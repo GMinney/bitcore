@@ -27,3 +27,8 @@ declare module 'bitcore-lib-ltc' {
     const index: any;
     export default index;
 }
+
+declare module 'bitcore-lib-tht' {
+    const index: any;
+    export default index;
+}

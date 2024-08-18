@@ -4,11 +4,33 @@ import styled, {css} from 'styled-components';
 import {Tile} from '../assets/styles/tile';
 import LargeThinSpinner from '../assets/images/large-thin-spinner.svg';
 import {Spinner} from '../assets/styles/spinner';
-import {Line} from 'react-chartjs-2';
+
 import {colorCodes} from '../utilities/constants';
 import {useNavigate} from 'react-router-dom';
 import {useApi} from '../api/api';
 import {Error, SlateDark, White} from '../assets/styles/colors';
+
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js'
+import { Line } from 'react-chartjs-2'
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+)
 
 const gutter = '1.5rem';
 
