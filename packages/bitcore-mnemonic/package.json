@@ -35,19 +35,16 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "assert": "^1.4.1",
-    "bitcore-build": "^10.0.21",
-    "brfs": "^2.0.1",
-    "chai": "^4.2.0",
-    "gulp": "^4.0.0",
-    "mocha": "^5.2.0"
+    "assert": "^2.1.0",
+    "bitcore-build": "file:../bitcore-build",
+    "brfs": "^2.0.2",
+    "chai": "^5.1.1",
+    "gulp": "^5.0.0",
+    "mocha": "^10.7.3"
   },
   "dependencies": {
-    "bitcore-lib": "^10.2.1",
-    "unorm": "^1.4.1"
-  },
-  "peerDependencies": {
-    "bitcore-lib": "*"
+    "bitcore-lib": "file:../bitcore-lib",
+    "unorm": "^1.6.0"
   },
   "gitHead": "012cc0216a9bc6b195035855bd17149bad41acd1"
 }
