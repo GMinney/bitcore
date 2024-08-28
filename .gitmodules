@@ -1,0 +1,6 @@
+[submodule "packages/bitcoind-rpc"]
+	path = packages/bitcoind-rpc
+	url = https://github.com/GMinney/bitcoind-rpc.git
+[submodule "packages/crypto-rpc"]
+	path = packages/crypto-rpc
+	url = https://github.com/GMinney/crypto-rpc.git
