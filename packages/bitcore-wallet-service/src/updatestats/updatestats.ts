@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { UpdateStats } from '../lib/updatestats';
+import { UpdateStats } from '../lib/updatestats.ts';
 var config = require('../config');
 
 const updateStatsScript = new UpdateStats();

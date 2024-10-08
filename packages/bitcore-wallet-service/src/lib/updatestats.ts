@@ -1,7 +1,7 @@
 import * as async from 'async';
 import moment from 'moment';
 import * as mongodb from 'mongodb';
-const ObjectID = mongodb.ObjectID;
+const ObjectID = mongodb.ObjectId;
 
 const storage = require('./storage');
 const LAST_DAY = '2019-12-01';

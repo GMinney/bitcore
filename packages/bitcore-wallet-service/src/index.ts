@@ -1,5 +1,5 @@
-import { ExpressApp } from './lib/expressapp';
-import { Storage } from './lib/storage';
+import { ExpressApp } from './lib/expressapp.ts';
+import { Storage } from './lib/storage.ts';
 
 const BWS = {
   ExpressApp,

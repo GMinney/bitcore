@@ -30,7 +30,7 @@ export abstract class BaseBlock<T extends IBlock> extends BaseModel<T> {
   }
 
   async getLocalTip({ chain, network }) {
-    const tip = await this.collection.findOne({ chain, network, processed: true }, { sort: { height: -1 } });
+    const tip = await this.collection.findOne({ chain, network, processed: true } as any, { sort: { height: -1 } });
     return tip as IBlock;
   }
 
@@ -42,7 +42,7 @@ export abstract class BaseBlock<T extends IBlock> extends BaseModel<T> {
         processed: true,
         chain,
         network
-      })
+      } as any)
       .sort({ height: -1 })
       .limit(100)
       .project({ hash: 1, previousBlockHash: 1, nextBlockHash: 1 })
@@ -61,7 +61,7 @@ export abstract class BaseBlock<T extends IBlock> extends BaseModel<T> {
         nextMatch = nextMatch && locatorBlocks[i].previousBlockHash === locatorBlocks[i + 1].hash;
       }
       if (!prevMatch || !nextMatch) {
-        headers.push(locatorBlocks[i]);
+        headers.push(locatorBlocks[i] as IBlock);
       }
     }
     return headers;

@@ -179,7 +179,7 @@ export class BitcoinP2PWorker extends BaseP2PWorker<IBtcBlock> {
     this.pool.removeAllListeners();
     this.pool.disconnect();
     if (this.connectInterval) {
-      clearInterval(this.connectInterval);
+      clearInterval(this.connectInterval as NodeJS.Timeout);
     }
   }
 
@@ -325,7 +325,7 @@ export class BitcoinP2PWorker extends BaseP2PWorker<IBtcBlock> {
   async stop() {
     this.stopping = true;
     logger.debug(`Stopping worker for chain ${this.chain}`);
-    this.queuedRegistrations.forEach(clearTimeout);
+    this.queuedRegistrations.forEach(timeoutId => clearTimeout(timeoutId as NodeJS.Timeout));
     await this.unregisterSyncingNode();
     await this.disconnect();
   }

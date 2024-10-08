@@ -8,8 +8,8 @@ import {
 } from '../../constants/chains';
 import { Key } from '../../derivation';
 import { MULTISENDAbi } from '../erc20/abi';
+import BN from 'bn.js'
 const utils = require('web3-utils');
-const { toBN } = Web3.utils;
 export class ETHTxProvider {
   chain: string;
 
@@ -39,11 +39,11 @@ export class ETHTxProvider {
       }
       const addresses = [];
       const amounts = [];
-      amount = toBN(0);
+      amount = new BN(0);
       for (let recipient of recipients) {
         addresses.push(recipient.address);
-        amounts.push(toBN(recipient.amount));
-        amount = amount.add(toBN(recipient.amount));
+        amounts.push(new BN(recipient.amount));
+        amount = amount.add(new BN(recipient.amount));
       }
       const multisendContract = this.getMultiSendContract(contractAddress);
       data = data || multisendContract.methods.sendEth(addresses, amounts).encodeABI();
@@ -70,7 +70,7 @@ export class ETHTxProvider {
       txData.gasPrice = utils.toHex(gasPrice);
     }
 
-    return ethers.utils.serializeTransaction(txData);
+    return ethers.Transaction.from(txData).serialized;
   }
 
   getMultiSendContract(tokenContractAddress: string) {
@@ -98,39 +98,38 @@ export class ETHTxProvider {
       k = '0x' + k;
     }
 
-    const signingKey = new ethers.utils.SigningKey(k);
-    const signDigest = signingKey.signDigest.bind(signingKey);
-    return signDigest(ethers.utils.keccak256(tx));
+    const signingKey = new ethers.SigningKey(k);
+    return signingKey.sign(ethers.keccak256(tx));
   }
 
   getSignature(params: { tx: string; key: Key }) {
-    const signatureHex = ethers.utils.joinSignature(this.getSignatureObject(params));
+    const signatureHex = ethers.Signature.from(this.getSignatureObject(params));
     return signatureHex;
   }
 
   getHash(params: { tx: string }) {
     const { tx } = params;
     // tx must be signed, for hash to exist
-    return ethers.utils.parseTransaction(tx).hash;
+    return ethers.Transaction.from(tx).hash;
   }
 
   applySignature(params: { tx: string; signature: any }) {
     let { tx, signature } = params;
-    const parsedTx = ethers.utils.parseTransaction(tx);
+    const parsedTx = ethers.Transaction.from(tx);
     const { nonce, gasPrice, gasLimit, to, value, data, chainId, maxFeePerGas, maxPriorityFeePerGas } = parsedTx;
     let txData: any = { nonce, gasPrice, gasLimit, to, value, data, chainId };
     if (maxFeePerGas) {
       txData.maxFeePerGas = maxFeePerGas;
       txData.maxPriorityFeePerGas = maxPriorityFeePerGas;
       txData.type = 2;
-    } else if (!gasPrice || !gasPrice.toNumber()) {
+    } else if (!gasPrice || !ethers.toNumber(gasPrice)) {
       throw new Error('either gasPrice or maxFeePerGas is required');
     }
     if (typeof signature == 'string') {
-      signature = ethers.utils.splitSignature(signature);
+      signature = ethers.Signature.from(signature);
     }
-    const signedTx = ethers.utils.serializeTransaction(txData, signature);
-    const parsedTxSigned = ethers.utils.parseTransaction(signedTx);
+    const signedTx = ethers.Transaction.from(txData).serialized;
+    const parsedTxSigned = ethers.Transaction.from(signedTx);
     if (!parsedTxSigned.hash) {
       throw new Error('Signature invalid');
     }

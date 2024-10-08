@@ -1,13 +1,13 @@
 import * as async from 'async';
-import * as request from 'request';
-import { Common } from './common';
-import { providers } from './fiatrateproviders';
-import logger from './logger';
-import { Storage } from './storage';
+import * as request from 'got';
+import { Defaults } from "./common/defaults.ts";
+import { Constants } from './common/constants.ts';
+import { providers } from './fiatrateproviders/index.ts';
+import logger from './logger.ts';
+import { Storage } from './storage.ts';
 
 const $ = require('preconditions').singleton();
-const Defaults = Common.Defaults;
-const Constants = Common.Constants;
+
 
 export class FiatRateService {
   request: request.RequestAPI<any, any, any>;

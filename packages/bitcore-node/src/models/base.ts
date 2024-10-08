@@ -1,8 +1,8 @@
 import { EventEmitter } from 'events';
-import { Collection, Db, MongoClient, ObjectID } from 'mongodb';
+import { Collection, Db, MongoClient, ObjectId } from 'mongodb';
 import { Storage } from '../services/storage';
 
-export type MongoBound<T> = T & Partial<{ _id: ObjectID }>;
+export type MongoBound<T> = T & Partial<{ _id: ObjectId }>;
 export abstract class BaseModel<T> {
   connected = false;
   client?: MongoClient;

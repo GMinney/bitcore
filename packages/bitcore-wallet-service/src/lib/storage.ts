@@ -2,9 +2,10 @@ import * as async from 'async';
 import _ from 'lodash';
 import { Db } from 'mongodb';
 import * as mongodb from 'mongodb';
-import { BCHAddressTranslator } from './bchaddresstranslator'; // only for migration
-import { Common } from './common';
-import logger from './logger';
+import { BCHAddressTranslator } from './bchaddresstranslator.ts'; // only for migration
+import { Constants } from './common/constants.ts';
+import { Defaults } from './common/defaults.ts';
+import logger from './logger.ts';
 import {
   Address,
   Advertisement,
@@ -16,7 +17,7 @@ import {
   TxNote,
   TxProposal,
   Wallet
-} from './model';
+} from './model/index.ts';
 
 const $ = require('preconditions').singleton();
 
@@ -39,10 +40,7 @@ const collections = {
   LOCKS: 'locks'
 };
 
-const Constants = Common.Constants;
-const Defaults = Common.Defaults;
-
-const ObjectID = mongodb.ObjectID;
+const ObjectID = mongodb.ObjectId;
 
 var objectIdDate = function(date) {
   return Math.floor(date / 1000).toString(16) + '0000000000000000';

@@ -1,17 +1,15 @@
 import * as async from 'async';
 import { BitcoreLibDoge } from 'crypto-wallet-core';
 import _ from 'lodash';
-import { IChain } from '..';
-import { Common } from '../../common';
-import { ClientError } from '../../errors/clienterror';
-import { Errors } from '../../errors/errordefinitions';
-import logger from '../../logger';
-import { TxProposal } from '../../model';
-import { BtcChain } from '../btc';
-
-const Constants = Common.Constants;
-const Utils = Common.Utils;
-const Defaults = Common.Defaults;
+import { IChain } from '../index.ts';
+import { Defaults } from "../../common/defaults.ts";
+import { Constants } from '../../common/constants.ts';
+import { Utils } from '../../common/utils.ts';
+import { ClientError } from '../../errors/clienterror.ts';
+import { Errors } from '../../errors/errordefinitions.ts';
+import logger from '../../logger.ts';
+import { TxProposal } from '../../model/index.ts';
+import { BtcChain } from '../btc/index.ts';
 
 export class DogeChain extends BtcChain implements IChain {
   constructor(private bitcoreLibDoge = BitcoreLibDoge) {

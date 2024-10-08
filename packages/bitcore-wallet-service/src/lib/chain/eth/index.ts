@@ -1,20 +1,21 @@
 import { Transactions, Validation } from 'crypto-wallet-core';
 import { Web3 } from 'crypto-wallet-core';
 import _ from 'lodash';
-import { IWallet } from 'src/lib/model';
-import { IAddress } from 'src/lib/model/address';
-import { WalletService } from 'src/lib/server';
-import { IChain } from '..';
-import { Common } from '../../common';
-import { ClientError } from '../../errors/clienterror';
-import { Errors } from '../../errors/errordefinitions';
-import logger from '../../logger';
-import { ERC20Abi } from './abi-erc20';
-import { InvoiceAbi } from './abi-invoice';
+import { IWallet } from 'src/lib/model/index.ts';
+import { IAddress } from 'src/lib/model/address.ts';
+import { WalletService } from 'src/lib/server.ts';
+import { IChain } from '../index.ts';
+import { Defaults } from "../../common/defaults.ts";
+import { Constants } from '../../common/constants.ts';
+import { Utils } from '../../common/utils.ts';
+import { ClientError } from '../../errors/clienterror.ts';
+import { Errors } from '../../errors/errordefinitions.ts';
+import logger from '../../logger.ts';
+import { ERC20Abi } from './abi-erc20.ts';
+import { InvoiceAbi } from './abi-invoice.ts';
 
-const { toBN } = Web3.utils;
-const Constants = Common.Constants;
-const Defaults = Common.Defaults;
+const BN = require('bn.js');
+
 
 function requireUncached(module) {
   delete require.cache[require.resolve(module)];
@@ -182,14 +183,14 @@ export class EthChain implements IChain {
         const defaultGasLimit = this.getDefaultGasLimit(opts);
         let outputAddresses = []; // Parameter for MuliSend contract
         let outputAmounts = []; // Parameter for MuliSend contract
-        let totalValue = toBN(0); // Parameter for MuliSend contract
+        let totalValue = new BN(0); // Parameter for MuliSend contract
 
         for (let output of opts.outputs) {
           if (opts.multiSendContractAddress) {
             outputAddresses.push(output.toAddress);
-            outputAmounts.push(toBN(BigInt(output.amount).toString()));
+            outputAmounts.push(new BN(BigInt(output.amount).toString()));
             if (!opts.tokenAddress) {
-              totalValue = totalValue.add(toBN(BigInt(output.amount).toString()));
+              totalValue = totalValue.add(new BN(BigInt(output.amount).toString()));
             }
             inGasLimit += output.gasLimit ? output.gasLimit : defaultGasLimit;
             continue;
@@ -503,7 +504,7 @@ export class EthChain implements IChain {
         output.amount == null ||
         output.amount < 0 ||
         isNaN(output.amount) ||
-        Web3.utils.toBN(BigInt(output.amount).toString()).toString() !== BigInt(output.amount).toString()
+        new BN(BigInt(output.amount).toString()).toString() !== BigInt(output.amount).toString()
       ) {
         throw new Error('output.amount is not a valid value: ' + output.amount);
       }

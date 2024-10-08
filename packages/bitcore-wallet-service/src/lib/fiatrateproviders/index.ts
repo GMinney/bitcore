@@ -1,5 +1,5 @@
-import { BitPay } from './bitpay';
-import { IProvider } from './provider';
+import { BitPay } from './bitpay.ts';
+import { IProvider } from './provider.ts';
 // import { Bitstamp } from './bitstamp';
 
 

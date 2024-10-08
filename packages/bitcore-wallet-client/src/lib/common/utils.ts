@@ -2,9 +2,6 @@
 
 import {
   BitcoreLib,
-  BitcoreLibCash,
-  BitcoreLibDoge,
-  BitcoreLibLtc,
   Deriver,
   Transactions
 } from 'crypto-wallet-core';
@@ -20,15 +17,13 @@ const Stringify = require('json-stable-stringify');
 const Bitcore = BitcoreLib;
 const Bitcore_ = {
   btc: Bitcore,
-  bch: BitcoreLibCash,
+
   eth: Bitcore,
   matic: Bitcore,
   arb: Bitcore,
   base: Bitcore,
   op: Bitcore,
   xrp: Bitcore,
-  doge: BitcoreLibDoge,
-  ltc: BitcoreLibLtc
 };
 const PrivateKey = Bitcore.PrivateKey;
 const PublicKey = Bitcore.PublicKey;

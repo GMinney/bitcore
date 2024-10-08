@@ -1,4 +1,4 @@
-import { ClientError } from './clienterror';
+import { ClientError } from './clienterror.ts';
 
 
 interface Errors<T> {

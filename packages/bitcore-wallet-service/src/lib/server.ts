@@ -7,21 +7,24 @@ import {
 import * as _ from 'lodash';
 import Moralis from 'moralis';
 import 'source-map-support/register';
-import config from '../config';
-import logger from './logger';
+import config from '../config.ts';
+import logger from './logger.ts';
 
-import { serverMessages as deprecatedServerMessage } from '../deprecated-serverMessages';
-import { serverMessages } from '../serverMessages';
-import { BCHAddressTranslator } from './bchaddresstranslator';
-import { BlockChainExplorer } from './blockchainexplorer';
-import { V8 } from './blockchainexplorers/v8';
-import { ChainService } from './chain/index';
-import { Common } from './common';
-import { ClientError } from './errors/clienterror';
-import { Errors } from './errors/errordefinitions';
-import { FiatRateService } from './fiatrateservice';
-import { Lock } from './lock';
-import { MessageBroker } from './messagebroker';
+import { serverMessages as deprecatedServerMessage } from '../deprecated-serverMessages.ts';
+import { serverMessages } from '../serverMessages.ts';
+import { BCHAddressTranslator } from './bchaddresstranslator.ts';
+import { BlockChainExplorer } from './blockchainexplorer.ts';
+import { V8 } from './blockchainexplorers/v8.ts';
+import { ChainService } from './chain/index.ts';
+import { Utils } from './common/utils.ts';
+import { Constants } from './common/constants.ts';
+import { Defaults } from './common/defaults.ts';
+import { Services } from './common/services.ts';
+import { ClientError } from './errors/clienterror.ts';
+import { Errors } from './errors/errordefinitions.ts';
+import { FiatRateService } from './fiatrateservice.ts';
+import { Lock } from './lock.ts';
+import { MessageBroker } from './messagebroker.ts';
 import {
   Advertisement,
   Copayer,
@@ -37,8 +40,8 @@ import {
   TxNote,
   TxProposal,
   Wallet
-} from './model';
-import { Storage } from './storage';
+} from './model/index.ts';
+import { Storage } from './storage.ts';
 
 const Uuid = require('uuid');
 const $ = require('preconditions').singleton();
@@ -58,10 +61,6 @@ const Bitcore_ = {
   ltc: require('bitcore-lib-ltc')
 };
 
-const Utils = Common.Utils;
-const Constants = Common.Constants;
-const Defaults = Common.Defaults;
-const Services = Common.Services;
 
 let request = require('request');
 let initialized = false;

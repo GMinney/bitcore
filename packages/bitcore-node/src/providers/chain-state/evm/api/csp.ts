@@ -1,8 +1,7 @@
 import { CryptoRpc } from 'crypto-rpc';
-import { ObjectID } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import Web3 from 'web3';
-import { Transaction } from 'web3-eth';
-import { AbiItem } from 'web3-utils';
+import { Transaction, AbiItem } from 'web3-types';
 import Config from '../../../../config';
 import {
   historical,
@@ -53,8 +52,9 @@ import {
   isValidProviderType
 } from './provider';
 import { EVMListTransactionsStream } from './transform';
+import CryptoRpcProvider from 'crypto-rpc/lib';
 
-export interface GetWeb3Response { rpc: CryptoRpc; web3: Web3; dataType: string };
+export interface GetWeb3Response { rpc: CryptoRpcProvider; web3: Web3; dataType: string };
 
 export class BaseEVMStateProvider extends InternalStateProvider implements IChainStateService {
   config: IChainConfig<IEVMNetworkConfig>;
@@ -97,8 +97,20 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
     const dataType = params?.type;
     const providerConfig = getProvider({ network, dataType, config: this.config });
     // Default to using ETH CryptoRpc with all EVM chain configs
-    const rpcConfig = { ...providerConfig, chain: 'ETH', currencyConfig: {} };
-    const rpc = new CryptoRpc(rpcConfig, {}).get('ETH');
+    const rpcConfig = {
+      ...providerConfig,
+      chain: 'ETH',
+      currencyConfig: {},
+      isEVM: true,
+      rpcPort: providerConfig.port?.toString() || '',
+      port: 0,
+      user: '',
+      rpcUser: '',
+      pass: '',
+      rpcPass: '',
+      tokens: {}
+    };
+    const rpc = new CryptoRpc(rpcConfig).get('ETH');
     const rpcObj = { rpc, web3: rpc.web3, dataType: rpcConfig.dataType || 'combined' };
     if (!BaseEVMStateProvider.rpcs[this.chain]) {
       BaseEVMStateProvider.rpcs[this.chain] = {};
@@ -252,7 +264,7 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
     if (!tx.receipt) {
       const receipt = await this.getReceipt(tx.network, tx.txid);
       if (receipt) {
-        const fee = receipt.gasUsed * tx.gasPrice;
+        const fee = receipt.gasUsed * BigInt(tx.gasPrice);
         await EVMTransactionStorage.collection.updateOne({ _id: tx._id }, { $set: { receipt, fee } });
         tx.receipt = receipt;
         tx.fee = fee;

@@ -4,7 +4,7 @@ var _ = require('lodash');
 const request = require('request');
 const Bitcore = require('bitcore-lib');
 const requestStream = require('request');
-import { Client } from '../lib//blockchainexplorers/v8/client';
+import { Client } from '../lib//blockchainexplorers/v8/client.ts';
 
 const coin = process.argv[2];
 

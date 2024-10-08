@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import 'source-map-support/register';
-import logger from './logger';
+import logger from './logger.ts';
 
 export class MessageBroker extends EventEmitter {
   remote: boolean;

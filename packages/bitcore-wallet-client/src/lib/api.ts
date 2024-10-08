@@ -21,15 +21,13 @@ var events = require('events');
 var Bitcore = CWC.BitcoreLib;
 var Bitcore_ = {
   btc: CWC.BitcoreLib,
-  bch: CWC.BitcoreLibCash,
+
   eth: CWC.BitcoreLib,
   matic: CWC.BitcoreLib,
   arb: CWC.BitcoreLib,
   base: CWC.BitcoreLib,
   op: CWC.BitcoreLib,
-  xrp: CWC.BitcoreLib,
-  doge: CWC.BitcoreLibDoge,
-  ltc: CWC.BitcoreLibLtc
+  xrp: CWC.BitcoreLib
 };
 var Mnemonic = require('bitcore-mnemonic');
 var url = require('url');
@@ -74,9 +72,6 @@ export class API extends EventEmitter {
 
   // Expose bitcore
   static Bitcore = CWC.BitcoreLib;
-  static BitcoreCash = CWC.BitcoreLibCash;
-  static BitcoreDoge = CWC.BitcoreLibDoge;
-  static BitcoreLtc = CWC.BitcoreLibLtc;
 
   constructor(opts?) {
     super();

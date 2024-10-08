@@ -23,6 +23,8 @@ export class DogecoinP2PWorker extends BaseP2PWorker<IBtcBlock> {
   protected pool: any;
   public events: EventEmitter;
   public isSyncing: boolean;
+  protected queuedRegistrations: NodeJS.Timeout[] = [];
+
   constructor({ chain, network, chainConfig, blockModel = BitcoinBlockStorage }) {
     super({ chain, network, chainConfig, blockModel });
     this.blockModel = blockModel;
@@ -189,7 +191,7 @@ export class DogecoinP2PWorker extends BaseP2PWorker<IBtcBlock> {
     this.pool.removeAllListeners();
     this.pool.disconnect();
     if (this.connectInterval) {
-      clearInterval(this.connectInterval);
+      clearInterval(this.connectInterval as NodeJS.Timeout);
     }
   }
 
@@ -333,7 +335,7 @@ export class DogecoinP2PWorker extends BaseP2PWorker<IBtcBlock> {
   }
 
   async stop() {
-    this.stopping = true;
+    this.queuedRegistrations.forEach(timeoutId => clearTimeout(timeoutId));
     logger.debug(`Stopping worker for chain ${this.chain}`);
     this.queuedRegistrations.forEach(clearTimeout);
     await this.unregisterSyncingNode();

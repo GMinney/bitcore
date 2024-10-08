@@ -3,20 +3,20 @@ import cors from 'cors';
 import express from 'express';
 import _ from 'lodash';
 import 'source-map-support/register';
-import config from '../config';
-import { Common } from './common';
-import { ClientError } from './errors/clienterror';
-import { Errors } from './errors/errordefinitions';
-import { logger, transport } from './logger';
-import { LogMiddleware } from './middleware';
-import { WalletService } from './server';
-import { Stats } from './stats';
+import config from '../config.ts';
+import { Defaults } from "./common/defaults.ts";
+import { ClientError } from './errors/clienterror.ts';
+import { Errors } from './errors/errordefinitions.ts';
+import { logger, transport } from './logger.ts';
+import { LogMiddleware } from './middleware.ts';
+import { WalletService } from './server.ts';
+import { Stats } from './stats.ts';
 
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const RateLimit = require('express-rate-limit');
 const rp = require('request-promise-native');
-const Defaults = Common.Defaults;
+
 
 export class ExpressApp {
   app: express.Express;

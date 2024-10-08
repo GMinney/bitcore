@@ -2,11 +2,11 @@ import * as async from 'async';
 import * as _ from 'lodash';
 import moment from 'moment';
 import * as mongodb from 'mongodb';
-import config from '../config';
-import logger from './logger';
-import { Storage } from './storage';
+import config from '../config.ts';
+import logger from './logger.ts';
+import { Storage } from './storage.ts';
 
-const ObjectID = mongodb.ObjectID;
+const ObjectID = mongodb.ObjectId;
 
 var objectIdDate = function(date) {
   return Math.floor(date.getTime() / 1000).toString(16) + '0000000000000000';
@@ -32,7 +32,11 @@ export class CleanFiatRates {
       return cb(new Error('No dbname at config.'));
     }
 
-    mongodb.MongoClient.connect(dbConfig.uri, { useUnifiedTopology: true }, (err, client) => {
+    mongodb.MongoClient.connect(
+      dbConfig.uri, 
+      { useUnifiedTopology: true }, 
+      (err, client) => {
+        
       if (err) {
         return cb(err);
       }

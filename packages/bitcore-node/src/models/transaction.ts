@@ -1,6 +1,6 @@
-import { ObjectID } from 'bson';
+import { ObjectId } from 'bson';
 import * as lodash from 'lodash';
-import { Collection } from 'mongodb';
+import { Collection, Document } from 'mongodb';
 import { Readable, Transform } from 'stream';
 import { LoggifyClass } from '../decorators/Loggify';
 import logger from '../logger';
@@ -21,7 +21,7 @@ import { IWalletAddress, WalletAddressStorage } from './walletAddress';
 export { ITransaction };
 
 const { onlyWalletEvents } = Config.get().services.event;
-function shouldFire(obj: { wallets?: Array<ObjectID> }) {
+function shouldFire(obj: { wallets?: Array<ObjectId> }) {
   return !onlyWalletEvents || (onlyWalletEvents && obj.wallets && obj.wallets.length > 0);
 }
 const MAX_BATCH_SIZE = 50000;
@@ -34,7 +34,7 @@ export type IBtcTransaction = ITransaction & {
   size: number;
 };
 
-export type TaggedBitcoinTx = BitcoinTransaction & { wallets: Array<ObjectID> };
+export type TaggedBitcoinTx = BitcoinTransaction & { wallets: Array<ObjectId> };
 
 export interface MintOp {
   updateOne: {
@@ -55,11 +55,11 @@ export interface MintOp {
         script: Buffer;
         spentTxid?: string;
         spentHeight?: SpentHeightIndicators;
-        wallets?: Array<ObjectID>;
+        wallets?: Array<ObjectId>;
       };
       $setOnInsert?: {
         spentHeight: SpentHeightIndicators;
-        wallets?: Array<ObjectID>;
+        wallets?: Array<ObjectId>;
       };
     };
     upsert: true;
@@ -98,7 +98,7 @@ export interface TxOp {
         inputCount: number;
         outputCount: number;
         value: number;
-        wallets: Array<ObjectID>;
+        wallets: Array<ObjectId>;
         mempoolTime?: Date;
       };
       $setOnInsert?: TxOp['updateOne']['update']['$set'];
@@ -233,7 +233,7 @@ export class TransactionModel extends BaseTransaction<IBtcTransaction> {
     await new Promise(r =>
       mintStream
         .pipe(new MempoolSafeTransform(height))
-        .pipe(new MongoWriteStream(CoinStorage.collection))
+        .pipe(new MongoWriteStream(CoinStorage.collection as unknown as Collection<Document>)) // This might be broken
         .pipe(new MempoolCoinEventTransform(height))
         .on('finish', r)
     );
@@ -242,7 +242,7 @@ export class TransactionModel extends BaseTransaction<IBtcTransaction> {
     await new Promise(r =>
       spentStream
         .pipe(new PruneMempoolStream(chain, network, initialSyncComplete))
-        .pipe(new MongoWriteStream(CoinStorage.collection))
+        .pipe(new MongoWriteStream(CoinStorage.collection as unknown as Collection<Document>))
         .on('finish', r)
     );
 
@@ -250,7 +250,7 @@ export class TransactionModel extends BaseTransaction<IBtcTransaction> {
     await new Promise(r =>
       txStream
         .pipe(new MempoolSafeTransform(height))
-        .pipe(new MongoWriteStream(TransactionStorage.collection))
+        .pipe(new MongoWriteStream(TransactionStorage.collection as unknown as Collection<Document>))
         .pipe(new MempoolTxEventTransform(height))
         .on('finish', r)
     );
@@ -327,7 +327,7 @@ export class TransactionModel extends BaseTransaction<IBtcTransaction> {
         .project({ spentTxid: 1, value: 1, wallets: 1 })
         .toArray();
       interface CoinGroup {
-        [txid: string]: { total: number; wallets: Array<ObjectID> };
+        [txid: string]: { total: number; wallets: Array<ObjectId> };
       }
       const groupedSpends = spent.reduce<CoinGroup>((agg, coin) => {
         if (!agg[coin.spentTxid]) {
@@ -423,12 +423,12 @@ export class TransactionModel extends BaseTransaction<IBtcTransaction> {
         addressBatch.add(mintOp.updateOne.update.$set.address);
         if (addressBatch.size >= 1000) {
           const batchWallets = await findWalletsForAddresses(Array.from(addressBatch));
-          wallets = wallets.concat(batchWallets);
+          wallets = wallets.concat(batchWallets as IWalletAddress[]);
           addressBatch.clear();
         }
       }
       const remainingBatch = await findWalletsForAddresses(Array.from(addressBatch));
-      wallets = wallets.concat(remainingBatch);
+      wallets = wallets.concat(remainingBatch as IWalletAddress[]);
 
       if (wallets.length) {
         for (let mintOp of mintBatch) {
@@ -449,7 +449,7 @@ export class TransactionModel extends BaseTransaction<IBtcTransaction> {
           tx.wallets = coinsForTx.reduce((wallets, c) => {
             wallets = wallets.concat(c.updateOne.update.$set.wallets!);
             return wallets;
-          }, new Array<ObjectID>());
+          }, new Array<ObjectId>());
         }
       }
     }

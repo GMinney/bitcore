@@ -1,5 +1,5 @@
 import * as Bcrypt from 'bcrypt';
-import { BitcoreLib, BitcoreLibCash, BitcoreLibDoge, BitcoreLibLtc, Deriver, ethers, Transactions, Web3, xrpl } from 'crypto-wallet-core';
+import { BitcoreLib, Deriver, ethers, Transactions, Web3, xrpl } from 'crypto-wallet-core';
 import 'source-map-support/register';
 import { Client } from './client';
 import { Encryption } from './encryption';
@@ -10,9 +10,6 @@ const { ParseApiStream } = require('./stream-util');
 const { PrivateKey, HDPrivateKey } = BitcoreLib;
 const chainLibs = {
   BTC: BitcoreLib,
-  BCH: BitcoreLibCash,
-  DOGE: BitcoreLibDoge,
-  LTC: BitcoreLibLtc,
   ETH: { Web3, ethers },
   MATIC: { Web3, ethers },
   ARB: { Web3, ethers },
@@ -539,7 +536,7 @@ export class Wallet {
       for (let utxo of utxos) {
         addresses.push(utxo.address);
       }
-      addresses = addresses.length > 0 ? addresses : await this.getAddresses();
+      addresses = addresses.length > 0 ? addresses : await this.getAddresses().then(res => Array.isArray(res) ? res : []);
       decryptedKeys = await this.storage.getKeys({
         addresses,
         name: this.name,
@@ -678,7 +675,7 @@ export class Wallet {
   async getNonce(addressIndex: number = 0, isChange?: boolean) {
     const address = this.deriveAddress(0, isChange);
     const count = await this.client.getNonce({ address });
-    if (!count || typeof count.nonce !== 'number') {
+    if (!count || !('nonce' in count) || typeof count.nonce !== 'number') {
       throw new Error('Unable to get nonce');
     }
     return count.nonce;
@@ -729,7 +726,8 @@ export class Wallet {
         params.feeRate = feeRate;
       } else {
         const scale = 1e5; // convert from sat/kb to sat/byte
-        params.feeRate = Math.ceil((await this.getNetworkFee({ target: feeTarget })).feerate * scale);
+        const feeRate = await (await this.getNetworkFee({ target: feeTarget })).body.feeRate
+        params.feeRate = Math.ceil(feeRate * scale);
         console.log(`Bumping fee rate to ${params.feeRate} sats/byte`);
       }
 
@@ -767,7 +765,8 @@ export class Wallet {
         if (feeRate) {
           params.gasPrice = Web3.utils.toWei(feeRate.toString(), 'gwei');
         } else {
-          params.gasPrice = (await this.getNetworkFee({ target: feeTarget })).feerate;
+          const feeRate = await (await this.getNetworkFee({ target: feeTarget })).body.feeRate
+          params.gasPrice = feeRate;
           console.log(`Bumping gas price to ${Web3.utils.fromWei(params.gasPrice.toString(), 'gwei')} gwei`);
         }
       }

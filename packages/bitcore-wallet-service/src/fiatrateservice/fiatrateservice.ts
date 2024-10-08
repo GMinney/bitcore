@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import config from '../config';
-import { FiatRateService } from '../lib/fiatrateservice';
-import logger from '../lib/logger';
+import config from '../config.ts';
+import { FiatRateService } from '../lib/fiatrateservice.ts';
+import logger from '../lib/logger.ts';
 
 const service = new FiatRateService();
 service.init(config, err => {

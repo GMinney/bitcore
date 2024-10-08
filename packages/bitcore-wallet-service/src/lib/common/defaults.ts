@@ -1,5 +1,3 @@
-'use strict';
-
 export const Defaults = {
   MIN_FEE_PER_KB: 0,
 

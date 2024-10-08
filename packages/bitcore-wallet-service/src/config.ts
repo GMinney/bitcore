@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { logger } from './lib/logger';
+import { logger } from './lib/logger.ts';
 
 const Config = (): any => {
   let defaultConfig = {

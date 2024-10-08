@@ -1,19 +1,18 @@
 import * as async from 'async';
 import { BitcoreLib } from 'crypto-wallet-core';
 import _ from 'lodash';
-import { WalletService } from 'src/lib/server';
-import { IChain } from '..';
-import config from '../../../config';
-import { Common } from '../../common';
-import { ClientError } from '../../errors/clienterror';
-import { Errors } from '../../errors/errordefinitions';
-import logger from '../../logger';
-import { IWallet, TxProposal } from '../../model';
+import { WalletService } from 'src/lib/server.ts';
+import { IChain } from '../index.ts';
+import config from '../../../config.ts';
+import { Defaults } from "../../common/defaults.ts";
+import { Constants } from '../../common/constants.ts';
+import { Utils } from '../../common/utils.ts';
+import { ClientError } from '../../errors/clienterror.ts';
+import { Errors } from '../../errors/errordefinitions.ts';
+import logger from '../../logger.ts';
+import { IWallet, TxProposal } from '../../model/index.ts';
 
 const $ = require('preconditions').singleton();
-const Constants = Common.Constants;
-const Utils = Common.Utils;
-const Defaults = Common.Defaults;
 
 export class BtcChain implements IChain {
   protected sizeEstimationMargin: number;

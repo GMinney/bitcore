@@ -1,13 +1,15 @@
 import * as async from 'async';
 import * as crypto from 'crypto';
 import _ from 'lodash';
-import * as request from 'request-promise-native';
+import * as request from 'got';
 import io = require('socket.io-client');
-import config from '../../config';
-import { ChainService } from '../chain/index';
-import { Common } from '../common';
-import logger from '../logger';
-import { Client } from './v8/client';
+import config from '../../config.ts';
+import { ChainService } from '../chain/index.ts';
+import { Defaults } from "../common/defaults.ts";
+import { Constants } from '../common/constants.ts';
+import { Utils } from '../common/utils.ts';
+import logger from '../logger.ts';
+import { Client } from './v8/client.ts';
 
 const $ = require('preconditions').singleton();
 const Bitcore = require('bitcore-lib');
@@ -23,10 +25,6 @@ const Bitcore_ = {
   op: Bitcore,
   base: Bitcore
 };
-
-const Constants = Common.Constants,
-  Defaults = Common.Defaults,
-  Utils = Common.Utils;
 
 function v8network(bwsNetwork, chain = 'btc') {
   if (Utils.getGenericName(bwsNetwork) == 'livenet') return 'mainnet';
@@ -47,7 +45,7 @@ export class V8 {
   host: string;
   userAgent: string;
   baseUrl: string;
-  request: request;
+  request: request.Got;
   Client: typeof Client;
   private _cachedReserve: number;
   private _cachedReserveTs: number;
@@ -251,10 +249,11 @@ export class V8 {
     client
       .broadcast({ payload })
       .then(ret => {
-        if (!ret.txid) {
+        const response = JSON.parse(ret.body);
+        if (!response.txid) {
           return cb(new Error('Error broadcasting'));
         }
-        return cb(null, ret.txid);
+        return cb(null, response.txid);
       })
       .catch(err => {
         if (count > 3) {
@@ -375,7 +374,7 @@ export class V8 {
     this.request
       .get(url, {})
       .then(ret => {
-        return cb(null, ret !== '[]');
+        return cb(null, ret.body !== '[]');
       })
       .catch(err => {
         return cb(err);
@@ -388,8 +387,8 @@ export class V8 {
     this.request
       .get(url, {})
       .then(ret => {
-        ret = JSON.parse(ret);
-        return cb(null, ret.nonce);
+        const parsedRet = JSON.parse(ret.body);
+        return cb(null, parsedRet.nonce);
       })
       .catch(err => {
         return cb(err);
@@ -402,7 +401,7 @@ export class V8 {
     this.request
       .post(url, { body: opts, json: true })
       .then(gasLimit => {
-        gasLimit = JSON.parse(gasLimit);
+        gasLimit = JSON.parse(gasLimit.body);
         return cb(null, gasLimit);
       })
       .catch(err => {
@@ -416,7 +415,7 @@ export class V8 {
     this.request
       .get(url, {})
       .then(contractInstantiationInfo => {
-        contractInstantiationInfo = JSON.parse(contractInstantiationInfo);
+        contractInstantiationInfo = JSON.parse(contractInstantiationInfo.body);
         return cb(null, contractInstantiationInfo);
       })
       .catch(err => {
@@ -430,7 +429,7 @@ export class V8 {
     this.request
       .get(url, {})
       .then(contractInfo => {
-        contractInfo = JSON.parse(contractInfo);
+        contractInfo = JSON.parse(contractInfo.body);
         return cb(null, contractInfo);
       })
       .catch(err => {
@@ -444,7 +443,7 @@ export class V8 {
     this.request
       .get(url, {})
       .then(contractInfo => {
-        contractInfo = JSON.parse(contractInfo);
+        contractInfo = JSON.parse(contractInfo.body);
         return cb(null, contractInfo);
       })
       .catch(err => {
@@ -459,7 +458,7 @@ export class V8 {
     this.request
       .get(url, {})
       .then(allowance => {
-        allowance = JSON.parse(allowance);
+        allowance = JSON.parse(allowance.body);
         return cb(null, allowance);
       })
       .catch(err => {
@@ -473,7 +472,7 @@ export class V8 {
     this.request
       .get(url, {})
       .then(multisigTxpsInfo => {
-        multisigTxpsInfo = JSON.parse(multisigTxpsInfo);
+        multisigTxpsInfo = JSON.parse(multisigTxpsInfo.body);
         return cb(null, multisigTxpsInfo);
       })
       .catch(err => {
@@ -493,15 +492,14 @@ export class V8 {
           .get(url, {})
           .then(ret => {
             try {
-              ret = JSON.parse(ret);
-
+              const response = JSON.parse(ret.body);
               // only process right responses.
-              if (!_.isUndefined(ret.blocks) && ret.blocks != x) {
+              if (!_.isUndefined(response.blocks) && response.blocks != x) {
                 logger.info(`[v8.js] Ignoring response for ${x}: %o`, ret?.body || ret);
                 return icb();
               }
 
-              result[x] = ret.feerate;
+              result[x] = response.feerate;
             } catch (e) {
               logger.warn('[v8.js] Fee error: %o', e);
             }
@@ -534,8 +532,8 @@ export class V8 {
       .get(url, {})
       .then(ret => {
         try {
-          ret = JSON.parse(ret);
-          result = ret.feerate;
+          const response = JSON.parse(ret.body);
+          result = response.feerate;
         } catch (e) {
           logger.warn('[v8.js] Fee error: %o', e);
         }
@@ -554,8 +552,8 @@ export class V8 {
       .get(url, {})
       .then(ret => {
         try {
-          ret = JSON.parse(ret);
-          result = ret.feerate;
+          const response = JSON.parse(ret.body);
+          result = response.feerate;
         } catch (e) {
           logger.warn('[v8.js] Priority fee error: %o', e);
         }
@@ -573,8 +571,8 @@ export class V8 {
       .get(url, {})
       .then(ret => {
         try {
-          ret = JSON.parse(ret);
-          return cb(null, ret.height, ret.hash);
+          const response = JSON.parse(ret.body);
+          return cb(null, response.height, response.hash);
         } catch (err) {
           return cb(new Error('Could not get height from block explorer'));
         }
@@ -588,8 +586,8 @@ export class V8 {
       .get(url, {})
       .then(ret => {
         try {
-          ret = JSON.parse(ret);
-          const res = _.map(ret, 'txid');
+          const response = JSON.parse(ret.body);
+          const res = _.map(response, 'txid');
           return cb(null, res);
         } catch (err) {
           return cb(new Error('Could not get height from block explorer'));
@@ -607,12 +605,12 @@ export class V8 {
       .get(url, {})
       .then(ret => {
         try {
-          ret = JSON.parse(ret);
-          if (ret.reserve != null) {
-            this._cachedReserve = ret.reserve;
+          const response = JSON.parse(ret.body);
+          if (response.reserve != null) {
+            this._cachedReserve = response.reserve;
             this._cachedReserveTs = Date.now();
           }
-          return cb(null, ret.reserve ?? Defaults.MIN_XRP_BALANCE);
+          return cb(null, response.reserve ?? Defaults.MIN_XRP_BALANCE);
         } catch (err) {
           logger.error('[v8.js] Error getting reserve: %o', err);
           return cb(null, Defaults.MIN_XRP_BALANCE);

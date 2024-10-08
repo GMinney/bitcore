@@ -1,5 +1,5 @@
-import { V8 } from './blockchainexplorers/v8';
-import { ChainService } from './chain/index';
+import { V8 } from './blockchainexplorers/v8.ts';
+import { ChainService } from './chain/index.ts';
 
 const $ = require('preconditions').singleton();
 

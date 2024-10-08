@@ -1,20 +1,20 @@
-import { Common } from '../common';
-import { ITxProposal, IWallet, TxProposal } from '../model';
-import { WalletService } from '../server';
-import logger from './../logger';
-import { ArbChain } from './arb';
-import { BaseChain } from './base';
-import { BchChain } from './bch';
-import { BtcChain } from './btc';
-import { DogeChain } from './doge';
-import { EthChain } from './eth';
-import { LtcChain } from './ltc';
-import { MaticChain } from './matic';
-import { OpChain } from './op';
-import { XrpChain } from './xrp';
+import { Defaults } from "../common/defaults.ts";
+import { Constants } from '../common/constants.ts';
+import { Utils } from '../common/utils.ts';
+import { ITxProposal, IWallet, TxProposal } from '../model/index.ts';
+import { WalletService } from '../server.ts';
+import logger from './../logger.ts';
+import { ArbChain } from './arb/index.ts';
+import { BaseChain } from './base/index.ts';
+import { BchChain } from './bch/index.ts';
+import { BtcChain } from './btc/index.ts';
+import { DogeChain } from './doge/index.ts';
+import { EthChain } from './eth/index.ts';
+import { LtcChain } from './ltc/index.ts';
+import { MaticChain } from './matic/index.ts';
+import { OpChain } from './op/index.ts';
+import { XrpChain } from './xrp/index.ts';
 
-const Constants = Common.Constants;
-const Defaults = Common.Defaults;
 
 export interface INotificationData {
   out: {

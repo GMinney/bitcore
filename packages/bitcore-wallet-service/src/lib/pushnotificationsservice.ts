@@ -3,20 +3,19 @@ import * as fs from 'fs';
 import _ from 'lodash';
 import 'source-map-support/register';
 
-import request from 'request';
-import config from '../config';
-import { Common } from './common';
-import logger from './logger';
-import { MessageBroker } from './messagebroker';
-import { INotification, IPreferences } from './model';
-import { Storage } from './storage';
+import got as request from 'got';
+import config from '../config.ts';
+import { Utils } from './common/utils.ts';
+import { Defaults } from './common/defaults.ts';
+import { Constants } from './common/constants.ts';
+import logger from './logger.ts';
+import { MessageBroker } from './messagebroker.ts';
+import { INotification, IPreferences } from './model/index.ts';
+import { Storage } from './storage.ts';
 
 const Mustache = require('mustache');
 const defaultRequest = require('request');
 const path = require('path');
-const Utils = Common.Utils;
-const Defaults = Common.Defaults;
-const Constants = Common.Constants;
 const sjcl = require('sjcl');
 
 const PUSHNOTIFICATIONS_TYPES = {

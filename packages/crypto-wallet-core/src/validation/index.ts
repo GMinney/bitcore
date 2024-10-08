@@ -7,7 +7,6 @@ import { EthValidation } from './eth';
 import { LtcValidation } from './ltc';
 import { MaticValidation } from './matic';
 import { OpValidation } from './op';
-import { XrpValidation } from './xrp';
 
 export interface IValidation {
   validateAddress(network: string, address: string): boolean;
@@ -18,7 +17,6 @@ const validation: { [chain: string]: IValidation } = {
   BTC: new BtcValidation(),
   BCH: new BchValidation(),
   ETH: new EthValidation(),
-  XRP: new XrpValidation(),
   DOGE: new DogeValidation(),
   LTC: new LtcValidation(),
   MATIC: new MaticValidation(),

@@ -2,19 +2,19 @@ import * as async from 'async';
 import _ from 'lodash';
 import 'source-map-support/register';
 
-import { BlockChainExplorer } from './blockchainexplorer';
-import { ChainService } from './chain/index';
-import { Common } from './common';
-import { Utils } from './common/utils';
-import { Lock } from './lock';
-import logger from './logger';
-import { MessageBroker } from './messagebroker';
-import { Notification, TxConfirmationSub } from './model';
-import { WalletService } from './server';
-import { Storage } from './storage';
+import { BlockChainExplorer } from './blockchainexplorer.ts';
+import { ChainService } from './chain/index.ts';
+import { Defaults } from "./common/defaults.ts";
+import { Constants } from './common/constants.ts';
+import { Utils } from './common/utils.ts';
+import { Lock } from './lock.ts';
+import logger from './logger.ts';
+import { MessageBroker } from './messagebroker.ts';
+import { Notification, TxConfirmationSub } from './model/index.ts';
+import { WalletService } from './server.ts';
+import { Storage } from './storage.ts';
 
 const $ = require('preconditions').singleton();
-const Constants = Common.Constants;
 
 const throttle = (fn: (bcmContext: any, chain: string, network: string, hash: string) => void) => {
   let lastCalled = 0;

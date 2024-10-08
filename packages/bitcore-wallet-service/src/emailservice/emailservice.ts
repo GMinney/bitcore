@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-import config from '../config';
-import { EmailService } from '../lib/emailservice';
-import logger from '../lib/logger';
+import config from '../config.ts';
+import { EmailService } from '../lib/emailservice.ts';
+import logger from '../lib/logger.ts';
 
 const emailService = new EmailService();
 emailService.start(config, err => {

@@ -1,4 +1,4 @@
-import { ObjectID } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { Readable, Transform, Writable } from 'stream';
 import { StorageService } from '../services/storage';
 import { TransformOptions } from '../types/TransformOptions';
@@ -9,7 +9,7 @@ import { TransactionStorage } from './transaction';
 import { IWallet } from './wallet';
 
 export interface IWalletAddress {
-  wallet: ObjectID;
+  wallet: ObjectId;
   address: string;
   chain: string;
   network: string;
@@ -168,7 +168,7 @@ export class WalletAddressModel extends BaseModel<IWalletAddress> {
         let errored = false;
         coinStream.on('error', err => {
           errored = true;
-          coinStream.destroy(err);
+          coinStream.close();
           callback(err);
         });
         coinStream.on('end', () => {

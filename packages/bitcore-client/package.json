@@ -3,8 +3,9 @@
   "description": "Wallet client for Bitcore node",
   "version": "10.2.1",
   "author": "Justin Langston <nitsujlangston@gmail.com>",
-  "main": "./ts_build/src/index.js",
+  "exports": "./ts_build/src/index.js",
   "types": "./ts_build/src/index.d.ts",
+  "type": "module",
   "engines": {
     "node": ">=18.0.0"
   },

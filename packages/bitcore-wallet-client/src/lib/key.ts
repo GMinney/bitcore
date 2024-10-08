@@ -3,7 +3,6 @@
 var $ = require('preconditions').singleton();
 import {
   BitcoreLib,
-  BitcoreLibCash,
   Deriver,
   Transactions
 } from 'crypto-wallet-core';

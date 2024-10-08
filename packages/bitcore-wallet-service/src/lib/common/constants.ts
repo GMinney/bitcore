@@ -1,4 +1,3 @@
-'use strict';
 import * as CWC from 'crypto-wallet-core';
 
 export const Constants = {

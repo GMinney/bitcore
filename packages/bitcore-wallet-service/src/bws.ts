@@ -2,9 +2,9 @@
 import cluster from 'cluster';
 import * as fs from 'fs';
 import 'source-map-support/register';
-import config from './config';
-import { ExpressApp } from './lib/expressapp';
-import logger from './lib/logger';
+import config from './config.ts';
+import { ExpressApp } from './lib/expressapp.ts';
+import logger from './lib/logger.ts';
 
 const port = process.env.BWS_PORT || config.port || 3232;
 const serverModule = config.https ? require('https') : require('http');

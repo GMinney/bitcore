@@ -1,7 +1,7 @@
 import { ObjectId } from 'bson';
 import { EventEmitter } from 'events';
 import { Request, Response } from 'express';
-import { ObjectID } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { Cursor, Db, MongoClient } from 'mongodb';
 import { Readable } from 'stream';
 import { LoggifyClass } from '../decorators/Loggify';
@@ -105,7 +105,7 @@ export class StorageService {
             break;
         }
       } else if (modelKey == '_id') {
-        typecastedValue = new ObjectID(oldValue) as any;
+        typecastedValue = new ObjectId(oldValue) as any;
       }
     }
     return typecastedValue;

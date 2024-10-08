@@ -1,14 +1,16 @@
 import { Transactions, Validation } from 'crypto-wallet-core';
 import _ from 'lodash';
-import { IWallet } from 'src/lib/model';
-import { IAddress } from 'src/lib/model/address';
-import { IChain } from '..';
-import { Common } from '../../common';
-import { Errors } from '../../errors/errordefinitions';
-import logger from '../../logger';
-import { WalletService } from '../../server';
+import { IWallet } from 'src/lib/model/index.ts';
+import { IAddress } from 'src/lib/model/address.ts';
+import { IChain } from '../index.ts';
+import { Defaults } from "../../common/defaults.ts";
+import { Constants } from '../../common/constants.ts';
+import { Utils } from '../../common/utils.ts';
+import { Errors } from '../../errors/errordefinitions.ts';
+import logger from '../../logger.ts';
+import { WalletService } from '../../server.ts';
 
-const Defaults = Common.Defaults;
+
 
 export class XrpChain implements IChain {
   /**

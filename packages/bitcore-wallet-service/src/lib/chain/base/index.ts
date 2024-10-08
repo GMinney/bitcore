@@ -1,4 +1,4 @@
-import { EthChain } from '../eth';
+import { EthChain } from '../eth/index.ts';
 
 export class BaseChain extends EthChain {
   constructor() {

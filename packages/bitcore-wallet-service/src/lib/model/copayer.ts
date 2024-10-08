@@ -1,12 +1,12 @@
-import { Common } from '../common';
-import { Address } from './address';
-import { AddressManager } from './addressmanager';
+import { Constants } from '../common/constants.ts';
+import { Defaults } from '../common/defaults.ts';
+import { Utils } from '../common/utils.ts';
+import { Address } from './address.ts';
+import { AddressManager } from './addressmanager.ts';
 
 const $ = require('preconditions').singleton();
 const sjcl = require('sjcl');
-const Constants = Common.Constants,
-  Defaults = Common.Defaults,
-  Utils = Common.Utils;
+
 
 export interface ICopayer {
   version: number;

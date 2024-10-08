@@ -1,13 +1,13 @@
 import { Deriver } from 'crypto-wallet-core';
 import _ from 'lodash';
-import { ChainService } from '../chain/index';
-import { Common } from '../common';
-import { AddressManager } from './addressmanager';
+import { ChainService } from '../chain/index.ts';
+import { Constants } from '../common/constants.ts';
+import { Defaults } from '../common/defaults.ts';
+import { Utils } from '../common/utils.ts';
+import { AddressManager } from './addressmanager.ts';
 
 const $ = require('preconditions').singleton();
-const Constants = Common.Constants,
-  Defaults = Common.Defaults,
-  Utils = Common.Utils;
+
 
 export interface IAddress {
   version: string;

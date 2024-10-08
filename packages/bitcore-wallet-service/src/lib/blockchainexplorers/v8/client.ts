@@ -1,7 +1,6 @@
-import * as requestStream from 'request';
-import * as request from 'request-promise-native';
+import { GotStream, got} from 'got';
 import { URL } from 'url';
-import logger from '../../logger';
+import logger from '../../logger.ts';
 
 const bitcoreLib = require('bitcore-lib');
 const secp256k1 = require('secp256k1');
@@ -37,7 +36,7 @@ export class Client {
     const { baseUrl = this.baseUrl } = payload;
     const url = `${baseUrl}/wallet`;
     const signature = this.sign({ method: 'POST', url, payload });
-    return request.post(url, {
+    return got.post(url, {
       headers: { 'x-signature': signature },
       body: payload,
       json: true
@@ -59,7 +58,7 @@ export class Client {
 
     const url = apiUrl + query;
     const signature = this.sign({ method: 'GET', url, payload });
-    return request.get(url, {
+    return got.get(url, {
       headers: { 'x-signature': signature },
       body: payload,
       json: true
@@ -71,7 +70,7 @@ export class Client {
     const url = `${this.baseUrl}/wallet/${pubKey}/check`;
     logger.debug('WALLET CHECK');
     const signature = this.sign({ method: 'GET', url, payload });
-    return request.get(url, {
+    return got.get(url, {
       headers: { 'x-signature': signature },
       body: payload,
       json: true
@@ -82,7 +81,7 @@ export class Client {
     const { unspent, address } = params;
     const args = unspent ? `?unspent=${unspent}` : '';
     const url = `${this.baseUrl}/address/${address}${args}`;
-    return request.get(url, {
+    return got.get(url, {
       json: true
     });
   }
@@ -90,7 +89,7 @@ export class Client {
   async getTx(params) {
     const { txid } = params;
     const url = `${this.baseUrl}/tx/${txid}`;
-    return request.get(url, {
+    return got.get(url, {
       json: true
     });
   }
@@ -105,7 +104,7 @@ export class Client {
     const url = `${this.baseUrl}/wallet/${pubKey}/utxos${extra}`;
     logger.debug('GET UTXOS: %o', url);
     const signature = this.sign({ method: 'GET', url, payload });
-    return request.get(url, {
+    return got.get(url, {
       headers: { 'x-signature': signature },
       body: payload,
       json: true
@@ -116,7 +115,7 @@ export class Client {
     const { txId } = params;
     const url = `${this.baseUrl}/tx/${txId}/coins`;
     logger.debug('GET COINS FOR TX: %o', url);
-    return request.get(url, {
+    return got.get(url, {
       json: true
     });
   }
@@ -152,7 +151,7 @@ export class Client {
     const url = apiUrl + query;
     const signature = this.sign({ method: 'GET', url });
     logger.debug('List transactions %o', url);
-    return requestStream.get(url, {
+    return got.stream.get(url, {
       headers: { 'x-signature': signature },
       json: true
     });
@@ -165,7 +164,7 @@ export class Client {
     logger.debug('addAddresses: %o %o', url, payload);
     const signature = this.sign({ method: 'POST', url, payload });
     const h = { 'x-signature': signature };
-    return request.post(url, {
+    return got.post(url, {
       headers: h,
       body: payload,
       json: true
@@ -176,6 +175,6 @@ export class Client {
     const { payload } = params;
     const url = `${this.baseUrl}/tx/send`;
     logger.debug('Broadcast %o', url);
-    return request.post(url, { body: payload, json: true });
+    return got.post(url, { body: payload, json: true });
   }
 }

@@ -1,18 +1,16 @@
 import _ from 'lodash';
-import config from '../../config';
-import { ChainService } from '../chain/index';
-import { Common } from '../common';
-import logger from '../logger';
-import { Address } from './address';
-import { AddressManager } from './addressmanager';
-import { Copayer } from './copayer';
+import config from '../../config.ts';
+import { ChainService } from '../chain/index.ts';
+import { Constants } from '../common/constants.ts';
+import { Defaults } from '../common/defaults.ts';
+import { Utils } from '../common/utils.ts';
+import logger from '../logger.ts';
+import { Address } from './address.ts';
+import { AddressManager } from './addressmanager.ts';
+import { Copayer } from './copayer.ts';
 
 const $ = require('preconditions').singleton();
 const Uuid = require('uuid');
-
-const Constants = Common.Constants,
-  Defaults = Common.Defaults,
-  Utils = Common.Utils;
 
 const Bitcore = {
   btc: require('bitcore-lib'),

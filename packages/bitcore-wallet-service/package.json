@@ -4,8 +4,11 @@
   "author": "BitPay Inc",
   "version": "10.2.1",
   "license": "MIT",
-  "main": "ts_build/index.js",
+  "exports": "./ts_build/index.js",
   "types": "./ts_build/index.d.ts",
+  "engines": {
+    "node": ">=18"
+  },
   "keywords": [
     "bitcoin",
     "copay",
@@ -14,6 +17,7 @@
     "bitcore",
     "BWS"
   ],
+  "type": "module",
   "repository": {
     "url": "git@github.com:bitpay/bitcore-wallet-service.git",
     "type": "git"
@@ -30,7 +34,9 @@
     "coveralls": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "tsc": "npm run clean && tsc",
     "build": "tsc",
-    "clean": "rm -rf ./ts_build",
+    "clean": "npm run clean:win && npm run clean:lin",
+    "clean:win": "node -e \"if (process.platform === 'win32') process.exit(1)\" || , if exist ./ts_build rmdir /Q /S ./ts_build",
+    "clean:lin": "node -e \"if (process.platform !== 'win32') process.exit(1)\" || rm -rf ./ts_build",
     "compile": "npm run clean && npm run build",
     "pub": "npm run build && npm publish",
     "precommit": "npm run fix && npm run lint",
@@ -43,31 +49,34 @@
     "@sendgrid/mail": "^8.1.3",
     "async": "3.2.6",
     "bitcore-lib": "file:../bitcore-lib",
+    "bn.js": "^5.2.1",
     "body-parser": "^1.20.2",
     "compression": "1.7.4",
     "cors": "2.8.5",
     "crypto-wallet-core": "file:../crypto-wallet-core",
+    "elliptic": "6.5.7",
     "email-validator": "2.0.4",
     "ethers": "^6.13.2",
     "express": "^4.19.2",
     "express-rate-limit": "7.4.0",
+    "got": "14.4.2",
     "inherits": "2.0.4",
-    "nyc": "17.0.0",
     "json-stable-stringify": "1.1.1",
     "lodash": "^4.17.21",
     "moment": "2.30.1",
     "mongodb": "6.8.0",
     "mustache": "4.2.0",
     "nodemailer": "^6.9.14",
+    "nyc": "17.0.0",
     "preconditions": "3.0.2",
     "read": "3.0.1",
-    "got": "14.4.2",
-    "elliptic": "6.5.7",
     "sjcl": "1.0.8",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
     "source-map-support": "0.5.21",
     "uuid": "10.0.0",
+    "web3": "4.12.1",
+    "web3-utils": "^4.3.1",
     "winston": "3.14.2"
   },
   "devDependencies": {
@@ -75,6 +84,7 @@
     "@types/lodash": "^4.17.7",
     "@types/node": "^22.5.0",
     "@types/nodemailer": "^6.4.15",
+    "@types/got": "9.6.12",
     "chai": "^5.1.1",
     "jsdoc": "^4.0.3",
     "memdown": "^6.1.1",
@@ -84,8 +94,8 @@
     "sinon": "^18.0.0",
     "supertest": "*",
     "ts-node": "^10.9.2",
-    "typescript-eslint": "8.3.0",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "typescript-eslint": "8.3.0"
   },
   "bitcoreNode": "./bitcorenode",
   "contributors": [

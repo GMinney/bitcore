@@ -6,14 +6,18 @@ import 'source-map-support/register';
 // sending function from `.send` to `.sendMail`.
 // import * as nodemailer from nodemailer';
 import { Constants as ConstantsCWC } from 'crypto-wallet-core';
-import request from 'request';
-import config from '../config';
-import { Common } from './common';
-import { Lock } from './lock';
-import logger from './logger';
-import { MessageBroker } from './messagebroker';
-import { Email } from './model';
-import { Storage } from './storage';
+import got, { Options as GotOptions } from 'got';
+import GotJSONOptions from 'got';
+import * as request from 'got';
+import config from '../config.ts';
+import { Defaults } from "./common/defaults.ts";
+import { Constants } from './common/constants.ts';
+import { Utils } from './common/utils.ts';
+import { Lock } from './lock.ts';
+import logger from './logger.ts';
+import { MessageBroker } from './messagebroker.ts';
+import { Email } from './model/index.ts';
+import { Storage } from './storage.ts';
 
 export interface Recipient {
   copayerId: string;
@@ -25,9 +29,6 @@ export interface Recipient {
 const Mustache = require('mustache');
 const fs = require('fs');
 const path = require('path');
-const Utils = Common.Utils;
-const Defaults = Common.Defaults;
-const Constants = Common.Constants;
 const defaultRequest = require('request');
 
 const EMAIL_TYPES = {
@@ -68,6 +69,8 @@ const EMAIL_TYPES = {
   }
 };
 
+
+
 export class EmailService {
   defaultLanguage: string;
   defaultUnit: string;
@@ -80,7 +83,7 @@ export class EmailService {
   messageBroker: MessageBroker;
   lock: Lock;
   mailer: any;
-  request: request.RequestAPI<any, any, any>;
+  request: request.Got;
   //  mailer: nodemailer.Transporter;
 
   start(opts, cb) {
@@ -542,26 +545,30 @@ export class EmailService {
         const credentials = this.oneInchGetCredentials();
         // Get mainnet chainId
         const chainId = ConstantsCWC.EVM_CHAIN_NETWORK_TO_CHAIN_ID[`${chain.toUpperCase()}_mainnet`]
-        this.request(
-          {
-            url: `${credentials.API}/v5.2/${chainId}/tokens`,
-            method: 'GET',
-            json: true,
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-              Authorization: 'Bearer ' + credentials.API_KEY,
-            }
-          },
-          (err, data) => {
-            if (err) return reject(err);
-            if (data?.statusCode === 429) {
+        const options = {
+          method: 'GET' as const,
+          json: true,
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: 'Bearer ' + credentials.API_KEY,
+          }
+        }
+        this.request(`${credentials.API}/v5.2/${chainId}/tokens`, options)
+          .then(response => {
+            if (response.statusCode === 429) {
               // oneinch rate limit
               return reject();
             }
-            return resolve(data?.body?.tokens);
-          }
-        );
+            const ret = JSON.parse(response.body)
+            if (!ret.tokens) {
+              throw new Error("Token Data could not be retrieved")
+            }
+            return resolve(ret.tokens);
+          })
+          .catch(err => {
+            return reject(err);
+          });
       } catch (err) {
         return reject(err);
       }

@@ -1,10 +1,11 @@
-import { ObjectID } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
+import { MongoBound } from './base';
 import os from 'os';
 import { StorageService } from '../services/storage';
 import { BaseModel } from './base';
 
 export interface IState {
-  _id?: ObjectID;
+  _id?: ObjectId;
   initialSyncComplete: any;
   verifiedBlockHeight?: {
     [chain: string]: {
@@ -21,26 +22,32 @@ export class StateModel extends BaseModel<IState> {
 
   onConnect() {}
 
-  async getSingletonState() {
+  async getSingletonState(): Promise<WithId<MongoBound<IState>> | null> {
     return this.collection.findOneAndUpdate(
       {},
       { $setOnInsert: { created: new Date() } },
-      { upsert: true, returnOriginal: false }
+      { upsert: true, returnDocument: 'after' }
     );
   }
 
   async getSyncingNode(params: { chain: string; network: string }): Promise<string> {
     const { chain, network } = params;
     const state = await this.getSingletonState();
-    return state.value![`syncingNode:${chain}:${network}`];
+    if (!state){
+      throw new Error("State null")
+    }
+    return state[`syncingNode:${chain}:${network}`];
   }
 
   async selfNominateSyncingNode(params: { chain: string; network: string; lastHeartBeat: any }) {
     const { chain, network, lastHeartBeat } = params;
-    const singleState = await this.getSingletonState();
+    const singleState = await this.getSingletonState()!;
+    if (!singleState){
+      throw new Error("singlestate null")
+    }
     return this.collection.findOneAndUpdate(
       {
-        _id: singleState.value!._id,
+        _id: singleState._id,
         $or: [
           { [`syncingNode:${chain}:${network}`]: { $exists: false } },
           { [`syncingNode:${chain}:${network}`]: lastHeartBeat }
@@ -53,8 +60,11 @@ export class StateModel extends BaseModel<IState> {
   async selfResignSyncingNode(params: { chain: string; network: string; lastHeartBeat: any }) {
     const { chain, network, lastHeartBeat } = params;
     const singleState = await this.getSingletonState();
+    if (!singleState){
+      throw new Error("singlestate null")
+    }
     return this.collection.findOneAndUpdate(
-      { _id: singleState.value!._id, [`syncingNode:${chain}:${network}`]: lastHeartBeat },
+      { _id: singleState._id, [`syncingNode:${chain}:${network}`]: lastHeartBeat },
       { $unset: { [`syncingNode:${chain}:${network}`]: true } }
     );
   }

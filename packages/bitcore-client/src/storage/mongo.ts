@@ -38,7 +38,7 @@ export class Mongo {
       return;
     }
     try {
-      this.client = new MongoClient(this.path, { useNewUrlParser: true, useUnifiedTopology: true });
+      this.client = new MongoClient(this.path);
       await this.client.connect();
       this.db = this.client.db(this.databaseName);
       this.walletCollection = this.db.collection(this.walletCollectionName);
@@ -57,8 +57,6 @@ export class Mongo {
   async testConnection() {
     try {
       const client = new MongoClient(this.path, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
         noDelay: true,
         serverSelectionTimeoutMS: 5000
       });

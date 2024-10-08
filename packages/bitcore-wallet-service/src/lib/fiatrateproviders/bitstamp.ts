@@ -1,4 +1,4 @@
-import { IProvider, IRates } from './provider';
+import { IProvider, IRates } from './provider.ts';
 
 export const Bitstamp: IProvider = {
   name: 'Bitstamp',

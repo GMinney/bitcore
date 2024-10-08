@@ -166,7 +166,7 @@ export class BitcoinBlock extends BaseBlock<IBtcBlock> {
 
     await CoinStorage.collection.updateMany(
       { chain, network, spentHeight: { $gte: localTip.height } },
-      { $set: { spentTxid: null, spentHeight: SpentHeightIndicators.unspent } }
+      { $set: { spentTxid: undefined, spentHeight: SpentHeightIndicators.unspent } }
     );
 
     logger.debug('Removed data from above blockHeight: %o', localTip.height);

@@ -24,6 +24,8 @@
   "license": "MIT",
   "dependencies": {
     "bitcore-lib": "file:../bitcore-lib",
+    "bn.js": "^5.2.1",
+    "eslint-import-resolver-typescript": "^3.6.3",
     "ethers": "^6.13.2",
     "info": "0.0.6-beta.0",
     "web3": "^4.12.1",
@@ -36,8 +38,8 @@
     "chai": "5.1.1",
     "mocha": "^10.7.3",
     "ts-node": "10.9.2",
-    "typescript-eslint": "8.3.0",
-    "typescript": "5.5.4"
+    "typescript": "5.5.4",
+    "typescript-eslint": "8.3.0"
   },
   "gitHead": "e091d99915d099863ad3e78dbe867aa7780191e4"
 }
