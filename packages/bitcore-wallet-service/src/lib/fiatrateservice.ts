@@ -10,7 +10,7 @@ const $ = require('preconditions').singleton();
 
 
 export class FiatRateService {
-  request: request.RequestAPI<any, any, any>;
+  request: request.Got<any>;
   defaultProvider: any;
   providers: any[];
   storage: Storage;
@@ -111,13 +111,10 @@ export class FiatRateService {
     if (Constants.BITPAY_EUR_STABLECOINS[coinUC]) {
       return this.getRatesForStablecoin({ code: 'EUR', ts }, handleCoinsRates);
     }
-    this.request.get(
-      {
-        url: provider.getUrl(coinUC),
-        json: true
-      },
-      (err, res, body) => handleCoinsRates(err, body)
-    );
+    this.request(provider.getUrl(coinUC), {
+      responseType: 'json'
+    }).then(response => handleCoinsRates(null, response.body))
+      .catch(err => handleCoinsRates(err, null));
   }
 
   getRate(opts, cb) {

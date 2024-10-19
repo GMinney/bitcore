@@ -2,6 +2,7 @@ import * as async from 'async';
 import * as _ from 'lodash';
 import moment from 'moment';
 import * as mongodb from 'mongodb';
+import {Document, WithId} from 'mongodb';
 import config from '../config.ts';
 import logger from './logger.ts';
 import { Storage } from './storage.ts';
@@ -11,6 +12,8 @@ const ObjectID = mongodb.ObjectId;
 var objectIdDate = function(date) {
   return Math.floor(date.getTime() / 1000).toString(16) + '0000000000000000';
 };
+
+
 
 export class CleanFiatRates {
   db: mongodb.Db;
@@ -32,26 +35,22 @@ export class CleanFiatRates {
       return cb(new Error('No dbname at config.'));
     }
 
-    mongodb.MongoClient.connect(
-      dbConfig.uri, 
-      { useUnifiedTopology: true }, 
-      (err, client) => {
-        
-      if (err) {
-        return cb(err);
-      }
-      this.db = client.db(dbConfig.dbname);
-      this.client = client;
-
-      this.cleanFiatRates((err, rates) => {
-        if (err) return cb(err);
-
-        this.client.close(err => {
-          if (err) logger.error('%o', err);
-          return cb(null, rates);
-        });
+    try {
+      mongodb.MongoClient.connect(dbConfig.uri)
+      .then(client => {
+        this.db = client.db(dbConfig.dbname);
+        this.client = client;
+        this.cleanFiatRates(cb);
+        this.client.close().catch(err => {});
+      })
+      .catch(err => {
+        logger.error('%o', err);
+        return cb(null);
       });
-    });
+    } catch (err) {
+      return cb(err);
+    }
+      
   }
 
   cleanFiatRates(cb) {
@@ -80,6 +79,8 @@ export class CleanFiatRates {
     );
   }
 
+
+
   async _getDatesToKeep(cb) {
     this.from = new Date();
     this.from.setMonth(this.from.getMonth() - 2); // from 2 month ago
@@ -101,8 +102,8 @@ export class CleanFiatRates {
         }
       })
       .sort({ _id: 1 })
-      .toArray((err, results) => {
-        if (err) return cb(err);
+      .toArray()
+      .then( results => {
 
         const datesToKeep = [];
 
@@ -138,6 +139,9 @@ export class CleanFiatRates {
           });
         });
         return cb(null, datesToKeep);
+      })
+      .catch(err => {
+        return cb(err);
       });
   }
 
@@ -145,7 +149,7 @@ export class CleanFiatRates {
     try {
       this.db
         .collection(Storage.collections.FIAT_RATES2)
-        .remove({
+        .deleteMany({
           ts: {
             $nin: datesToKeep,
             $gte: moment(this.from).valueOf(),
@@ -153,8 +157,8 @@ export class CleanFiatRates {
           }
         })
         .then(data => {
-          console.log(`\t${data.result.n} entries were removed from fiat_rates2`);
-          return cb(null, data.result);
+          console.log(`\t${data.deletedCount} entries were removed from fiat_rates2`);
+          return cb(null, data.acknowledged);
         });
     } catch (err) {
       console.log('\t!! Cannot remove data from fiat_rates2:', err);

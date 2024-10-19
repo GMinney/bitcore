@@ -25,7 +25,7 @@ async function streamCoins(req, res) {
 
 router.get('/:address', function (req, res) {
   try {
-    let { chain, network, address } = req.params;
+    let { chain, network, address } = req.params as { chain: string; network: string; address: string };
     let { unspent, limit = 10, since } = req.query;
     let payload = {
       chain,
@@ -46,7 +46,7 @@ router.get('/:address/txs', streamCoins);
 router.get('/:address/coins', streamCoins);
 
 router.get('/:address/balance', async function (req, res) {
-  let { address, chain, network } = req.params;
+  let { address, chain, network } = req.params as { chain: string; network: string; address: string };
   try {
     let result = await ChainStateProvider.getBalanceForAddress({
       chain,

@@ -1,8 +1,7 @@
-import { ObjectId } from 'bson';
+import { ObjectId as ObjectId } from 'bson';
 import { EventEmitter } from 'events';
 import { Request, Response } from 'express';
-import { ObjectId } from 'mongodb';
-import { Cursor, Db, MongoClient } from 'mongodb';
+import { Db, MongoClient, WithId, Document } from 'mongodb';
 import { Readable } from 'stream';
 import { LoggifyClass } from '../decorators/Loggify';
 import logger from '../logger';
@@ -40,9 +39,10 @@ export class StorageService {
         : `mongodb://${auth}${dbHost}:${dbPort}/${dbName}?socketTimeoutMS=3600000&noDelay=true${dbReadPreference ? `?readPreference=${dbReadPreference}` : ''}`;
       let attemptConnect = async () => {
         return MongoClient.connect(connectUrl, {
-          keepAlive: true,
-          poolSize: options.maxPoolSize,
-          useNewUrlParser: true
+          socketTimeoutMS: 30000,
+          connectTimeoutMS: 30000,
+          maxPoolSize: options.maxPoolSize,
+          // useNewUrlParser is no longer needed
         });
       };
       let attempted = 0;
@@ -113,13 +113,13 @@ export class StorageService {
 
   stream(input: Readable, req: Request, res: Response) {
     let closed = false;
-    req.on('close', function() {
+    req.on('close', function () {
       closed = true;
     });
-    res.on('close', function() {
+    res.on('close', function () {
       closed = true;
     });
-    input.on('error', function(err) {
+    input.on('error', function (err) {
       if (!closed) {
         closed = true;
         return res.status(500).end(err.message);
@@ -128,7 +128,7 @@ export class StorageService {
     });
     let isFirst = true;
     res.type('json');
-    input.on('data', function(data) {
+    input.on('data', function (data) {
       if (!closed) {
         if (isFirst) {
           res.write('[\n');
@@ -139,7 +139,7 @@ export class StorageService {
         res.write(JSON.stringify(data));
       }
     });
-    input.on('end', function() {
+    input.on('end', function () {
       if (!closed) {
         if (isFirst) {
           // there was no data
@@ -152,17 +152,18 @@ export class StorageService {
     });
   }
 
-  apiStream<T>(cursor: Cursor<T>, req: Request, res: Response) {
+  apiStream<T>(cursor: Readable & AsyncIterable<WithId<MongoBound<T>>>, req: Request, res: Response) {
     let closed = false;
-    req.on('close', function() {
+    req.on('close', function () {
       closed = true;
-      cursor.close();
+
+      cursor.destroy();
     });
-    res.on('close', function() {
+    res.on('close', function () {
       closed = true;
-      cursor.close();
+      cursor.destroy();
     });
-    cursor.on('error', function(err) {
+    cursor.on('error', function (err) {
       if (!closed) {
         closed = true;
         return res.status(500).end(err.message);
@@ -171,7 +172,7 @@ export class StorageService {
     });
     let isFirst = true;
     res.type('json');
-    cursor.on('data', function(data) {
+    cursor.on('data', function (data) {
       if (!closed) {
         if (isFirst) {
           res.write('[\n');
@@ -181,10 +182,10 @@ export class StorageService {
         }
         res.write(data);
       } else {
-        cursor.close();
+        cursor.destroy();
       }
     });
-    cursor.on('end', function() {
+    cursor.on('end', function () {
       if (!closed) {
         if (isFirst) {
           // there was no data
@@ -226,7 +227,7 @@ export class StorageService {
     return { query, options };
   }
 
-  apiStreamingFind<T>(
+  apiStreamingFind<T extends Document>(
     model: TransformableModel<T>,
     originalQuery: any,
     originalOptions: StreamingFindOptions<T>,
@@ -239,12 +240,11 @@ export class StorageService {
     let cursor = model.collection
       .find(finalQuery, options)
       .addCursorFlag('noCursorTimeout', true)
+      .sort(options.sort)
       .stream({
         transform: transform || model._apiTransform.bind(model)
       });
-    if (options.sort) {
-      cursor = cursor.sort(options.sort);
-    }
+
     return this.apiStream(cursor, req, res);
   }
 }

@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import _ from 'lodash';
 import 'source-map-support/register';
 
-import got as request from 'got';
+import * as request from 'got';
 import config from '../config.ts';
 import { Utils } from './common/utils.ts';
 import { Defaults } from './common/defaults.ts';
@@ -79,7 +79,7 @@ export interface IPushNotificationService {
 }
 
 export class PushNotificationsService {
-  request: request.RequestAPI<any, any, any>;
+  request: request.Got<any>
   templatePath: string;
   defaultLanguage: string;
   defaultUnit: string;
@@ -673,35 +673,30 @@ export class PushNotificationsService {
   }
 
   _makeRequest(opts, cb) {
-    this.request(
+    this.request.post(
+      this.pushServerUrl + '/send',
       {
-        url: this.pushServerUrl + '/send',
-        method: 'POST',
-        json: true,
+        json: opts,
         headers: {
           'Content-Type': 'application/json',
           Authorization: 'key=' + this.authorizationKey
-        },
-        body: opts
-      },
-      cb
-    );
+        }
+      }
+    ).then(response => cb(null, response)).catch(err => cb(err));
   }
 
   _makeBrazeRequest(opts, cb) {
-    this.request(
+    this.request.post(
+      this.pushServerUrlBraze + '/messages/send',
       {
-        url: this.pushServerUrlBraze + '/messages/send',
-        method: 'POST',
         json: true,
         headers: {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + this.authorizationKeyBraze
         },
         body: opts
-      },
-      cb
-    );
+      }
+    ).then(response => cb(null, response)).catch(err => cb(err));
   }
 
   private oneInchGetCredentials() {
@@ -725,26 +720,21 @@ export class PushNotificationsService {
           eth: 1,
           matic: 137
         };
-        this.request(
-          {
-            url: `${credentials.API}/v5.2/${chainIdMap[chain]}/tokens`,
-            method: 'GET',
-            json: true,
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-              Authorization: 'Bearer ' + credentials.API_KEY,
-            }
-          },
-          (err, data) => {
-            if (err) return reject(err);
-            if (data?.statusCode === 429) {
-              // oneinch rate limit
-              return reject();
-            }
-            return resolve(data?.body?.tokens);
+        this.request(`${credentials.API}/v5.2/${chainIdMap[chain]}/tokens`, {
+          method: 'GET',
+          responseType: 'json',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: 'Bearer ' + credentials.API_KEY,
           }
-        );
+        }).then(response => {
+          if (response.statusCode === 429) {
+            // oneinch rate limit
+            return reject();
+          }
+          return resolve(response.body.tokens);
+        }).catch(err => reject(err));
       } catch (err) {
         return reject(err);
       }

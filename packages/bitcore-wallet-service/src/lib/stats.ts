@@ -36,22 +36,23 @@ export class Stats {
       return cb(new Error('No dbname at config.'));
     }
 
-    mongodb.MongoClient.connect(dbConfig.uri, { useUnifiedTopology: true }, (err, client) => {
-      if (err) {
-        return cb(err);
-      }
-      this.db = client.db(dbConfig.dbname);
-      this.client = client;
+    let client = mongodb.MongoClient.connect(dbConfig.uri)
+      .then(client => {
+        this.db = client.db(dbConfig.dbname);
+        this.client = client;
 
-      this._getStats((err, stats) => {
-        if (err) return cb(err);
-
-        this.client.close(err => {
-          if (err) logger.error('%o', err);
-          return cb(null, stats);
+        this._getStats((err, stats) => {
+          this.client.close()
+            .then(stats => {
+              return cb(null, stats);
+            })
+            .catch(err => {
+              logger.error('%o', err)
+            })
+          return cb(err);
         });
-      });
-    });
+      })
+      .catch(err => { return cb(err); });
   }
 
   _getStats(cb) {
@@ -76,7 +77,7 @@ export class Stats {
     );
   }
 
-  _getNewWallets(cb) {
+  _getNewWallets(cb) { // Could potentially become a problem with _id.
     this.db
       .collection('stats_wallets')
       .find({
@@ -90,21 +91,25 @@ export class Stats {
       .sort({
         '_id.day': 1
       })
-      .toArray((err, results) => {
-        if (err) return cb(err);
+      .toArray()
+      .then( results => {
         const stats = {
           byDay: _.map(results, record => {
-            const day = moment(record._id.day).format('YYYYMMDD');
+            const day = moment(record.day).format('YYYYMMDD');
             return {
               day,
-              coin: record._id.coin,
-              value: record._id.value,
+              coin: record.coin,
+              value: record.value,
               count: record.count ? record.count : record.value.count
             };
           })
         };
         return cb(null, stats);
-      });
+      })
+      .catch(err => {
+        return cb(err);
+      })
+      
   }
 
   _getFiatRates(cb) {
@@ -120,20 +125,25 @@ export class Stats {
       .sort({
         '_id.day': 1
       })
-      .toArray((err, results) => {
-        if (err) return cb(err);
+      .toArray()
+      .then(results => {
         const stats = {
           byDay: _.map(results, record => {
-            const day = moment(record._id.day).format('YYYYMMDD');
+            const day = moment(record.day).format('YYYYMMDD');
             return {
               day,
-              coin: record._id.coin,
+              coin: record.coin,
               value: record.value
             };
           })
         };
         return cb(null, stats);
+      })
+      .catch(err => {
+        return cb(err);
       });
+
+
   }
 
   _getTxProposals(cb) {
@@ -150,17 +160,17 @@ export class Stats {
       .sort({
         '_id.day': 1
       })
-      .toArray((err, results) => {
-        if (err) return cb(err);
+      .toArray()
+      .then(results => {
         const stats = {
           nbByDay: [],
           amountByDay: []
         };
         _.each(results, record => {
-          const day = moment(record._id.day).format('YYYYMMDD');
+          const day = moment(record.day).format('YYYYMMDD');
           stats.nbByDay.push({
             day,
-            coin: record._id.coin,
+            coin: record.coin,
             count: record.count ? record.count : record.value.count
           });
           stats.amountByDay.push({
@@ -169,6 +179,11 @@ export class Stats {
           });
         });
         return cb(null, stats);
-      });
+      })
+      .catch(err => {
+        return cb(err);
+      })
+
+
   }
 }

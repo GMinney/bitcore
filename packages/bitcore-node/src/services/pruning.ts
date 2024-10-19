@@ -131,6 +131,7 @@ export class PruningService {
       this.transactionModel.collection
         .find({ chain, network, blockHeight: SpentHeightIndicators.pending, blockTimeNormalized: { $lt: oldTime } })
         .sort(count > 5000 ? { chain: 1, network: 1, blockTimeNormalized: 1 } : {})
+        .stream()
         .pipe(
           new Transform({
             objectMode: true,
@@ -192,6 +193,7 @@ export class PruningService {
     await new Promise((resolve, reject) => {
       this.transactionModel.collection
         .find({ chain, network, blockHeight: SpentHeightIndicators.conflicting })
+        .stream()
         .pipe(
           new Transform({
             objectMode: true,

@@ -22,7 +22,7 @@ router.get('/:target', CacheMiddleware(CacheTimes.Second), async (req: Request, 
 
   chain = chain.toUpperCase();
   network = network.toLowerCase();
-  mode = mode?.toUpperCase();
+  mode = typeof mode === 'string' ? mode.toUpperCase() : undefined;
   const targetNum = Number(target);
   if (targetNum < 0 || targetNum > 100) {
     return res.status(400).send('invalid target specified');
@@ -45,7 +45,10 @@ router.get('/:target', CacheMiddleware(CacheTimes.Second), async (req: Request, 
     return res.json(cachedFee.fee);
   }
   try {
-    let fee = await ChainStateProvider.getFee({ chain, network, target: targetNum, mode, txType });
+    if (mode === undefined || txType === undefined) {
+      return res.status(404).send('not available right now');
+    }
+    let fee = await ChainStateProvider.getFee({ chain, network, target: targetNum, mode: mode as 'CONSERVATIVE' | 'ECONOMICAL', txType: txType as string | number });
     if (!fee) {
       return res.status(404).send('not available right now');
     }

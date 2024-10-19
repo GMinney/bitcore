@@ -5,6 +5,7 @@ import * as mongodb from 'mongodb';
 import { BCHAddressTranslator } from './bchaddresstranslator.ts'; // only for migration
 import { Constants } from './common/constants.ts';
 import { Defaults } from './common/defaults.ts';
+import { IWallet } from './model/index.ts';
 import logger from './logger.ts';
 import {
   Address,
@@ -42,7 +43,7 @@ const collections = {
 
 const ObjectID = mongodb.ObjectId;
 
-var objectIdDate = function(date) {
+var objectIdDate = function (date) {
   return Math.floor(date / 1000).toString(16) + '0000000000000000';
 };
 export class Storage {
@@ -177,19 +178,20 @@ export class Storage {
       return cb(new Error('No dbname at config.'));
     }
 
-    mongodb.MongoClient.connect(config.uri, { useUnifiedTopology: true }, (err, client) => {
-      if (err) {
+    mongodb.MongoClient.connect(config.uri)
+      .then(client => {
+        this.db = client.db(config.dbname);
+        this.client = client;
+
+        logger.info(`Connection established to db: ${config.uri}`);
+
+        Storage.createIndexes(this.db);
+        return cb();
+      })
+      .catch(err => {
         logger.error('Unable to connect to the mongoDB. Check the credentials.');
         return cb(err);
-      }
-      this.db = client.db(config.dbname);
-      this.client = client;
-
-      logger.info(`Connection established to db: ${config.uri}`);
-
-      Storage.createIndexes(this.db);
-      return cb();
-    });
+      });
   }
 
   disconnect(cb) {
@@ -208,16 +210,14 @@ export class Storage {
   fetchWallet(id, cb: (err?: any, wallet?: Wallet) => void) {
     if (!this.db) return cb('not ready');
 
-    this.db.collection(collections.WALLETS).findOne(
-      {
-        id
-      },
-      (err, result) => {
-        if (err) return cb(err);
+    this.db.collection(collections.WALLETS).findOne({ id })
+      .then(result => {
         if (!result) return cb();
-        return cb(null, Wallet.fromObj(result));
-      }
-    );
+        return cb(null, Wallet.fromObj(result as unknown as IWallet));
+      })
+      .catch(err => {
+        return cb(err);
+      });
   }
 
   storeWallet(wallet, cb) {
@@ -227,10 +227,10 @@ export class Storage {
       },
       wallet.toObject(),
       {
-        w: 1,
+        //w: 1,
         upsert: true
-      },
-      cb
+      }
+      //cb
     );
   }
 
@@ -252,36 +252,23 @@ export class Storage {
       };
     });
 
-    this.db.collection(collections.COPAYERS_LOOKUP).deleteMany(
-      {
-        walletId: wallet.id
-      },
-      {
-        w: 1
-      },
-      err => {
-        if (err) return cb(err);
-        this.db.collection(collections.COPAYERS_LOOKUP).insertMany(
-          copayerLookups,
-          {
-            w: 1
-          },
-          err => {
-            if (err) return cb(err);
-            return this.storeWallet(wallet, cb);
-          }
-        );
-      }
-    );
+    this.db.collection(collections.COPAYERS_LOOKUP).deleteMany({ walletId: wallet.id })
+      .then(() => {
+        this.db.collection(collections.COPAYERS_LOOKUP).insertMany(copayerLookups)
+          .then(() => { return this.storeWallet(wallet, cb); })
+          .catch(err => { return cb(err); });
+      })
+      .catch(err => {
+        return cb(err);
+      });
   }
 
   fetchCopayerLookup(copayerId, cb) {
     this.db.collection(collections.COPAYERS_LOOKUP).findOne(
       {
         copayerId
-      },
-      (err, result) => {
-        if (err) return cb(err);
+      })
+      .then(result => {
         if (!result) return cb();
 
         if (!result.requestPubKeys) {
@@ -294,8 +281,10 @@ export class Storage {
         }
 
         return cb(null, result);
-      }
-    );
+      })
+      .catch(err => {
+        return cb(err);
+      });
   }
 
   // TODO: should be done client-side
@@ -323,13 +312,12 @@ export class Storage {
       {
         id: txProposalId,
         walletId
-      },
-      (err, result) => {
-        if (err) return cb(err);
+      })
+      .then(result => {
         if (!result) return cb();
         return this._completeTxData(walletId, TxProposal.fromObj(result), cb);
-      }
-    );
+      })
+      .catch(err => { return cb(err); });
   }
 
   fetchTxByHash(hash, cb) {
@@ -338,14 +326,12 @@ export class Storage {
     this.db.collection(collections.TXS).findOne(
       {
         txid: hash
-      },
-      (err, result) => {
-        if (err) return cb(err);
+      })
+      .then(result => {
         if (!result) return cb();
-
         return this._completeTxData(result.walletId, TxProposal.fromObj(result), cb);
-      }
-    );
+      })
+      .catch(err => { return cb(err); });
   }
 
   fetchLastTxs(walletId, creatorId, limit, cb) {
@@ -363,14 +349,17 @@ export class Storage {
       .sort({
         createdOn: -1
       })
-      .toArray((err, result) => {
-        if (err) return cb(err);
+      .toArray()
+      .then(result => {
         if (!result) return cb();
         const txs = _.map(result, tx => {
           return TxProposal.fromObj(tx);
         });
         return cb(null, txs);
-      });
+      })
+      .catch(err => {
+        return cb(err);
+      })
   }
 
   fetchEthPendingTxs(multisigTxpsInfo) {
@@ -383,8 +372,8 @@ export class Storage {
         .sort({
           createdOn: -1
         })
-        .toArray(async (err, result) => {
-          if (err) return reject(err);
+        .toArray()
+        .then(result => {
           if (!result) return reject();
           const multisigTxpsInfoByTransactionHash: any = _.groupBy(multisigTxpsInfo, 'transactionHash');
           const actionsById = {};
@@ -415,7 +404,10 @@ export class Storage {
           });
 
           return resolve(txs);
-        });
+        })
+        .catch(err => {
+          return reject(err);
+        })
     });
   }
 
@@ -429,14 +421,16 @@ export class Storage {
       .sort({
         createdOn: -1
       })
-      .toArray((err, result) => {
-        if (err) return cb(err);
+      .toArray()
+      .then(result => {
         if (!result) return cb();
         const txs = _.map(result, tx => {
           return TxProposal.fromObj(tx);
         });
         return this._completeTxData(walletId, txs, cb);
-      });
+      })
+      .catch(err => { return cb(err); })
+
   }
 
   /**
@@ -468,14 +462,16 @@ export class Storage {
       .sort({
         createdOn: -1
       })
-      .toArray((err, result) => {
-        if (err) return cb(err);
+      .toArray()
+      .then(result => {
         if (!result) return cb();
         const txs = _.map(result, tx => {
           return TxProposal.fromObj(tx);
         });
         return this._completeTxData(walletId, txs, cb);
-      });
+      })
+      .catch(err => { return cb(err); })
+
   }
 
   /**
@@ -512,14 +508,15 @@ export class Storage {
       .sort({
         createdOn: -1
       })
-      .toArray((err, result) => {
-        if (err) return cb(err);
+      .toArray()
+      .then(result => {
         if (!result) return cb();
         const txs = _.map(result, tx => {
           return TxProposal.fromObj(tx);
         });
         return this._completeTxData(walletId, txs, cb);
-      });
+      })
+      .catch(err => { return cb(err); })
   }
 
   /**
@@ -549,14 +546,15 @@ export class Storage {
       .sort({
         id: 1
       })
-      .toArray((err, result) => {
-        if (err) return cb(err);
+      .toArray()
+      .then(result => {
         if (!result) return cb();
         const notifications = _.map(result, notification => {
           return Notification.fromObj(notification);
         });
         return cb(null, notifications);
-      });
+      })
+      .catch(err => { return cb(err); })
   }
 
   // TODO: remove walletId from signature
@@ -567,13 +565,9 @@ export class Storage {
       return;
     }
 
-    this.db.collection(collections.NOTIFICATIONS).insertOne(
-      notification,
-      {
-        w: 1
-      },
-      cb
-    );
+    this.db.collection(collections.NOTIFICATIONS).insertOne(notification);
+    cb();
+
   }
 
   // TODO: remove walletId from signature
@@ -584,12 +578,9 @@ export class Storage {
         walletId
       },
       txp.toObject(),
-      {
-        w: 1,
-        upsert: true
-      },
-      cb
-    );
+      {upsert: true});
+    cb();
+
   }
 
   removeTx(walletId, txProposalId, cb) {
@@ -597,12 +588,9 @@ export class Storage {
       {
         id: txProposalId,
         walletId
-      },
-      {
-        w: 1
-      },
-      cb
-    );
+      });
+    cb();
+
   }
 
   removeWallet(walletId, cb) {
@@ -612,8 +600,7 @@ export class Storage {
           this.db.collection(collections.WALLETS).deleteOne(
             {
               id: walletId
-            },
-            next
+            }
           );
         },
         next => {
@@ -624,8 +611,7 @@ export class Storage {
               this.db.collection(col).deleteMany(
                 {
                   walletId
-                },
-                next
+                }
               );
             },
             next
@@ -645,25 +631,25 @@ export class Storage {
       .sort({
         createdOn: 1
       })
-      .toArray((err, result) => {
-        if (err) return cb(err);
+      .toArray()
+      .then(result => {
         if (!result) return cb();
-
         return cb(null, result.map(Address.fromObj));
-      });
+      })
+      .catch(err => { return cb(err); })
   }
 
   migrateToCashAddr(walletId, cb) {
     const cursor = this.db.collection(collections.ADDRESSES).find({
       walletId
-    });
+    }).stream();
 
     cursor.on('end', () => {
       console.log(`Migration to cash address of ${walletId} Finished`);
       return this.clearWalletCache(walletId, cb);
     });
 
-    cursor.on('err', err => {
+    cursor.on('error', err => {
       return cb(err);
     });
 
@@ -688,11 +674,12 @@ export class Storage {
         walletId,
         beRegistered: null
       })
-      .toArray((err, result) => {
-        if (err) return cb(err);
+      .toArray()
+      .then(result => {
         if (!result) return cb();
         return cb(null, result);
-      });
+      })
+      .catch(err => { return cb(err); })
   }
 
   fetchNewAddresses(walletId, fromTs, cb) {
@@ -707,11 +694,12 @@ export class Storage {
       .sort({
         createdOn: 1
       })
-      .toArray((err, result) => {
-        if (err) return cb(err);
+      .toArray()
+      .then(result => {
         if (!result) return cb();
         return cb(null, result.map(Address.fromObj));
-      });
+      })
+      .catch(err => { return cb(err); })
   }
 
   storeAddress(address, cb) {
@@ -722,11 +710,9 @@ export class Storage {
       },
       address,
       {
-        w: 1,
         upsert: false
-      },
-      cb
-    );
+      });
+      cb();
   }
 
   markSyncedAddresses(addresses, cb) {
@@ -736,11 +722,10 @@ export class Storage {
       },
       { $set: { beRegistered: true } },
       {
-        w: 1,
         upsert: false
-      },
-      cb
-    );
+      });
+    cb();
+
   }
 
   deregisterWallet(walletId, cb) {
@@ -750,25 +735,17 @@ export class Storage {
       },
       { $set: { beRegistered: null } },
       {
-        w: 1,
         upsert: false
+      });
+    this.db.collection(collections.ADDRESSES).updateMany(
+      {
+        walletId
       },
-      () => {
-        this.db.collection(collections.ADDRESSES).updateMany(
-          {
-            walletId
-          },
-          { $set: { beRegistered: null } },
-          {
-            w: 1,
-            upsert: false
-          },
-          () => {
-            this.clearWalletCache(walletId, cb);
-          }
-        );
-      }
-    );
+      { $set: { beRegistered: null } },
+      {
+        upsert: false
+      });
+    this.clearWalletCache(walletId, cb);
   }
 
   storeAddressAndWallet(wallet, addresses, cb) {
@@ -777,26 +754,23 @@ export class Storage {
     let duplicate;
 
     this.db.collection(collections.ADDRESSES).insertMany(
-      clonedAddresses,
-      {
-        w: 1
-      },
-      err => {
-        // duplicate address?
-        if (err) {
-          if (!err.toString().match(/E11000/)) {
-            return cb(err);
-          } else {
-            // just return it
-            duplicate = true;
-            logger.warn('Found duplicate address: ' + clonedAddresses.map(a => a.address).join(','));
-          }
+      clonedAddresses)
+      .then( () => {
+        return cb();
+      })
+      .catch(err => {
+        if (!err.toString().match(/E11000/)) {
+          return cb(err);
+        } else {
+          // just return it
+          duplicate = true;
+          logger.warn('Found duplicate address: ' + clonedAddresses.map(a => a.address).join(','));
         }
         this.storeWallet(wallet, err => {
           return cb(err, duplicate);
         });
-      }
-    );
+      });
+
   }
 
   fetchAddressByWalletId(walletId, address, cb) {
@@ -804,14 +778,12 @@ export class Storage {
       {
         walletId,
         address
-      },
-      (err, result) => {
-        if (err) return cb(err);
+      })
+      .then(result => {
         if (!result) return cb();
-
         return cb(null, Address.fromObj(result));
-      }
-    );
+      })
+      .catch(err => {return cb(err);});
   }
 
   fetchAddressesByWalletId(walletId, addresses, cb) {
@@ -824,11 +796,12 @@ export class Storage {
         },
         {}
       )
-      .toArray((err, result) => {
-        if (err) return cb(err);
+      .toArray()
+      .then(result => {
         if (!result) return cb();
         return cb(null, result);
-      });
+      })
+      .catch(err => { return cb(err); })
   }
 
   fetchAddressByChain(chain, address, cb) {
@@ -839,20 +812,24 @@ export class Storage {
       .find({
         address
       })
-      .toArray((err, result) => {
-        if (err) return cb(err);
+      .toArray()
+      .then(result => {
         if (!result || _.isEmpty(result)) return cb();
         if (result.length > 1) {
-          result = _.find(result, address => {
+          _.find(result, address => {
             return chain == (address.chain || address.coin || 'btc');
           });
         } else {
-          result = _.head(result);
+          return cb(null, Address.fromObj(_.head(result)));
         }
         if (!result) return cb();
 
-        return cb(null, Address.fromObj(result));
-      });
+        
+      })
+      .catch(err => {
+        return cb(err);
+      })
+
   }
 
   fetchPreferences(walletId, copayerId, cb) {
@@ -861,17 +838,13 @@ export class Storage {
       .find({
         walletId
       })
-      .toArray((err, result) => {
-        if (err) return cb(err);
-
-        if (copayerId) {
-          result = _.find(result, {
-            copayerId
-          });
-        }
+      .toArray()
+      .then(result => {
         if (!result) return cb();
 
-        const preferences = _.map([].concat(result), r => {
+        const preferences = _.map([].concat(_.find(result, {
+          copayerId
+        })), r => {
           return Preferences.fromObj(r);
         });
         if (copayerId) {
@@ -880,7 +853,10 @@ export class Storage {
         } else {
           return cb(null, preferences);
         }
-      });
+      })
+      .catch(err => {
+        return cb(err);
+      })
   }
 
   storePreferences(preferences, cb) {
@@ -891,11 +867,10 @@ export class Storage {
       },
       preferences,
       {
-        w: 1,
         upsert: true
-      },
-      cb
-    );
+      });
+      cb();
+    
   }
 
   storeEmail(email, cb) {
@@ -905,11 +880,10 @@ export class Storage {
       },
       email,
       {
-        w: 1,
         upsert: true
-      },
-      cb
-    );
+      });
+      cb();
+    
   }
 
   fetchUnsentEmails(cb) {
@@ -918,8 +892,8 @@ export class Storage {
       .find({
         status: 'fail'
       })
-      .toArray((err, result) => {
-        if (err) return cb(err);
+      .toArray()
+      .then(result => {
         if (!result || _.isEmpty(result)) return cb(null, []);
 
         const emails = _.map(result, x => {
@@ -927,21 +901,21 @@ export class Storage {
         });
 
         return cb(null, emails);
-      });
+      })
+      .catch(err => { return cb(err); })
+
   }
 
   fetchEmailByNotification(notificationId, cb) {
     this.db.collection(collections.EMAIL_QUEUE).findOne(
       {
         notificationId
-      },
-      (err, result) => {
-        if (err) return cb(err);
+      })
+      .then(result => {
         if (!result) return cb();
-
         return cb(null, Email.fromObj(result));
-      }
-    );
+      })
+      .catch(err => { return cb(err); });
   }
 
   getTxHistoryCacheStatusV8(walletId, cb) {
@@ -950,9 +924,8 @@ export class Storage {
         walletId,
         type: 'historyCacheStatusV8',
         key: null
-      },
-      (err, result) => {
-        if (err) return cb(err);
+      })
+      .then(result => {
         if (!result)
           return cb(null, {
             tipId: null,
@@ -966,8 +939,10 @@ export class Storage {
           tipTxId: result.tipTxId,
           tipHeight: result.tipHeight
         });
-      }
-    );
+      })
+      .catch(err => {
+        return cb(err);
+      });
   }
 
   getWalletAddressChecked(walletId, cb) {
@@ -976,12 +951,12 @@ export class Storage {
         walletId,
         type: 'addressChecked',
         key: null
-      },
-      (err, result) => {
-        if (err || !result) return cb(err);
-        return cb(null, result.totalAddresses);
-      }
-    );
+      })
+      .then(result => {
+        if (!result)
+          return cb(null, result.totalAddresses);
+      })
+      .catch(err => { return cb(err); });
   }
 
   setWalletAddressChecked(walletId, totalAddresses, cb) {
@@ -998,11 +973,10 @@ export class Storage {
         totalAddresses
       },
       {
-        w: 1,
         upsert: true
-      },
-      cb
-    );
+      });
+     cb();
+
   }
 
   // Since cache TX are "hard confirmed" skip, and limit
@@ -1045,12 +1019,14 @@ export class Storage {
         .sort({
           key: -1
         })
-        .toArray((err, result) => {
-          if (err) return cb(err);
+        .toArray()
+        .then(result => {
           if (!result) return cb();
           const txs = _.map(result, 'tx');
           return cb(null, txs);
-        });
+        })
+        .catch(err => { return cb(err); })
+
     });
   }
 
@@ -1059,9 +1035,10 @@ export class Storage {
       {
         walletId
       },
-      {},
-      cb
-    );
+      {})
+      .then(() => {
+        return cb(cb);
+      })
   }
 
   /*
@@ -1083,11 +1060,11 @@ export class Storage {
         items
       },
       {
-        w: 1,
         upsert: true
-      },
-      cb
-    );
+      })
+      .then(() => {
+        return cb(cb);
+      })
   }
 
   clearTxHistoryStreamV8(walletId, cb) {
@@ -1097,9 +1074,10 @@ export class Storage {
         type: 'historyStream',
         key: null
       },
-      {},
-      cb
-    );
+      {})
+      .then(() => {
+        return cb(cb);
+      })
   }
 
   getTxHistoryStreamV8(walletId, cb) {
@@ -1108,12 +1086,12 @@ export class Storage {
         walletId,
         type: 'historyStream',
         key: null
-      },
-      (err, result) => {
-        if (err || !result) return cb(err);
-        return cb(null, result);
-      }
-    );
+      })
+      .then(result => {
+        if (!result)
+          return cb(null, result);
+      })
+      .catch(err => { return cb(err); })
   }
 
   /*
@@ -1205,11 +1183,10 @@ export class Storage {
             tipHeight: last.blockheight
           },
           {
-            w: 1,
+
             upsert: true
-          },
-          cb
-        );
+          });
+          cb();
       }
     );
   }
@@ -1251,10 +1228,14 @@ export class Storage {
         ts: -1
       })
       .limit(1)
-      .toArray((err, result) => {
-        if (err || _.isEmpty(result)) return cb(err);
+      .toArray()
+      .then(result => {
+        if (_.isEmpty(result)) return cb(null);
         return cb(null, result[0]);
-      });
+      })
+      .catch(err => {
+        return cb(err);
+      })
   }
 
   fetchHistoricalRates(coin, code, ts, cb) {
@@ -1270,10 +1251,13 @@ export class Storage {
       .sort({
         ts: -1
       })
-      .toArray((err, result) => {
-        if (err || _.isEmpty(result)) return cb(err);
-        return cb(null, result);
-      });
+      .toArray()
+      .then(result => {
+        if (_.isEmpty(result))
+          return cb(null, result);
+      })
+      .catch(err => { return cb(err); })
+
   }
 
   fetchTxNote(walletId, txid, cb) {
@@ -1281,13 +1265,15 @@ export class Storage {
       {
         walletId,
         txid
-      },
-      (err, result) => {
-        if (err) return cb(err);
+      })
+      .then(result => {
         if (!result) return cb();
         return this._completeTxNotesData(walletId, TxNote.fromObj(result), cb);
-      }
-    );
+      })
+      .catch(err => {
+
+        if (err) return cb(err);
+      });
   }
 
   // TODO: should be done client-side
@@ -1318,14 +1304,17 @@ export class Storage {
     this.db
       .collection(collections.TX_NOTES)
       .find(filter)
-      .toArray((err, result) => {
-        if (err) return cb(err);
+      .toArray()
+      .then(result => {
         const notes = _.compact(
           _.map(result, note => {
             return TxNote.fromObj(note);
           })
         );
         return this._completeTxNotesData(walletId, notes, cb);
+      })
+      .catch(err => {
+        return cb(err);
       });
   }
 
@@ -1337,23 +1326,22 @@ export class Storage {
       },
       txNote.toObject(),
       {
-        w: 1,
         upsert: true
-      },
-      cb
-    );
+      })
+      cb();
+    
   }
 
   getSession(copayerId, cb) {
     this.db.collection(collections.SESSIONS).findOne(
       {
         copayerId
-      },
-      (err, result) => {
-        if (err || !result) return cb(err);
+      })
+      .then(result => {
+        if (!result) return cb();
         return cb(null, Session.fromObj(result));
-      }
-    );
+      })
+      .catch(err => { return cb(err); });
   }
 
   storeSession(session, cb) {
@@ -1363,11 +1351,9 @@ export class Storage {
       },
       session.toObject(),
       {
-        w: 1,
         upsert: true
-      },
-      cb
-    );
+      });
+    cb();
   }
 
   fetchPushNotificationSubs(copayerId, cb) {
@@ -1376,16 +1362,16 @@ export class Storage {
       .find({
         copayerId
       })
-      .toArray((err, result) => {
-        if (err) return cb(err);
-
+      .toArray()
+      .then(result => {
         if (!result) return cb();
 
         const tokens = _.map([].concat(result), r => {
           return PushNotificationSub.fromObj(r);
         });
         return cb(null, tokens);
-      });
+      })
+      .catch(err => { return cb(err); });
   }
 
   fetchLatestPushNotificationSubs(cb) {
@@ -1398,16 +1384,16 @@ export class Storage {
         }
       })
       .sort({ _id: -1 })
-      .toArray((err, result) => {
-        if (err) return cb(err);
-
+      .toArray()
+      .then(result => {
         if (!result) return cb();
 
         const tokens = _.map([].concat(result), r => {
           return PushNotificationSub.fromObj(r);
         });
         return cb(null, tokens);
-      });
+      })
+      .catch(err => { return cb(err); });
   }
 
   storePushNotificationSub(pushNotificationSub, cb) {
@@ -1418,11 +1404,10 @@ export class Storage {
       },
       pushNotificationSub,
       {
-        w: 1,
         upsert: true
-      },
-      cb
-    );
+      })
+    cb();
+
   }
 
   removePushNotificationSub(copayerId, token, cb) {
@@ -1430,12 +1415,9 @@ export class Storage {
       {
         copayerId,
         token
-      },
-      {
-        w: 1
-      },
-      cb
-    );
+      })
+    cb();
+
   }
 
   storePushNotificationBrazeSub(pushNotificationSub, cb) {
@@ -1446,11 +1428,9 @@ export class Storage {
       },
       pushNotificationSub,
       {
-        w: 1,
         upsert: true
-      },
-      cb
-    );
+      });
+    cb();
   }
 
   removePushNotificationBrazeSub(copayerId, externalUserId, cb) {
@@ -1458,12 +1438,9 @@ export class Storage {
       {
         copayerId,
         externalUserId
-      },
-      {
-        w: 1
-      },
-      cb
-    );
+      })
+    cb();
+
   }
 
   streamActiveTxConfirmationSubs(copayerId: string, txids: string[]) {
@@ -1494,11 +1471,10 @@ export class Storage {
       },
       txConfirmationSub,
       {
-        w: 1,
         upsert: true
-      },
-      cb
-    );
+      })
+    cb();
+
   }
 
   removeTxConfirmationSub(copayerId, txid, cb) {
@@ -1506,33 +1482,33 @@ export class Storage {
       {
         copayerId,
         txid
-      },
-      {
-        w: 1
-      },
-      cb
-    );
+      })
+    cb();
+
   }
 
   _dump(cb, fn) {
     fn = fn || console.log;
-    cb = cb || function() {};
+    cb = cb || function () { };
 
-    this.db.collections((err, collections) => {
-      if (err) return cb(err);
-      async.eachSeries(
-        collections,
-        (col: any, next) => {
-          col.find().toArray((err, items) => {
-            fn('--------', col.s.name);
-            fn(items);
-            fn('------------------------------------------------------------------\n\n');
-            next(err);
-          });
-        },
-        cb
-      );
-    });
+    this.db.collections()
+      .then(collections => {
+        async.eachSeries(
+          collections,
+          (col: any, next) => {
+            col.find().toArray((err, items) => {
+              fn('--------', col.s.name);
+              fn(items);
+              fn('------------------------------------------------------------------\n\n');
+              next(err);
+            });
+          },
+          cb
+        );
+      })
+      .catch(err => {
+        return cb(err);
+      });
   }
 
   // key: 'feeLevel' + JSON.stringify(opts);
@@ -1546,16 +1522,17 @@ export class Storage {
         key,
         walletId: null,
         type: null
-      },
-      (err, ret) => {
-        if (err) return cb(err);
+      })
+      .then(ret => {
         if (!ret) return cb();
         const validFor = ret.ts + duration - now;
 
         // always return the value as a 3 param anyways.
         return cb(null, validFor > 0 ? ret.result : null, ret.result);
-      }
-    );
+      })
+      .catch(err => {
+        return cb(err);
+      });
   }
 
   storeGlobalCache(key, values, cb) {
@@ -1573,11 +1550,9 @@ export class Storage {
         }
       },
       {
-        w: 1,
         upsert: true
-      },
-      cb
-    );
+      })
+    cb();
   }
 
   clearGlobalCache(key, cb) {
@@ -1586,12 +1561,9 @@ export class Storage {
         key,
         walletId: null,
         type: null
-      },
-      {
-        w: 1
-      },
-      cb
-    );
+      })
+    cb();
+
   }
 
   walletCheck = async params => {
@@ -1619,37 +1591,35 @@ export class Storage {
       {
         _id: key,
         expireOn: expireTs
-      },
-      {},
-      cb
-    );
+      })
+    cb();
+
   }
 
   releaseLock(key, cb) {
     this.db.collection(collections.LOCKS).deleteMany(
       {
         _id: key
-      },
-      {},
-      cb
-    );
+      })
+    cb();
+
   }
 
   clearExpiredLock(key, cb) {
     this.db.collection(collections.LOCKS).findOne(
       {
         _id: key
-      },
-      (err, ret) => {
-        if (err || !ret) return;
+      })
+      .then(ret => {
+        if (!ret) return;
 
         if (ret.expireOn < Date.now()) {
           logger.info('Releasing expired lock : ' + key);
           return this.releaseLock(key, cb);
         }
         return cb();
-      }
-    );
+      })
+      .catch(err => { return cb(err); });
   }
 
   fetchTestingAdverts(cb) {
@@ -1658,11 +1628,12 @@ export class Storage {
       .find({
         isTesting: true
       })
-      .toArray((err, result) => {
-        if (err) return cb(err);
+      .toArray()
+      .then(result => {
         if (!result) return cb();
         return cb(null, result.map(Advertisement.fromObj));
-      });
+      })
+      .catch(err => { return cb(err); });
   }
 
   fetchActiveAdverts(cb) {
@@ -1671,11 +1642,13 @@ export class Storage {
       .find({
         isAdActive: true
       })
-      .toArray((err, result) => {
-        if (err) return cb(err);
+      .toArray()
+      .then(result => {
         if (!result) return cb();
         return cb(null, result.map(Advertisement.fromObj));
-      });
+      })
+      .catch(err => { return cb(err); });
+
   }
 
   fetchAdvertsByCountry(country, cb) {
@@ -1684,11 +1657,12 @@ export class Storage {
       .find({
         country
       })
-      .toArray((err, result) => {
-        if (err) return cb(err);
+      .toArray().then(result => {
         if (!result) return cb();
         return cb(null, result.map(Advertisement.fromObj));
-      });
+      })
+      .catch(err => { return cb(err); });
+
   }
 
   fetchAllAdverts(cb) {
@@ -1699,12 +1673,9 @@ export class Storage {
     this.db.collection(collections.ADVERTISEMENTS).deleteOne(
       {
         advertisementId: adId
-      },
-      {
-        w: 1
-      },
-      cb
-    );
+      })
+    cb();
+
   }
 
   storeAdvert(advert, cb) {
@@ -1715,23 +1686,21 @@ export class Storage {
       { $set: advert },
       {
         upsert: true
-      },
-      cb
-    );
+      })
+    cb();
+
   }
 
   fetchAdvert(adId, cb) {
     this.db.collection(collections.ADVERTISEMENTS).findOne(
       {
         advertisementId: adId
-      },
-      (err, result) => {
-        if (err) return cb(err);
+      })
+      .then(result => {
         if (!result) return cb();
-
         return cb(null, Advertisement.fromObj(result));
-      }
-    );
+      })
+      .catch(err => { return cb(err); });
   }
 
   activateAdvert(adId, cb) {
@@ -1742,9 +1711,9 @@ export class Storage {
       { $set: { isAdActive: true, isTesting: false } },
       {
         upsert: true
-      },
-      cb
-    );
+      })
+    cb();
+
   }
 
   deactivateAdvert(adId, cb) {
@@ -1757,8 +1726,8 @@ export class Storage {
       },
       {
         upsert: true
-      },
-      cb
-    );
+      })
+    cb();
+
   }
 }

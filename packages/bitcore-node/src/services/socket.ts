@@ -1,6 +1,6 @@
 import * as http from 'http';
 import { ObjectId } from 'mongodb';
-import SocketIO = require('socket.io');
+import { Server } from 'socket.io';
 import { LoggifyClass } from '../decorators/Loggify';
 import logger from '../logger';
 import { CoinEvent, EventModel, EventStorage, TxEvent } from '../models/events';
@@ -22,7 +22,7 @@ function SanitizeWallet(x: { wallets?: ObjectId[] }) {
 @LoggifyClass
 export class SocketService {
   httpServer?: http.Server;
-  io?: SocketIO.Server;
+  io?: Server;
   id: number = Math.random();
   configService: ConfigService;
   serviceConfig: ConfigType['services']['socket'];
@@ -61,8 +61,8 @@ export class SocketService {
       this.stopped = false;
       logger.info('Starting Socket Service');
       this.httpServer = server;
-      this.io = SocketIO(server);
-      this.io.sockets.on('connection', socket => {
+      this.io = new Server(server);
+      this.io?.sockets.on('connection', socket => {
         socket.on('room', (room: string, payload: VerificationPayload) => {
           const chainNetwork = room.slice(0, room.lastIndexOf('/') + 1);
           const roomName = room.slice(room.lastIndexOf('/') + 1);

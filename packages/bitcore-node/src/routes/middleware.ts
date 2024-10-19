@@ -96,13 +96,16 @@ export function RateLimiter(method: string, perSecond: number, perMinute: number
         identifier,
         method
       );
-      if (
-        perSecondResult.value!.count > perSecond ||
-        perMinuteResult.value!.count > perMinute ||
-        perHourResult.value!.count > perHour
-      ) {
-        return res.status(429).send('Rate Limited');
+      if (perSecondResult != null && perMinuteResult != null && perHourResult != null) {
+        if (
+          perSecondResult!.count > perSecond ||
+          perMinuteResult!.count > perMinute ||
+          perHourResult!.count > perHour
+        ) {
+          return res.status(429).send('Rate Limited');
+        }
       }
+
     } catch (err) {
       logger.error('Rate Limiter failed');
     }
