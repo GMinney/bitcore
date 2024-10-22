@@ -1,5 +1,5 @@
-export const SUPPORTED_CURRENCIES = ['BTC', 'BCH', 'ETH', 'DOGE', 'LTC', 'THT'];
-//export const SUPPORTED_CURRENCIES = ['THT', 'tTHT'];
+export const SUPPORTED_CURRENCIES = ['BTC', 'BCH', 'ETH'];
+// export const SUPPORTED_CURRENCIES = ['THT', 'tTHT'];
 export const API_ROOT = 'https://api.bitcore.io/api';
 export const API_ROOT_ETH = 'https://api-eth.bitcore.io/api';
 export const ETH_DEFAULT_REFRESH_INTERVAL = 300000;

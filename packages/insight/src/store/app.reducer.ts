@@ -13,14 +13,22 @@ interface AppState {
 /**
  * Define Initial state
  */
-const initialTheme = window.localStorage.getItem('theme');
+const getInitialTheme = (): string => {
+  if (typeof window !== 'undefined') {
+    const storedTheme = window.localStorage.getItem('theme');
+    if (storedTheme) {
+      return storedTheme;
+    }
+    if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+  }
+  return 'light';
+};
+
 const initialState: AppState = {
   loading: false,
-  theme: initialTheme
-    ? initialTheme
-    : window.matchMedia?.('(prefers-color-scheme: dark)').matches // System default theme color
-    ? 'dark'
-    : 'light',
+  theme: getInitialTheme(),
   network: '',
   currency: '',
 };
@@ -34,7 +42,9 @@ export const appSlice = createSlice({
   reducers: {
     // Use the PayloadAction type to declare the contents of `action.payload`
     changeTheme: (state, action: PayloadAction<'dark' | 'light'>) => {
-      window.localStorage.setItem('theme', action.payload);
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('theme', action.payload);
+      }
       state.theme = action.payload;
     },
     changeNetwork: (state, action: PayloadAction<string>) => {

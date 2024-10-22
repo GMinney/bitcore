@@ -38,7 +38,7 @@ const TransactionHash: React.FC = () => {
   const [error, setError] = useState('');
   const [refTxid, setRefTxid] = useState<string | undefined>();
   const [refVout, setRefVout] = useState<number | undefined>();
-  let confInterval: NodeJS.Timer | null = null;
+  let confInterval: NodeJS.Timeout | null = null;
 
   useEffect(() => {
     if (reftxidParam != null && reftxidParam !== '') {
@@ -97,7 +97,7 @@ const TransactionHash: React.FC = () => {
 
     // clear interval on nav to new tx or unmount
     return () => {
-      clearInterval(confInterval as NodeJS.Timer);
+      clearInterval(confInterval as NodeJS.Timeout);
       confInterval = null;
     };  
   }, [network, currency, tx]);
@@ -124,7 +124,7 @@ const TransactionHash: React.FC = () => {
           const {height} = _newTip;
           const confirmations = blockHeight > 0 ? height - blockHeight + 1 : blockHeight;
           if (confirmations !== -1) { // conf status has changed from unconfirmed
-            clearInterval(confInterval as NodeJS.Timer);
+            clearInterval(confInterval as NodeJS.Timeout);
             confInterval = null;
             transaction.confirmations = confirmations;
             if (confirmations > -1) { // if confirmed

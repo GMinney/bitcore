@@ -8,9 +8,9 @@ import {
 } from './constants';
 import {BlockTransactionDetails} from './models';
 import BitcoreLib from 'bitcore-lib';
-import BitcoreLibCash from 'bitcore-lib-cash';
-import BitcoreLibDoge from 'bitcore-lib-doge';
-import BitcoreLibLtc from 'bitcore-lib-ltc';
+// import BitcoreLibCash from 'bitcore-lib-cash';
+// import BitcoreLibDoge from 'bitcore-lib-doge';
+// import BitcoreLibLtc from 'bitcore-lib-ltc';
 
 export const buildTime = (time: string): string => {
   const diffMs = Math.abs(Date.now() - Date.parse(time));
@@ -174,11 +174,11 @@ export const getLib = (currency: string) => {
     case 'BTC':
     default:
       return BitcoreLib;
-    case 'BCH':
-      return BitcoreLibCash;
-    case 'DOGE':
-      return BitcoreLibDoge;
-    case 'LTC':
-      return BitcoreLibLtc;
+    // case 'BCH':
+    //   return BitcoreLibCash;
+    // case 'DOGE':
+    //   return BitcoreLibDoge;
+    // case 'LTC':
+    //   return BitcoreLibLtc;
   }
 };

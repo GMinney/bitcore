@@ -63,7 +63,7 @@ const Search: FC<SearchProps> = ({borderBottom, id, setErrorMessage}) => {
         const val = await searchValue(searchInputs, currency, network);
         processAllResponse(val, searchVal);
       } catch (e) {
-        setErrorMessage('Server error. Please try again');
+        setErrorMessage('Server error. Please try again', e);
         clearErrorMsg();
       }
       event.target[searchId].value = '';
@@ -93,11 +93,13 @@ const Search: FC<SearchProps> = ({borderBottom, id, setErrorMessage}) => {
       };
 
       resFiltered.map((res: any) => {
-        res.block
-          ? matches.blocks.push(res.block)
-          : res.tx
-          ? matches.txs.push(res.tx)
-          : matches.addresses.push(res.addr[0]);
+        if (res.block) {
+          matches.blocks.push(res.block);
+        } else if (res.tx) {
+          matches.txs.push(res.tx);
+        } else {
+          matches.addresses.push(res.addr[0]);
+        }
         return res;
       });
 

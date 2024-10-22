@@ -18,10 +18,21 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "baseUrl": ".", // To import directly from the root of the project
-    "types": ["cypress", "cypress-axe", "node"]
+    "types": [
+      "node",
+      "next",
+      "next/types/global"
+    ],
+    "incremental": true
   },
-  "include": ["**/*.ts", "**/*.tsx", "."],
-  "exclude": ["node_modules"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "."
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

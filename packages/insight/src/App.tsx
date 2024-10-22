@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter} from 'react-router-dom';
+
 import {SWRConfig} from 'swr';
 import {fetcher} from './api/api';
 import Body from './components/body';
@@ -18,14 +18,14 @@ function App() {
   return (
     <ThemeProvider theme={colorScheme}>
       <GlobalStyles />
-      <BrowserRouter basename={'/insight'}>
+
         <SWRConfig
           value={{
             fetcher,
           }}>
           <Body />
         </SWRConfig>
-      </BrowserRouter>
+
     </ThemeProvider>
   );
 }

@@ -1,4 +1,4 @@
-import {useEffect, useState, memo, FC} from 'react';
+import { useEffect, useState, memo, FC } from 'react';
 import {
   getApiRoot,
   getConvertedValue,
@@ -8,17 +8,17 @@ import {
 } from '../utilities/helper-methods';
 import InfiniteScrollLoadSpinner from './infinite-scroll-load-spinner';
 import Info from './info';
-import {routerFadeIn} from '../utilities/animations';
-import {motion} from 'framer-motion';
-import {useNavigate} from 'react-router-dom';
-import {fetcher} from '../api/api';
-import {MainTitle, SecondaryTitle} from '../assets/styles/titles';
+import { routerFadeIn } from '../utilities/animations';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { fetcher } from '../api/api';
+import { MainTitle, SecondaryTitle } from '../assets/styles/titles';
 import SupCurrencyLogo from './icons/sup-currency-logo';
-import {DisplayFlex} from '../assets/styles/global';
-import {Tile, TileDescription, TileLink} from '../assets/styles/tile';
+import { DisplayFlex } from '../assets/styles/global';
+import { Tile, TileDescription, TileLink } from '../assets/styles/tile';
 import CopyText from './copy-text';
-import {Grid} from '../assets/styles/grid';
-import {SharedTile} from './shared';
+import { Grid } from '../assets/styles/grid';
+import { SharedTile } from './shared';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import TransactionDetails from './transaction-details';
 import nProgress from 'nprogress';
@@ -29,7 +29,7 @@ interface BlockDetailsProps {
   block: string;
 }
 
-const populateTxsForBlock = (txData: any, {time, height}: {time: number; height: number}) => {
+const populateTxsForBlock = (txData: any, { time, height }: { time: number; height: number }) => {
   const txd = txData.txids.map((txid: any) => {
     const tx: any = {};
     tx.txid = txid;
@@ -41,14 +41,19 @@ const populateTxsForBlock = (txData: any, {time, height}: {time: number; height:
     tx.value = tx.outputs
       .filter((output: any) => output.mintTxid === txid)
       .reduce((a: any, b: any) => a + b.value, 0);
-    tx.inputs.length === 0 ? (tx.coinbase = true) : (tx.coinbase = false);
+    // Replace ternary operator with if statement
+    if (tx.inputs.length === 0) {
+      tx.coinbase = true;
+    } else {
+      tx.coinbase = false;
+    }
     tx.confirmations = tx.blockHeight > 0 ? height - tx.blockHeight + 1 : tx.blockHeight;
     return tx;
   });
   return txd;
 };
 
-const BlockDetails: FC<BlockDetailsProps> = ({currency, network, block}) => {
+const BlockDetails: FC<BlockDetailsProps> = ({ currency, network, block }) => {
   const _normalizeParams = normalizeParams(currency, network);
   currency = _normalizeParams.currency;
   network = _normalizeParams.network;
@@ -125,7 +130,7 @@ const BlockDetails: FC<BlockDetailsProps> = ({currency, network, block}) => {
           {error ? <Info type={'error'} message={error} /> : null}
           {summary ? (
             <motion.div variants={routerFadeIn} animate='animate' initial='initial'>
-              <MainTitle style={{marginBottom: 8}}>
+              <MainTitle style={{ marginBottom: 8 }}>
                 Block #{summary.height}
                 <SupCurrencyLogo currency={currency} />
               </MainTitle>
