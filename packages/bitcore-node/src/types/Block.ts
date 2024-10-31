@@ -1,16 +1,21 @@
 export interface IBlock {
   chain: string;
-  confirmations?: number;
   network: string;
-  height: number;
+
   hash: string;
+  confirmations?: number;
+  size: number;
+  height: number;
+
   time: Date;
   timeNormalized: Date;
-  previousBlockHash: string;
+
   nextBlockHash: string;
   transactions?: string[];
   transactionCount: number;
-  size: number;
+
   reward: number;
   processed: boolean;
+
+  previousBlockHash: string;
 }

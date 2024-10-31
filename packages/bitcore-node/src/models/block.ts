@@ -18,6 +18,13 @@ export type IBtcBlock = IBlock & {
   nonce: number;
 };
 
+export type IThtBlock = IBlock & {
+  version: number;
+  merkleRoot: string;
+  bits: number;
+  nonce: number;
+};
+
 @LoggifyClass
 export class BitcoinBlock extends BaseBlock<IBtcBlock> {
   constructor(storage?: StorageService) {
