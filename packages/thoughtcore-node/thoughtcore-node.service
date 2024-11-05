@@ -1,0 +1,11 @@
+[Unit]
+Description=Thoughtcore Node API Web Application for Insight
+After=network.target
+
+[Service]
+User=thoughtcore
+Group=thoughtcore
+ExecStart=/usr/bin/node /home/thoughtcore/thoughtcore/packages/thoughtcore-node/build/src/server.js
+
+[Install]
+WantedBy=multi-user.target

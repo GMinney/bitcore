@@ -1,5 +1,5 @@
 /* Primary */
-export const BitPay = '#1A3B8B';
+export const Thought = '#1A3B8B';
 export const Action = '#2240C4';
 export const Black = '#000000';
 export const Feather = '#F6F7FC';

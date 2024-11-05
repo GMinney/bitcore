@@ -4,10 +4,10 @@
 
 ## Contributing
 
-See [CONTRIBUTING.md](https://github.com/bitpay/bitcore/blob/master/Contributing.md) on the main bitcore repo for information about how to contribute.
+See [CONTRIBUTING.md](https://github.com/thoughtnetwork/thoughtcore/blob/master/Contributing.md) on the main thoughtcore repo for information about how to contribute.
 
 ## License
 
-Code released under [the MIT license](https://github.com/bitpay/bitcore/blob/master/LICENSE).
+Code released under [the MIT license](https://github.com/thoughtnetwork/thoughtcore/blob/master/LICENSE).
 
-Copyright 2013-2019 BitPay, Inc. Bitcore is a trademark maintained by BitPay, Inc.
+Copyright 2013-2019 Thought, Inc. Thoughtcore is a trademark maintained by Thought, Inc.

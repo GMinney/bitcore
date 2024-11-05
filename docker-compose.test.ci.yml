@@ -6,7 +6,7 @@ services:
     ports:
       - "7357:27017"
 
-  bitcoin:
+  thought:
     ports:
       - "8332:8332"
       - "8333:8333"

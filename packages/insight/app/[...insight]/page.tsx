@@ -4,7 +4,7 @@ import { SWRConfig } from 'swr';
 import { fetcher } from '@/api/api';
 import Body from '@/components/body';
 import { ThemeProvider } from 'styled-components';
-import { BitPayDarkTheme, BitPayLightTheme } from '@/assets/styles/bitpay';
+import { ThoughtDarkTheme, ThoughtLightTheme } from '@/assets/styles/thoughtnetwork';
 import { GlobalStyles } from '@/assets/styles/global';
 import { useAppSelector } from '@/lib/utilities/hooks';
 import 'nprogress/nprogress.css';
@@ -13,7 +13,7 @@ import NoSSR from './NoSSR';
 
 export default function Insight() {
   const theme = useAppSelector(({ APP }) => APP.theme);
-  const colorScheme = theme === 'dark' ? BitPayDarkTheme : BitPayLightTheme;
+  const colorScheme = theme === 'dark' ? ThoughtDarkTheme : ThoughtLightTheme;
   nProgress.configure({ showSpinner: false });
   return (
       <NoSSR>

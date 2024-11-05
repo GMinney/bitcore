@@ -7,9 +7,9 @@ services:
     volumes: 
     - /data/db:/data/db
     
-  bitcore-node:
+  thoughtcore-node:
     build: .
-    image: bitcore-node
+    image: thoughtcore-node
     links:
       - database
     ports:
@@ -19,9 +19,9 @@ services:
       - DB_HOST=database
     env_file: .env
 
-#insight:
-  #image: insight
-  #links:
-    #- bitcore-node
-  #environment:
-    #- API_URL=bitcore-node
+  insight:
+    image: insight
+    links:
+      - thoughtcore-node
+    environment:
+      - API_URL=thoughtcore-node

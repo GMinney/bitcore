@@ -12,11 +12,11 @@ services:
       - 3000:3000
     environment:
       - DB_HOST=db
-      - DB_NAME=bitcore-test
-      - BITCORE_CONFIG_PATH=../../../../bitcore-test.config.js
+      - DB_NAME=thoughtcore-test
+      - THOUGHTCORE_CONFIG_PATH=../../../../thoughtcore-test.config.js
     depends_on:
       - db
-      - bitcoin
+      - thought
       - erigon
       - geth
       - rippled

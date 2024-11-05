@@ -1,14 +1,6 @@
-import { ArbDeriver } from './arb';
-import { BaseDeriver } from './base';
-import { BchDeriver } from './bch';
-import { BtcDeriver } from './btc';
-import { DogeDeriver } from './doge';
+import { ThtDeriver } from './tht';
 import { EthDeriver } from './eth';
-import { LtcDeriver } from './ltc';
-import { MaticDeriver } from './matic';
-import { OpDeriver } from './op';
 import { Paths } from './paths';
-import { XrpDeriver } from './xrp';
 
 export interface Key {
   address: string;
@@ -29,16 +21,8 @@ export interface IDeriver {
 }
 
 const derivers: { [chain: string]: IDeriver } = {
-  BTC: new BtcDeriver(),
-  BCH: new BchDeriver(),
+  THT: new ThtDeriver(),
   ETH: new EthDeriver(),
-  XRP: new XrpDeriver(),
-  DOGE: new DogeDeriver(),
-  LTC: new LtcDeriver(),
-  MATIC: new MaticDeriver(),
-  ARB: new ArbDeriver(),
-  BASE: new BaseDeriver(),
-  OP: new OpDeriver(),
 };
 
 export class DeriverProxy {
@@ -77,7 +61,7 @@ export class DeriverProxy {
   /**
    * This derives addresses on a specific path.
    * This should probably only be used when importing from another wallet
-   *   where known paths are provided with their keys. Most of the BitPay
+   *   where known paths are provided with their keys. Most of the Thought
    *   codebase uses `deriveAddress()`
    * @param chain
    * @param network
@@ -93,7 +77,7 @@ export class DeriverProxy {
   /**
    * This derives keys/addresses on a specific path.
    * This should probably only be used when importing from another wallet
-   *   where known paths are provided with their keys. Most of the BitPay
+   *   where known paths are provided with their keys. Most of the Thought
    *   codebase uses `derivePrivateKey()`
    * @param chain
    * @param network
@@ -130,7 +114,7 @@ export class DeriverProxy {
         return chainConfig.default + accountStr;
       }
     } else {
-      return Paths.BTC.default + accountStr;
+      return Paths.THT.default + accountStr;
     }
   }
 }

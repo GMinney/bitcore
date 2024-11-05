@@ -8,11 +8,11 @@ executors:
       image: default # https://discuss.circleci.com/t/linux-image-deprecations-and-eol-for-2024/50177
       docker_layer_caching: true
     resource_class: large
-    working_directory: ~/bitcore
+    working_directory: ~/thoughtcore
     environment:
-      - DB_NAME: bitcore-test
+      - DB_NAME: thoughtcore-test
       - DB_PORT: 7357
-      - BITCORE_CONFIG_PATH: ~/bitcore/bitcore-test.config.json
+      - THOUGHTCORE_CONFIG_PATH: ~/thoughtcore/thoughtcore-test.config.json
 
 commands:
   create_concatenated_package_lock:
@@ -61,7 +61,7 @@ commands:
         type: string
     steps:    
       - attach_workspace:
-          at: ~/bitcore
+          at: ~/thoughtcore
       - use_node
       - start_docker_images
       - run:
@@ -100,122 +100,122 @@ jobs:
           key: node_modules-{{ checksum "package-lock.json" }}-{{ checksum "combined-package-lock.txt" }}
           paths:
             - node_modules
-            - packages/bitcore-build/node_modules
-            - packages/bitcore-client/node_modules
-            - packages/bitcore-lib/node_modules
-            - packages/bitcore-lib-cash/node_modules
-            - packages/bitcore-lib-doge/node_modules
-            - packages/bitcore-lib-ltc/node_modules
-            - packages/bitcore-mnemonic/node_modules
-            - packages/bitcore-node/node_modules
-            - packages/bitcore-p2p/node_modules
-            - packages/bitcore-p2p-cash/node_modules
-            - packages/bitcore-p2p-doge/node_modules
-            - packages/bitcore-wallet/node_modules
-            - packages/bitcore-wallet-client/node_modules
-            - packages/bitcore-wallet-service/node_modules
+            - packages/thoughtcore-build/node_modules
+            - packages/thoughtcore-client/node_modules
+            - packages/thoughtcore-lib/node_modules
+            - packages/thoughtcore-lib-cash/node_modules
+            - packages/thoughtcore-lib-doge/node_modules
+            - packages/thoughtcore-lib-ltc/node_modules
+            - packages/thoughtcore-mnemonic/node_modules
+            - packages/thoughtcore-node/node_modules
+            - packages/thoughtcore-p2p/node_modules
+            - packages/thoughtcore-p2p-cash/node_modules
+            - packages/thoughtcore-p2p-doge/node_modules
+            - packages/thoughtcore-wallet/node_modules
+            - packages/thoughtcore-wallet-client/node_modules
+            - packages/thoughtcore-wallet-service/node_modules
             - packages/crypto-wallet-core/node_modules
             - packages/insight/node_modules
       - persist_to_workspace:
-          root: ~/bitcore
+          root: ~/thoughtcore
           paths:
             - .
-  bitcore-node:
+  thoughtcore-node:
     executor: main
     steps:
       - run_test:
-          package: bitcore-node
-  bitcore-wallet-service:
+          package: thoughtcore-node
+  thoughtcore-wallet-service:
     executor: main
     steps:    
       - run_test:
-          package: bitcore-wallet-service
-  bitcore-wallet-client:
+          package: thoughtcore-wallet-service
+  thoughtcore-wallet-client:
     executor: main
     steps:
       - run_test:
-          package: bitcore-wallet-client
+          package: thoughtcore-wallet-client
   crypto-wallet-core:
     executor: main
     steps:
       - run_test:
           package: crypto-wallet-core
-  bitcore-wallet:
+  thoughtcore-wallet:
     executor: main
     steps:
       - run_test:
-          package: bitcore-wallet
-  bitcore-lib:
+          package: thoughtcore-wallet
+  thoughtcore-lib:
     executor: main
     steps:
       - run_test:
-          package: bitcore-lib
-  bitcore-lib-cash:
+          package: thoughtcore-lib
+  thoughtcore-lib-cash:
     executor: main
     steps:
       - run_test:
-          package: bitcore-lib-cash
-  bitcore-lib-doge:
+          package: thoughtcore-lib-cash
+  thoughtcore-lib-doge:
     executor: main
     steps:
       - run_test:
-          package: bitcore-lib-doge
-  bitcore-lib-ltc:
+          package: thoughtcore-lib-doge
+  thoughtcore-lib-ltc:
     executor: main
     steps:
       - run_test:
-          package: bitcore-lib-ltc
-  bitcore-mnemonic:
+          package: thoughtcore-lib-ltc
+  thoughtcore-mnemonic:
     executor: main
     steps:
       - run_test:
-          package: bitcore-mnemonic
-  bitcore-p2p:
+          package: thoughtcore-mnemonic
+  thoughtcore-p2p:
     executor: main
     steps:
       - run_test:
-          package: bitcore-p2p
-  bitcore-client:
+          package: thoughtcore-p2p
+  thoughtcore-client:
     executor: main
     steps:
       - run_test:
-          package: bitcore-client
+          package: thoughtcore-client
       
 workflows:
   version: 2
   build_and_test:
     jobs:
       - build
-      - bitcore-node:
+      - thoughtcore-node:
           requires:
             - build
-      - bitcore-wallet-service:
+      - thoughtcore-wallet-service:
           requires:
             - build
-      - bitcore-wallet-client:
+      - thoughtcore-wallet-client:
           requires:
             - build
       - crypto-wallet-core:
           requires:
             - build
-      - bitcore-lib:
+      - thoughtcore-lib:
           requires:
             - build
-      - bitcore-lib-cash:
+      - thoughtcore-lib-cash:
           requires:
             - build
-      - bitcore-lib-doge:
+      - thoughtcore-lib-doge:
           requires:
             - build
-      - bitcore-lib-ltc:
+      - thoughtcore-lib-ltc:
           requires:
             - build
-      - bitcore-mnemonic:
+      - thoughtcore-mnemonic:
           requires:
             - build
-      - bitcore-p2p:
+      - thoughtcore-p2p:
           requires:
             - build
-      - bitcore-client:
+      - thoughtcore-client:
           requires:
             - build

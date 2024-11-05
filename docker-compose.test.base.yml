@@ -5,8 +5,8 @@ services:
   db:
     image: mongo:3.6.23
 
-  bitcoin:
-    image: ruimarinho/bitcoin-core:24
+  thought:
+    image: ruimarinho/thought-core:24
     command:
       -printtoconsole
       -regtest=1
@@ -19,7 +19,7 @@ services:
       -rpcport=8333
       -rpcallowip=0.0.0.0/0
       -rpcbind=0.0.0.0
-      -rpcuser=bitcorenodetest
+      -rpcuser=thoughtcorenodetest
       -rpcpassword=local321
       -fallbackfee=0.00001
 

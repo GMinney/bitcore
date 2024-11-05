@@ -15,7 +15,7 @@
     "@reduxjs/toolkit": "2.2.7",
     "assert": "2.1.0",
     "axios": "^1.7.5",
-    "bitcore-lib": "file:../bitcore-lib",
+    "thoughtcore-lib": "file:../thoughtcore-lib",
     "buffer": "6.0.3",
     "chart.js": "4.4.4",
     "crypto-browserify": "^3.3.0",

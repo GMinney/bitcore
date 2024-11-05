@@ -1,6 +1,6 @@
 import {Black, Action, White, LinkBlue, LightBlack} from './colors';
 
-export type BitPayTheme = {
+export type ThoughtTheme = {
   dark: boolean;
   colors: {
     color: string;
@@ -10,7 +10,7 @@ export type BitPayTheme = {
   };
 };
 
-export const BitPayLightTheme: BitPayTheme = {
+export const ThoughtLightTheme: ThoughtTheme = {
   dark: false,
   colors: {
     color: Black,
@@ -20,7 +20,7 @@ export const BitPayLightTheme: BitPayTheme = {
   },
 };
 
-export const BitPayDarkTheme: BitPayTheme = {
+export const ThoughtDarkTheme: ThoughtTheme = {
   dark: true,
   colors: {
     color: White,

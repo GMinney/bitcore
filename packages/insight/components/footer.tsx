@@ -1,8 +1,8 @@
 'use client';
 
 import styled, { useTheme } from 'styled-components';
-import BitPayLogoDark from '@/assets/images/bitpay-logo-blue.svg';
-import BitPayLogoLight from '@/assets/images/bitpay-logo-white.svg';
+import ThoughtLogoDark from '@/assets/images/thoughtnetwork-logo-blue.svg';
+import ThoughtLogoLight from '@/assets/images/thoughtnetwork-logo-white.svg';
 import { Feather, SlateDark, White } from '@/assets/styles/colors';
 import { FooterHeight } from '@/assets/styles/global';
 import { memo } from 'react';
@@ -26,7 +26,7 @@ const Version = styled.div`
   line-height: 25px;
 `;
 
-const BitPayLink = styled.div`
+const ThoughtLink = styled.div`
   height: 25px;
 
   &:hover {
@@ -39,19 +39,19 @@ const Footer = () => {
 
   return (
     <FooterDiv>
-      <BitPayLink>
+      <ThoughtLink>
 
 
         <div style={{ width: '89px', height: '25px', position: 'relative' }}>
           <Image
-            src={theme.dark ? BitPayLogoDark.src : BitPayLogoLight.src}
-            alt='BitPay logo'
-            onClick={() => window.open('https://bitpay.com', '_blank')}
+            src={theme.dark ? ThoughtLogoDark.src : ThoughtLogoLight.src}
+            alt='Thought logo'
+            onClick={() => window.open('https://thoughtnetwork.com', '_blank')}
             fill={true}
           />
         </div>
 
-      </BitPayLink>
+      </ThoughtLink>
 
       <Version>v9.0.0</Version>
     </FooterDiv>

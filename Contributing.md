@@ -45,11 +45,11 @@ Follow this process:
 
    ```bash
    # Clone your fork of the repo into the current directory
-   git clone https://github.com/<your-username>/bitcore
+   git clone https://github.com/<your-username>/thoughtcore
    # Navigate to the newly cloned directory
-   cd bitcore
+   cd thoughtcore
    # Assign the original repo to a remote called "upstream"
-   git remote add upstream https://github.com/bitpay/bitcore
+   git remote add upstream https://github.com/thoughtnetwork/thoughtcore
    ```
 
 2. If you cloned a while ago, get the latest changes from upstream:
@@ -81,6 +81,6 @@ Follow this process:
    ```
 
 7. [Open a Merge Request](https://help.github.com/articles/using-pull-requests/)
-    with a clear title and description from your fork to the base repository (bitpay/bitcore - master).
+    with a clear title and description from your fork to the base repository (thoughtnetwork/thoughtcore - master).
 
 

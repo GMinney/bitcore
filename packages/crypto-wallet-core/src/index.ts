@@ -1,4 +1,4 @@
-import * as BitcoreLib from 'bitcore-lib';
+import * as ThoughtcoreLib from 'thoughtcore-lib';
 import { ethers } from 'ethers';
 import Web3 from 'web3';
 import * as xrpl from 'xrpl';
@@ -8,7 +8,7 @@ import Transactions from './transactions';
 import Validation from './validation';
 
 export {
-  BitcoreLib,
+  ThoughtcoreLib,
   Deriver,
   Transactions,
   Validation,

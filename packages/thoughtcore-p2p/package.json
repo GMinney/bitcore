@@ -1,0 +1,36 @@
+{
+  "name": "thoughtcore-p2p",
+  "version": "10.2.1",
+  "description": "Interface to the thought P2P network for thoughtcore",
+  "main": "index.js",
+  "scripts": {
+    "test": "gulp test",
+    "test:ci": "npm run test",
+    "coverage": "gulp coverage",
+    "build": "gulp",
+    "pub": "npm run build && npm publish"
+  },
+  "keywords": [
+    "thought",
+    "thoughtcore"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thoughtnetwork/thoughtcore-p2p.git"
+  },
+  "dependencies": {
+    "thoughtcore-lib": "file:../thoughtcore-lib",
+    "bloom-filter": "^0.2.0",
+    "buffers": "thoughtnetwork/node-buffers#v0.1.2-thoughtnetwork",
+    "socks5-client": "^1.2.8"
+  },
+  "devDependencies": {
+    "thoughtcore-build": "file:../thoughtcore-build",
+    "brfs": "^2.0.2",
+    "chai": "~5.1.1",
+    "gulp": "^5.0.0",
+    "sinon": "^18.0.0"
+  },
+  "license": "MIT",
+  "gitHead": "012cc0216a9bc6b195035855bd17149bad41acd1"
+}

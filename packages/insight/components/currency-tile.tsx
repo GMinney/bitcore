@@ -38,7 +38,7 @@ ChartJS.register(
 const gutter = '1.5rem';
 
 const LightBackground: {[key in string]: string} = {
-  BTC: '#FFF1E0',
+  THT: '#FFF1E0',
   BCH: '#EFFFF6',
   ETH: '#EBECF6',
   LTC: '#FAFAFA',
@@ -46,7 +46,7 @@ const LightBackground: {[key in string]: string} = {
 };
 
 const DarkBackground: {[key in string]: string} = {
-  BTC: '#0C0700',
+  THT: '#0C0700',
   BCH: '#020A05',
   ETH: '#06070F',
   LTC: '#0A0A0A',
@@ -133,9 +133,9 @@ const CurrencyTile: FC<CurrencyTileProps> = ({currency}) => {
 
   const url = `${apiRoot}/${currency}/mainnet/block?limit=1`;
   const {data, error} = useApi(url, {refreshInterval});
-  const {data: priceDetails} = useApi(`https://bitpay.com/rates/${currency}/usd`);
+  const {data: priceDetails} = useApi(`https://thoughtnetwork.com/rates/${currency}/usd`);
   const {data: priceDisplay} = useApi(
-    `https://bitpay.com/currencies/prices?currencyPairs=["${currency}:USD"]`,
+    `https://thoughtnetwork.com/currencies/prices?currencyPairs=["${currency}:USD"]`,
   );
 
   if (priceDetails?.data) {
@@ -178,7 +178,7 @@ const CurrencyTile: FC<CurrencyTileProps> = ({currency}) => {
     // return <Navigate to={`/insight/${currency}/mainnet/blocks`} replace={true} />
   };
 
-  const imgSrc = `https://bitpay.com/img/icon/currencies/${currency}.svg`;
+  const imgSrc = `https://thoughtnetwork.com/img/icon/currencies/${currency}.svg`;
 
   const chartData = {
     labels: priceList,

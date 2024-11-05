@@ -2,14 +2,14 @@ import { expect } from 'chai';
 import { Deriver } from '../src';
 
 describe('Address Derivation', () => {
-  it('should be able to generate a valid BTC address', () => {
+  it('should be able to generate a valid THT address', () => {
     const xPub = 'xpub6A4DRTebM6TS5f6cUt5YAxKXikhDZd6ANwbyomHhFFkjJApdAwnADvMRfimdaKXf1xk1LTrPuRo7eGCGYARApdytZ18SqoUv6MTYtbCx4Xv';
     // 'select scout crash enforce riot rival spring whale hollow radar rule sentence';
 
-    const path = Deriver.pathFor('BTC', 'mainnet');
+    const path = Deriver.pathFor('THT', 'mainnet');
     expect(path).to.equal("m/44'/0'/0'");
 
-    const address = Deriver.deriveAddress('BTC', 'mainnet', xPub, 0, false);
+    const address = Deriver.deriveAddress('THT', 'mainnet', xPub, 0, false);
     const expectedAddress = '1EDh8HXc2jwbyDPLEyDDnYea48f2D8z3ER';
     expect(address).to.equal(expectedAddress);
   });

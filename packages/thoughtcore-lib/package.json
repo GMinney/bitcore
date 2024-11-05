@@ -1,0 +1,61 @@
+{
+  "name": "thoughtcore-lib-tht",
+  "version": "10.2.1",
+  "description": "A pure and powerful JavaScript Thought library.",
+  "author": "Thought <dev@thoughtnetwork.com>",
+  "contributors": [
+    {
+      "name": "Gavin Minney",
+      "email": "gminney@thought.live"
+    }
+  ],
+  "main": "index.js",
+  "scripts": {
+    "test": "gulp test",
+    "test:ci": "npm run test",
+    "coverage": "gulp coverage",
+    "build": "gulp",
+    "pub": "npm run build && npm publish"
+  },
+  "keywords": [
+    "thought",
+    "transaction",
+    "address",
+    "p2p",
+    "ecies",
+    "cryptocurrency",
+    "blockchain",
+    "payment",
+    "bip21",
+    "bip32",
+    "bip37",
+    "bip69",
+    "bip70",
+    "multisig"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thoughtnetwork/thoughtcore/tree/master/packages/thoughtcore-lib"
+  },
+  "browser": {
+    "request": "browser-request"
+  },
+  "dependencies": {
+    "bech32": "=2.0.0",
+    "bn.js": "=5.2.1",
+    "bs58": "^6.0.0",
+    "buffer-compare": "=1.1.1",
+    "elliptic": "^6.5.7",
+    "inherits": "=2.0.4",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "thoughtcore-build": "file:../thoughtcore-build",
+    "brfs": "^2.0.2",
+    "chai": "^5.1.1",
+    "gulp": "^5.0.0",
+    "sinon": "^18.0.0"
+  },
+  "license": "MIT",
+  "gitHead": "012cc0216a9bc6b195035855bd17149bad41acd1"
+}

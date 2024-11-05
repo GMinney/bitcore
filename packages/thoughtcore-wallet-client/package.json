@@ -1,0 +1,79 @@
+{
+  "name": "thoughtcore-wallet-client",
+  "description": "Client for thoughtcore-wallet-service",
+  "author": "Thought Inc",
+  "version": "10.2.1",
+  "license": "MIT",
+  "main": "ts_build/index.js",
+  "types": "ts_build/index.d.js",
+  "keywords": [
+    "thought",
+    "copay",
+    "multisig",
+    "wallet",
+    "client",
+    "thoughtcore",
+    "BWS",
+    "BWC"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "url": "git@github.com:thoughtnetwork/thoughtcore-wallet-client.git",
+    "type": "git"
+  },
+  "bugs": {
+    "url": "https://github.com/thoughtnetwork/thoughtcore-wallet-client/issues"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "async": "3.2.6",
+    "bip38": "3.1.1",
+    "thoughtcore-mnemonic": "file:../thoughtcore-mnemonic",
+    "crypto-wallet-core": "file:../crypto-wallet-core",
+    "json-stable-stringify": "1.1.1",
+    "lodash": "^4.17.21",
+    "preconditions": "3.0.2",
+    "sjcl": "1.0.8",
+    "source-map-loader": "5.0.0",
+    "source-map-support": "0.5.21",
+    "superagent": "10.1.0",
+    "typescript": "5.5.4"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.7",
+    "@types/node": "^22.5.0",
+    "thoughtcore-wallet-service": "file:../thoughtcore-wallet-service",
+    "browserify": "^17.0.0",
+    "chai": "^5.1.1",
+    "nyc": "17.0.0",
+    "kbpgp": "^2.1.15",
+    "mocha": "^10.7.3",
+    "mongodb": "^6.8.0",
+    "prettier": "^3.3.3",
+    "got": "14.4.2",
+    "sinon": "^18.0.0",
+    "supertest": "*",
+    "ts-node": "^10.9.2",
+    "typescript-eslint": "8.3.0",
+    "uuid": "^10.0.0"
+  },
+  "scripts": {
+    "start": "npm run clean && npm run tsc && node app.js",
+    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --reporter spec test",
+    "test": "npm run compile && mocha --exit",
+    "test:ci": "npm run test",
+    "docs": "TODO ./node_modules/.bin/tsdoc src/lib/* src/lib/common src/lib/errors -o docs && cat README.header.md  docs/*.md LICENSE > README.md",
+    "coveralls": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "compile": "npm run tsc",
+    "tsc": "npm run clean && tsc",
+    "build": "tsc && npm run lint",
+    "clean": "rm -rf ./ts_build",
+    "lint": "tslint -c ../../tslint.json 'src/**/*.ts'",
+    "fix": "tslint --fix -c ../../tslint.json 'src/**/*.ts'",
+    "pub": "npm run build && npm publish",
+    "precommit": "npm run fix && npm run lint"
+  },
+  "gitHead": "e091d99915d099863ad3e78dbe867aa7780191e4"
+}

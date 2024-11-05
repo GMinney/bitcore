@@ -3,9 +3,9 @@ import { expect } from 'chai';
 import { Validation } from '../src';
 
 describe('Address Validation', () => {
-  // BTC
-  const btcAddress = '1NuKwkDtCymgA1FNLUBaUWLD8s4kdKWvgn';
-  const btcTestAddress = 'mkUNMewkQsHKRcUvv5HLKbqmepCqNH8goc';
+  // THT
+  const thtAddress = '1NuKwkDtCymgA1FNLUBaUWLD8s4kdKWvgn';
+  const thtTestAddress = 'mkUNMewkQsHKRcUvv5HLKbqmepCqNH8goc';
 
   // BCH
   const bchAddress = 'qr8uujscckc56ancdkmqnyyl2rx6pnp24gmdfrf8qd';
@@ -31,14 +31,14 @@ describe('Address Validation', () => {
   const xrpAddress = 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh';
 
   // Uri
-  const btcUri = 'bitcoin:1NuKwkDtCymgA1FNLUBaUWLD8s4kdKWvgn';
-  const bchUri = 'bitcoincash:pp8skudq3x5hzw8ew7vzsw8tn4k8wxsqsv0lt0mf3g';
+  const thtUri = 'thought:1NuKwkDtCymgA1FNLUBaUWLD8s4kdKWvgn';
+  const bchUri = 'thoughtcash:pp8skudq3x5hzw8ew7vzsw8tn4k8wxsqsv0lt0mf3g';
   const dogeUri = 'dogecoin:DQnSpKaUdXYZz8Q4WUBCdaGBSthiAJbWBr';
   const ltcUri = 'litecoin:LYgDcZ3oW3aZBhZUyiC84fb99hyUPVxLwB';
   const ethUri = 'ethereum:0x37d7B3bBD88EFdE6a93cF74D2F5b0385D3E3B08A';
   const ethUriParams = 'ethereum:0x37d7B3bBD88EFdE6a93cF74D2F5b0385D3E3B08A?value=123&gasPrice=123&gas=123&gasLimit=123';
   const ethUriSingleParam = 'ethereum:0x37d7B3bBD88EFdE6a93cF74D2F5b0385D3E3B08A?value=123';
-  const btcTestUri = 'bitcoin:mkUNMewkQsHKRcUvv5HLKbqmepCqNH8goc';
+  const thtTestUri = 'thought:mkUNMewkQsHKRcUvv5HLKbqmepCqNH8goc';
   const bchTestUri = 'bchtest:qq083kgf3wjg7ya8nun36e8nf24g9xgvachahfnyle';
   const dogeTestUri = 'dogecoin:mpz836YMHb7Ubjx4G2YnutwQRd1yz5ssNv';
   const ltcTestUri = 'litecoin:QhpBFbYvLG2bgCZ3D1ztGEUVqmcgY5vjVF';
@@ -50,7 +50,7 @@ describe('Address Validation', () => {
   const maticUriSingleParam = 'matic:0x37d7B3bBD88EFdE6a93cF74D2F5b0385D3E3B08A?value=123';
 
   // Invalid Address
-  const invalidBtcAddress = '1NuKwkDtCymgA1FNLUBaUWLD8s4kKWvgn';
+  const invalidThtAddress = '1NuKwkDtCymgA1FNLUBaUWLD8s4kKWvgn';
   const invalidBchAddress = 'r8uujscckc56ancdkmqnyyl2rx6pnp24gmdfrf8qd';
   const invalidDogeAddress = 'DQnSpKaUdXYZz8Q4WUBCdaGBSthiAJbWB';
   const invalidLtcAddress = 'LYgDcZ3oW3aZBhZUyiC84fb99hyUPVxLw';
@@ -66,9 +66,9 @@ describe('Address Validation', () => {
   const invalidXrpUriParams = 'ripple:rEqj9WKSH7wEkPvWf6b4gCi26Y3F7HbKUF?amount=invalid&dt=123';
   const invalidMaticUriParams = 'matic:0x37d7B3bBD88EFdE6a93cF74D2F5b0385D3E3B08A?value=invalid&gasLimit=123&gas=123';
 
-  it('should be able to validate an BTC address', async () => {
-    const isValidAddress = await Validation.validateAddress('BTC', 'mainnet', btcAddress);
-    const isValidTestAddress = await Validation.validateAddress('BTC', 'testnet', btcTestAddress);
+  it('should be able to validate an THT address', async () => {
+    const isValidAddress = await Validation.validateAddress('THT', 'mainnet', thtAddress);
+    const isValidTestAddress = await Validation.validateAddress('THT', 'testnet', thtTestAddress);
     expect(isValidAddress).to.equal(true);
     expect(isValidTestAddress).to.equal(true);
   });
@@ -113,9 +113,9 @@ describe('Address Validation', () => {
     expect(isValidPrefixAddress).to.equal(true);
   });
 
-  it('should be able to validate an BTC Uri', async () => {
-    const isValidUri = await Validation.validateUri('BTC', btcUri);
-    const isValidTestUri = await Validation.validateUri('BTC', btcTestUri);
+  it('should be able to validate an THT Uri', async () => {
+    const isValidUri = await Validation.validateUri('THT', thtUri);
+    const isValidTestUri = await Validation.validateUri('THT', thtTestUri);
     expect(isValidUri).to.equal(true);
     expect(isValidTestUri).to.equal(true);
   });
@@ -168,8 +168,8 @@ describe('Address Validation', () => {
     expect(isValidUriSingleParam).to.equal(true);
   });
 
-  it('should be able to invalidate an incorrect BTC address', async () => {
-    const inValidAddress = await Validation.validateAddress('BTC', 'mainnet', invalidBtcAddress);
+  it('should be able to invalidate an incorrect THT address', async () => {
+    const inValidAddress = await Validation.validateAddress('THT', 'mainnet', invalidThtAddress);
     expect(inValidAddress).to.equal(false);
   });
 

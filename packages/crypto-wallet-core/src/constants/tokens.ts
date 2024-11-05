@@ -36,8 +36,8 @@ export let ETH_TOKEN_OPTS = {
     address: '0x6b175474e89094c44da98b954eedeac495271d0f'
   },
   '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599': {
-    name: 'Wrapped Bitcoin',
-    symbol: 'WBTC',
+    name: 'Wrapped Thought',
+    symbol: 'WTHT',
     decimals: 8,
     address: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'
   },
@@ -93,8 +93,8 @@ export let MATIC_TOKEN_OPTS = {
     address: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063'
   },
   '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6': {
-    name: '(PoS) Wrapped BTC',
-    symbol: 'WBTC',
+    name: '(PoS) Wrapped THT',
+    symbol: 'WTHT',
     decimals: 8,
     address: '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6'
   },
@@ -138,8 +138,8 @@ export let ARB_TOKEN_OPTS = {
     address: '0xaf88d065e77c8cc2239327c5edb3a432268e5831'
   },
   '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f': {
-    name: 'Wrapped Bitcoin',
-    symbol: 'WBTC',
+    name: 'Wrapped Thought',
+    symbol: 'WTHT',
     decimals: 8,
     address: '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f'
   },
@@ -180,8 +180,8 @@ export let OP_TOKEN_OPTS = {
     address: '0x0b2c639c533813f4aa9d7837caf62653d097ff85'
   },
   '0x68f180fcce6836688e9084f035309e29bf0a2095': {
-    name: 'Wrapped Bitcoin',
-    symbol: 'WBTC',
+    name: 'Wrapped Thought',
+    symbol: 'WTHT',
     decimals: 8,
     address: '0x68f180fcce6836688e9084f035309e29bf0a2095'
   },

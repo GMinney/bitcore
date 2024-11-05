@@ -1,0 +1,117 @@
+{
+  "name": "thoughtcore-wallet-service",
+  "description": "A service for Mutisig HD Thought Wallets",
+  "author": "Thought Inc",
+  "version": "10.2.1",
+  "license": "MIT",
+  "exports": "./ts_build/index.js",
+  "types": "./ts_build/index.d.ts",
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "thought",
+    "copay",
+    "multisig",
+    "wallet",
+    "thoughtcore",
+    "BWS"
+  ],
+  "type": "module",
+  "repository": {
+    "url": "git@github.com:thoughtnetwork/thoughtcore-wallet-service.git",
+    "type": "git"
+  },
+  "bugs": {
+    "url": "https://github.com/thoughtnetwork/thoughtcore-wallet-service/issues"
+  },
+  "scripts": {
+    "start": "npm run clean && npm run tsc && ./start.sh",
+    "stop": "./stop.sh",
+    "coverage": "npm run compile && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --reporter spec test",
+    "test": "npm run compile && mocha --exit",
+    "test:ci": "npm run test",
+    "coveralls": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "tsc": "npm run clean && tsc",
+    "build": "tsc",
+    "clean": "npm run clean:win && npm run clean:lin",
+    "clean:win": "node -e \"if (process.platform === 'win32') process.exit(1)\" || , if exist ./ts_build rmdir /Q /S ./ts_build",
+    "clean:lin": "node -e \"if (process.platform !== 'win32') process.exit(1)\" || rm -rf ./ts_build",
+    "compile": "npm run clean && npm run build",
+    "pub": "npm run build && npm publish",
+    "precommit": "npm run fix && npm run lint",
+    "lint": "tslint -c ../../tslint.json 'src/**/*.ts'",
+    "fix": "tslint --fix -c ../../tslint.json 'src/**/*.ts'",
+    "update:stats": "npm run clean && npm run tsc && chmod +x ./ts_build/updatestats/updatestats.js && ./ts_build/updatestats/updatestats.js ",
+    "clean:fiatrates": "npm run clean && npm run tsc && chmod +x ./ts_build/cleanfiatrates/cleanfiatrates.js && ./ts_build/cleanfiatrates/cleanfiatrates.js "
+  },
+  "dependencies": {
+    "@sendgrid/mail": "^8.1.3",
+    "async": "3.2.6",
+    "thoughtcore-lib": "file:../thoughtcore-lib",
+    "bn.js": "^5.2.1",
+    "body-parser": "^1.20.2",
+    "compression": "1.7.4",
+    "cors": "2.8.5",
+    "crypto-wallet-core": "file:../crypto-wallet-core",
+    "elliptic": "6.5.7",
+    "email-validator": "2.0.4",
+    "ethers": "^6.13.2",
+    "express": "^4.19.2",
+    "express-rate-limit": "7.4.0",
+    "got": "14.4.2",
+    "inherits": "2.0.4",
+    "json-stable-stringify": "1.1.1",
+    "lodash": "^4.17.21",
+    "moment": "2.30.1",
+    "mongodb": "6.8.0",
+    "moralis": "^2.27.2",
+    "mustache": "4.2.0",
+    "nodemailer": "^6.9.14",
+    "nyc": "17.0.0",
+    "preconditions": "3.0.2",
+    "read": "3.0.1",
+    "sjcl": "1.0.8",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
+    "source-map-support": "0.5.21",
+    "uuid": "10.0.0",
+    "web3": "4.12.1",
+    "web3-utils": "^4.3.1",
+    "winston": "3.14.2"
+  },
+  "devDependencies": {
+    "@types/async": "^3.2.24",
+    "@types/got": "9.6.12",
+    "@types/lodash": "^4.17.7",
+    "@types/node": "^22.5.0",
+    "@types/nodemailer": "^6.4.15",
+    "chai": "^5.1.1",
+    "jsdoc": "^4.0.3",
+    "memdown": "^6.1.1",
+    "mocha": "^10.7.3",
+    "mocha-lcov-reporter": "^1.3.0",
+    "proxyquire": "^2.1.3",
+    "sinon": "^18.0.0",
+    "supertest": "*",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "8.3.0"
+  },
+  "thoughtcoreNode": "./thoughtcorenode",
+  "contributors": [
+    {
+      "name": "Braydon Fuller",
+      "email": "braydon@thoughtnetwork.com"
+    },
+    {
+      "name": "Ivan Socolsky",
+      "email": "ivan@thoughtnetwork.com"
+    },
+    {
+      "name": "Matias Alejo Garcia",
+      "email": "ematiu@gmail.com"
+    }
+  ],
+  "gitHead": "e091d99915d099863ad3e78dbe867aa7780191e4"
+}

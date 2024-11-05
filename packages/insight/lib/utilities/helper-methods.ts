@@ -10,10 +10,10 @@ import {
   UTXO_DEFAULT_REFRESH_INTERVAL,
 } from './constants';
 import {BlockTransactionDetails} from './models';
-import BitcoreLib from 'bitcore-lib';
-// import BitcoreLibCash from 'bitcore-lib-cash';
-// import BitcoreLibDoge from 'bitcore-lib-doge';
-// import BitcoreLibLtc from 'bitcore-lib-ltc';
+import ThoughtcoreLib from 'thoughtcore-lib';
+// import ThoughtcoreLibCash from 'thoughtcore-lib-cash';
+// import ThoughtcoreLibDoge from 'thoughtcore-lib-doge';
+// import ThoughtcoreLibLtc from 'thoughtcore-lib-ltc';
 
 export const buildTime = (time: string): string => {
   const diffMs = Math.abs(Date.now() - Date.parse(time));
@@ -108,10 +108,10 @@ export const aggregateItems = (items: any[]): any[] => {
 };
 
 export const getFee = (tx: BlockTransactionDetails): number => {
-  const sumSatoshis: any = (arr: any): number =>
+  const sumNotions: any = (arr: any): number =>
     arr.reduce((prev: any, cur: any) => prev + cur.value, 0);
-  const inputs: number = sumSatoshis(tx.inputs);
-  const outputs: number = sumSatoshis(tx.outputs);
+  const inputs: number = sumNotions(tx.inputs);
+  const outputs: number = sumNotions(tx.outputs);
   return tx.isCoinBase ? 0 : inputs - outputs;
 };
 
@@ -174,14 +174,14 @@ export const normalizeParams = (
 
 export const getLib = (currency: string) => {
   switch (currency.toUpperCase()) {
-    case 'BTC':
+    case 'THT':
     default:
-      return BitcoreLib;
+      return ThoughtcoreLib;
     // case 'BCH':
-    //   return BitcoreLibCash;
+    //   return ThoughtcoreLibCash;
     // case 'DOGE':
-    //   return BitcoreLibDoge;
+    //   return ThoughtcoreLibDoge;
     // case 'LTC':
-    //   return BitcoreLibLtc;
+    //   return ThoughtcoreLibLtc;
   }
 };

@@ -1,12 +1,5 @@
-import { ArbValidation } from './arb';
-import { BaseValidation } from './base';
-import { BchValidation } from './bch';
-import { BtcValidation } from './btc';
-import { DogeValidation } from './doge';
+import { ThtValidation } from './tht';
 import { EthValidation } from './eth';
-import { LtcValidation } from './ltc';
-import { MaticValidation } from './matic';
-import { OpValidation } from './op';
 
 export interface IValidation {
   validateAddress(network: string, address: string): boolean;
@@ -14,15 +7,8 @@ export interface IValidation {
 }
 
 const validation: { [chain: string]: IValidation } = {
-  BTC: new BtcValidation(),
-  BCH: new BchValidation(),
-  ETH: new EthValidation(),
-  DOGE: new DogeValidation(),
-  LTC: new LtcValidation(),
-  MATIC: new MaticValidation(),
-  ARB: new ArbValidation(),
-  BASE: new BaseValidation(),
-  OP: new OpValidation()
+  THT: new ThtValidation(),
+  ETH: new EthValidation()
 };
 
 export class ValidationProxy {

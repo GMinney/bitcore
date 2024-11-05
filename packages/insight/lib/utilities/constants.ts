@@ -1,7 +1,7 @@
-export const SUPPORTED_CURRENCIES = ['BTC', 'BCH', 'ETH'];
+export const SUPPORTED_CURRENCIES = ['THT', 'BCH', 'ETH'];
 // export const SUPPORTED_CURRENCIES = ['THT', 'tTHT'];
-export const API_ROOT = 'https://api.bitcore.io/api';
-export const API_ROOT_ETH = 'https://api-eth.bitcore.io/api';
+export const API_ROOT = 'https://api.thoughtcore.io/api';
+export const API_ROOT_ETH = 'https://api-eth.thoughtcore.io/api';
 export const ETH_DEFAULT_REFRESH_INTERVAL = 300000;
 export const UTXO_DEFAULT_REFRESH_INTERVAL = 600000;
 export const COIN = 100000000;
@@ -9,7 +9,7 @@ export const DEFAULT_RBF_SEQ_NUMBER = 0xffffffff;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const colorCodes: any = {
-  BTC: '#F7931A',
+  THT: '#F7931A',
   BCH: '#2FCF6E',
   ETH: '#6B71D6',
   LTC: '#868686',

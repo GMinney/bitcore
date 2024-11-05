@@ -9,7 +9,7 @@ const CurrencyIcon = styled(motion.sup)`
 
 const SupCurrencyLogo = ({ currency }: { currency: string }) => {
   const animationControls = useAnimation();
-  const imgSrc = `https://bitpay.com/img/icon/currencies/${currency}.svg`;
+  const imgSrc = `https://thoughtnetwork.com/img/icon/currencies/${currency}.svg`;
 
   return (
     <CurrencyIcon variants={imageFadeIn} initial='initial' animate={animationControls}>

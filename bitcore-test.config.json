@@ -1,8 +1,8 @@
 {
-  "bitcoreNode": {
+  "thoughtcoreNode": {
     "modules": [
-      "./bitcoin",
-      "./bitcoin-cash",
+      "./thought",
+      "./thought-cash",
       "./ethereum",
       "./matic",
       "./ripple"
@@ -15,7 +15,7 @@
       }
     },
     "chains": {
-      "BTC": {
+      "THT": {
         "regtest": {
           "chainSource": "p2p",
           "trustedPeers": [
@@ -27,7 +27,7 @@
           "rpc": {
             "host": "localhost",
             "port": 8333,
-            "username": "bitcorenodetest",
+            "username": "thoughtcorenodetest",
             "password": "local321"
           }
         }
@@ -114,10 +114,10 @@
     },
     "aliasMapping": {
       "chains": {
-        "BTC": "BTC"
+        "THT": "THT"
       },
       "networks": {
-        "BTC": {
+        "THT": {
           "testnet3": "testnet",
           "testnet4": "testnet"
         }

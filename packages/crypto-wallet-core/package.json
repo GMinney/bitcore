@@ -23,7 +23,7 @@
   "author": "Micah Riggan",
   "license": "MIT",
   "dependencies": {
-    "bitcore-lib": "file:../bitcore-lib",
+    "thoughtcore-lib": "file:../thoughtcore-lib",
     "bn.js": "^5.2.1",
     "eslint-import-resolver-typescript": "^3.6.3",
     "ethers": "^6.13.2",
