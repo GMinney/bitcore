@@ -21,7 +21,7 @@ RUN set -x \
     && google-chrome --version
 
 
-RUN npm i -g npm@8.19.3
+RUN npm i -g npm@10.9.3
 
 WORKDIR /thoughtcore
 

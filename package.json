@@ -10,7 +10,7 @@
     "bootstrap": "./node_modules/.bin/lerna bootstrap",
     "insight:build": "cd ./packages/insight && npm i && npm run build",
     "node": "cd packages/thoughtcore-node && npm start",
-    "bws": "cd packages/thoughtcore-wallet-service && npm start",
+    "tws": "cd packages/thoughtcore-wallet-service && npm start",
     "compile": "./node_modules/.bin/lerna run compile",
     "lint": "lerna run lint",
     "fix": "lerna run fix",

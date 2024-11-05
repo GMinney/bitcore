@@ -11,6 +11,25 @@
   
 **Infrastructure to build Thought and blockchain-based applications for the next generation of financial technology.**
 
+## Insight Core
+- [Thoughtcore Node](packages/thoughtcore-node) - A standardized API to interact with multiple blockchain networks
+- [Insight](packages/insight) - A blockchain explorer web user interface
+
+### Insight Core Dependents
+- [Thoughtcore Wallet Client](packages/thoughtcore-wallet-client) - A client for the wallet service
+- [Thoughtcore Lib](packages/thoughtcore-lib) - A powerful JavaScript library for Thought
+- [Thoughtcore P2P](packages/thoughtcore-p2p) - The peer-to-peer networking protocol for Thought
+- [Thoughtcore Client](packages/thoughtcore-client) - A helper to create a wallet using the thoughtcore-v8 infrastructure
+- [Crypto Wallet Core](packages/crypto-wallet-core) - A coin-agnostic wallet library for creating transactions, signing, and address derivation
+- [Crypto RPC](packages/crypto-rpc) - RPC wrapper for multiple rpcs
+- - [Thoughtd RPC](packages/crypto-rpc) - A client library to connect to Thought Core RPC in JavaScript.
+
+
+## Setup
+- Ports 
+  - Insight and thoughtcore-node api - 3000 for public web applications,  
+  - Thought Network - 10617 (rpc) 10618 (peers) 11617 (rpc testnet) 11618 (peers testnet)
+
 ## Applications
 
 - [Thoughtcore Node](packages/thoughtcore-node) - A standardized API to interact with multiple blockchain networks
@@ -23,10 +42,8 @@
 ## Libraries
 
 - [Thoughtcore Lib](packages/thoughtcore-lib) - A powerful JavaScript library for Thought
-- [Thoughtcore Lib THT](packages/thoughtcore-lib-tht) - A powerful JavaScript library for THT
 - [Thoughtcore Mnemonic](packages/thoughtcore-mnemonic) - Implements mnemonic code for generating deterministic keys
 - [Thoughtcore P2P](packages/thoughtcore-p2p) - The peer-to-peer networking protocol for Thought
-- [Thoughtcore P2P THT](packages/thoughtcore-p2p-tht) - The peer-to-peer networking protocol for THT
 - [Crypto Wallet Core](packages/crypto-wallet-core) - A coin-agnostic wallet library for creating transactions, signing, and address derivation
 
 ## Extras
