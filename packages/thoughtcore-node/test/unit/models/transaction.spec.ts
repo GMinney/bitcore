@@ -15,7 +15,7 @@ describe('Transaction Model', function() {
   before(unitBeforeHelper);
   after(unitAfterHelper);
 
-  let sandbox = sinon.sandbox.create();
+  let sandbox = sinon.createSandbox();
   let address = 'mjVf6sFjt9q6aLY7M21Ap6CPSWdaoNHSf1';
   this.timeout(500000);
   before(() => {

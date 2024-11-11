@@ -92,7 +92,7 @@ export interface TxOp {
         blockTime?: Date;
         blockTimeNormalized?: Date;
         coinbase: boolean;
-        fee: number;
+        fee: bigint;
         size: number;
         locktime: number;
         inputCount: number;
@@ -350,11 +350,11 @@ export class TransactionModel extends BaseTransaction<IThtTransaction> {
         const spentWallets = spent.wallets || [];
         const txWallets = mintedWallets.concat(spentWallets);
         const wallets = lodash.uniqBy(txWallets, wallet => wallet.toHexString());
-        let fee = 0;
+        let fee = BigInt(0);
         if (groupedSpends[txid]) {
           // TODO: Fee is negative for mempool txs
-          fee = groupedSpends[txid].total - tx.outputAmount;
-          if (fee < 0) {
+          fee = BigInt(groupedSpends[txid].total) - BigInt(tx.outputAmount);
+          if (fee < BigInt(0)) {
             logger.debug('Negative fee %o %o %o', txid, groupedSpends[txid], tx.outputAmount);
           }
         }
@@ -738,7 +738,7 @@ export class TransactionModel extends BaseTransaction<IThtTransaction> {
       inputCount: tx.inputCount || -1,
       outputCount: tx.outputCount || -1,
       size: tx.size || -1,
-      fee: tx.fee || -1,
+      fee: tx.fee || BigInt(-1),
       value: tx.value || -1
     };
     if (tx.blockHeight === SpentHeightIndicators.conflicting) {

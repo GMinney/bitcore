@@ -5,17 +5,15 @@
  *  open a PR.
  */
 
-import AbiDecoder from 'abi-decoder';
+// import AbiDecoder from 'abi-decoder';
 import Web3 from 'web3';
 import { LoggifyClass } from '../../../../../decorators/Loggify';
-import { ERC20Abi } from '../../abi/erc20';
-import { ERC721Abi } from '../../abi/erc721';
+// import { ERC20Abi } from '../../abi/erc20';
+// import { ERC721Abi } from '../../abi/erc721';
 import { EVMTransactionStorage } from '../../models/transaction';
 import { ErigonBlock, IAbiDecodedData, IEVMBlock, IEVMTransactionInProcess } from '../../types';
 import { Callback, IJsonRpcRequest, IJsonRpcResponse, IRpc } from './index';
 
-AbiDecoder.addABI(ERC20Abi);
-AbiDecoder.addABI(ERC721Abi);
 
 if (Symbol['asyncIterator'] === undefined) (Symbol as any)['asyncIterator'] = Symbol.for('asyncIterator');
 
@@ -97,7 +95,7 @@ export class ErigonRPC implements IRpc {
   }
 
   public reconcileTraces(block: IEVMBlock, transactions: IEVMTransactionInProcess[], traceTxs: ClassifiedTrace[]) {
-    const gasSum = transactions.reduce((sum, e) => sum + e.fee, 0);
+    const gasSum = transactions.reduce((sum, e) => Number(BigInt(sum) + e.fee), 0);
 
     for (const tx of traceTxs) {
       if (tx.type === 'reward') {

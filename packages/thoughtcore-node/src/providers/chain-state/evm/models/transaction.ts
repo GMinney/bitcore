@@ -1,4 +1,4 @@
-import { ObjectID } from 'bson';
+import { ObjectId as ObjectID } from 'mongodb';
 import * as _ from 'lodash';
 import { LoggifyClass } from '../../../../decorators/Loggify';
 import logger from '../../../../logger';
@@ -292,7 +292,7 @@ export class EVMTransactionModel extends BaseTransaction<IEVMTransaction> {
       return;
     }
     for (const tx of txs) {
-      await this.collection.update(
+      await this.collection.updateMany(
         {
           chain,
           network,
@@ -301,8 +301,7 @@ export class EVMTransactionModel extends BaseTransaction<IEVMTransaction> {
           txid: { $ne: tx.txid },
           blockHeight: SpentHeightIndicators.pending
         },
-        { $set: { blockHeight: SpentHeightIndicators.conflicting, replacedByTxid: tx.txid } },
-        { w: 0, j: false, multi: true }
+        { $set: { blockHeight: SpentHeightIndicators.conflicting, replacedByTxid: tx.txid } }
       );
     }
     return;
@@ -542,7 +541,7 @@ export class EVMTransactionModel extends BaseTransaction<IEVMTransaction> {
       blockHash: tx.blockHash || '',
       blockTime: tx.blockTime ? tx.blockTime.toISOString() : '',
       blockTimeNormalized: tx.blockTimeNormalized ? tx.blockTimeNormalized.toISOString() : '',
-      fee: valueOrDefault(tx.fee, -1),
+      fee: valueOrDefault(tx.fee, BigInt(-1)),
       value: valueOrDefault(tx.value, -1),
       gasLimit: valueOrDefault(tx.gasLimit, -1),
       gasPrice: valueOrDefault(tx.gasPrice, -1),

@@ -11,10 +11,7 @@ const should = chai.should();
 const expect = chai.expect;
 
 const libMap = {
-  THT: CWC.ThoughtcoreLib,
-  BCH: CWC.ThoughtcoreLibCash,
-  LTC: CWC.ThoughtcoreLibLtc,
-  DOGE: CWC.ThoughtcoreLibDoge
+  THT: CWC.ThoughtcoreLib
 };
 
 describe('Wallet', function() {

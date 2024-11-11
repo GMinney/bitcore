@@ -741,7 +741,7 @@ describe('Transaction Sign', () => {
   it('should apply signatures to an ETH tx type 2', () => {
     const expectedTx =
       '0x02f9017d0580808504a817c800809437d7b3bbd88efde6a93cf74d2f5b0385d3e3b08a870dd764300b8000b90152f9014f808504a817c800809437d7b3bbd88efde6a93cf74d2f5b0385d3e3b08a870dd764300b8000b90124b6b4af05000000000000000000000000000000000000000000000000000dd764300b800000000000000000000000000000000000000000000000000000000004a817c8000000000000000000000000000000000000000000000000000000016ada606a26050bb49a5a8228599e0dd48c1368abd36f4f14d2b74a015b2d168dbcab0773ce399393220df874bb22ca961f351e038acd2ba5cc8c764385c9f23707622cc435000000000000000000000000000000000000000000000000000000000000001c7e247d684a635813267b10a63f7f3ba88b28ca2790c909110b28236cf1b9bba03451e83d5834189f28d4c77802fc76b7c760a42bc8bebf8dd15e6ead146805630000000000000000000000000000000000000000000000000000000000000000058080c0';
-    const parsedTx = ethers.utils.parseTransaction(expectedTx);
+    const parsedTx = ethers.Transaction.from(expectedTx);
     expect(parsedTx.type).to.equal(2);
     expect(parsedTx.maxFeePerGas).to.not.equal(null);
     expect(parsedTx.gasPrice).to.equal(null);
@@ -755,7 +755,7 @@ describe('Transaction Sign', () => {
 
     const expectedSignedTx =
       '0x02f901c00580808504a817c800809437d7b3bbd88efde6a93cf74d2f5b0385d3e3b08a870dd764300b8000b90152f9014f808504a817c800809437d7b3bbd88efde6a93cf74d2f5b0385d3e3b08a870dd764300b8000b90124b6b4af05000000000000000000000000000000000000000000000000000dd764300b800000000000000000000000000000000000000000000000000000000004a817c8000000000000000000000000000000000000000000000000000000016ada606a26050bb49a5a8228599e0dd48c1368abd36f4f14d2b74a015b2d168dbcab0773ce399393220df874bb22ca961f351e038acd2ba5cc8c764385c9f23707622cc435000000000000000000000000000000000000000000000000000000000000001c7e247d684a635813267b10a63f7f3ba88b28ca2790c909110b28236cf1b9bba03451e83d5834189f28d4c77802fc76b7c760a42bc8bebf8dd15e6ead146805630000000000000000000000000000000000000000000000000000000000000000058080c080a0db427c4dddcfc816581d657d9f30f8287bdebd9b9cbabc7a535fc67cde9f2b3da02eafc2d79ef47fe045c47f08af54736caf797c27f2e25266d6320243104834f7';
-    const parsedSignedTx = ethers.utils.parseTransaction(expectedSignedTx);
+    const parsedSignedTx = ethers.Transaction.from(expectedSignedTx);
     expect(signedTx).to.equal(expectedSignedTx);
     expect(parsedSignedTx.type).to.equal(2);
     expect(parsedSignedTx.maxFeePerGas).to.not.equal(null);
@@ -765,9 +765,9 @@ describe('Transaction Sign', () => {
   it('should fail to apply signatures to an ETH tx type 2 with insufficient gasPrice or maxGasFee', () => {
     const expectedTx =
       '0xf866018082520894423163e58aabec5daa3dd1130b759d24bef0f6ea8711c37937e080008025a06852e54c99c14b47d64a5c2791d76f2b9694f6b2d925f881793bec474315897ea0116f3a4ac81642aaac3bcb33fefb46fab24608dfdfaba5cc56e8c0e6022b020a';
-    const parsedTx = ethers.utils.parseTransaction(expectedTx);
+    const parsedTx = ethers.Transaction.from(expectedTx);
     expect(!!parsedTx.maxFeePerGas).to.equal(false);
-    expect(!!parsedTx.gasPrice.toNumber()).to.equal(false);
+    expect(!!parsedTx.gasPrice).to.equal(false);
     let error;
     try {
       const signedTx = Transactions.applySignature({
@@ -839,7 +839,7 @@ describe('Transaction Sign', () => {
   it('should apply signatures to an MATIC tx type 2', () => {
     const expectedTx =
       '0x02f901528301388180808504a817c800809437d7b3bbd88efde6a93cf74d2f5b0385d3e3b08a870dd764300b8000b90124b6b4af05000000000000000000000000000000000000000000000000000dd764300b800000000000000000000000000000000000000000000000000000000004a817c8000000000000000000000000000000000000000000000000000000016ada606a26050bb49a5a8228599e0dd48c1368abd36f4f14d2b74a015b2d168dbcab0773ce399393220df874bb22ca961f351e038acd2ba5cc8c764385c9f23707622cc435000000000000000000000000000000000000000000000000000000000000001c7e247d684a635813267b10a63f7f3ba88b28ca2790c909110b28236cf1b9bba03451e83d5834189f28d4c77802fc76b7c760a42bc8bebf8dd15e6ead146805630000000000000000000000000000000000000000000000000000000000000000c0';
-    const parsedTx = ethers.utils.parseTransaction(expectedTx);
+    const parsedTx = ethers.Transaction.from(expectedTx);
     expect(parsedTx.type).to.equal(2);
     expect(parsedTx.maxFeePerGas).to.not.equal(null);
     expect(parsedTx.gasPrice).to.equal(null);
@@ -853,7 +853,7 @@ describe('Transaction Sign', () => {
 
     const expectedSignedTx =
       '0x02f901958301388180808504a817c800809437d7b3bbd88efde6a93cf74d2f5b0385d3e3b08a870dd764300b8000b90124b6b4af05000000000000000000000000000000000000000000000000000dd764300b800000000000000000000000000000000000000000000000000000000004a817c8000000000000000000000000000000000000000000000000000000016ada606a26050bb49a5a8228599e0dd48c1368abd36f4f14d2b74a015b2d168dbcab0773ce399393220df874bb22ca961f351e038acd2ba5cc8c764385c9f23707622cc435000000000000000000000000000000000000000000000000000000000000001c7e247d684a635813267b10a63f7f3ba88b28ca2790c909110b28236cf1b9bba03451e83d5834189f28d4c77802fc76b7c760a42bc8bebf8dd15e6ead146805630000000000000000000000000000000000000000000000000000000000000000c080a0db427c4dddcfc816581d657d9f30f8287bdebd9b9cbabc7a535fc67cde9f2b3da02eafc2d79ef47fe045c47f08af54736caf797c27f2e25266d6320243104834f7';
-    const parsedSignedTx = ethers.utils.parseTransaction(expectedSignedTx);
+    const parsedSignedTx = ethers.Transaction.from(expectedSignedTx);
     expect(signedTx).to.equal(expectedSignedTx);
     expect(parsedSignedTx.type).to.equal(2);
     expect(parsedSignedTx.maxFeePerGas).to.not.equal(null);
@@ -863,9 +863,9 @@ describe('Transaction Sign', () => {
   it('should fail to apply signatures to an MATIC tx type 2 with insufficient gasPrice or maxGasFee', () => {
     const expectedTx =
       '0xf867018082520894423163e58aabec5daa3dd1130b759d24bef0f6ea8711c37937e08000808194a00da3147299808e98b962c45ff89415c8e53cbc1572dc4f275ac4e090c4b5f7b7a02bf658e82ebf130889be5150658c9d13667e0ef9ead5710b8ee21a72490d0186';
-    const parsedTx = ethers.utils.parseTransaction(expectedTx);
+    const parsedTx = ethers.Transaction.from(expectedTx);
     expect(!!parsedTx.maxFeePerGas).to.equal(false);
-    expect(!!parsedTx.gasPrice.toNumber()).to.equal(false);
+    expect(!!parsedTx.gasPrice).to.equal(false);
     let error;
     try {
       const signedTx = Transactions.applySignature({

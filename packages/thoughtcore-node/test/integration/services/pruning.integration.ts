@@ -8,7 +8,7 @@ const Pruning = new PruningService({ transactionModel: TransactionStorage, coinM
 import '../../../src/utils/polyfills';
 import { resetDatabase } from '../../helpers';
 import { intAfterHelper, intBeforeHelper } from '../../helpers/integration';
-import { RPC } from '../../../src/rpc';
+import { RPC, RPCTransaction } from '../../../src/rpc';
 
 describe('Pruning Service', function() {
   const suite = this;
@@ -147,7 +147,7 @@ describe('Pruning Service', function() {
   });
 
   it('should remove old transactions', async () => {
-    sandbox.stub(RPC.prototype, 'getTransaction').resolves(null);
+    sandbox.stub(RPC.prototype, 'getTransaction').resolves(undefined);
     await insertOldTx();
     const { chain, network } = oldMempoolTx;
 
@@ -180,9 +180,28 @@ describe('Pruning Service', function() {
 
   it('should skip removing transactions still in mempool', async () => {
     const rpcStub = sandbox.stub(RPC.prototype, 'getTransaction')
-    rpcStub.onCall(0).resolves(null);
-    rpcStub.onCall(1).resolves({});
-    rpcStub.onCall(2).resolves(null);
+
+    const mockRPCTransaction: RPCTransaction = {
+      in_active_chain: true,
+      strippedsize: 123,
+      hex: 'mockHex',
+      txid: 'mockTxid',
+      hash: 'mockHash',
+      size: 123,
+      vsize: 123,
+      version: 1,
+      locktime: 0,
+      vin: [],
+      vout: [],
+      blockhash: 'mockBlockhash',
+      confirmations: 1,
+      time: 1234567890,
+      blocktime: 1234567890
+    };
+
+    rpcStub.onCall(0).resolves(undefined);
+    rpcStub.onCall(1).resolves(mockRPCTransaction);
+    rpcStub.onCall(2).resolves(undefined);
     await insertOldTx(0);
     await insertOldTx(1);
     await insertOldTx(2);

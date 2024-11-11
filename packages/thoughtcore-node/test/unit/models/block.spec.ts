@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { ObjectID } from 'mongodb';
+import { ObjectId as ObjectID } from 'mongodb';
 import * as sinon from 'sinon';
 import { MongoBound } from '../../../src/models/base';
 import { ThoughtBlockStorage } from '../../../src/models/block';
@@ -29,7 +29,7 @@ describe('Block Model', function() {
   describe('addBlock', () => {
     let sandbox;
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
     });
     afterEach(() => {
       sandbox.restore();
@@ -89,7 +89,7 @@ describe('Block Model', function() {
   describe('getLocalTip', () => {
     let sandbox;
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
     });
     afterEach(() => {
       sandbox.restore();
@@ -112,7 +112,7 @@ describe('Block Model', function() {
   describe('getLocatorHashes', () => {
     let sandbox;
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
     });
     afterEach(() => {
       sandbox.restore();
@@ -127,7 +127,7 @@ describe('Block Model', function() {
   describe('handleReorg', () => {
     let sandbox;
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
     });
     afterEach(() => {
       sandbox.restore();

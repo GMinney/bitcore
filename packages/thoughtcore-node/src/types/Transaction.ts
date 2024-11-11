@@ -8,7 +8,7 @@ export interface TransactionJSON {
   blockTime: string;
   blockTimeNormalized: string;
   coinbase: boolean;
-  fee: number;
+  fee: bigint;
   size: number;
   locktime: number;
   inputCount: number;

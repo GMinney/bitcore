@@ -91,7 +91,7 @@ describe('Coin Model', function() {
   describe('getBalanceAtTime', () => {
     let sandbox: sinon.SinonSandbox;
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
     });
     afterEach(() => {
       sandbox.restore();
@@ -146,7 +146,7 @@ describe('Coin Model', function() {
   describe('getBalance', () => {
     let sandbox: sinon.SinonSandbox;
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
     });
     afterEach(() => {
       sandbox.restore();

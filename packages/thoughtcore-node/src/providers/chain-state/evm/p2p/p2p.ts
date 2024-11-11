@@ -81,7 +81,7 @@ export class EVMP2pWorker extends BaseP2PWorker<IEVMBlock> {
       this.txSubscription.subscribe(async (_err, txid) => {
         if (!this.isCachedInv('TX', txid)) {
           this.cacheInv('TX', txid);
-          const tx = (await this.web3!.eth.getTransaction(txid)) as ErigonTransaction;
+          const tx = (await this.web3!.eth.getTransaction(txid)) as unknown as ErigonTransaction;
           if (tx) {
             await this.processTransaction(tx);
             this.events.emit('transaction', tx);
@@ -265,7 +265,7 @@ export class EVMP2pWorker extends BaseP2PWorker<IEVMBlock> {
       let bestBlock = await this.web3!.eth.getBlockNumber();
       let lastLog = 0;
       let currentHeight = tip ? tip.height : chainConfig.syncStartHeight || 0;
-      logger.info(`Syncing ${bestBlock - currentHeight} blocks for ${chain} ${network}`);
+      logger.info(`Syncing ${bestBlock - BigInt(currentHeight)} blocks for ${chain} ${network}`);
       while (currentHeight <= bestBlock) {
         const block = await this.getBlock(currentHeight);
         if (!block) {
@@ -274,7 +274,7 @@ export class EVMP2pWorker extends BaseP2PWorker<IEVMBlock> {
         }
         const { convertedBlock, convertedTxs } = await this.convertBlock(block);
         await this.processBlock(convertedBlock, convertedTxs);
-        if (currentHeight === bestBlock) {
+        if (BigInt(currentHeight) === bestBlock) {
           bestBlock = await this.web3!.eth.getBlockNumber();
         }
         tip = await ChainStateProvider.getLocalTip({ chain, network });
@@ -364,7 +364,7 @@ export class EVMP2pWorker extends BaseP2PWorker<IEVMBlock> {
       const to = tx.to || '';
       const from = tx.from || '';
       const value = Number(tx.value);
-      const fee = Number(tx.gas) * Number(tx.gasPrice);
+      const fee = BigInt(Number(tx.gas) * Number(tx.gasPrice));
       const abiType = this.txModel.abiDecode(tx.input!);
       const nonce = tx.nonce || 0;
       const convertedTx: IEVMTransactionInProcess = {

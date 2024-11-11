@@ -52,7 +52,7 @@ if (require.main === module) {
           }
         }
 
-        previousBlock = locatorBlock;
+        previousBlock = locatorBlock.toObject();
         checkHeight++;
         if (success) {
           console.log({ block: checkHeight, success });

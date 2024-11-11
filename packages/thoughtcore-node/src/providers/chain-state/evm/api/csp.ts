@@ -1,7 +1,7 @@
 import { CryptoRpc } from 'crypto-rpc';
 import { ObjectId } from 'mongodb';
 import Web3 from 'web3';
-import { Transaction, AbiItem } from 'web3-types';
+import { AbiItem, TransactionReceipt } from 'web3-types';
 import Config from '../../../../config';
 import {
   historical,
@@ -53,6 +53,7 @@ import {
 } from './provider';
 import { EVMListTransactionsStream } from './transform';
 import CryptoRpcProvider from 'crypto-rpc/lib';
+import { TransformableModel } from '../../../../types/TransformableModel';
 
 export interface GetWeb3Response { rpc: CryptoRpcProvider; web3: Web3; dataType: string };
 
@@ -265,7 +266,11 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
       const receipt = await this.getReceipt(tx.network, tx.txid);
       if (receipt) {
         const fee = receipt.gasUsed * BigInt(tx.gasPrice);
-        await EVMTransactionStorage.collection.updateOne({ _id: tx._id }, { $set: { receipt, fee } });
+        await EVMTransactionStorage.collection.updateOne(
+          { _id: tx._id },
+          { $set: { receipt, fee } }
+        );
+
         tx.receipt = receipt;
         tx.fee = fee;
       }
@@ -298,8 +303,8 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
 
       if (this.isExternallyProvided({ network })) {
         const { web3 } = await this.getWeb3(network, { type: 'historical' });
-        tipHeight = await web3.eth.getBlockNumber();
-        const chainId = await this.getChainId({ network });
+        tipHeight = await Number(web3.eth.getBlockNumber());
+        const chainId = (await this.getChainId({ network })).toString();
         found = await this.getExternalProvider({ network }).getTransaction({ chain, network, chainId, txId });
       } else {
         let query = { chain, network, txid: txId };
@@ -352,7 +357,7 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
         const { limit, /*since,*/ tokenAddress } = args;
 
         if (this.isExternallyProvided({ network })) {
-          const chainId = await this.getChainId({ network });
+          const chainId = await Number(this.getChainId({ network }));
           const provider = this.getExternalProvider({ network });
           const txStream = await provider.streamAddressTransactions({
             chainId,
@@ -381,7 +386,13 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
 
           // NOTE: commented out since and paging for now b/c they were causing extra long query times on insight.
           // The case where an address has >1000 txns is an edge case ATM and can be addressed later
-          Storage.apiStreamingFind(EVMTransactionStorage, query, { limit /*since, paging: '_id'*/ }, req!, res!);
+          Storage.apiStreamingFind(
+            EVMTransactionStorage as unknown as TransformableModel<IEVMTransactionInProcess | Partial<MongoBound<IEVMTransactionInProcess>>>,
+            query,
+            { limit /*since, paging: '_id'*/ },
+            req!,
+            res!
+          );
         } else {
           try {
             const tokenTransfers = await this.getErc20Transfers(network, address, tokenAddress, args);
@@ -513,7 +524,7 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
       const populateEffects = new PopulateEffectsTransform();
 
       if (this.isExternallyProvided({ network })) {
-        const chainId = await this.getChainId({ network });
+        const chainId = (await this.getChainId({ network })).toString();
         const provider = this.getExternalProvider({ network });
         for (const address of walletAddresses) {
           const txStream = await provider.streamAddressTransactions({
@@ -536,6 +547,7 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
           .find(query)
           .sort({ blockTimeNormalized: 1 })
           .addCursorFlag('noCursorTimeout', true)
+          .stream()
           .pipe(new TransformWithEventPipe({ objectMode: true, passThrough: true }));
 
         transactionStream = transactionStream.eventPipe(populateEffects); // For old db entires
@@ -571,21 +583,21 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
     address: string,
     tokenAddress: string,
     args: Partial<StreamWalletTransactionsArgs> = {}
-  ): Promise<Array<Partial<Transaction>>> {
+  ): Promise<Array<Partial<TransactionReceipt>>> {
     const token = await this.erc20For(network, tokenAddress);
     const [sent, received] = await Promise.all([
-      token.getPastEvents('Transfer', {
+      token.getPastEvents('Transfer' as any, {
         filter: { _from: address },
         fromBlock: args.startBlock || 0,
         toBlock: args.endBlock || 'latest'
       }),
-      token.getPastEvents('Transfer', {
+      token.getPastEvents('Transfer' as any, {
         filter: { _to: address },
         fromBlock: args.startBlock || 0,
         toBlock: args.endBlock || 'latest'
       })
     ]);
-    return this.convertTokenTransfers([...sent, ...received]);
+    return this.convertTokenTransfers([...sent as ERC20Transfer[], ...received as ERC20Transfer[]]);
   }
 
   convertTokenTransfers(tokenTransfers: Array<ERC20Transfer>) {
@@ -603,7 +615,7 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
       from: returnValues['_from'],
       to: returnValues['_to'],
       value: returnValues['_value']
-    } as Partial<Transaction>;
+    } as Partial<TransactionReceipt>;
   }
 
   @realtime
@@ -623,19 +635,19 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
 
   async getWalletTokenTransactions(
     network: string,
-    walletId: ObjectID,
+    walletId: ObjectId,
     tokenAddress: string,
     args: StreamWalletTransactionsArgs
   ) {
     const addresses = await this.getWalletAddresses(walletId);
-    const allTokenQueries = Array<Promise<Array<Partial<Transaction>>>>();
+    const allTokenQueries = Array<Promise<Array<Partial<TransactionReceipt>>>>();
     for (const walletAddress of addresses) {
       const transfers = this.getErc20Transfers(network, walletAddress.address, tokenAddress, args);
       allTokenQueries.push(transfers);
     }
     let batches = await Promise.all(allTokenQueries);
     let txs = batches.reduce((agg, batch) => agg.concat(batch));
-    return txs.sort((tx1, tx2) => tx1.blockNumber! - tx2.blockNumber!);
+    return txs.sort((tx1, tx2) => Number(tx1.blockNumber) - Number(tx2.blockNumber));
   }
 
   @realtime
@@ -724,16 +736,20 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
 
     if (this.isExternallyProvided({ network })) {
       const { web3 } = await this.getWeb3(network);
-      tipHeight = await web3.eth.getBlockNumber();
-      const chainId = await this.getChainId({ network });
+      tipHeight = await Number(web3.eth.getBlockNumber());
+      const chainId = (await this.getChainId({ network })).toString();
       const blockRange = await this.getBlocksRange({ ...params, chainId });
 
       for (const blockNum of blockRange) {
         const block = await web3.eth.getBlock(blockNum);
-        const nextBlock = await web3.eth.getBlock(block.number + 1);
+        const nextBlock = await web3.eth.getBlock(block.number + BigInt(1));
         const convertedBlock = EVMBlockStorage.convertRawBlock(chain, network, block);
-        convertedBlock.nextBlockHash = nextBlock?.hash;
-        blocks.push(convertedBlock);
+        if (nextBlock?.hash) {
+          convertedBlock.nextBlockHash = nextBlock.hash;
+          blocks.push(convertedBlock);
+        } else {
+          continue
+        }
       }
     } else {
       const { query, options } = this.getBlocksQuery(params);
@@ -761,6 +777,9 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
     const addressBatches = partition(params.addresses, 500);
     for (let addressBatch of addressBatches) {
       const walletAddressInserts = addressBatch.map(address => {
+        if (!params.wallet._id) {
+          throw new Error('Wallet ID is undefined');
+        }
         return {
           insertOne: {
             document: { chain, network, wallet: params.wallet._id, address, processed: false }
@@ -851,7 +870,7 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
       if (tipHeight > height) {
         return [];
       }
-      query.endBlock = query.endBlock ?? tipHeight;
+      query.endBlock = query.endBlock ?? Number(tipHeight);
       query.startBlock = query.startBlock ?? query.endBlock - limit;
     } else if (blockId) {
       const { web3 } = await this.getWeb3(network);
@@ -859,7 +878,7 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
       if (!blk || blk.number == null) {
         throw new Error(`Could not get block ${blockId}`);
       }
-      height = blk.number;
+      height = Number(blk.number);
     }
 
     if (height != null) {
@@ -871,7 +890,7 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
       // Calaculate range with options
       const { web3 } = await this.getWeb3(network);
       const tipHeight = await web3.eth.getBlockNumber();
-      query.endBlock = query.endBlock ?? tipHeight;
+      query.endBlock = query.endBlock ?? Number(tipHeight);
       query.startBlock = query.startBlock ?? query.endBlock - limit;
     }
 
@@ -909,7 +928,7 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
 
     const { web3 } = await this.getWeb3(network);
     const tipHeight = await web3.eth.getBlockNumber();
-    const chainId = await this.getChainId({ network });
+    const chainId = await Number(this.getChainId({ network }));
     const blockRange = await this.getBlocksRange({ ...params, chainId });
     let isReading = false;
   
@@ -934,7 +953,7 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
             nextBlock = thisNextBlock;
             const convertedBlock = EVMBlockStorage.convertRawBlock(chain, network, block);
             convertedBlock.nextBlockHash = nextBlock?.hash;
-            convertedBlock.confirmations = tipHeight - block.number + 1;
+            convertedBlock.confirmations = Number(tipHeight) - Number(block.number) + 1;
             this.push(convertedBlock);
           }
         } catch (e) {

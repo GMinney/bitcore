@@ -146,7 +146,7 @@ class MoralisClass implements IExternalProvider {
       value: tx.value,
       gasLimit: tx.gas,
       gasPrice: tx.gas_price,
-      fee: Number(tx.receipt_gas_used) * Number(tx.gas_price),
+      fee: BigInt(Number(tx.receipt_gas_used) * Number(tx.gas_price)),
       nonce: tx.nonce,
       to: Web3.utils.toChecksumAddress(tx.to_address),
       from: Web3.utils.toChecksumAddress(tx.from_address),

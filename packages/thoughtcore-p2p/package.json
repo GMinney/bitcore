@@ -21,7 +21,6 @@
   "dependencies": {
     "thoughtcore-lib": "file:../thoughtcore-lib",
     "bloom-filter": "^0.2.0",
-    "buffers": "thoughtnetwork/node-buffers#v0.1.2-thoughtnetwork",
     "socks5-client": "^1.2.8"
   },
   "devDependencies": {

@@ -1,6 +1,5 @@
 import { Readable } from 'stream';
-import { Transaction } from 'web3-eth';
-import { AbiItem } from 'web3-utils';
+import { Transaction, AbiItem,  } from 'web3-types';
 import { ChainStateProvider } from '../..';
 import { Config } from '../../../../services/config';
 import { IEVMNetworkConfig } from '../../../../types/Config';
@@ -62,14 +61,18 @@ export class GnosisApi {
     const blockHeight = found && found.blockHeight ? found.blockHeight : null;
     if (!blockHeight || blockHeight < 0) return Promise.resolve([]);
     const contract = await this.multisigFor(chain, network, gnosisFactory);
-    const contractInfo = await contract.getPastEvents('ContractInstantiation', {
+    const contractInfo = await contract.getPastEvents('ContractInstantiation' as any, {
       fromBlock: web3.utils.toHex(blockHeight),
       toBlock: web3.utils.toHex(blockHeight)
     });
     return this.convertMultisigContractInstantiationInfo(
       contractInfo.filter(info => info.returnValues.sender.toLowerCase() === sender.toLowerCase())
+
     );
+
   }
+
+
 
   convertMultisigContractInstantiationInfo(contractInstantiationInfo: Array<MULTISIGInstantiation>) {
     return contractInstantiationInfo.map(this.convertContractInstantiationInfo);
@@ -102,19 +105,19 @@ export class GnosisApi {
 
     const blockHeight = block!.height;
     const [confirmationInfo, revocationInfo, executionInfo, executionFailure] = await Promise.all([
-      contract.getPastEvents('Confirmation', {
+      contract.getPastEvents('Confirmation' as any, {
         fromBlock: blockHeight,
         toBlock: 'latest'
       }),
-      contract.getPastEvents('Revocation', {
+      contract.getPastEvents('Revocation' as any, {
         fromBlock: blockHeight,
         toBlock: 'latest'
       }),
-      contract.getPastEvents('Execution', {
+      contract.getPastEvents('Execution' as any, {
         fromBlock: blockHeight,
         toBlock: 'latest'
       }),
-      contract.getPastEvents('ExecutionFailure', {
+      contract.getPastEvents('ExecutionFailure' as any, {
         fromBlock: blockHeight,
         toBlock: 'latest'
       })
@@ -200,7 +203,8 @@ export class GnosisApi {
     transactionStream = EVMTransactionStorage.collection
       .find(query)
       .sort({ blockTimeNormalized: 1 })
-      .addCursorFlag('noCursorTimeout', true);
+      .addCursorFlag('noCursorTimeout', true)
+      .stream();
 
     transactionStream = transactionStream.pipe(populateEffects); // For old db entires
 

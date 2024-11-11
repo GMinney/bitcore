@@ -23,11 +23,11 @@
   "author": "Micah Riggan",
   "license": "MIT",
   "dependencies": {
-    "thoughtcore-lib": "file:../thoughtcore-lib",
     "bn.js": "^5.2.1",
     "eslint-import-resolver-typescript": "^3.6.3",
     "ethers": "^6.13.2",
     "info": "0.0.6-beta.0",
+    "thoughtcore-lib": "file:../thoughtcore-lib",
     "web3": "^4.12.1",
     "xrpl": "4.0.0"
   },

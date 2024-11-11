@@ -183,14 +183,14 @@ export type IEVMTransactionInProcess = IEVMTransaction & {
 };
 
 export interface TxReceipt {
-  status: boolean;
+  status: bigint;
   transactionHash: string;
-  transactionIndex: number;
+  transactionIndex: bigint;
   blockHash: string;
-  blockNumber: number;
+  blockNumber: bigint;
   contractAddress?: string;
-  cumulativeGasUsed: number;
-  gasUsed: number;
+  cumulativeGasUsed: bigint;
+  gasUsed: bigint;
   logs: Array<any>;
 }
 
@@ -237,7 +237,7 @@ export interface EVMTransactionJSON {
   blockHash: string;
   blockTime: string;
   blockTimeNormalized: string;
-  fee: number;
+  fee: bigint;
   value: number;
   gasLimit: number;
   gasPrice: number;

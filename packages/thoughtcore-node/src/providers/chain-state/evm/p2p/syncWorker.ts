@@ -176,7 +176,7 @@ export class SyncWorker {
     const to = tx.to || '';
     const from = tx.from || '';
     const value = Number(tx.value);
-    const fee = Number(tx.gas) * Number(tx.gasPrice);
+    const fee = BigInt(Number(tx.gas) * Number(tx.gasPrice));
     const abiType = EVMTransactionStorage.abiDecode(tx.input!);
     const nonce = tx.nonce || 0;
     const convertedTx: IEVMTransactionInProcess = {

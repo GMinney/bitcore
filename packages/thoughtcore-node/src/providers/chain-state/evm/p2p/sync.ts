@@ -42,8 +42,27 @@ export class MultiThreadSync extends EventEmitter {
   getRpc() {
     const providerIdx = threadId % (this.config.providers || []).length;
     const providerConfig = this.config.provider || this.config.providers![providerIdx];
-    const rpcConfig = { ...providerConfig, chain: this.chain, currencyConfig: {} };
-    const rpc = new CryptoRpc(rpcConfig, {}).get(this.chain);
+
+
+    const rpcConfig = {
+      ...providerConfig,
+      chain: this.chain,
+      isEVM: true, // Assuming this is an EVM-compatible chain
+      host: providerConfig.host,
+      port: typeof providerConfig.port === 'number' ? providerConfig.port : 80, 
+      protocol: providerConfig.protocol,
+      currencyConfig: {},
+      options: providerConfig.options || {}, 
+      dataType: providerConfig.dataType || 'realtime', 
+      rpcPort: '', 
+      user: '', 
+      rpcUser: '', 
+      pass: '', 
+      rpcPass: '', 
+      tokens: {} 
+    };
+    
+    const rpc = new CryptoRpc(rpcConfig).get(this.chain);
     return rpc;
   }
 

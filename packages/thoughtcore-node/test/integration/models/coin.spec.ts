@@ -148,7 +148,7 @@ describe('Coin Model', function() {
     };
 
     // create tx with mutliple outputs
-    const tx1 = new ThoughtcoreLib.Transaction()
+    const tx1 = new ThoughtcoreLib.Transaction(false, undefined)
       .from(utxo1)
       .to('1Gokm82v6DmtwKEB8AiVhm82hyFSsEvBDK', 15000)
       .to('1Gokm82v6DmtwKEB8AiVhm82hyFSsEvBDK', 13000)

@@ -66,7 +66,7 @@ function addTx() {
     blockTime: new Date('2009-01-09T02:54:25.000Z'),
     blockTimeNormalized: new Date('2009-01-09T02:54:25.000Z'),
     coinbase: true,
-    fee: 0,
+    fee: BigInt(0),
     inputCount: 1,
     locktime: 0,
     outputCount: 1,

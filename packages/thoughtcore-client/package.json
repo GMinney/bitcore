@@ -22,10 +22,9 @@
   "dependencies": {
     "async": "3.2.6",
     "bcrypt": "5.1.1",
-    "thoughtcore-mnemonic": "file:../thoughtcore-mnemonic",
     "commander": "12.1.0",
     "crypto-wallet-core": "file:../crypto-wallet-core",
-    "elliptic": "6.5.7",
+    "elliptic": "^6.6.0",
     "ethers": "6.13.2",
     "got": "14.4.2",
     "JSONStream": "~1.3.5",
@@ -37,8 +36,9 @@
     "npm-check-updates": "^17.1.0",
     "progress": "2.0.3",
     "promptly": "3.2.0",
-    "secp256k1": "5.0.0",
-    "source-map-support": "0.5.21"
+    "secp256k1": "^5.0.1",
+    "source-map-support": "0.5.21",
+    "thoughtcore-mnemonic": "file:../thoughtcore-mnemonic"
   },
   "devDependencies": {
     "@types/bcrypt": "5.0.2",

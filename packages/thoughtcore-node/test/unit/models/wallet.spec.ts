@@ -1,4 +1,4 @@
-import { ObjectID } from 'bson';
+import { ObjectId as ObjectID } from 'bson';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { MongoBound } from '../../../src/models/base';
@@ -49,7 +49,7 @@ describe('Wallet Model', function() {
   describe('updateCoins', () => {
     let sandbox;
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
     });
     afterEach(() => {
       sandbox.restore();

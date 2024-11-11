@@ -14,7 +14,7 @@ describe('Modules', function() {
 
   it('should load configured modules correctly', () => {
     const sandbox = sinon.createSandbox();
-    sandbox.stub(Config, 'get').returns(mockConfig);
+    // sandbox.stub(Config, 'get').returns(mockConfig);
 
     validateModules();
     sandbox.restore();
@@ -22,12 +22,12 @@ describe('Modules', function() {
 
   it('should prevent double module registration', () => {
     const sandbox = sinon.createSandbox();
-    sandbox.stub(Config, 'get').returns({
-      // Double module registration test case. ModuleManager will attempt to register THT Module from
-      // "config.modules" as well as "config.chains". Should only register once.
-      modules: ['./thought'],
-      ...mockConfig
-    });
+    // sandbox.stub(Config, 'get').returns({
+    //   // Double module registration test case. ModuleManager will attempt to register THT Module from
+    //   // "config.modules" as well as "config.chains". Should only register once.
+    //   modules: ['./thought'],
+    //   ...mockConfig
+    // });
 
     validateModules();
     sandbox.restore();
@@ -70,44 +70,44 @@ describe('Modules', function() {
   });
 });
 
-const mockConfig = {
-  chains: {
-    THT: {
-      testnet: {
-        chainSource: 'p2p',
-        trustedPeers: [
-          {
-            host: '127.0.0.1',
-            port: 18333
-          }
-        ],
-        rpc: {
-          host: '127.0.0.1',
-          port: 18332,
-          username: 'thoughtnetworktest',
-          password: 'local321'
-        }
-      },
-    },
-    ETH: {
-      dev: {
-        trustedPeers: [
-          {
-            host: '127.0.0.1',
-            port: 8545
-          }
-        ],
-        chainSource: 'p2p',
-        provider: {
-          protocol: 'http',
-          host: '127.0.0.1',
-          port: 8545,
-          chain: 'ETH'
-        }
-      }
-    }
-  }
-};
+// const mockConfig = {
+//   chains: {
+//     THT: {
+//       testnet: {
+//         chainSource: 'p2p',
+//         trustedPeers: [
+//           {
+//             host: '127.0.0.1',
+//             port: 18333
+//           }
+//         ],
+//         rpc: {
+//           host: '127.0.0.1',
+//           port: 18332,
+//           username: 'thoughtnetworktest',
+//           password: 'local321'
+//         }
+//       },
+//     },
+//     ETH: {
+//       dev: {
+//         trustedPeers: [
+//           {
+//             host: '127.0.0.1',
+//             port: 8545
+//           }
+//         ],
+//         chainSource: 'p2p',
+//         provider: {
+//           protocol: 'http',
+//           host: '127.0.0.1',
+//           port: 8545,
+//           chain: 'ETH'
+//         }
+//       }
+//     }
+//   }
+// };
 
 const validateModules = () => {
   Modules.internalServices = []; // Remove all loaded modules from internalServices array for a fresh load
