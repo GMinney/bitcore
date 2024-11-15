@@ -1,17 +1,20 @@
 import * as express from 'express';
-import request from 'request';
+
 import logger from '../../logger';
 import { Config } from '../../services/config';
 import { IEVMNetworkConfig } from '../../types/Config';
 
-export function Web3Proxy(req: express.Request, res: express.Response) {
+
+export async function Web3Proxy(req: express.Request, res: express.Response) {
   let { chain, network } = req.params;
   const chainConfig: IEVMNetworkConfig = Config.chainConfig({ chain, network });
   const provider = chainConfig.provider || (chainConfig.providers && chainConfig.providers![0]);
+
   if (provider && chainConfig.publicWeb3) {
     const { host, port } = provider;
     const url = `http://${host}:${port}`;
     let requestStream;
+    let got = await import('got');
     if (req.body.jsonrpc) {
       const options = {
         uri: url,
@@ -20,9 +23,9 @@ export function Web3Proxy(req: express.Request, res: express.Response) {
         body: JSON.stringify(req.body),
         json: true
       };
-      requestStream = request(options);
+      requestStream = got.stream(url, options);
     } else {
-      requestStream = req.pipe(request(url) as any);
+      requestStream = req.pipe(got.stream(url) as any);
     }
     requestStream
       .on('error', (err: any) => {

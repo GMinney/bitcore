@@ -1,27 +1,54 @@
 version: '3'
+
+# mongo can be pulled from the docker hub
+# thoughtcore-node is built from the Dockerfile in the current directory using node from docker hub
+# insight is built from the Dockerfile in the packages/insight directory using node from docker hub
+# thought is built from the src repo using the ubuntu image
 services:
-  database:
-    image: mongo:3.4-jessie
+  mongo:
+    image: mongo:8.0.3-noble
     ports: 
     - 27017:27017
     volumes: 
     - /data/db:/data/db
+    restart: unless-stopped
     
   thoughtcore-node:
     build: .
     image: thoughtcore-node
     links:
-      - database
+      - mongo
     ports:
       - 8100:8100
       - 3000:3000
     environment:
-      - DB_HOST=database
+      - DB_HOST=mongo
     env_file: .env
+    restart: unless-stopped
 
   insight:
-    image: insight
+    image: ./packages/insight
     links:
       - thoughtcore-node
     environment:
       - API_URL=thoughtcore-node
+    restart: unless-stopped
+
+  thought:
+    image: ruimarinho/thought-core:24
+    command:
+      -printtoconsole
+      -regtest=1
+      -txindex=0
+      -listen=1
+      -server=1
+      -dnsseed=0
+      -upnp=0
+      -port=8332
+      -rpcport=8333
+      -rpcallowip=0.0.0.0/0
+      -rpcbind=0.0.0.0
+      -rpcuser=thoughtcorenodetest
+      -rpcpassword=local321
+      -fallbackfee=0.00001
+    restart: unless-stopped

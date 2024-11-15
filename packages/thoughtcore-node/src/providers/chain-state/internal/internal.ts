@@ -10,7 +10,7 @@ import { ThoughtBlockStorage, IThtBlock } from '../../../models/block';
 import { CacheStorage } from '../../../models/cache';
 import { CoinStorage, ICoin } from '../../../models/coin';
 import { StateStorage } from '../../../models/state';
-import { ITransaction, TransactionStorage } from '../../../models/transaction';
+import { IThtTransaction, ITransaction, TransactionStorage } from '../../../models/transaction';
 import { IWallet, WalletStorage } from '../../../models/wallet';
 import { IWalletAddress, WalletAddressStorage } from '../../../models/walletAddress';
 import { RPC } from '../../../rpc';
@@ -42,6 +42,7 @@ import {
 import { TransactionJSON } from '../../../types/Transaction';
 import { StringifyJsonStream } from '../../../utils/jsonStream';
 import { ListTransactionsStream } from './transforms';
+import { TransformableModel } from '../../../types/TransformableModel';
 
 @LoggifyClass
 export class InternalStateProvider implements IChainStateService {
@@ -79,14 +80,14 @@ export class InternalStateProvider implements IChainStateService {
     const { req, res, args } = params;
     const { limit, since } = args;
     const query = this.getAddressQuery(params);
-    Storage.apiStreamingFind(CoinStorage, query, { limit, since, paging: '_id' }, req!, res!);
+    Storage.apiStreamingFind(CoinStorage as unknown as TransformableModel<Partial<MongoBound<ICoin>>>, query, { limit, since, paging: '_id' }, req!, res!);
   }
 
   async streamAddressTransactions(params: StreamAddressUtxosParams) {
     const { req, res, args } = params;
     const { limit, since } = args;
     const query = this.getAddressQuery(params);
-    Storage.apiStreamingFind(CoinStorage, query, { limit, since, paging: '_id' }, req!, res!);
+    Storage.apiStreamingFind(CoinStorage as unknown as TransformableModel<Partial<MongoBound<ICoin>>>, query, { limit, since, paging: '_id' }, req!, res!);
   }
 
   async getBalanceForAddress(params: GetBalanceForAddressParams) {
@@ -105,7 +106,7 @@ export class InternalStateProvider implements IChainStateService {
   streamBlocks(params: StreamBlocksParams) {
     const { req, res } = params;
     const { query, options } = this.getBlocksQuery(params);
-    Storage.apiStreamingFind(ThoughtBlockStorage, query, options, req, res);
+    Storage.apiStreamingFind(ThoughtBlockStorage as unknown as TransformableModel<Partial<MongoBound<IThtBlock>>>, query, options, req, res);
   }
 
   async getBlocks(params: GetBlockParams): Promise<Array<IBlock>> {
@@ -212,7 +213,7 @@ export class InternalStateProvider implements IChainStateService {
     }
     const tip = await this.getLocalTip(params);
     const tipHeight = tip ? tip.height : 0;
-    return Storage.apiStreamingFind(TransactionStorage, query, args, req, res, t => {
+    return Storage.apiStreamingFind(TransactionStorage as unknown as TransformableModel<Partial<MongoBound<IThtTransaction>>>, query, args, req, res, t => {
       let confirmations = 0;
       if (t.blockHeight !== undefined && t.blockHeight >= 0) {
         confirmations = tipHeight - t.blockHeight + 1;

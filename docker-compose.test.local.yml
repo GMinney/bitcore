@@ -17,6 +17,3 @@ services:
     depends_on:
       - db
       - thought
-      - erigon
-      - geth
-      - rippled

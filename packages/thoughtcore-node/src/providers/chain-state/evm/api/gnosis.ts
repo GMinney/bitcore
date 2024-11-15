@@ -11,18 +11,20 @@ import { PopulateReceiptTransform } from './populateReceiptTransform';
 import { EVMListTransactionsStream } from './transform';
 import { EVMBlockStorage } from '../models/block';
 import { EVMTransactionStorage } from '../models/transaction';
-import { EventLog } from '../types';
+import { EventLog } from 'web3-types';
 import { BaseEVMStateProvider } from './csp';
 
-interface MULTISIGInstantiation
-  extends EventLog<{
-    [key: string]: string;
-  }> {}
+interface MULTISIGInstantiation extends EventLog{
+  returnValues: {
+    [key: string]: any;
+  }
+};
 
-interface MULTISIGTxInfo
-  extends EventLog<{
-    [key: string]: string;
-  }> {}
+interface MULTISIGTxInfo extends EventLog{
+  returnValues: {
+    [key: string]: any;
+  }
+};
 
 function getCSP(chain: string) {
   return ChainStateProvider.get({ chain }) as BaseEVMStateProvider;
@@ -61,18 +63,15 @@ export class GnosisApi {
     const blockHeight = found && found.blockHeight ? found.blockHeight : null;
     if (!blockHeight || blockHeight < 0) return Promise.resolve([]);
     const contract = await this.multisigFor(chain, network, gnosisFactory);
-    const contractInfo = await contract.getPastEvents('ContractInstantiation' as any, {
+
+    const contractInfo: EventLog[] = (await contract.getPastEvents('ContractInstantiation' as any, {
       fromBlock: web3.utils.toHex(blockHeight),
       toBlock: web3.utils.toHex(blockHeight)
-    });
+    })) as unknown as EventLog[];
     return this.convertMultisigContractInstantiationInfo(
-      contractInfo.filter(info => info.returnValues.sender.toLowerCase() === sender.toLowerCase())
-
+      contractInfo.filter(info => (info.returnValues as { sender: string }).sender.toLowerCase() === sender.toLowerCase())
     );
-
   }
-
-
 
   convertMultisigContractInstantiationInfo(contractInstantiationInfo: Array<MULTISIGInstantiation>) {
     return contractInstantiationInfo.map(this.convertContractInstantiationInfo);
@@ -105,22 +104,22 @@ export class GnosisApi {
 
     const blockHeight = block!.height;
     const [confirmationInfo, revocationInfo, executionInfo, executionFailure] = await Promise.all([
-      contract.getPastEvents('Confirmation' as any, {
+      (contract.getPastEvents('Confirmation' as any, {
         fromBlock: blockHeight,
         toBlock: 'latest'
-      }),
-      contract.getPastEvents('Revocation' as any, {
+      })) as unknown as EventLog[],
+      (contract.getPastEvents('Revocation' as any, {
         fromBlock: blockHeight,
         toBlock: 'latest'
-      }),
-      contract.getPastEvents('Execution' as any, {
+      })) as unknown as EventLog[],
+      (contract.getPastEvents('Execution' as any, {
         fromBlock: blockHeight,
         toBlock: 'latest'
-      }),
-      contract.getPastEvents('ExecutionFailure' as any, {
+      })) as unknown as EventLog[],
+      (contract.getPastEvents('ExecutionFailure' as any, {
         fromBlock: blockHeight,
         toBlock: 'latest'
-      })
+      })) as unknown as EventLog[]
     ]);
 
     const executionTransactionIdArray = executionInfo.map(i => i.returnValues.transactionId);

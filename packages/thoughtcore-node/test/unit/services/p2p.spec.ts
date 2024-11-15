@@ -38,7 +38,7 @@ describe('P2P Service', function() {
     sandbox
       .stub(Config, 'chainConfig')
       .withArgs({ chain, network })
-      .returns(fakeConfig);
+      .returns(fakeConfig as unknown as any);
 
     expect(P2P.workers).to.deep.eq([]);
     await P2P.start();
@@ -77,7 +77,7 @@ describe('P2P Service', function() {
     sandbox
       .stub(Config, 'chainConfig')
       .withArgs({ chain, network })
-      .returns(fakeConfig);
+      .returns(fakeConfig as unknown as any);
 
     expect(P2P.workers).to.deep.eq([]);
     await P2P.start();
@@ -96,7 +96,7 @@ describe('P2P Service', function() {
     sandbox
       .stub(Config, 'chainConfig')
       .withArgs({ chain, network })
-      .returns(fakeConfig);
+      .returns(fakeConfig as unknown as any);
 
     expect(P2P.workers).to.deep.eq([]);
     await P2P.start();

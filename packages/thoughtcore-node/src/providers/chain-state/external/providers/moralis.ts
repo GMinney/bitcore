@@ -1,4 +1,5 @@
-import request = require('request');
+// import request = require('request');
+import got from 'got';
 import Web3 from 'web3';
 import config from '../../../../config';
 import { ChainId } from '../../../../types/ChainNetwork';
@@ -31,17 +32,15 @@ class MoralisClass implements IExternalProvider {
     const queryStr = this._buildQueryString(query);
 
     return new Promise<number>((resolve, reject) => {
-      request({
+      got(`${this.baseUrl}/dateToBlock${queryStr}`,{
         method: 'GET',
-        url: `${this.baseUrl}/dateToBlock${queryStr}`,
         headers: this.headers,
         json: true
-      }, (err, _data: any, body) => {
-        if (err) {
-          return reject(err);
-        }
-        return resolve(body.block as number);
       })
+      .then((res) => {return resolve(res.body.block as number)} )
+      .catch((err) => {reject(err)});
+
+      
     });
   }
 
@@ -52,21 +51,21 @@ class MoralisClass implements IExternalProvider {
     const query = this._buildQueryString({ chain: chainId, include: 'internal_transactions' });
 
     return new Promise<IEVMTransactionTransformed>((resolve, reject) => {
-      request({
+      got(`${this.baseUrl}/transaction/${txId}${query}`, {
         method: 'GET',
-        url: `${this.baseUrl}/transaction/${txId}${query}`,
         headers: this.headers,
         json: true
-      }, (err, data) => {
-        if (err) {
-          return reject(err);
+      })
+      .then((res) => {
+        if (typeof res === 'string') {
+          return reject(new Error(res));
         }
-        if (typeof data === 'string') {
-          return reject(new Error(data));
-        }
-        const tx = data.body;
+        const tx = res.body;
         return resolve(this._transformTransaction({ chain, network, ...tx }));
-      });
+      })
+      .catch((err) => {reject(err);});
+
+      
     });
   }
 

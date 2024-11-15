@@ -1,3 +1,5 @@
+# Dockerfile for thoughtcore-node build found in docker-compose.yml
+
 FROM node:18-bullseye
 
 # Install Chrome

@@ -429,7 +429,7 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
     }
     const tip = await this.getLocalTip(params);
     const tipHeight = tip ? tip.height : 0;
-    return Storage.apiStreamingFind(EVMTransactionStorage, query, args, req, res, t => {
+    return Storage.apiStreamingFind(EVMTransactionStorage as unknown as TransformableModel<IEVMTransactionInProcess | Partial<MongoBound<IEVMTransactionInProcess>>>, query, args, req, res, t => {
       let confirmations = 0;
       if (t.blockHeight !== undefined && t.blockHeight >= 0) {
         confirmations = tipHeight - t.blockHeight + 1;

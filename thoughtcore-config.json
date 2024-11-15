@@ -1,0 +1,74 @@
+{
+  "thoughtcoreNode": {
+    "modules": [
+      "./thought"
+    ],
+    "services": {
+      "api": {
+        "wallets": {
+          "allowCreationBeforeCompleteSync": true
+        }
+      }
+    },
+    "chains": {
+      "THT": {
+        "regtest": {
+          "chainSource": "p2p",
+          "trustedPeers": [
+            {
+              "host": "localhost",
+              "port": 10618
+            }
+          ],
+          "rpc": {
+            "host": "localhost",
+            "port": 10617,
+            "username": "username",
+            "password": "password"
+          }
+        },
+        "testnet": {
+          "chainSource": "p2p",
+          "trustedPeers": [
+            {
+              "host": "phi.thought.live",
+              "port": 10618
+            }
+          ],
+          "rpc": {
+            "host": "localhost",
+            "port": 10617,
+            "username": "username",
+            "password": "password"
+          }
+        },
+        "mainnet": {
+          "chainSource": "p2p",
+          "trustedPeers": [
+            {
+              "host": "phi.thought.live",
+              "port": 10618
+            }
+          ],
+          "rpc": {
+            "host": "localhost",
+            "port": 10617,
+            "username": "username",
+            "password": "password"
+          }
+        }
+      }
+    },
+    "aliasMapping": {
+      "chains": {
+        "THT": "THT"
+      },
+      "networks": {
+        "THT": {
+          "testnet3": "testnet",
+          "testnet4": "testnet"
+        }
+      }
+    }
+  }
+}

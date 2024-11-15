@@ -279,10 +279,10 @@ function disableRegtest() {
 module.exports = {
   add: addNetwork,
   remove: removeNetwork,
-  defaultNetwork: mainnet,
-  mainnet: mainnet,
-  testnet: testnet,
-  regtest: regtest,
+  defaultNetwork: 'mainnet',
+  mainnet: 'mainnet',
+  testnet: 'testnet',
+  regtest: 'regtest',
   get: get,
   enableRegtest: enableRegtest,
   disableRegtest: disableRegtest

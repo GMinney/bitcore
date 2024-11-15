@@ -1,5 +1,4 @@
-import request from 'request';
-import util from 'util';
+// import got from 'got';
 import logger from '../../logger';
 import { NetworkType } from '../../types/ChainNetwork';
 import { FeeCacheType, IFeeProvider } from '../../types/FeeProvider';
@@ -32,9 +31,8 @@ export class BlockCypherClass implements IFeeProvider {
       if (this.cache[network] && this.cache[network].timestamp > Date.now() - 1000 * 90) {
         return this._getFeeLevel(this.cache[network].response, nblocks);
       }
-
-      const res = await util.promisify(request.get).call(request, {
-        uri: this.feeUrls[network],
+      let got = await import('got');
+      const res = await got.get(this.feeUrls[network], {
         json: true
       });
       if (res.statusCode !== 200) {

@@ -1,4 +1,4 @@
-import request = require('request');
+// import got from 'got';
 import { LoggifyClass } from './decorators/Loggify';
 type CallbackType = (err: any, data?: any) => any;
 
@@ -9,13 +9,13 @@ export class RPC {
     private password: string,
     private host: string,
     private port: number | string
-  ) {}
+  ) { }
 
-  public callMethod(method: string, params: any, callback: CallbackType, walletName?: string) {
-    request(
+  public async callMethod(method: string, params: any, callback: CallbackType, walletName?: string) {
+    let got = await import('got');
+    got.get(`http://${this.username}:${this.password}@${this.host}:${this.port}${walletName ? '/wallet/' + walletName : ''}`,
       {
         method: 'POST',
-        url: `http://${this.username}:${this.password}@${this.host}:${this.port}${walletName ? '/wallet/' + walletName : ''}`,
         body: {
           jsonrpc: '1.0',
           id: Date.now(),
@@ -23,25 +23,22 @@ export class RPC {
           params
         },
         json: true
-      },
-      (err, res) => {
-        if (err) {
-          return callback(err);
-        } else if (res) {
-          if (res.body) {
-            if (res.body.error) {
-              return callback(res.body.error);
-            } else if (res.body.result) {
-              return callback(null, res.body && res.body.result);
-            } else {
-              return callback({ msg: 'No error or body found', body: res.body });
-            }
+      })
+      .then((res) => {
+        if (res.body) {
+          if (res.body.error) {
+            return callback(res.body.error);
+          } else if (res.body.result) {
+            return callback(null, res.body && res.body.result);
+          } else {
+            return callback({ msg: 'No error or body found', body: res.body });
           }
-        } else {
+        }
+        else {
           return callback('No response or error returned by rpc call');
         }
-      }
-    );
+      })
+      .catch((err) => { callback(err) });
   }
 
   async asyncCall<T>(method: string, params: any[], walletName?: string) {

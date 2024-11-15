@@ -1124,7 +1124,7 @@ Transaction.prototype.removeOutput = function(index) {
 /**
  * Sort a transaction's inputs and outputs according to BIP69
  *
- * @see {https://github.com/thought/bips/blob/master/bip-0069.mediawiki}
+ * @see https://github.com/thought/bips/blob/master/bip-0069.mediawiki
  * @return {Transaction} this
  */
 Transaction.prototype.sort = function() {

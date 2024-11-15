@@ -1,5 +1,5 @@
-import request from 'request';
-import util from 'util';
+// import request from 'request';
+// import got from 'got';
 import logger from '../../logger';
 import { NetworkType } from '../../types/ChainNetwork';
 import { IFeeProvider } from '../../types/FeeProvider';
@@ -14,11 +14,11 @@ export class BitgoClass implements IFeeProvider {
     try {
       network = network === 'regtest' ? 'testnet' : network;
       nblocks = Math.min(Math.max(nblocks, 2), 1000); // min 2, max 1000
-
-      const res = await util.promisify(request.get).call(request, {
-        uri: `${this.feeUrls[network]}?numBlocks=${nblocks}`,
+      let got = await import('got');
+      const res = await got.get(`${this.feeUrls[network]}?numBlocks=${nblocks}`, {
         json: true
       });
+
       if (res.statusCode !== 200) {
         throw new Error(`Status code: ${res.statusCode}`);
       }

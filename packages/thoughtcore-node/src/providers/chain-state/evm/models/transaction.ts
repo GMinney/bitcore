@@ -22,6 +22,7 @@ import { MultisigAbi } from '../abi/multisig';
 import Web3 from 'web3';
 import { IEVMNetworkConfig } from '../../../../types/Config';
 import { Effect, EVMTransactionJSON, IAbiDecodedData, IAbiDecodeResponse, IEVMCachedAddress, IEVMTransaction, IEVMTransactionInProcess, ParsedAbiParams } from '../types';
+import { TransformableModel } from '../../../../types/TransformableModel';
 
 function requireUncached(module) {
   delete require.cache[require.resolve(module)];
@@ -131,9 +132,9 @@ export class EVMTransactionModel extends BaseTransaction<IEVMTransaction> {
     const txOps = await this.addTransactions({ ...params });
     logger.debug('Writing Transactions: %o', txOps.length);
     operations.push(
-      ...partition(txOps, txOps.length / Config.get().maxPoolSize).map(txBatch =>
+      ...partition(txOps as any, txOps.length / Config.get().maxPoolSize).map(txBatch =>
         this.collection.bulkWrite(
-          txBatch.map(op => this.toMempoolSafeUpsert(op, params.height)),
+          txBatch.map(op => this.toMempoolSafeUpsert(op as any, params.height)),
           { ordered: false }
         )
       )
@@ -309,7 +310,7 @@ export class EVMTransactionModel extends BaseTransaction<IEVMTransaction> {
 
   getTransactions(params: { query: any; options: StreamingFindOptions<IEVMTransaction> }) {
     let originalQuery = params.query;
-    const { query, options } = Storage.getFindOptions(this, params.options);
+    const { query, options } = Storage.getFindOptions(this as unknown as TransformableModel<IEVMTransactionInProcess | Partial<MongoBound<IEVMTransactionInProcess>>>, params.options);
     const finalQuery = Object.assign({}, originalQuery, query);
     return this.collection.find(finalQuery, options).addCursorFlag('noCursorTimeout', true);
   }
