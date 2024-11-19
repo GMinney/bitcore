@@ -1,4 +1,4 @@
-import { Thought } from './thoughtnetwork.ts';
+import { Thought } from './thought.ts';
 import { IProvider } from './provider.js';
 // import { Bitstamp } from './bitstamp';
 

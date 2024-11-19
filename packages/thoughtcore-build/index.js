@@ -2,12 +2,12 @@
 
 var gulp = require('gulp');
 
-var coveralls = require('@kollavarsham/gulp-coveralls');
 //var jshint = require('gulp-jshint');
-var mocha = require('gulp-mocha');
+//var mocha = require('gulp-mocha');
 var rename = require('gulp-rename');
-var shell = require('gulp-shell');
+//var shell = require('gulp-shell');
 var terser = require('gulp-terser');
+var exec = require('child_process').exec;
 //var bump = require('gulp-bump');
 //var git = require('gulp-git');
 var fs = require('fs');
@@ -18,7 +18,9 @@ function ignoreerror() {
   /* jshint ignore:end */
 }
 
-function startGulp(name, opts) {
+async function startGulp(name, opts) {
+  var mocha = await import('gulp-mocha');
+
   var task = {};
   opts = opts || {};
   var browser = !opts.skipBrowser;
@@ -67,17 +69,26 @@ function startGulp(name, opts) {
     }));
   };
 
-  task['test:karma'] = shell.task([
-    karmaPath + '  start ' + buildPath + 'karma.conf.js --single-run '
-  ]);
+  // task['test:karma'] = shell.task([
+  //   karmaPath + '  start ' + buildPath + 'karma.conf.js --single-run '
+  // ]);
 
-  task['test:node'] =  testmocha;
-  task['test:node:nofail'] =  function() {
+  task['test:karma'] = function () {
+    let command = karmaPath + '  start ' + buildPath + 'karma.conf.js --single-run '
+    exec($({command}), function (err, stdout, stderr) {
+      console.log(stdout);
+      console.log(stderr);
+      //console.log(err)
+    });
+  };
+
+  task['test:node'] = testmocha;
+  task['test:node:nofail'] = function () {
     return testmocha().on('error', ignoreerror);
   };
 
 
-  task['noop']= function() {};
+  task['noop'] = function () { };
 
   /**
    * file generation
@@ -92,11 +103,15 @@ function startGulp(name, opts) {
       browserifyCommand = browserifyPath + ' --require ./index.js:thoughtcore-lib -o thoughtcore-lib.js';
     }
 
-    task['browser:uncompressed'] = shell.task([
-      browserifyCommand
-    ]);
+    task['browser:uncompressed'] = function () {
+      exec($({browserifyCommand}), function (err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+        //console.log(err)
+      });
+    };
 
-    task['browser:terser'] =function() {
+    task['browser:terser'] = function () {
       return gulp.src(fullname + '.js')
         .pipe(terser({
           mangle: true,
@@ -110,9 +125,18 @@ function startGulp(name, opts) {
     task['browser:compressed'] =
       gulp.series(task['browser:uncompressed'], task['browser:terser']);
 
-    task['browser:maketests'] = shell.task([
-      'find test/ -type f -name "*.js" | xargs ' + browserifyPath + ' -t brfs -o tests.js'
-    ]);
+    // task['browser:maketests'] = shell.task([
+    //   'find test/ -type f -name "*.js" | xargs ' + browserifyPath + ' -t brfs -o tests.js'
+    // ]);
+
+    task['browser:maketests'] = function () {
+      let command = 'find test/ -type f -name "*.js" | xargs ' + browserifyPath + ' -t brfs -o tests.js';
+      exec($({command}), function (err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+        //console.log(err)
+      });
+    };
 
     task['browser'] = task['browser:compressed'];
   }
@@ -129,69 +153,69 @@ function startGulp(name, opts) {
 
   //  task['plato']= shell.task([platoPath + ' -d report -r -l .jshintrc -t ' + fullname + ' lib']);
 
-  task['coverage']= shell.task([istanbulPath + ' cover ' + mochaPath + ' -- --recursive']);
+  //task['coverage'] = shell.task([istanbulPath + ' cover ' + mochaPath + ' -- --recursive']);
 
-  task['coveralls'] = gulp.series(task['coverage'], function() {
-    gulp.src('coverage/lcov.info').pipe(coveralls());
-  });
+  // task['coveralls'] = gulp.series(task['coverage'], function() {
+  //   gulp.src('coverage/lcov.info').pipe(coveralls());
+  // });
 
   /**
    * watch tasks
    */
 
-  task['watch:test'] = function() {
+  task['watch:test'] = function () {
     //// todo: only run tests that are linked to file changes by doing
     //// something smart like reading through the require statements
     return gulp.watch(alljs, gulp.series('test'));
   };
 
-  task['watch:test:node']= function() {
+  task['watch:test:node'] = function () {
     //// todo: only run tests that are linked to file changes by doing
     //// something smart like reading through the require statements
     return gulp.watch(alljs, gulp.series('test:node'));
   };
 
   if (browser) {
-    task['watch:test:browser'], function() {
+    task['watch:test:browser'], function () {
       // todo: only run tests that are linked to file changes by doing
       // something smart like reading through the require statements
       return gulp.watch(alljs, task['test:browser']);
     };
   }
 
-  task['watch:coverage']= function() {
+  task['watch:coverage'] = function () {
     // todo: only run tests that are linked to file changes by doing
     // something smart like reading through the require statements
     return gulp.watch(alljs, task[coverage]);
   };
 
-  task['watch:lint']= function() {
+  task['watch:lint'] = function () {
     //// todo: only lint files that are linked to file changes by doing
     //// something smart like reading through the require statements
     return gulp.watch(alljs, task[lint]);
   };
 
   if (browser) {
-    task['watch:browser']= function() {
+    task['watch:browser'] = function () {
       return gulp.watch(alljs, task[browser]);
     };
   }
 
   if (browser) {
     task['test:browser'] = gulp.series(task['browser:uncompressed'], task['browser:maketests'], task['test:karma']);
-    task['test']= gulp.series(task['test:node'], task['test:browser']);
+    task['test'] = gulp.series(task['test:node'], task['test:browser']);
   } else {
-    task['test']= task['test:node'];
+    task['test'] = task['test:node'];
   }
-  task['default']= task['test'];
+  task['default'] = task['test'];
 
   /**
    * Release automation
    */
 
-  task['release:install']= shell.task([ 'npm install']);
+  //task['release:install'] = shell.task(['npm install']);
   var releaseFiles = ['./package.json'];
-  return  task;
+  return task;
 }
 
 module.exports = startGulp;

@@ -1,4 +1,9 @@
 
 var startGulp = require('thoughtcore-build');
-Object.assign(exports, startGulp('mnemonic'))
 
+function defaultTask(cb) {
+    startGulp('mnemonic')
+    cb();
+  }
+  
+  exports.default = defaultTask

@@ -102,7 +102,7 @@ export class TxProposal {
   escrowAddress: any;
   inputs: any[];
   outputs: Array<{
-    amount: number;
+    amount?: number;
     address?: string;
     toAddress?: string;
     message?: string;

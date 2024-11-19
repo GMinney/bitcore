@@ -4,17 +4,7 @@ import { Utils } from '../common/utils.ts';
 import { ITxProposal, IWallet, TxProposal } from '../model/index.ts';
 import { WalletService } from '../server.ts';
 import logger from '../logger.ts';
-import { ArbChain } from './arb/index.ts';
-import { BaseChain } from './base/index.ts';
-import { BchChain } from './bch/index.ts';
 import { ThtChain } from './tht/index.ts';
-import { DogeChain } from './doge/index.ts';
-import { EthChain } from './eth/index.ts';
-import { LtcChain } from './ltc/index.ts';
-import { MaticChain } from './matic/index.ts';
-import { OpChain } from './op/index.ts';
-import { XrpChain } from './xrp/index.ts';
-
 
 export interface INotificationData {
   out: {
@@ -76,15 +66,6 @@ export interface IChain {
 
 const chains: { [chain: string]: IChain } = {
   THT: new ThtChain(),
-  BCH: new BchChain(),
-  ETH: new EthChain(),
-  MATIC: new MaticChain(),
-  ARB: new ArbChain(),
-  BASE: new BaseChain(),
-  OP: new OpChain(),
-  XRP: new XrpChain(),
-  DOGE: new DogeChain(),
-  LTC: new LtcChain()
 };
 
 class ChainProxy {

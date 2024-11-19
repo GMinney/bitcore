@@ -16,14 +16,7 @@ const Thoughtcore = require('thoughtcore-lib');
 const Thoughtcore_ = {
   tht: Thoughtcore,
   bch: require('thoughtcore-lib-cash'),
-  eth: Thoughtcore,
-  matic: Thoughtcore,
-  xrp: Thoughtcore,
-  doge: require('thoughtcore-lib-doge'),
-  ltc: require('thoughtcore-lib-ltc'),
-  arb: Thoughtcore,
-  op: Thoughtcore,
-  base: Thoughtcore
+  eth: Thoughtcore
 };
 
 function v8network(bwsNetwork, chain = 'tht') {

@@ -16,13 +16,6 @@ const Thoughtcore = {
   tht: require('thoughtcore-lib'),
   bch: require('thoughtcore-lib-cash'),
   eth: require('thoughtcore-lib'),
-  matic: require('thoughtcore-lib'),
-  arb: require('thoughtcore-lib'),
-  base: require('thoughtcore-lib'),
-  op: require('thoughtcore-lib'),
-  xrp: require('thoughtcore-lib'),
-  doge: require('thoughtcore-lib-doge'),
-  ltc: require('thoughtcore-lib-ltc')
 };
 
 export interface IWallet {

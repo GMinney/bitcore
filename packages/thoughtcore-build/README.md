@@ -38,4 +38,5 @@ See [CONTRIBUTING.md](https://github.com/thoughtnetwork/thoughtcore/blob/master/
 
 Code released under [the MIT license](https://github.com/thoughtnetwork/thoughtcore/blob/master/LICENSE).
 
-Copyright 2013-2019 Thought, Inc. Thoughtcore is a trademark maintained by Thought, Inc.
+Copyright 2013-2019 BitPay, Inc. BitPay is a trademark maintained by BitPay, Inc.
+Copyright 2024 Thought AI, LLC. for modfications to Thought Network

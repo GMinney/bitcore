@@ -49,12 +49,12 @@
     "gulp-mocha": "^10.0.1",
     "gulp-rename": "^2.0.0",
     "gulp-terser": "^2.1.0",
-    "nyc": "17.0.0",
     "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",
     "karma-mocha": "^2.0.1",
     "lodash": "^4.17.21",
-    "mocha": "^10.7.3"
+    "mocha": "^10.7.3",
+    "nyc": "17.0.0"
   },
   "gitHead": "012cc0216a9bc6b195035855bd17149bad41acd1"
 }

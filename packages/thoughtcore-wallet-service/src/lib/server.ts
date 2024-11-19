@@ -51,14 +51,7 @@ const Thoughtcore = require('thoughtcore-lib');
 const Thoughtcore_ = {
   tht: Thoughtcore,
   bch: require('thoughtcore-lib-cash'),
-  eth: Thoughtcore,
-  matic: Thoughtcore,
-  arb: Thoughtcore,
-  base: Thoughtcore,
-  op: Thoughtcore,
-  xrp: Thoughtcore,
-  doge: require('thoughtcore-lib-doge'),
-  ltc: require('thoughtcore-lib-ltc')
+  eth: Thoughtcore
 };
 
 

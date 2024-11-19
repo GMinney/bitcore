@@ -1127,9 +1127,8 @@ export class Storage {
             type: 'historyCacheV8',
             key: pos,
             tx: item
-          },
-          next
-        );
+          }
+        ).then(() => next()).catch(next);
       },
       err => {
         if (err) return cb(err);
@@ -1204,11 +1203,7 @@ export class Storage {
         };
         this.db.collection(collections.FIAT_RATES2).insertOne(
           i,
-          {
-            w: 1
-          },
-          next
-        );
+        ).then(() => next()).catch(next);;
       },
       cb
     );

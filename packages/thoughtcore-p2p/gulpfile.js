@@ -1,4 +1,10 @@
 'use strict';
 
 var startGulp = require('thoughtcore-build');
-module.exports = startGulp('p2p', {skipBrowser: true})
+
+function defaultTask(cb) {
+    startGulp('p2p', {skipBrowser: true})
+    cb();
+  }
+  
+  exports.default = defaultTask

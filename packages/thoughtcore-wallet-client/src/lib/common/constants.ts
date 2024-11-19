@@ -39,20 +39,12 @@ export const Constants = {
     'usdt'
   ],
 
-  CHAINS: ['tht', 'bch', 'eth', 'matic', 'xrp', 'doge', 'ltc', 'arb', 'base', 'op'],
-  UTXO_CHAINS: ['tht', 'bch', 'doge', 'ltc'],
-  EVM_CHAINS: ['eth', 'matic', 'arb', 'base', 'op'],
+  CHAINS: ['tht', 'eth'],
+  UTXO_CHAINS: ['tht'],
+  EVM_CHAINS: ['eth'],
   ETH_TOKEN_OPTS: CWC.Constants.ETH_TOKEN_OPTS,
-  MATIC_TOKEN_OPTS: CWC.Constants.MATIC_TOKEN_OPTS,
-  ARB_TOKEN_OPTS: CWC.Constants.ARB_TOKEN_OPTS,
-  BASE_TOKEN_OPTS: CWC.Constants.BASE_TOKEN_OPTS,
-  OP_TOKEN_OPTS: CWC.Constants.OP_TOKEN_OPTS,
   UNITS: CWC.Constants.UNITS,
   EVM_CHAINSUFFIXMAP: {
-    eth: 'e',
-    matic: 'm',
-    arb: 'arb',
-    base: 'base',
-    op: 'op',
+    eth: 'e'
   }
 };
