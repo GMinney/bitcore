@@ -47,7 +47,7 @@ export function LoggifyFunction(fn: (...args: any[]) => any, logPrefix: string =
   if (bind) {
     copy = copy.bind(bind);
   }
-  return function(...methodargs: any[]) {
+  return function (...methodargs: any[]) {
     const startTime = new Date();
     logger.debug(`${logPrefix}::called::`);
     let returnVal = copy(...methodargs);

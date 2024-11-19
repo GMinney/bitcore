@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import InfiniteScroll from 'react-infinite-scroll-component';
-import {useEffect, useState, memo, FC} from 'react';
+import { useEffect, useState, memo, FC } from 'react';
 
-import {TransactionEth} from '@/lib/utilities/models';
+import { TransactionEth } from '@/lib/utilities/models';
 
 import TransactionDetailsEth from './transaction-details-eth';
 import Coin from './coin';
 import InfiniteScrollLoadSpinner from '@/components/infinite-scroll-load-spinner';
 
 import styled from 'styled-components';
-import {motion} from 'framer-motion';
-import {Action} from '@/assets/styles/colors';
+import { motion } from 'framer-motion';
+import { Action } from '@/assets/styles/colors';
 
 const SortDiv = styled.div`
   font-size: 16px;
@@ -31,16 +31,16 @@ const ButtonText = styled.div.attrs<{
   $activeTextColor: boolean;
 }>(props => ({
   $activeTextColor: props.$activeTextColor
- }))`
+}))`
   font-size: 16px;
-  color: ${({$activeTextColor, theme: {colors}}) => ($activeTextColor ? Action : colors.color)};
+  color: ${({ $activeTextColor, theme: { colors } }) => ($activeTextColor ? Action : colors.color)};
 `;
 
 const LIMIT = 10;
 const CHUNK_SIZE = 100;
 
 const ToUiFriendlyEthCoin = (coin: TransactionEth, blockTipHeight: number) => {
-  const {to, from, txid, fee, value, blockTime} = coin;
+  const { to, from, txid, fee, value, blockTime } = coin;
   const blockHeight = parseInt(coin.blockHeight + '', 10);
   const confirmations = blockHeight > 0 ? blockTipHeight - blockHeight + 1 : blockHeight;
 
@@ -60,7 +60,7 @@ const ToUiFriendlyEthCoin = (coin: TransactionEth, blockTipHeight: number) => {
 const ProcessData = (data: any, blockTipHeight: number) => {
   const txs: any = [];
   for (const tx of data) {
-    const {mintHeight, mintTxid, value, spentHeight, spentTxid} = tx;
+    const { mintHeight, mintTxid, value, spentHeight, spentTxid } = tx;
     if (spentHeight >= -1) {
       txs.push({
         height: spentHeight,
@@ -90,12 +90,12 @@ interface CoinListProps {
   transactionsLength: any;
 }
 
-const CoinList: FC<CoinListProps> = ({txs, currency, network, tip, transactionsLength}) => {
+const CoinList: FC<CoinListProps> = ({ txs, currency, network, tip, transactionsLength }) => {
   const [limit, setLimit] = useState(LIMIT);
   const [chunkSize, setChunkSize] = useState(CHUNK_SIZE);
   const [currentOrder, setCurrentOrder] = useState('mostRecent');
 
-  const {height} = tip;
+  const { height } = tip;
 
   const [txsCopy, setTxsCopy] = useState<any>([]);
   const [transactions, setTransactions] = useState<any>([]);

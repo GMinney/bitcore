@@ -65,7 +65,7 @@ function _signatureHash(transaction, sighashType, inputNumber, sigversion, execd
     const spentScriptsBW = new BufferWriter();
     const sequencesBW = new BufferWriter();
 
-    for(let vin of transaction.inputs) {
+    for (let vin of transaction.inputs) {
       prevoutsBW.writeReverse(vin.prevTxId);
       prevoutsBW.writeInt32LE(vin.outputIndex);
 
@@ -178,7 +178,7 @@ function _getExecData(sigversion, leafHash) {
  */
 function sign(transaction, privateKey, sighashType, inputIndex, sigversion, leafHash) {
   $.checkArgument(sigversion === Signature.Version.TAPROOT || sigversion === Signature.Version.TAPSCRIPT, 'Invalid sigversion');
-  
+
   const execdata = _getExecData(sigversion, leafHash);
   const hashbuf = _signatureHash(transaction, sighashType, inputIndex, sigversion, execdata);
   if (!hashbuf) {

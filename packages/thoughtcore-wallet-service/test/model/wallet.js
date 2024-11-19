@@ -7,17 +7,17 @@ var should = chai.should();
 var { Wallet } = require('../../ts_build/lib/model/wallet');
 
 
-describe('Wallet', function() {
+describe('Wallet', function () {
 
-  describe('#create', function() {
-    it('will throw with an invalid string argument for "m" or "n"', function() {
-      (function() {
+  describe('#create', function () {
+    it('will throw with an invalid string argument for "m" or "n"', function () {
+      (function () {
         Wallet.create({
           m: '2',
           n: 2
         });
       }).should.throw('Variable should be a Number.');
-      (function() {
+      (function () {
         Wallet.create({
           m: 2,
           n: '2'
@@ -26,28 +26,28 @@ describe('Wallet', function() {
     });
   });
 
-  describe('#fromObj', function() {
-    it('will throw with an invalid string argument for "m" or "n"', function() {
-      (function() {
+  describe('#fromObj', function () {
+    it('will throw with an invalid string argument for "m" or "n"', function () {
+      (function () {
         Wallet.fromObj({
           m: '2',
           n: 2
         });
       }).should.throw('Variable should be a Number.');
-      (function() {
+      (function () {
         Wallet.fromObj({
           m: 2,
           n: '2'
         });
       }).should.throw('Variable should be a Number.');
     });
-    it('read a wallet', function() {
+    it('read a wallet', function () {
       var w = Wallet.fromObj(testWallet);
       w.isComplete().should.be.true;
     });
   });
-  describe('#createAddress', function() {
-    it('create an address', function() {
+  describe('#createAddress', function () {
+    it('create an address', function () {
       var w = Wallet.fromObj(testWallet);
       var a = w.createAddress(false);
       a.address.should.equal('3HPJYvQZuTVY6pPBz17fFVz2YPoMBVT34i');
@@ -56,14 +56,14 @@ describe('Wallet', function() {
     });
   });
 
-  describe('#createBEKeys', function() {
-    it('create BE keys based on xPubkeys', function() {
+  describe('#createBEKeys', function () {
+    it('create BE keys based on xPubkeys', function () {
       var w = Wallet.fromObj(testWallet);
       var a = w.updateBEKeys();
       w.beAuthPrivateKey2.should.be.equal('7272c172cf48c6306153aa9d7eaa5397bbf71b076a41deaf43e4a194fc76212c');
     });
 
-    it('key should change depending on the network', function() {
+    it('key should change depending on the network', function () {
       var t = _.clone(testWallet);
       t.isTestnet = true;
       var w = Wallet.fromObj(t);
@@ -71,7 +71,7 @@ describe('Wallet', function() {
       w.beAuthPrivateKey2.should.be.equal('de469a81d1df982765044c65ab3cedae0edebaca6a17e29e9addbe71b0cec6e5');
     });
 
-    it('key should depend on xpubs', function() {
+    it('key should depend on xpubs', function () {
       var t = _.clone(testWallet);
 
       t.copayers[0].xPubKey = 'xpub661MyMwAqRbcF3Q3BRNic47PusMzQbG3TDmxKJJT2k7vGLg7STrmdfYporfSgmCefUkLDnaQrMrVZf9knKBR9bYkwQxCaEpK611mZV8VNkN';
@@ -107,7 +107,7 @@ var testWallet = {
   }, {
     xPubKey: 'xpub661MyMwAqRbcFXUfkjfSaRwxJbAPpzNUvTiNFjgZwDJ8sZuhyodkP24L4LvsrgThYAAwKkVVSSmL7Ts7o9EHEHPB3EE89roAra7njoSeiMd',
     requestPubKey: '0246c30040eda1e36e02629ae8cd2a845fcfa947239c4c703f7ea7550d39cfb43a'
-  }, ],
+  },],
   copayers: [{
     addressManager: {
       receiveAddressIndex: 0,

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import styled, {createGlobalStyle, css} from 'styled-components';
-import {Error, Slate, Warning} from './colors';
+import styled, { createGlobalStyle, css } from 'styled-components';
+import { Error, Slate, Warning } from './colors';
 
 export const HeaderHeight = '80px';
 export const FooterHeight = '57px';
@@ -27,8 +27,8 @@ interface ConfirmationLabelProps {
 }
 
 export const ConfirmationLabel = styled.span<ConfirmationLabelProps>`
-  padding: ${({padding}) => padding || 0};
-  ${({warning, error, greyed}) => {
+  padding: ${({ padding }) => padding || 0};
+  ${({ warning, error, greyed }) => {
     if (greyed) {
       return css`
         color: ${Slate};
@@ -54,8 +54,8 @@ export const GlobalStyles = createGlobalStyle`
   body {
     padding: 0;
     margin: 0;
-    background: ${({theme: {colors}}) => colors.background};
-    color:${({theme: {colors}}) => colors.color};
+    background: ${({ theme: { colors } }) => colors.background};
+    color:${({ theme: { colors } }) => colors.color};
   }
 
   a {

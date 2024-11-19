@@ -14,15 +14,15 @@ var db, client, storage;
 function resetDb(cb) {
   if (!client) return cb();
   let db1 = client.db(config.mongoDb.dbname);
-  db1.dropDatabase(function(err) {
+  db1.dropDatabase(function (err) {
     return cb();
   });
 };
 
 
-describe('Storage', function() {
-  before(function(done) {
-    mongodb.MongoClient.connect(config.mongoDb.uri,{ useUnifiedTopology: true }, function(err, inclient) {
+describe('Storage', function () {
+  before(function (done) {
+    mongodb.MongoClient.connect(config.mongoDb.uri, { useUnifiedTopology: true }, function (err, inclient) {
       if (err) throw err;
       client = inclient;
       let db1 = client.db(config.mongoDb.dbname);
@@ -32,12 +32,12 @@ describe('Storage', function() {
       done();
     });
   });
-  beforeEach(function(done) {
+  beforeEach(function (done) {
     resetDb(done);
   });
 
-  describe('Store & fetch wallet', function() {
-    it('should correctly store and fetch wallet', function(done) {
+  describe('Store & fetch wallet', function () {
+    it('should correctly store and fetch wallet', function (done) {
       var wallet = Model.Wallet.create({
         id: '123',
         name: 'my wallet',
@@ -47,9 +47,9 @@ describe('Storage', function() {
         network: 'livenet',
       });
       should.exist(wallet);
-      storage.storeWallet(wallet, function(err) {
+      storage.storeWallet(wallet, function (err) {
         should.not.exist(err);
-        storage.fetchWallet('123', function(err, w) {
+        storage.fetchWallet('123', function (err, w) {
           should.not.exist(err);
           should.exist(w);
           w.id.should.equal(wallet.id);
@@ -60,8 +60,8 @@ describe('Storage', function() {
         })
       });
     });
-    it('should not return error if wallet not found', function(done) {
-      storage.fetchWallet('123', function(err, w) {
+    it('should not return error if wallet not found', function (done) {
+      storage.fetchWallet('123', function (err, w) {
         should.not.exist(err);
         should.not.exist(w);
         done();
@@ -69,8 +69,8 @@ describe('Storage', function() {
     });
   });
 
-  describe('Copayer lookup', function() {
-    it('should correctly store and fetch copayer lookup', function(done) {
+  describe('Copayer lookup', function () {
+    it('should correctly store and fetch copayer lookup', function (done) {
       var wallet = Model.Wallet.create({
         id: '123',
         name: 'my wallet',
@@ -79,7 +79,7 @@ describe('Storage', function() {
         coin: 'tht',
         network: 'livenet',
       });
-      _.each(_.range(3), function(i) {
+      _.each(_.range(3), function (i) {
         var copayer = Model.Copayer.create({
           coin: 'tht',
           name: 'copayer ' + i,
@@ -91,9 +91,9 @@ describe('Storage', function() {
       });
 
       should.exist(wallet);
-      storage.storeWalletAndUpdateCopayersLookup(wallet, function(err) {
+      storage.storeWalletAndUpdateCopayersLookup(wallet, function (err) {
         should.not.exist(err);
-        storage.fetchCopayerLookup(wallet.copayers[1].id, function(err, lookup) {
+        storage.fetchCopayerLookup(wallet.copayers[1].id, function (err, lookup) {
           should.not.exist(err);
           should.exist(lookup);
           lookup.walletId.should.equal('123');
@@ -103,8 +103,8 @@ describe('Storage', function() {
         })
       });
     });
-    it('should not return error if copayer not found', function(done) {
-      storage.fetchCopayerLookup('2', function(err, lookup) {
+    it('should not return error if copayer not found', function (done) {
+      storage.fetchCopayerLookup('2', function (err, lookup) {
         should.not.exist(err);
         should.not.exist(lookup);
         done();
@@ -112,14 +112,14 @@ describe('Storage', function() {
     });
   });
 
-  describe('Advertisments', function() {
+  describe('Advertisments', function () {
     // not yet implemented
   });
 
-  describe('Transaction proposals', function() {
+  describe('Transaction proposals', function () {
     var wallet, proposals;
 
-    beforeEach(function(done) {
+    beforeEach(function (done) {
       wallet = Model.Wallet.create({
         id: '123',
         name: 'my wallet',
@@ -128,7 +128,7 @@ describe('Storage', function() {
         coin: 'tht',
         network: 'livenet',
       });
-      _.each(_.range(3), function(i) {
+      _.each(_.range(3), function (i) {
         var copayer = Model.Copayer.create({
           coin: 'tht',
           name: 'copayer ' + i,
@@ -139,10 +139,10 @@ describe('Storage', function() {
         wallet.addCopayer(copayer);
       });
       should.exist(wallet);
-      storage.storeWalletAndUpdateCopayersLookup(wallet, function(err) {
+      storage.storeWalletAndUpdateCopayersLookup(wallet, function (err) {
         should.not.exist(err);
 
-        proposals = _.map(_.range(4), function(i) {
+        proposals = _.map(_.range(4), function (i) {
           var tx = Model.TxProposal.create({
             walletId: '123',
             coin: 'tht',
@@ -164,16 +164,16 @@ describe('Storage', function() {
           tx.txid = 'txid' + i;
           return tx;
         });
-        async.each(proposals, function(tx, next) {
+        async.each(proposals, function (tx, next) {
           storage.storeTx('123', tx, next);
-        }, function(err) {
+        }, function (err) {
           should.not.exist(err);
           done();
         });
       });
     });
-    it('should fetch tx', function(done) {
-      storage.fetchTx('123', proposals[0].id, function(err, tx) {
+    it('should fetch tx', function (done) {
+      storage.fetchTx('123', proposals[0].id, function (err, tx) {
         should.not.exist(err);
         should.exist(tx);
         tx.id.should.equal(proposals[0].id);
@@ -182,8 +182,8 @@ describe('Storage', function() {
         done();
       });
     });
-    it('should fetch tx by hash', function(done) {
-      storage.fetchTxByHash('txid0', function(err, tx) {
+    it('should fetch tx by hash', function (done) {
+      storage.fetchTxByHash('txid0', function (err, tx) {
         should.not.exist(err);
         should.exist(tx);
         tx.id.should.equal(proposals[0].id);
@@ -193,8 +193,8 @@ describe('Storage', function() {
       });
     });
 
-    it('should fetch all pending txs', function(done) {
-      storage.fetchPendingTxs('123', function(err, txs) {
+    it('should fetch all pending txs', function (done) {
+      storage.fetchPendingTxs('123', function (err, txs) {
         should.not.exist(err);
         should.exist(txs);
         txs.length.should.equal(2);
@@ -204,13 +204,13 @@ describe('Storage', function() {
         done();
       });
     });
-    it('should remove tx', function(done) {
-      storage.removeTx('123', proposals[0].id, function(err) {
+    it('should remove tx', function (done) {
+      storage.removeTx('123', proposals[0].id, function (err) {
         should.not.exist(err);
-        storage.fetchTx('123', proposals[0].id, function(err, tx) {
+        storage.fetchTx('123', proposals[0].id, function (err, tx) {
           should.not.exist(err);
           should.not.exist(tx);
-          storage.fetchTxs('123', {}, function(err, txs) {
+          storage.fetchTxs('123', {}, function (err, txs) {
             should.not.exist(err);
             should.exist(txs);
             txs.length.should.equal(3);

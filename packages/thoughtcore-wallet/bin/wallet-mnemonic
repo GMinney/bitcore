@@ -11,7 +11,7 @@ var args = program.args;
 
 utils.getClient(program, {
   mustExist: true
-}, function(client) {
+}, function (client) {
   var mnemonic = client.getMnemonic();
   console.log('* Wallet seed: %s', mnemonic);
 });

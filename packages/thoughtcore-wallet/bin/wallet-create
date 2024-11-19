@@ -20,7 +20,7 @@ var walletName = args[0];
 var copayerName = args[2] || process.env.USER;
 var passphrase = args[3];
 var network = program.testnet ? 'testnet' : 'livenet';
-var coin  = program.coin ? program.coin : 'tht';
+var coin = program.coin ? program.coin : 'tht';
 
 var mn;
 try {
@@ -31,18 +31,18 @@ try {
 
 utils.getClient(program, {
   doNotComplete: true
-}, function(client) {
+}, function (client) {
 
-  let {key, cred} = utils.create(client, { coin, network, account: 0, n: mn[1] });
+  let { key, cred } = utils.create(client, { coin, network, account: 0, n: mn[1] });
   client.createWallet(walletName, copayerName, mn[0], mn[1], {
     network: network,
     coin: coin,
-  }, function(err, secret) {
+  }, function (err, secret) {
     utils.die(err);
     console.log(' * ' + _.capitalize(network) + ' Wallet Created.');
     utils.saveClient(program, key, cred, {
       doNotOverwrite: true
-    }, function() {
+    }, function () {
       if (secret) {
         console.log('   - Secret to share:\n\t' + secret);
       }

@@ -219,7 +219,7 @@ export class SyncWorker {
   }
 }
 
-worker.parentPort!.once('message', async function(msg) {
+worker.parentPort!.once('message', async function (msg) {
   if (msg.message !== 'start') {
     throw new Error('Unknown startup message');
   }

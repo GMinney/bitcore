@@ -160,7 +160,7 @@ export class PushNotificationsService {
   }
 
   _sendPushNotifications(notification, cb) {
-    cb = cb || function() {};
+    cb = cb || function () { };
 
     const notifType = _.cloneDeep(PUSHNOTIFICATIONS_TYPES[notification.type]);
     if (!notifType) return cb();

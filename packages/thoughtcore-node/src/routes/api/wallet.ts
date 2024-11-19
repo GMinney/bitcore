@@ -10,7 +10,7 @@ function isTooLong(field, maxLength = 255) {
   return field && field.toString().length >= maxLength;
 }
 // create wallet
-router.post('/', async function(req: Request, res: Response) {
+router.post('/', async function (req: Request, res: Response) {
   try {
     let { chain, network } = req.params;
     let { name, pubKey, path, singleAddress } = req.body;
@@ -194,7 +194,7 @@ router.get('/:pubKey/utxos', Auth.authenticateMiddleware, async (req: Authentica
   }
 });
 
-router.get('/:pubKey', Auth.authenticateMiddleware, async function(req: AuthenticatedRequest, res: Response) {
+router.get('/:pubKey', Auth.authenticateMiddleware, async function (req: AuthenticatedRequest, res: Response) {
   try {
     let wallet = req.wallet;
     return res.send(wallet);

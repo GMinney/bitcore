@@ -15,10 +15,10 @@ program
 var args = program.args;
 var network = program.testnet ? 'testnet' : 'livenet';
 var coin = program.coin ? 'tht' : 'bch';
-utils.getClient(program, { doNotComplete: true, mustBeNew: true },  function (client) {
-  client.seedFromRandom({network:network, coin:coin});
+utils.getClient(program, { doNotComplete: true, mustBeNew: true }, function (client) {
+  client.seedFromRandom({ network: network, coin: coin });
   utils.saveClient(program, client, function () {
-    console.log(' * ' + _.capitalize(network) + '/'  + coin + ' Extended Private Key Created.');
+    console.log(' * ' + _.capitalize(network) + '/' + coin + ' Extended Private Key Created.');
     console.log('   To operate with the corresponding public keys from a proxy device, please run `wallet-export --nosign` and then on the proxy device `wallet-import`.');
   });
 });

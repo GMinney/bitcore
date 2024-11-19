@@ -28,7 +28,7 @@ let wallet;
 const main = async () => {
   const { name, path, storageType = 'Level', raw: rawTx, change, feeRate, feeTarget = 2, feePriority, quiet, noRbf, isSweep } = program.opts();
   let { txid } = program.opts();
-  
+
   if (!txid && !rawTx) {
     return console.log('Must provide either --raw or --txid');
   }

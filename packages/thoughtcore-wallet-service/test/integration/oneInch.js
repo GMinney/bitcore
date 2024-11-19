@@ -9,9 +9,9 @@ const helpers = require('./helpers');
 let config = require('../../ts_build/config.js').default;
 let server, wallet, fakeRequest, req;
 
-describe('OneInch integration', function() {
+describe('OneInch integration', function () {
   this.timeout(5000);
-  
+
   before((done) => {
     helpers.before((res) => {
       done();
@@ -26,8 +26,8 @@ describe('OneInch integration', function() {
     }
 
     fakeRequest = {
-      post: (_url, _opts, _cb) => { return _cb(null, { body: 'data'}) },
-      get: (_url, _opts, _cb) => { return _cb(null, { body: 'data'}) },
+      post: (_url, _opts, _cb) => { return _cb(null, { body: 'data' }) },
+      get: (_url, _opts, _cb) => { return _cb(null, { body: 'data' }) },
     };
 
     helpers.beforeEach((res) => {
@@ -35,7 +35,7 @@ describe('OneInch integration', function() {
         wallet = w;
         const priv = TestData.copayers[0].privKey_1H_0;
         const sig = helpers.signMessage('hello world', priv);
-  
+
         WalletService.getInstanceWithAuth({
           // test assumes wallet's copayer[0] is TestData's copayer[0]
           copayerId: wallet.copayers[0].id,
@@ -152,7 +152,7 @@ describe('OneInch integration', function() {
     beforeEach(() => {
       req = {};
       fakeRequest = {
-        get: (_url, _opts, _cb) => { return _cb(null, { body: { tokens: 'data'}}) },
+        get: (_url, _opts, _cb) => { return _cb(null, { body: { tokens: 'data' } }) },
       };
     });
 

@@ -16,21 +16,21 @@ export class MempoolSpaceClass implements IFeeProvider {
     mainnet: FeeCacheType;
     testnet: FeeCacheType
   } = {
-    mainnet: {
-      timestamp: 0,
-      response: null
-    },
-    testnet: {
-      timestamp: 0,
-      response: null
-    }
-  };
+      mainnet: {
+        timestamp: 0,
+        response: null
+      },
+      testnet: {
+        timestamp: 0,
+        response: null
+      }
+    };
 
   private cacheTime = 1000 * 90; // 90 seconds
 
   public async getFee(network: NetworkType, nblocks: number): Promise<number> {
     network = network === 'regtest' ? 'testnet' : network;
-    
+
     if (this.cache[network] && this.cache[network].timestamp > Date.now() - this.cacheTime) {
       return this._getFeeLevel(this.cache[network].response, nblocks);
     }
@@ -43,7 +43,7 @@ export class MempoolSpaceClass implements IFeeProvider {
       if (res.statusCode !== 200) {
         if (res.statusCode === 429) {
           this.cacheTime += 1000 * 30; // add 30 seconds
-        }  
+        }
         throw new Error(`Status code: ${res.statusCode}`);
       }
       const fee = res.body;

@@ -1,4 +1,4 @@
-import { GotStream, got} from 'got';
+import { GotStream, got } from 'got';
 import { URL } from 'url';
 import logger from '../../logger.ts';
 

@@ -50,7 +50,7 @@ const main = async () => {
       replaceByFee: rbf,
       tag
     };
-    
+
     let feeRate = feeRateParam;
     if (!feeRate) {
       const feerate = await wallet.getNetworkFee();

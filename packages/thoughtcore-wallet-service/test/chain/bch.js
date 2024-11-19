@@ -5,7 +5,7 @@ var async = require('async');
 var chai = require('chai');
 var mongodb = require('mongodb');
 var should = chai.should();
-const { ThoughtcoreLibCash } = require ('crypto-wallet-core');
+const { ThoughtcoreLibCash } = require('crypto-wallet-core');
 const { ChainService } = require('../../ts_build/lib/chain');
 const { BchChain } = require('../../ts_build/lib/chain/bch');
 const { TxProposal } = require('../../ts_build/lib/model/txproposal');
@@ -13,13 +13,13 @@ const { TxProposal } = require('../../ts_build/lib/model/txproposal');
 const { Common } = require('../../ts_build/lib/common');
 const Constants = Common.Constants;
 
-describe('Chain BCH', function() {
- 
+describe('Chain BCH', function () {
 
-  describe('#getEstimatedSize', function() {
+
+  describe('#getEstimatedSize', function () {
     let bch, fromAddress, simpleUtxoWith1THT, changeAddress, toAddress, privateKey;
 
-    before(function()  {
+    before(function () {
       bch = new BchChain();
       fromAddress = 'qzydnyc75u7kp6hhu4n3alq922u39ygl9gc3t4e2ma';
       toAddress = 'qped668nq9ltx2x0y85ls7mkp6xkxmg89y85s8lyla';
@@ -36,32 +36,32 @@ describe('Chain BCH', function() {
       const privKey = new ThoughtcoreLibCash.PrivateKey();
 
     });
-    it('1  input p2pkh,1 output p2pkh: Margin should be 10%  ', function() {
+    it('1  input p2pkh,1 output p2pkh: Margin should be 10%  ', function () {
       let x = TxProposal.fromObj(aTXP());
       delete x.changeAddress;
       x.outputs.pop();
-      x.addressType =   Constants.SCRIPT_TYPES.P2PKH;
+      x.addressType = Constants.SCRIPT_TYPES.P2PKH;
       const estimatedLength = bch.getEstimatedSize(x);
 
       // Create a similar TX.
       let tx = new ThoughtcoreLibCash.Transaction();
       tx.from(simpleUtxoWith1THT)
-        .to([{address: toAddress, notions: 1e8-7000}])
+        .to([{ address: toAddress, notions: 1e8 - 7000 }])
         .sign(privateKey);
 
-      const actualLength = tx.serialize().length/2;
+      const actualLength = tx.serialize().length / 2;
 
 
       // Check margin is ~0.0
-      ((Math.abs(actualLength-estimatedLength))/actualLength).should.not.be.above(0.05);
+      ((Math.abs(actualLength - estimatedLength)) / actualLength).should.not.be.above(0.05);
     });
 
- 
+
   });
 });
 
 
-var aTXP = function() {
+var aTXP = function () {
   var txp = {
     "version": 3,
     "createdOn": 1423146231,
@@ -108,7 +108,7 @@ var aTXP = function() {
       "toAddress": "qq0zkyfjkjfec47hgcu0acdzw36td4s2evqyyllszk",
       "amount": 20000000,
       "message": "second message"
-    }, ],
+    },],
     "outputOrder": [0, 1, 2]
   };
 

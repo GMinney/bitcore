@@ -7,7 +7,7 @@ var bech32 = require('bech32');
  * @param {String} str String to decode
  * @returns {Object} Decoded string info
  */
-var decode = function(str) {
+var decode = function (str) {
   if (typeof str !== 'string') {
     throw new Error('Input should be a string');
   }
@@ -47,13 +47,13 @@ var decode = function(str) {
  * @param {String|Number} encoding (optional, default=bech32) Valid encodings are 'bech32', 'bech32m', 0, and 1.
  * @returns {String} encoded string
  */
-var encode = function(prefix, version, data, encoding) {
-	if (typeof prefix !== 'string') {
-		throw new Error('Prefix should be a string');
-	}
-	if (typeof version !== 'number') {
-		throw new Error('version should be a number');
-	}
+var encode = function (prefix, version, data, encoding) {
+  if (typeof prefix !== 'string') {
+    throw new Error('Prefix should be a string');
+  }
+  if (typeof version !== 'number') {
+    throw new Error('version should be a number');
+  }
   // convert string to number
   if (encoding && typeof encoding == 'string') {
     encoding = encodings[encoding.toUpperCase()] || -1; // fallback to -1 so it throws invalid encoding below
@@ -61,12 +61,12 @@ var encode = function(prefix, version, data, encoding) {
   if (encoding && !(encoding == encodings.BECH32 || encoding == encodings.BECH32M)) {
     throw new Error('Invalid encoding specified');
   }
-  
+
   let b32Variety = encoding == encodings.BECH32M ? bech32.bech32m : bech32.bech32;
   let words = b32Variety.toWords(data);
 
   words.unshift(version);
-	return b32Variety.encode(prefix, words);
+  return b32Variety.encode(prefix, words);
 }
 
 const encodings = {

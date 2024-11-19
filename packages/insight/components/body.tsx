@@ -13,20 +13,20 @@ import Search from '@/app/[...insight]/search';
 function Body() {
   return (
 
-      <BrowserRouter basename={'/insight'} >
-        <Layout>
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/:currency/:network/blocks' element={<Blocks />} />
-            <Route path='/:currency/:network/block/:block' element={<Block />} />
-            <Route path='/:currency/:network/tx/:tx' element={<TransactionHash />} />
-            <Route path='/:currency/:network/address/:address' element={<Address />} />
-            <Route path='/search' element={<Search />} />
-            {/* 404 redirect to home page */}
-            <Route path='*' element={<Navigate to='/' />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
+    <BrowserRouter basename={'/insight'} >
+      <Layout>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/:currency/:network/blocks' element={<Blocks />} />
+          <Route path='/:currency/:network/block/:block' element={<Block />} />
+          <Route path='/:currency/:network/tx/:tx' element={<TransactionHash />} />
+          <Route path='/:currency/:network/address/:address' element={<Address />} />
+          <Route path='/search' element={<Search />} />
+          {/* 404 redirect to home page */}
+          <Route path='*' element={<Navigate to='/' />} />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
 
   );
 }

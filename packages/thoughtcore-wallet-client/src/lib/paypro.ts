@@ -21,7 +21,7 @@ const MAX_FEE_PER_KB = 500000;
 export class PayPro {
   // static request: request;
   static r = superagent;
-  constructor() {}
+  constructor() { }
   // var PayPro = {
   //
   // };
@@ -50,7 +50,7 @@ export class PayPro {
 
     try {
       host = URL.parse(requestUrl).hostname;
-    } catch (e) {}
+    } catch (e) { }
 
     if (!host) {
       return callback(new Error('Invalid requestUrl'));

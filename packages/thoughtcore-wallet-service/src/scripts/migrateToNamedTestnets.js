@@ -5,7 +5,7 @@ const { Storage } = require('../../ts_build');
 const startDate = new Date('2011-01-01T00:00:00.000Z');
 const endDate = new Date();
 
-const networkMapping = { 
+const networkMapping = {
   eth: {
     testnet: 'sepolia'
   },
@@ -50,7 +50,7 @@ storage.connect(config.storageOpts, async (err) => {
     console.log(err);
     return;
   }
-  
+
   function done(err) {
     if (err) { console.log(err) }
     storage.disconnect(() => { console.log('done'); });
@@ -163,7 +163,7 @@ storage.connect(config.storageOpts, async (err) => {
           network: 'testnet'
         });
 
-        fixAddressCount+= addressCount;
+        fixAddressCount += addressCount;
 
         // Update Wallets collection
         const txsCount = await storage.db.collection(Storage.collections.TXS).countDocuments({

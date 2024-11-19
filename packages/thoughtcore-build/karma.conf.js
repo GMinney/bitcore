@@ -1,7 +1,7 @@
 'use strict';
 
 // karma.conf.js
-module.exports = function(config) {
+module.exports = function (config) {
   var fs = require('fs');
 
   var isDocker;
@@ -39,7 +39,7 @@ module.exports = function(config) {
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
-        flags: isDocker? [
+        flags: isDocker ? [
           '--no-sandbox', // required to run without privileges in docker
           '--user-data-dir=/tmp/chrome-test-profile',
           '--disable-web-security'

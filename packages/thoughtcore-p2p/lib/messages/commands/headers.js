@@ -31,7 +31,7 @@ function HeadersMessage(arg, options) {
 }
 inherits(HeadersMessage, Message);
 
-HeadersMessage.prototype.setPayload = function(payload) {
+HeadersMessage.prototype.setPayload = function (payload) {
   $.checkArgument(payload && payload.length > 0, 'No data found to create Headers message');
   var parser = new BufferReader(payload);
   var count = parser.readVarintNum();
@@ -46,7 +46,7 @@ HeadersMessage.prototype.setPayload = function(payload) {
   utils.checkFinished(parser);
 };
 
-HeadersMessage.prototype.getPayload = function() {
+HeadersMessage.prototype.getPayload = function () {
   var bw = new BufferWriter();
   bw.writeVarintNum(this.headers.length);
   for (var i = 0; i < this.headers.length; i++) {

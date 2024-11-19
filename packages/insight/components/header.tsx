@@ -3,14 +3,14 @@
 
 import Search from './search';
 import styled from 'styled-components';
-import {device} from '@/lib/utilities/constants';
-import {AnimatePresence, motion} from 'framer-motion';
+import { device } from '@/lib/utilities/constants';
+import { AnimatePresence, motion } from 'framer-motion';
 import InsightLogo from './icons/insight-logo';
-import {useNavigate, useLocation} from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ThemeChanger from './theme-changer';
-import {Feather} from '@/assets/styles/colors';
-import {HeaderHeight, HeaderZIndex} from '@/assets/styles/global';
-import {memo} from 'react';
+import { Feather } from '@/assets/styles/colors';
+import { HeaderHeight, HeaderZIndex } from '@/assets/styles/global';
+import { memo } from 'react';
 
 const HeaderDiv = styled.div`
   position: fixed;
@@ -20,7 +20,7 @@ const HeaderDiv = styled.div`
   top: 0;
   display: flex;
   padding: 1rem calc((100% - 992px) / 4);
-  background: ${({theme: {dark}}) => (dark ? '#090909' : Feather)};
+  background: ${({ theme: { dark } }) => (dark ? '#090909' : Feather)};
   align-items: center;
   z-index: ${HeaderZIndex};
   @media screen and (max-width: 992px) {
@@ -71,7 +71,7 @@ export const fadeInOut = {
   },
 };
 
-const Header = ({setSearchError}: {setSearchError?: any}) => {
+const Header = ({ setSearchError }: { setSearchError?: any }) => {
   const navigate = useNavigate();
   const location = useLocation();
 

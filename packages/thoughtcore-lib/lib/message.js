@@ -139,7 +139,7 @@ Message.prototype.recoverPublicKey = function recoverPublicKey(thoughtAddress, s
  * @param {String} str - A string of the message
  * @returns {Message} A new instance of a Message
  */
-Message.fromString = function(str) {
+Message.fromString = function (str) {
   return new Message(str);
 };
 
@@ -177,7 +177,7 @@ Message.prototype.toJSON = function toJSON() {
  *
  * @returns {String} Message
  */
-Message.prototype.toString = function() {
+Message.prototype.toString = function () {
   return this.message;
 };
 
@@ -186,7 +186,7 @@ Message.prototype.toString = function() {
  *
  * @returns {String} Message
  */
-Message.prototype.inspect = function() {
+Message.prototype.inspect = function () {
   return '<Message: ' + this.toString() + '>';
 };
 

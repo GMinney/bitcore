@@ -9,7 +9,7 @@ program
   .parse(process.argv);
 
 utils.getClient(program, { mustExist: true }, function (client) {
-  client.getStatus({}, function(err, x) {
+  client.getStatus({}, function (err, x) {
     utils.die(err);
 
     if (x.wallet.n == 1) {
@@ -20,11 +20,11 @@ utils.getClient(program, { mustExist: true }, function (client) {
     console.log('\n * Copayer confirmation IDs:');
 
     var myConfirmationId;
-    _.each(x.wallet.copayers, function(x) {
+    _.each(x.wallet.copayers, function (x) {
       var confirmationId = utils.confirmationId(x);
       if (x.id != client.credentials.copayerId)
         console.log('\t\t* %s : %s', x.name, confirmationId);
-      else 
+      else
         myConfirmationId = confirmationId;
     });
 

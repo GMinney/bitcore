@@ -13,8 +13,8 @@ const aKey = new Key({
   seedType: 'mnemonic'
 });
 
-describe('Verifier', function() {
-  describe('checkAddress', function() {
+describe('Verifier', function () {
+  describe('checkAddress', function () {
     it('should verify a THT  address', () => {
       let cred = aKey.createCredentials(null, { coin: 'tht', network: 'livenet', account: 0, n: 1 });
       cred.addWalletInfo('id', 'name', 1, 1, 'copayer');

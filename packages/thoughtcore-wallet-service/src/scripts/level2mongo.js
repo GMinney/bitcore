@@ -10,13 +10,13 @@ var level = new LevelStorage({
 
 var mongo = new MongoStorage();
 mongo.connect({
-    mongoDb: {
-      uri: 'mongodb://localhost:27017/bws',
-    }
-  },
-  function(err) {
+  mongoDb: {
+    uri: 'mongodb://localhost:27017/bws',
+  }
+},
+  function (err) {
     if (err) throw err;
-    run(function(err) {
+    run(function (err) {
       if (err) throw err;
       console.log('All data successfully migrated');
       process.exit(0);
@@ -31,9 +31,9 @@ function run(cb) {
   var pending = 0,
     ended = false;
   level.db.readStream()
-    .on('data', function(data) {
+    .on('data', function (data) {
       pending++;
-      migrate(data.key, data.value, function(err) {
+      migrate(data.key, data.value, function (err) {
         if (err) throw err;
         pending--;
         if (pending == 0 && ended) {
@@ -41,10 +41,10 @@ function run(cb) {
         }
       });
     })
-    .on('error', function(err) {
+    .on('error', function (err) {
       return cb(err);
     })
-    .on('end', function() {
+    .on('end', function () {
       console.log('All old data read')
       ended = true;
       if (!pending) {

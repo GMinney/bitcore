@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import styled, {css} from 'styled-components';
-import {device, size} from '@/lib/utilities/constants';
-import {motion} from 'framer-motion';
-import {Action, Error, LightBlack, NeutralSlate, Slate, Slate30, Warning, White} from './colors';
+import styled, { css } from 'styled-components';
+import { device, size } from '@/lib/utilities/constants';
+import { motion } from 'framer-motion';
+import { Action, Error, LightBlack, NeutralSlate, Slate, Slate30, Warning, White } from './colors';
 
 export const TransactionTile = styled(motion.div)`
-  background-color: ${({theme: {dark}}) => (dark ? LightBlack : NeutralSlate)};
+  background-color: ${({ theme: { dark } }) => (dark ? LightBlack : NeutralSlate)};
   margin: 0.5rem auto;
   padding: 1rem;
 `;
@@ -14,7 +14,7 @@ export const TxsPlusSign = styled.span`
   width: 20px;
   height: 20px;
   border-radius: 25px;
-  background-color: ${({theme: {dark}}) => (dark ? '#0F0F0F' : '#1A1A1A')};
+  background-color: ${({ theme: { dark } }) => (dark ? '#0F0F0F' : '#1A1A1A')};
   text-align: center;
   line-height: 20px;
   color: ${Slate};
@@ -45,7 +45,7 @@ export const TransactionTileFlex = styled.div.attrs<{
   $justifyContent?: string;
 }>(props => ({
   $justifyContent: props.$justifyContent
- }))`
+}))`
   display: flex;
   justify-content: ${props =>
     props.$justifyContent || 'space-between'};
@@ -76,24 +76,24 @@ export const TransactionBodyCol = styled.div.attrs<{
   $padding?: string;
 
 }>(props => ({
-   $type: props.$type,
-   $textAlign: props.$textAlign,
-   $backgroundColor: props.$backgroundColor,
-   $textTAlign: props.$textTAlign,
-   $padding: props.$padding
-  }))`
+  $type: props.$type,
+  $textAlign: props.$textAlign,
+  $backgroundColor: props.$backgroundColor,
+  $textTAlign: props.$textTAlign,
+  $padding: props.$padding
+}))`
   width: 100%;
   max-width: 100%;
   flex: 0 0 100%;
   padding: ${props => props.$padding || '1rem'};
   text-align: ${props => props.$textAlign || 'left'};
-  background-color: ${({$backgroundColor, theme: {dark}}) =>
+  background-color: ${({ $backgroundColor, theme: { dark } }) =>
     $backgroundColor || (dark ? '#303030' : Slate30)};
 
   @media screen and ${device.tablet} {
     ${props =>
-      props.$textTAlign &&
-      css`
+    props.$textTAlign &&
+    css`
         text-align: ${props.$textTAlign};
       `};
     flex: 0 0 ${props => Type[props.$type]}%;
@@ -117,9 +117,9 @@ export const TransactionChip = styled.div.attrs<{
   $error: props.$error,
   $margin: props.$margin,
   $errorText: props.$errorText,
- }))`
+}))`
   padding: 0.5rem 1rem;
-  background-color: ${({theme: {dark}}) => (dark ? '#303030' : Slate30)};
+  background-color: ${({ theme: { dark } }) => (dark ? '#303030' : Slate30)};
   font-size: 16px;
   margin: ${props => props.$margin || 0};
   text-align: center;
@@ -176,7 +176,7 @@ export const ArrowDiv = styled.div.attrs<{
   $margin: string;
 }>(props => ({
   $margin: props.$margin,
- }))`
+}))`
   width: 25px;
   position: relative;
   margin: ${props => props.$margin};

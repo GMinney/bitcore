@@ -20,7 +20,7 @@ let { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
     type: 'pkcs8',
     format: 'der'
   }
-  });
+});
 
 describe('Changelly integration', () => {
   before((done) => {
@@ -43,7 +43,7 @@ describe('Changelly integration', () => {
     }
 
     fakeRequest = {
-      post: (_url, _opts, _cb) => { return _cb(null, { body: 'data'}) },
+      post: (_url, _opts, _cb) => { return _cb(null, { body: 'data' }) },
     };
 
     helpers.beforeEach((res) => {
@@ -51,7 +51,7 @@ describe('Changelly integration', () => {
         wallet = w;
         const priv = TestData.copayers[0].privKey_1H_0;
         const sig = helpers.signMessage('hello world', priv);
-  
+
         WalletService.getInstanceWithAuth({
           // test assumes wallet's copayer[0] is TestData's copayer[0]
           copayerId: wallet.copayers[0].id,
@@ -369,7 +369,7 @@ describe('Changelly integration', () => {
       }
     });
 
-    it('should work properly if req is OK', async() => {
+    it('should work properly if req is OK', async () => {
       server.request = fakeRequest;
       try {
         const data = await server.changellyGetTransactions(req);
@@ -379,7 +379,7 @@ describe('Changelly integration', () => {
       }
     });
 
-    it('should work properly if req is OK for v2', async() => {
+    it('should work properly if req is OK for v2', async () => {
       server.request = fakeRequest;
       req.body.useV2 = true;
       try {
@@ -390,7 +390,7 @@ describe('Changelly integration', () => {
       }
     });
 
-    it('should return error if there is some missing arguments', async() => {
+    it('should return error if there is some missing arguments', async () => {
       delete req.body.exchangeTxId;
       server.request = fakeRequest;
 
@@ -403,7 +403,7 @@ describe('Changelly integration', () => {
       }
     });
 
-    it('should return error if post returns error', async() => {
+    it('should return error if post returns error', async () => {
       req.body.exchangeTxId = 'exchangeTxId';
       const fakeRequest2 = {
         post: (_url, _opts, _cb) => { return _cb(new Error('Error')) },
@@ -419,7 +419,7 @@ describe('Changelly integration', () => {
       }
     });
 
-    it('should return error if Changelly is commented in config', async() => {
+    it('should return error if Changelly is commented in config', async () => {
       config.changelly = undefined;
       server.request = fakeRequest;
 

@@ -30,20 +30,20 @@ function TransactionSignature(arg) {
 }
 inherits(TransactionSignature, Signature);
 
-TransactionSignature.prototype._fromObject = function(arg) {
+TransactionSignature.prototype._fromObject = function (arg) {
   this._checkObjectArgs(arg);
   this.publicKey = new PublicKey(arg.publicKey);
   this.prevTxId = BufferUtil.isBuffer(arg.prevTxId) ? arg.prevTxId : Buffer.from(arg.prevTxId, 'hex');
   this.outputIndex = arg.outputIndex;
   this.inputIndex = arg.inputIndex;
   this.signature = (arg.signature instanceof Signature) ? arg.signature :
-                     BufferUtil.isBuffer(arg.signature) ? Signature.fromBuffer(arg.signature) :
-                     Signature.fromString(arg.signature);
+    BufferUtil.isBuffer(arg.signature) ? Signature.fromBuffer(arg.signature) :
+      Signature.fromString(arg.signature);
   this.sigtype = arg.sigtype;
   return this;
 };
 
-TransactionSignature.prototype._checkObjectArgs = function(arg) {
+TransactionSignature.prototype._checkObjectArgs = function (arg) {
   $.checkArgument(PublicKey(arg.publicKey), 'invalid publicKey');
   $.checkArgument(arg.inputIndex != null, 'missing inputIndex');
   $.checkArgument(arg.outputIndex != null, 'missing outputIndex');
@@ -52,10 +52,10 @@ TransactionSignature.prototype._checkObjectArgs = function(arg) {
   $.checkArgument(arg.signature, 'missing signature');
   $.checkArgument(arg.prevTxId, 'missing prevTxId');
   $.checkState(arg.signature instanceof Signature ||
-               BufferUtil.isBuffer(arg.signature) ||
-               JSUtil.isHexa(arg.signature), 'signature must be a buffer or hexa value');
+    BufferUtil.isBuffer(arg.signature) ||
+    JSUtil.isHexa(arg.signature), 'signature must be a buffer or hexa value');
   $.checkState(BufferUtil.isBuffer(arg.prevTxId) ||
-               JSUtil.isHexa(arg.prevTxId), 'prevTxId must be a buffer or hexa value');
+    JSUtil.isHexa(arg.prevTxId), 'prevTxId must be a buffer or hexa value');
   $.checkArgument(arg.sigtype != null, 'missing sigtype');
   $.checkState(!isNaN(arg.sigtype), 'sigtype must be a number');
 };
@@ -80,7 +80,7 @@ TransactionSignature.prototype.toObject = TransactionSignature.prototype.toJSON 
  * @param {Object} object
  * @return {TransactionSignature}
  */
-TransactionSignature.fromObject = function(object) {
+TransactionSignature.fromObject = function (object) {
   $.checkArgument(object);
   return new TransactionSignature(object);
 };

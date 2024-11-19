@@ -578,7 +578,7 @@ export class Storage {
         walletId
       },
       txp.toObject(),
-      {upsert: true});
+      { upsert: true });
     cb();
 
   }
@@ -712,7 +712,7 @@ export class Storage {
       {
         upsert: false
       });
-      cb();
+    cb();
   }
 
   markSyncedAddresses(addresses, cb) {
@@ -755,7 +755,7 @@ export class Storage {
 
     this.db.collection(collections.ADDRESSES).insertMany(
       clonedAddresses)
-      .then( () => {
+      .then(() => {
         return cb();
       })
       .catch(err => {
@@ -783,7 +783,7 @@ export class Storage {
         if (!result) return cb();
         return cb(null, Address.fromObj(result));
       })
-      .catch(err => {return cb(err);});
+      .catch(err => { return cb(err); });
   }
 
   fetchAddressesByWalletId(walletId, addresses, cb) {
@@ -824,7 +824,7 @@ export class Storage {
         }
         if (!result) return cb();
 
-        
+
       })
       .catch(err => {
         return cb(err);
@@ -869,8 +869,8 @@ export class Storage {
       {
         upsert: true
       });
-      cb();
-    
+    cb();
+
   }
 
   storeEmail(email, cb) {
@@ -882,8 +882,8 @@ export class Storage {
       {
         upsert: true
       });
-      cb();
-    
+    cb();
+
   }
 
   fetchUnsentEmails(cb) {
@@ -975,7 +975,7 @@ export class Storage {
       {
         upsert: true
       });
-     cb();
+    cb();
 
   }
 
@@ -1185,7 +1185,7 @@ export class Storage {
 
             upsert: true
           });
-          cb();
+        cb();
       }
     );
   }
@@ -1323,8 +1323,8 @@ export class Storage {
       {
         upsert: true
       })
-      cb();
-    
+    cb();
+
   }
 
   getSession(copayerId, cb) {

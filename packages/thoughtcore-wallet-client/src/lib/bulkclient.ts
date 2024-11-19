@@ -86,11 +86,11 @@ export class BulkClient extends Request {
         if (wallets[copayerId].multisigContractAddress) {
           qs.push(
             `${copayerId}:multisigContractAddress=` +
-              wallets[copayerId].multisigContractAddress
+            wallets[copayerId].multisigContractAddress
           );
           qs.push(
             `${copayerId}:network=` +
-              this.credentials.find(cred => cred.copayerId == copayerId).network
+            this.credentials.find(cred => cred.copayerId == copayerId).network
           );
         }
       });
@@ -139,7 +139,7 @@ export class BulkClient extends Request {
         customData = JSON.parse(
           Utils.decryptMessage(me.customData, c.personalEncryptingKey)
         );
-      } catch (e) {}
+      } catch (e) { }
       if (!customData) return;
 
       // Add it to result

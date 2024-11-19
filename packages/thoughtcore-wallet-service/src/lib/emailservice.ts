@@ -430,7 +430,7 @@ export class EmailService {
   }
 
   sendEmail(notification, cb) {
-    cb = cb || function() { };
+    cb = cb || function () { };
 
     const emailType = EMAIL_TYPES[notification.type];
     if (!emailType) return cb();

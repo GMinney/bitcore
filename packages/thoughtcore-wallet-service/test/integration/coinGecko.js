@@ -9,9 +9,9 @@ const helpers = require('./helpers');
 let config = require('../../ts_build/config.js').default;
 let server, wallet, fakeRequest, req;
 
-describe('CoinGecko integration', function() {
+describe('CoinGecko integration', function () {
   this.timeout(5000);
-  
+
   before((done) => {
     helpers.before((res) => {
       done();
@@ -23,9 +23,9 @@ describe('CoinGecko integration', function() {
       api: 'xxxx',
     }
 
-    req = {params: {chain: 'eth', contractAddresses: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48,0x6b175474e89094c44da98b954eedeac495271d0f', altCurrencies: 'ars,aud,usd'}};
+    req = { params: { chain: 'eth', contractAddresses: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48,0x6b175474e89094c44da98b954eedeac495271d0f', altCurrencies: 'ars,aud,usd' } };
     fakeRequest = {
-      get: (_url, _opts, _cb) => { return _cb(null,  { body: 'data'}) },
+      get: (_url, _opts, _cb) => { return _cb(null, { body: 'data' }) },
     };
 
     helpers.beforeEach((res) => {
@@ -33,7 +33,7 @@ describe('CoinGecko integration', function() {
         wallet = w;
         const priv = TestData.copayers[0].privKey_1H_0;
         const sig = helpers.signMessage('hello world', priv);
-  
+
         WalletService.getInstanceWithAuth({
           // test assumes wallet's copayer[0] is TestData's copayer[0]
           copayerId: wallet.copayers[0].id,

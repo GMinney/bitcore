@@ -1,12 +1,12 @@
-import {FC, memo} from 'react';
-import {Transaction} from '@/lib/utilities/models';
-import {SharedTile} from './shared';
+import { FC, memo } from 'react';
+import { Transaction } from '@/lib/utilities/models';
+import { SharedTile } from './shared';
 
 interface TransactionSummaryProps {
   transaction: Transaction;
 }
-const TransactionSummary: FC<TransactionSummaryProps> = ({transaction}) => {
-  const {size, fee} = transaction;
+const TransactionSummary: FC<TransactionSummaryProps> = ({ transaction }) => {
+  const { size, fee } = transaction;
   return (
     <>
       <SharedTile title='Size' description={`${size} bytes`} />

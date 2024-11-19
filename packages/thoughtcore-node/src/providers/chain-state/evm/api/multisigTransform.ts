@@ -32,8 +32,8 @@ export class MultisigRelatedFilterTransform extends Transform {
       }
       // If we didn't find any internal transfers, original tx may be inconsequential
       hasEffects = !!walletRelatedInternalTxs.length;
-    } 
-    
+    }
+
     if (!hasEffects && tx.to !== this.multisigContractAddress) {
       // If no effects and tx isn't to multisig, we don't care about original tx, return done()
       return done();

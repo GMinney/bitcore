@@ -13,9 +13,9 @@ program
 var args = program.args;
 
 utils.getClient(program, { mustExist: true }, function (client) {
-  client.getTxProposals({forAirGapped: !!program.output}, function (err, res) {
+  client.getTxProposals({ forAirGapped: !!program.output }, function (err, res) {
     utils.die(err);
-    
+
     if (program.output) {
       fs.writeFileSync(program.output, JSON.stringify(res));
       console.log(' * Tx proposals saved to: %s\n', program.output);

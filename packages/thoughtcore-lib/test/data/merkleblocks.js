@@ -10,19 +10,19 @@ module.exports = {
   HEX: [
     // Mainnet Block 100014
     "01000000" + // Version
-      "82bb869cf3a793432a66e826e05a6fc37469f8efb7421dc88067010000000000" + // prevHash
-      "7f16c5962e8bd963659c793ce370d95f093bc7e367117b3c30c1f8fdd0d97287" + // MerkleRoot
-      "76381b4d" + // Time
-      "4c86041b" + // Bits
-      "554b8529" + // Nonce
-      "07000000" + // Transaction Count
-      "04" + // Hash Count
-      "3612262624047ee87660be1a707519a443b1c1ce3d248cbfc6c15870f6c5daa2" + // Hash1
-      "019f5b01d4195ecbc9398fbf3c3b1fa9bb3183301d7a1fb3bd174fcfa40a2b65" + // Hash2
-      "41ed70551dd7e841883ab8f0b16bf04176b7d1480e4f0af9f3d4c3595768d068" + // Hash3
-      "20d2a7bc994987302e5b1ac80fc425fe25f8b63169ea78e68fbaaefa59379bbf" + // Hash4
-      "01" + // Num Flag Bytes
-      "1d" // Flags
+    "82bb869cf3a793432a66e826e05a6fc37469f8efb7421dc88067010000000000" + // prevHash
+    "7f16c5962e8bd963659c793ce370d95f093bc7e367117b3c30c1f8fdd0d97287" + // MerkleRoot
+    "76381b4d" + // Time
+    "4c86041b" + // Bits
+    "554b8529" + // Nonce
+    "07000000" + // Transaction Count
+    "04" + // Hash Count
+    "3612262624047ee87660be1a707519a443b1c1ce3d248cbfc6c15870f6c5daa2" + // Hash1
+    "019f5b01d4195ecbc9398fbf3c3b1fa9bb3183301d7a1fb3bd174fcfa40a2b65" + // Hash2
+    "41ed70551dd7e841883ab8f0b16bf04176b7d1480e4f0af9f3d4c3595768d068" + // Hash3
+    "20d2a7bc994987302e5b1ac80fc425fe25f8b63169ea78e68fbaaefa59379bbf" + // Hash4
+    "01" + // Num Flag Bytes
+    "1d" // Flags
   ],
   JSON: [
     { // Mainnet Block 100014
@@ -42,7 +42,7 @@ module.exports = {
         "41ed70551dd7e841883ab8f0b16bf04176b7d1480e4f0af9f3d4c3595768d068",
         "20d2a7bc994987302e5b1ac80fc425fe25f8b63169ea78e68fbaaefa59379bbf"
       ],
-      flags: [ 29 ]
+      flags: [29]
     },
     { // Mainnet Block 12363
       header: {
@@ -58,10 +58,10 @@ module.exports = {
       hashes: [
         "d008a007400650a08aeb612ef60a1f7c72961a8a578093feaf2fb6737a3e3167"
       ],
-      flags: [ 0 ]
+      flags: [0]
     },
     { // Mainnet Block 280472
-      flags : [
+      flags: [
         255, 85, 218, 225, 90, 173, 229, 43, 183, 195, 213, 229, 43, 108, 43,
         219, 226, 215, 217, 226, 61, 92, 253, 92, 237, 134, 215, 170, 174, 182,
         170, 237, 220, 251, 106, 235, 109, 109, 253, 219, 58, 159, 182, 221,
@@ -70,8 +70,8 @@ module.exports = {
         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
         255, 255, 255, 255, 255, 255, 255, 15
       ],
-      numTransactions : 1159,
-      hashes : [
+      numTransactions: 1159,
+      hashes: [
         "ad6c32eef89f29f29d43d14500dcb0ac35cba42626244a4dbded64e27d3cdbe4",
         "31878bc4a8004d4d2457f7c93571a927de9f22fcacca0356f96fbed5500e1a93",
         "252931be626437e48a264aac1f7d178e1ffe8e1c94812e4970f7ab19dfadf074",
@@ -444,25 +444,25 @@ module.exports = {
         "823486c19fd887d93dc2d1478edf5773ba381f13f0ae6f287c1038e7c81aef1c",
         "036bf6944a47791471e9a2cb86615de837f3aa234a7d1cd024026b3e1daee79e"
       ],
-      header : {
+      header: {
         hash: "00000000000000018eaf634bf13b7e5e50860b99466b91140538223c75b75049",
-        prevHash : "000000000000000124f6ce137a43bb288d63cc84f9847033cb84595ead05f9de",
-        merkleRoot : "792f40129c95aec653d2838ef4b031bf541f11c764ca6c3ecc2e20b396ce83cb",
-        time : 1389715824,
-        version : 2,
-        nonce : 322045839,
-        bits : 419587686,
+        prevHash: "000000000000000124f6ce137a43bb288d63cc84f9847033cb84595ead05f9de",
+        merkleRoot: "792f40129c95aec653d2838ef4b031bf541f11c764ca6c3ecc2e20b396ce83cb",
+        time: 1389715824,
+        version: 2,
+        nonce: 322045839,
+        bits: 419587686,
       }
     },
     { // Mainnet FilteredBlock 399775 with filter: 6f64fd5aa9dd01f74c03656d376625cf80328d83d9afebe60cc68b8f0e245bd9
       "header": {
-      "hash": "0000000000000000011b04bc9f4f3856e299b53a335eb1c42be906237c860bb8",
-      "version": 4,
-      "prevHash": "0000000000000000015373947aa93c7cb16a308fb0a59644d4123072ad24ce5b",
-      "merkleRoot": "ac1841eb3b7d380ee114270e3b1c7df349f1e27e2f0f7891138199bc07e006f8",
-      "time": 1456274787,
-      "bits": 403093919,
-      "nonce": 736568686
+        "hash": "0000000000000000011b04bc9f4f3856e299b53a335eb1c42be906237c860bb8",
+        "version": 4,
+        "prevHash": "0000000000000000015373947aa93c7cb16a308fb0a59644d4123072ad24ce5b",
+        "merkleRoot": "ac1841eb3b7d380ee114270e3b1c7df349f1e27e2f0f7891138199bc07e006f8",
+        "time": 1456274787,
+        "bits": 403093919,
+        "nonce": 736568686
       },
       "numTransactions": 3309,
       "hashes": [
@@ -479,8 +479,8 @@ module.exports = {
         "691c6855c5da434a06cb39a7e47d9337da0e39112ad975cc70cecc882233920a",
         "6a9e7f8e6d1d8c326a774ff691bdf424252cee710f8e5d9da2c094e999c15efc",
         "0723ffc695fef989e86784fa2b47097d55f6aac244631536d8d901f5cd9bf170"
-        ],
-      "flags": [171,86,23,0]
+      ],
+      "flags": [171, 86, 23, 0]
     }
   ]
 };

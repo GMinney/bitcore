@@ -36,7 +36,7 @@ storage.connect(config.storageOpts, async (err) => {
     console.log(err);
     return;
   }
-  
+
   function done(err) {
     if (err) { console.log(err) }
     storage.disconnect(() => { console.log('done'); });

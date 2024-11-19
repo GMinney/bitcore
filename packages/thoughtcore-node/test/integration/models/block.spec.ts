@@ -83,7 +83,7 @@ async function insertBlocks() {
   });
 }
 
-describe('Block Model', function() {
+describe('Block Model', function () {
   const suite = this;
   this.timeout(30000);
   before(intBeforeHelper);

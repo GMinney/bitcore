@@ -15,7 +15,7 @@ const logger = winston.createLogger({
     winston.format.prettyPrint(),
     winston.format.splat(),
     winston.format.simple(),
-    winston.format.printf(function(info) {
+    winston.format.printf(function (info) {
       // fallback in case the above formatters  don't work.
       // eg: logger.log({ some: 'object' })
       if (typeof info.message === 'object') {
@@ -36,18 +36,18 @@ export const formatTimestamp = (date: Date) =>
     .getDate()
     .toString()
     .padStart(2, '0')} ${date
-    .getHours()
-    .toString()
-    .padStart(2, '0')}:${date
-    .getMinutes()
-    .toString()
-    .padStart(2, '0')}:${date
-    .getSeconds()
-    .toString()
-    .padStart(2, '0')}.${date
-    .getMilliseconds()
-    .toString()
-    .padEnd(3, '0')} ${timezone}`;
+      .getHours()
+      .toString()
+      .padStart(2, '0')}:${date
+        .getMinutes()
+        .toString()
+        .padStart(2, '0')}:${date
+          .getSeconds()
+          .toString()
+          .padStart(2, '0')}.${date
+            .getMilliseconds()
+            .toString()
+            .padEnd(3, '0')} ${timezone}`;
 
 export const timestamp = () => formatTimestamp(new Date());
 

@@ -43,7 +43,7 @@ module.exports = {
    * @param {Buffer} original
    * @return {Buffer}
    */
-  copy: function(original) {
+  copy: function (original) {
     var buffer = Buffer.alloc(original.length);
     original.copy(buffer);
     return buffer;

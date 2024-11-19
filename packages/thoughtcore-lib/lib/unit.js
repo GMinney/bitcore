@@ -6,11 +6,11 @@ var errors = require('./errors');
 var $ = require('./util/preconditions');
 
 var UNITS = {
-  'THT'      : [1e8, 8],
-  'mTHT'     : [1e5, 5],
-  'uTHT'     : [1e2, 2],
-  'bits'     : [1e2, 2],
-  'notions' : [1, 0]
+  'THT': [1e8, 8],
+  'mTHT': [1e5, 5],
+  'uTHT': [1e2, 2],
+  'bits': [1e2, 2],
+  'notions': [1, 0]
 };
 
 /**
@@ -54,9 +54,9 @@ function Unit(amount, code) {
   this._value = this._from(amount, code);
 
   var self = this;
-  var defineAccesor = function(key) {
+  var defineAccesor = function (key) {
     Object.defineProperty(self, key, {
-      get: function() { return self.to(key); },
+      get: function () { return self.to(key); },
       enumerable: true,
     });
   };
@@ -64,7 +64,7 @@ function Unit(amount, code) {
   Object.keys(UNITS).forEach(defineAccesor);
 }
 
-Object.keys(UNITS).forEach(function(key) {
+Object.keys(UNITS).forEach(function (key) {
   Unit[key] = key;
 });
 
@@ -74,7 +74,7 @@ Object.keys(UNITS).forEach(function(key) {
  * @param {String|Object} json - JSON with keys: amount and code
  * @returns {Unit} A Unit instance
  */
-Unit.fromObject = function fromObject(data){
+Unit.fromObject = function fromObject(data) {
   $.checkArgument(_.isObject(data), 'Argument is expected to be an object');
   return new Unit(data.amount, data.code);
 };
@@ -85,7 +85,7 @@ Unit.fromObject = function fromObject(data){
  * @param {Number} amount - The amount in THT
  * @returns {Unit} A Unit instance
  */
-Unit.fromTHT = function(amount) {
+Unit.fromTHT = function (amount) {
   return new Unit(amount, Unit.THT);
 };
 
@@ -95,7 +95,7 @@ Unit.fromTHT = function(amount) {
  * @param {Number} amount - The amount in mTHT
  * @returns {Unit} A Unit instance
  */
-Unit.fromMillis = Unit.fromMilis = function(amount) {
+Unit.fromMillis = Unit.fromMilis = function (amount) {
   return new Unit(amount, Unit.mTHT);
 };
 
@@ -105,7 +105,7 @@ Unit.fromMillis = Unit.fromMilis = function(amount) {
  * @param {Number} amount - The amount in bits
  * @returns {Unit} A Unit instance
  */
-Unit.fromMicros = Unit.fromBits = function(amount) {
+Unit.fromMicros = Unit.fromBits = function (amount) {
   return new Unit(amount, Unit.bits);
 };
 
@@ -115,7 +115,7 @@ Unit.fromMicros = Unit.fromBits = function(amount) {
  * @param {Number} amount - The amount in notions
  * @returns {Unit} A Unit instance
  */
-Unit.fromNotions = function(amount) {
+Unit.fromNotions = function (amount) {
   return new Unit(amount, Unit.notions);
 };
 
@@ -126,11 +126,11 @@ Unit.fromNotions = function(amount) {
  * @param {Number} rate - The exchange rate THT/fiat
  * @returns {Unit} A Unit instance
  */
-Unit.fromFiat = function(amount, rate) {
+Unit.fromFiat = function (amount, rate) {
   return new Unit(amount, rate);
 };
 
-Unit.prototype._from = function(amount, code) {
+Unit.prototype._from = function (amount, code) {
   if (!UNITS[code]) {
     throw new errors.Unit.UnknownCode(code);
   }
@@ -143,7 +143,7 @@ Unit.prototype._from = function(amount, code) {
  * @param {String|Number} code - The unit code or exchange rate
  * @returns {Number} The converted value
  */
-Unit.prototype.to = function(code) {
+Unit.prototype.to = function (code) {
   if (_.isNumber(code)) {
     if (code <= 0) {
       throw new errors.Unit.InvalidRate(code);
@@ -164,7 +164,7 @@ Unit.prototype.to = function(code) {
  *
  * @returns {Number} The value converted to THT
  */
-Unit.prototype.toTHT = function() {
+Unit.prototype.toTHT = function () {
   return this.to(Unit.THT);
 };
 
@@ -173,7 +173,7 @@ Unit.prototype.toTHT = function() {
  *
  * @returns {Number} The value converted to mTHT
  */
-Unit.prototype.toMillis = Unit.prototype.toMilis = function() {
+Unit.prototype.toMillis = Unit.prototype.toMilis = function () {
   return this.to(Unit.mTHT);
 };
 
@@ -182,7 +182,7 @@ Unit.prototype.toMillis = Unit.prototype.toMilis = function() {
  *
  * @returns {Number} The value converted to bits
  */
-Unit.prototype.toMicros = Unit.prototype.toBits = function() {
+Unit.prototype.toMicros = Unit.prototype.toBits = function () {
   return this.to(Unit.bits);
 };
 
@@ -191,7 +191,7 @@ Unit.prototype.toMicros = Unit.prototype.toBits = function() {
  *
  * @returns {Number} The value converted to notions
  */
-Unit.prototype.toNotions = function() {
+Unit.prototype.toNotions = function () {
   return this.to(Unit.notions);
 };
 
@@ -201,7 +201,7 @@ Unit.prototype.toNotions = function() {
  * @param {string} rate - The exchange rate between THT/currency
  * @returns {Number} The value converted to notions
  */
-Unit.prototype.atRate = function(rate) {
+Unit.prototype.atRate = function (rate) {
   return this.to(rate);
 };
 
@@ -210,7 +210,7 @@ Unit.prototype.atRate = function(rate) {
  *
  * @returns {string} the value in notions
  */
-Unit.prototype.toString = function() {
+Unit.prototype.toString = function () {
   return this.notions + ' notions';
 };
 
@@ -231,7 +231,7 @@ Unit.prototype.toObject = Unit.prototype.toJSON = function toObject() {
  *
  * @returns {string} the value in notions
  */
-Unit.prototype.inspect = function() {
+Unit.prototype.inspect = function () {
   return '<Unit: ' + this.toString() + '>';
 };
 

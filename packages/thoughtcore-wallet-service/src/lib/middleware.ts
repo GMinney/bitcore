@@ -9,8 +9,7 @@ type TimedRequest = {
 
 function LogObj(logOut: { [key: string]: string }) {
   logger.info(
-    `${logOut.support}${logOut.time} | ${logOut.ip} | ${logOut.userAgent || 'na'}  |  ${logOut.walletId || '-'}  | ${
-      logOut.phase
+    `${logOut.support}${logOut.time} | ${logOut.ip} | ${logOut.userAgent || 'na'}  |  ${logOut.walletId || '-'}  | ${logOut.phase
     } | ${logOut.took} | ${logOut.method} | ${logOut.status} | ${logOut.url} | ${logOut.openConnections} open`
   );
 }

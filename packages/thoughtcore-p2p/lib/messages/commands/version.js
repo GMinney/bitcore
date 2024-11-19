@@ -43,7 +43,7 @@ function VersionMessage(arg, options) {
 }
 inherits(VersionMessage, Message);
 
-VersionMessage.prototype.setPayload = function(payload) {
+VersionMessage.prototype.setPayload = function (payload) {
   var parser = new BufferReader(payload);
   this.version = parser.readUInt32LE();
   this.services = parser.readUInt64LEBN();
@@ -63,7 +63,7 @@ VersionMessage.prototype.setPayload = function(payload) {
   this.subversion = parser.readVarLengthBuffer().toString();
   this.startHeight = parser.readUInt32LE();
 
-  if(parser.finished()) {
+  if (parser.finished()) {
     this.relay = true;
   } else {
     this.relay = !!parser.readUInt8();
@@ -71,7 +71,7 @@ VersionMessage.prototype.setPayload = function(payload) {
   utils.checkFinished(parser);
 };
 
-VersionMessage.prototype.getPayload = function() {
+VersionMessage.prototype.getPayload = function () {
   var bw = new BufferWriter();
   bw.writeUInt32LE(this.version);
   bw.writeUInt64LEBN(this.services);

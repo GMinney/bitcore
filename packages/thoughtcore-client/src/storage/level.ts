@@ -141,7 +141,7 @@ export class Level {
     const { pubKey, path } = JSON.parse(data);
     return { address, pubKey, path };
   }
-  
+
   async getAddresses(params: { name: string; limit?: number; skip?: number }) {
     const { name, limit, skip } = params;
     const addresses = [];
@@ -149,7 +149,7 @@ export class Level {
     const stream = this.db.createReadStream();
     return new Promise((resolve, reject) => {
       stream
-        .on('data', function({ key, value }) {
+        .on('data', function ({ key, value }) {
           if (key.toString().startsWith(`key|${name}|`)) {
             if (skipped <= skip) {
               skipped++;
@@ -159,16 +159,16 @@ export class Level {
               stream.destroy();
               resolve(addresses);
             }
-            
+
             const address = key.toString().split('|')[2];
             const valJSON = JSON.parse(value.toString());
             addresses.push({ address, pubKey: valJSON.pubKey, path: valJSON.path });
           }
         })
-        .on('error', function(err) {
+        .on('error', function (err) {
           reject(err);
         })
-        .on('end', function() {
+        .on('end', function () {
           resolve(addresses);
         });
     });

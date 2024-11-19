@@ -22,7 +22,7 @@ export class MessageBroker extends EventEmitter {
 
       this.remote = true;
       this.mq = io(url);
-      this.mq.on('connect', () => {});
+      this.mq.on('connect', () => { });
       this.mq.on('connect_error', () => {
         logger.warn('Error connecting to message broker server @ ' + url);
       });

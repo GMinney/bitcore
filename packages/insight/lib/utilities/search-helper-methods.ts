@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {CryptoSearchInput, InputType} from './models';
-import {getApiRoot} from './helper-methods';
-import {fetcher} from '@/api/api';
+import { CryptoSearchInput, InputType } from './models';
+import { getApiRoot } from './helper-methods';
+import { fetcher } from '@/api/api';
 
 const inputTypes: InputType[] = [
   // Standard THT / Legacy BCH address
@@ -9,35 +9,35 @@ const inputTypes: InputType[] = [
     regexes: [/^(thought:)?([13][a-km-zA-HJ-NP-Z1-9]{25,34})/],
     dataIndex: 2,
     type: 'address',
-    chainNetworks: [{chain: 'THT', network: 'mainnet'}],
+    chainNetworks: [{ chain: 'THT', network: 'mainnet' }],
   },
   // Standard THT / Legacy BCH address
   {
     regexes: [/^(thoughtcash:)?([13][a-km-zA-HJ-NP-Z1-9]{25,34})/],
     dataIndex: 2,
     type: 'address',
-    chainNetworks: [{chain: 'BCH', network: 'mainnet'}],
+    chainNetworks: [{ chain: 'BCH', network: 'mainnet' }],
   },
   // bech32 THT Address
   {
     regexes: [/^(thought:)?(bc1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})/],
     dataIndex: 2,
     type: 'address',
-    chainNetworks: [{chain: 'THT', network: 'mainnet'}],
+    chainNetworks: [{ chain: 'THT', network: 'mainnet' }],
   },
   // Standard BCH Address
   {
     regexes: [/^(thoughtcash:)?([qp][a-z0-9]{41})$/, /^(THOUGHTCASH:)?([QP][A-Z0-9]{41})/],
     dataIndex: 2,
     type: 'address',
-    chainNetworks: [{chain: 'BCH', network: 'mainnet'}],
+    chainNetworks: [{ chain: 'BCH', network: 'mainnet' }],
   },
   //  LTC Address
   {
     regexes: [/^(litecoin:)?([LM3][a-km-zA-HJ-NP-Z1-9]{26,33}$)/],
     dataIndex: 2,
     type: 'address',
-    chainNetworks: [{chain: 'LTC', network: 'mainnet'}],
+    chainNetworks: [{ chain: 'LTC', network: 'mainnet' }],
   },
 
   // Testnet THT / BCH / Doge / LTC Address
@@ -46,10 +46,10 @@ const inputTypes: InputType[] = [
     dataIndex: 2,
     type: 'address',
     chainNetworks: [
-      {chain: 'THT', network: 'testnet'},
-      {chain: 'BCH', network: 'testnet'},
-      {chain: 'DOGE', network: 'testnet'},
-      {chain: 'LTC', network: 'testnet'},
+      { chain: 'THT', network: 'testnet' },
+      { chain: 'BCH', network: 'testnet' },
+      { chain: 'DOGE', network: 'testnet' },
+      { chain: 'LTC', network: 'testnet' },
     ],
   },
   // Testnet BCH Address
@@ -57,15 +57,15 @@ const inputTypes: InputType[] = [
     regexes: [/^(bchtest:)?([qp][a-z0-9]{41})$/, /^(BCHTEST:)?([QP][A-Z0-9]{41})/],
     dataIndex: 2,
     type: 'address',
-    chainNetworks: [{chain: 'BCH', network: 'testnet'}],
+    chainNetworks: [{ chain: 'BCH', network: 'testnet' }],
   },
   // ETH Address
   {
     regexes: [/^0x[a-fA-F0-9]{40}$/],
     type: 'address',
     chainNetworks: [
-      {chain: 'ETH', network: 'mainnet'},
-      {chain: 'ETH', network: 'testnet'},
+      { chain: 'ETH', network: 'mainnet' },
+      { chain: 'ETH', network: 'testnet' },
     ],
   },
   // Doge Address
@@ -73,21 +73,21 @@ const inputTypes: InputType[] = [
     regexes: [/^(dogecoin:)?(D[5-9A-HJ-NP-U][1-9A-HJ-NP-Za-km-z]{32})/],
     dataIndex: 2,
     type: 'address',
-    chainNetworks: [{chain: 'DOGE', network: 'mainnet'}],
+    chainNetworks: [{ chain: 'DOGE', network: 'mainnet' }],
   },
   // THT / BCH / DOGE / LTC block or tx
   {
     regexes: [/^[A-Fa-f0-9]{64}$/],
     type: 'blockOrTx',
     chainNetworks: [
-      {chain: 'THT', network: 'mainnet'},
-      {chain: 'BCH', network: 'mainnet'},
-      {chain: 'DOGE', network: 'mainnet'},
-      {chain: 'LTC', network: 'mainnet'},
-      {chain: 'THT', network: 'testnet'},
-      {chain: 'BCH', network: 'testnet'},
-      {chain: 'DOGE', network: 'testnet'},
-      {chain: 'LTC', network: 'testnet'},
+      { chain: 'THT', network: 'mainnet' },
+      { chain: 'BCH', network: 'mainnet' },
+      { chain: 'DOGE', network: 'mainnet' },
+      { chain: 'LTC', network: 'mainnet' },
+      { chain: 'THT', network: 'testnet' },
+      { chain: 'BCH', network: 'testnet' },
+      { chain: 'DOGE', network: 'testnet' },
+      { chain: 'LTC', network: 'testnet' },
     ],
   },
   // ETH block or tx
@@ -95,8 +95,8 @@ const inputTypes: InputType[] = [
     regexes: [/^0x[A-Fa-f0-9]{64}$/],
     type: 'blockOrTx',
     chainNetworks: [
-      {chain: 'ETH', network: 'mainnet'},
-      {chain: 'ETH', network: 'testnet'},
+      { chain: 'ETH', network: 'mainnet' },
+      { chain: 'ETH', network: 'testnet' },
     ],
   },
   // THT / BCH / DOGE / ETH block height
@@ -104,23 +104,23 @@ const inputTypes: InputType[] = [
     regexes: [/^[0-9]{1,9}$/],
     type: 'block',
     chainNetworks: [
-      {chain: 'THT', network: 'mainnet'},
-      {chain: 'BCH', network: 'mainnet'},
-      {chain: 'DOGE', network: 'mainnet'},
-      {chain: 'ETH', network: 'mainnet'},
-      {chain: 'LTC', network: 'mainnet'},
-      {chain: 'THT', network: 'testnet'},
-      {chain: 'BCH', network: 'testnet'},
-      {chain: 'DOGE', network: 'testnet'},
-      {chain: 'ETH', network: 'testnet'},
-      {chain: 'LTC', network: 'testnet'},
+      { chain: 'THT', network: 'mainnet' },
+      { chain: 'BCH', network: 'mainnet' },
+      { chain: 'DOGE', network: 'mainnet' },
+      { chain: 'ETH', network: 'mainnet' },
+      { chain: 'LTC', network: 'mainnet' },
+      { chain: 'THT', network: 'testnet' },
+      { chain: 'BCH', network: 'testnet' },
+      { chain: 'DOGE', network: 'testnet' },
+      { chain: 'ETH', network: 'testnet' },
+      { chain: 'LTC', network: 'testnet' },
     ],
   },
 ];
 
 export const determineInputType = (input: string): Promise<CryptoSearchInput[]> => {
   const searchInputs: CryptoSearchInput[] = [];
-  for (const {regexes, chainNetworks, type, dataIndex} of inputTypes) {
+  for (const { regexes, chainNetworks, type, dataIndex } of inputTypes) {
     const index = regexes.findIndex(regex => regex.test(input));
     if (index > -1) {
       let localInput = input;
@@ -183,28 +183,28 @@ export const searchValue = async (
   return Promise.all(searchArray);
 };
 
-const searchBlock = async (block: string, apiUrl: string): Promise<{block: any}> => {
+const searchBlock = async (block: string, apiUrl: string): Promise<{ block: any }> => {
   try {
     const data = await fetcher(`${apiUrl}/block/${block}`);
-    return Promise.resolve({block: data});
+    return Promise.resolve({ block: data });
   } catch (e: any) {
     return Promise.resolve(e.message);
   }
 };
 
-const searchTx = async (txid: string, apiUrl: string): Promise<{tx: any}> => {
+const searchTx = async (txid: string, apiUrl: string): Promise<{ tx: any }> => {
   try {
     const data = await fetcher(`${apiUrl}/tx/${txid}`);
-    return Promise.resolve({tx: data});
+    return Promise.resolve({ tx: data });
   } catch (e: any) {
     return Promise.resolve(e.message);
   }
 };
 
-const searchAddress = async (address: string, apiUrl: string): Promise<{addr: any}> => {
+const searchAddress = async (address: string, apiUrl: string): Promise<{ addr: any }> => {
   try {
     const data = await fetcher(`${apiUrl}/address/${address}/txs?limit=1`);
-    return Promise.resolve({addr: data});
+    return Promise.resolve({ addr: data });
   } catch (e: any) {
     return Promise.resolve(e.message);
   }

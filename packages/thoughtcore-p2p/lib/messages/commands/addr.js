@@ -20,17 +20,17 @@ function AddrMessage(arg, options) {
   this.command = 'addr';
   $.checkArgument(
     _.isUndefined(arg) ||
-      (Array.isArray(arg) &&
-       !_.isUndefined(arg[0].services) &&
-       !_.isUndefined(arg[0].ip) &&
-       !_.isUndefined(arg[0].port)),
+    (Array.isArray(arg) &&
+      !_.isUndefined(arg[0].services) &&
+      !_.isUndefined(arg[0].ip) &&
+      !_.isUndefined(arg[0].port)),
     'First argument is expected to be an array of addrs'
   );
   this.addresses = arg;
 }
 inherits(AddrMessage, Message);
 
-AddrMessage.prototype.setPayload = function(payload) {
+AddrMessage.prototype.setPayload = function (payload) {
   var parser = new BufferReader(payload);
 
   var addrCount = parser.readVarintNum();
@@ -48,7 +48,7 @@ AddrMessage.prototype.setPayload = function(payload) {
   utils.checkFinished(parser);
 };
 
-AddrMessage.prototype.getPayload = function() {
+AddrMessage.prototype.getPayload = function () {
   var bw = new BufferWriter();
   bw.writeVarintNum(this.addresses.length);
 

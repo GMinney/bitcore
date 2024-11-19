@@ -50,7 +50,7 @@ function setTrustedPeers(config: ConfigType): ConfigType {
   }
   return config;
 }
-const Config = function(): ConfigType {
+const Config = function (): ConfigType {
   let config: ConfigType = {
     maxPoolSize: 50,
     port: 3000,
@@ -102,7 +102,7 @@ const Config = function(): ConfigType {
       THT: {
         mainnet: {
           chainSource: 'p2p',
-          trustedPeers: [{ host: 'phi.thought.live', port: 10618 },{ host: 'idea-01.insufficient-light.com', port: 10618 },{ host: 'intuition-01.insufficient-light.com', port: 10618 }],
+          trustedPeers: [{ host: 'phi.thought.live', port: 10618 }, { host: 'idea-01.insufficient-light.com', port: 10618 }, { host: 'intuition-01.insufficient-light.com', port: 10618 }],
           rpc: {
             host: '127.0.0.1',
             port: 10617,

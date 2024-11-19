@@ -41,7 +41,7 @@ Point.prototype = Object.getPrototypeOf(ec.curve.point());
  * @throws {Error} A validation error if exists
  * @returns {Point} An instance of Point
  */
-Point.fromX = function fromX(odd, x){
+Point.fromX = function fromX(odd, x) {
   try {
     var point = ecPointFromX(x, odd);
   } catch (e) {
@@ -77,7 +77,7 @@ Point.getN = function getN() {
  * Secp256k1 field size
  * @returns {BN} A BN instance of the field size
  */
-Point.getP = function() {
+Point.getP = function () {
   return ec.curve.p.clone();
 };
 
@@ -116,7 +116,7 @@ Point.prototype.getY = function getY() {
  */
 Point.prototype.validate = function validate() {
 
-  if (this.isInfinity()){
+  if (this.isInfinity()) {
     throw new Error('Point cannot be equal to Infinity');
   }
 
@@ -142,8 +142,8 @@ Point.prototype.validate = function validate() {
 };
 
 Point.pointToCompressed = function pointToCompressed(point) {
-  var xbuf = point.getX().toBuffer({size: 32});
-  var ybuf = point.getY().toBuffer({size: 32});
+  var xbuf = point.getX().toBuffer({ size: 32 });
+  var ybuf = point.getY().toBuffer({ size: 32 });
 
   var prefix;
   var odd = ybuf[ybuf.length - 1] % 2;
@@ -156,7 +156,7 @@ Point.pointToCompressed = function pointToCompressed(point) {
 };
 
 
-Point.prototype.liftX = function() {
+Point.prototype.liftX = function () {
   const fieldSize = Point.getP();
   const zero = new BN(0);
   const one = new BN(1);
@@ -168,11 +168,11 @@ Point.prototype.liftX = function() {
 
   const c = this.x.pow(three).add(seven).mod(fieldSize);
   const y = c.toRed(red).redPow(fieldSize.add(one).div(four)).mod(fieldSize);
-  
+
   if (!c.eq(y.pow(two).mod(fieldSize))) {
     throw new Error('liftX failed');
   }
-  
+
   const pointX = this.x.red ? this.x.fromRed() : this.x;
   const pointY = y.mod(two).eq(zero) ? y.fromRed() : fieldSize.sub(y)
   return new Point(pointX, pointY, true);

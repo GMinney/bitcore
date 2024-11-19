@@ -16,9 +16,9 @@ function VerackMessage(arg, options) {
 }
 inherits(VerackMessage, Message);
 
-VerackMessage.prototype.setPayload = function() {};
+VerackMessage.prototype.setPayload = function () { };
 
-VerackMessage.prototype.getPayload = function() {
+VerackMessage.prototype.getPayload = function () {
   return BufferUtil.EMPTY_BUFFER;
 };
 

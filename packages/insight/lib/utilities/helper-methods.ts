@@ -9,7 +9,7 @@ import {
   ETH_DEFAULT_REFRESH_INTERVAL,
   UTXO_DEFAULT_REFRESH_INTERVAL,
 } from './constants';
-import {BlockTransactionDetails} from './models';
+import { BlockTransactionDetails } from './models';
 import ThoughtcoreLib from 'thoughtcore-lib';
 // import ThoughtcoreLibCash from 'thoughtcore-lib-cash';
 // import ThoughtcoreLibDoge from 'thoughtcore-lib-doge';
@@ -168,8 +168,8 @@ export function sleep(duration: number) {
 export const normalizeParams = (
   currency: string,
   network: string,
-): {currency: string; network: string} => {
-  return {currency: currency.toUpperCase(), network: network.toLowerCase()};
+): { currency: string; network: string } => {
+  return { currency: currency.toUpperCase(), network: network.toLowerCase() };
 };
 
 export const getLib = (currency: string) => {

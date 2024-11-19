@@ -80,16 +80,16 @@ export class ExternalApiStream extends ReadableWithEventPipe {
       let closed = false;
       let isFirst = true;
 
-      req.on('close', function() {
+      req.on('close', function () {
         closed = true;
       });
 
       res.type('json');
-      res.on('close', function() {
+      res.on('close', function () {
         closed = true;
       });
 
-      stream.on('error', function(err: any) {
+      stream.on('error', function (err: any) {
         if (!closed) {
           closed = true;
           if (err.isAxiosError) {
@@ -124,7 +124,7 @@ export class ExternalApiStream extends ReadableWithEventPipe {
         }
         return;
       });
-      stream.on('data', function(data) {
+      stream.on('data', function (data) {
         if (!closed) {
           // We are assuming jsonl data appended a new line upstream
           if (!opts.jsonl) {
@@ -146,7 +146,7 @@ export class ExternalApiStream extends ReadableWithEventPipe {
           stream.destroy();
         }
       });
-      stream.on('end', function() {
+      stream.on('end', function () {
         if (!closed) {
           closed = true;
           if (!opts.jsonl) {

@@ -45,7 +45,7 @@ export class Mongo {
       this.addressCollection = this.db.collection(this.addressCollectionName);
       await this.walletCollection.createIndex({ name: 1 });
       await this.addressCollection.createIndex({ name: 1 });
-    } catch (error) {}
+    } catch (error) { }
   }
 
   async close() {
@@ -164,7 +164,7 @@ export class Mongo {
     }
   }
 
-  async getAddress(params: { name: string; address: string, keepAlive: boolean; open: boolean}) {
+  async getAddress(params: { name: string; address: string, keepAlive: boolean; open: boolean }) {
     const { name, address, keepAlive, open } = params;
     const data = await this.getKey({ address, name, keepAlive, open });
     if (!data) {

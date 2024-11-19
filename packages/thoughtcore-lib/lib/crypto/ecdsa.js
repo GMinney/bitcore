@@ -20,7 +20,7 @@ var ECDSA = function ECDSA(obj) {
 };
 
 /* jshint maxcomplexity: 9 */
-ECDSA.prototype.set = function(obj) {
+ECDSA.prototype.set = function (obj) {
   this.hashbuf = obj.hashbuf || this.hashbuf;
   this.endian = obj.endian || this.endian; //the endianness of hashbuf
   this.privkey = obj.privkey || this.privkey;
@@ -31,11 +31,11 @@ ECDSA.prototype.set = function(obj) {
   return this;
 };
 
-ECDSA.prototype.privkey2pubkey = function() {
+ECDSA.prototype.privkey2pubkey = function () {
   this.pubkey = this.privkey.toPublicKey();
 };
 
-ECDSA.prototype.calci = function() {
+ECDSA.prototype.calci = function () {
   for (var i = 0; i < 4; i++) {
     this.sig.i = i;
     var Qprime;
@@ -56,12 +56,12 @@ ECDSA.prototype.calci = function() {
   throw new Error('Unable to find valid recovery factor');
 };
 
-ECDSA.fromString = function(str) {
+ECDSA.fromString = function (str) {
   var obj = JSON.parse(str);
   return new ECDSA(obj);
 };
 
-ECDSA.prototype.randomK = function() {
+ECDSA.prototype.randomK = function () {
   var N = Point.getN();
   var k;
   do {
@@ -73,7 +73,7 @@ ECDSA.prototype.randomK = function() {
 
 
 // https://tools.ietf.org/html/rfc6979#section-3.2
-ECDSA.prototype.deterministicK = function(badrs) {
+ECDSA.prototype.deterministicK = function (badrs) {
   /* jshint maxstatements: 25 */
   // if r or s were invalid when this function was used in signing,
   // we do not want to actually compute r, s here for efficiency, so,
@@ -112,7 +112,7 @@ ECDSA.prototype.deterministicK = function(badrs) {
 // Information about public key recovery:
 // https://thoughttalk.org/index.php?topic=6430.0
 // http://stackoverflow.com/questions/19665491/how-do-i-get-an-ecdsa-public-key-from-just-a-thought-signature-sec1-4-1-6-k
-ECDSA.prototype.toPublicKey = function() {
+ECDSA.prototype.toPublicKey = function () {
   /* jshint maxstatements: 25 */
   var i = this.sig.i;
   $.checkArgument(i === 0 || i === 1 || i === 2 || i === 3, new Error('i must be equal to 0, 1, 2, or 3'));
@@ -157,7 +157,7 @@ ECDSA.prototype.toPublicKey = function() {
   return pubkey;
 };
 
-ECDSA.prototype.sigError = function() {
+ECDSA.prototype.sigError = function () {
   /* jshint maxstatements: 25 */
   if (!BufferUtil.isBuffer(this.hashbuf) || this.hashbuf.length !== 32) {
     return 'hashbuf must be a 32 byte buffer';
@@ -189,7 +189,7 @@ ECDSA.prototype.sigError = function() {
   }
 };
 
-ECDSA.toLowS = function(s) {
+ECDSA.toLowS = function (s) {
   //enforce low s
   //see BIP 62, "low S values in signatures"
   if (s.gt(BN.fromBuffer(Buffer.from('7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0', 'hex')))) {
@@ -198,7 +198,7 @@ ECDSA.toLowS = function(s) {
   return s;
 };
 
-ECDSA.prototype._findSignature = function(d, e) {
+ECDSA.prototype._findSignature = function (d, e) {
   var N = Point.getN();
   var G = Point.getG();
   // try different values of k until r, s are valid
@@ -223,7 +223,7 @@ ECDSA.prototype._findSignature = function(d, e) {
 
 };
 
-ECDSA.prototype.sign = function() {
+ECDSA.prototype.sign = function () {
   var hashbuf = this.hashbuf;
   var privkey = this.privkey;
   var d = privkey.bn;
@@ -242,12 +242,12 @@ ECDSA.prototype.sign = function() {
   return this;
 };
 
-ECDSA.prototype.signRandomK = function() {
+ECDSA.prototype.signRandomK = function () {
   this.randomK();
   return this.sign();
 };
 
-ECDSA.prototype.toString = function() {
+ECDSA.prototype.toString = function () {
   var obj = {};
   if (this.hashbuf) {
     obj.hashbuf = this.hashbuf.toString('hex');
@@ -267,7 +267,7 @@ ECDSA.prototype.toString = function() {
   return JSON.stringify(obj);
 };
 
-ECDSA.prototype.verify = function() {
+ECDSA.prototype.verify = function () {
   if (!this.sigError()) {
     this.verified = true;
   } else {
@@ -276,7 +276,7 @@ ECDSA.prototype.verify = function() {
   return this;
 };
 
-ECDSA.sign = function(hashbuf, privkey, endian) {
+ECDSA.sign = function (hashbuf, privkey, endian) {
   return ECDSA().set({
     hashbuf: hashbuf,
     endian: endian,
@@ -284,7 +284,7 @@ ECDSA.sign = function(hashbuf, privkey, endian) {
   }).sign().sig;
 };
 
-ECDSA.verify = function(hashbuf, sig, pubkey, endian) {
+ECDSA.verify = function (hashbuf, sig, pubkey, endian) {
   return ECDSA().set({
     hashbuf: hashbuf,
     endian: endian,

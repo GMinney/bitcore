@@ -1,4 +1,4 @@
-export const SUPPORTED_CURRENCIES = ['THT', 'BCH', 'ETH'];
+export const SUPPORTED_CURRENCIES = ['THT', 'ETH'];
 // export const SUPPORTED_CURRENCIES = ['THT', 'tTHT'];
 export const API_ROOT = 'https://api.thoughtcore.io/api';
 export const API_ROOT_ETH = 'https://api-eth.thoughtcore.io/api';
@@ -9,11 +9,7 @@ export const DEFAULT_RBF_SEQ_NUMBER = 0xffffffff;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const colorCodes: any = {
-  THT: '#F7931A',
-  BCH: '#2FCF6E',
   ETH: '#6B71D6',
-  LTC: '#868686',
-  DOGE: '#B29832',
   THT: '#2222FF'
 };
 

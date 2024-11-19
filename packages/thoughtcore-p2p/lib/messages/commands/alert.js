@@ -26,14 +26,14 @@ function AlertMessage(arg, options) {
 }
 inherits(AlertMessage, Message);
 
-AlertMessage.prototype.setPayload = function(payload) {
+AlertMessage.prototype.setPayload = function (payload) {
   var parser = new BufferReader(payload);
   this.payload = parser.readVarLengthBuffer();
   this.signature = parser.readVarLengthBuffer();
   utils.checkFinished(parser);
 };
 
-AlertMessage.prototype.getPayload = function() {
+AlertMessage.prototype.getPayload = function () {
   var bw = new BufferWriter();
   bw.writeVarintNum(this.payload.length);
   bw.write(this.payload);

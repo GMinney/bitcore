@@ -104,8 +104,7 @@ Promise.all(keyRequests)
 
     if (!githubOnlyKeys.length && !thoughtnetworkOnlyKeys.length) {
       console.log(
-        `Both sites returned ${
-          Object.keys(githubPgpKeys).length
+        `Both sites returned ${Object.keys(githubPgpKeys).length
         } keys. Key lists from both are identical.`
       );
       return Promise.resolve();
@@ -216,8 +215,7 @@ Promise.all(keyRequests)
   .then(() => {
     if (signatureCount >= Object.keys(thoughtnetworkPgpKeys).length / 2) {
       console.log(
-        `----\nThe following ECC key set has been verified against signatures from ${signatureCount} of the ${
-          Object.keys(thoughtnetworkPgpKeys).length
+        `----\nThe following ECC key set has been verified against signatures from ${signatureCount} of the ${Object.keys(thoughtnetworkPgpKeys).length
         } published Thought PGP keys.`
       );
       console.log(eccPayload);

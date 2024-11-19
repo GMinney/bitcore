@@ -15,19 +15,19 @@ var Script = thoughtcore.Script;
 
 var errors = thoughtcore.errors;
 
-describe("Output", function() {
+describe("Output", function () {
   var output = new Output({
     notions: 0,
     script: Script.empty()
   });
 
-  it("throws error with unrecognized argument", function() {
-    (function() {
+  it("throws error with unrecognized argument", function () {
+    (function () {
       var out = new Output(12345);
     }.should.throw(TypeError));
   });
 
-  it("can be assigned a notions amount in big number", function() {
+  it("can be assigned a notions amount in big number", function () {
     var newOutput = new Output({
       notions: new BN(100),
       script: Script.empty()
@@ -35,7 +35,7 @@ describe("Output", function() {
     newOutput.notions.should.equal(100);
   });
 
-  it("can be assigned a notions amount with a string", function() {
+  it("can be assigned a notions amount with a string", function () {
     var newOutput = new Output({
       notions: "100",
       script: Script.empty()
@@ -43,9 +43,9 @@ describe("Output", function() {
     newOutput.notions.should.equal(100);
   });
 
-  describe("will error if output is not a positive integer", function() {
-    it("-100", function() {
-      (function() {
+  describe("will error if output is not a positive integer", function () {
+    it("-100", function () {
+      (function () {
         var newOutput = new Output({
           notions: -100,
           script: Script.empty()
@@ -53,8 +53,8 @@ describe("Output", function() {
       }.should.throw("Output notions is not a natural number"));
     });
 
-    it("1.1", function() {
-      (function() {
+    it("1.1", function () {
+      (function () {
         var newOutput = new Output({
           notions: 1.1,
           script: Script.empty()
@@ -62,8 +62,8 @@ describe("Output", function() {
       }.should.throw("Output notions is not a natural number"));
     });
 
-    it("NaN", function() {
-      (function() {
+    it("NaN", function () {
+      (function () {
         var newOutput = new Output({
           notions: NaN,
           script: Script.empty()
@@ -71,8 +71,8 @@ describe("Output", function() {
       }.should.throw("Output notions is not a natural number"));
     });
 
-    it("Infinity", function() {
-      (function() {
+    it("Infinity", function () {
+      (function () {
         var newOutput = new Output({
           notions: Infinity,
           script: Script.empty()
@@ -81,12 +81,12 @@ describe("Output", function() {
     });
   });
 
-  var expectEqualOutputs = function(a, b) {
+  var expectEqualOutputs = function (a, b) {
     a.notions.should.equal(b.notions);
     a.script.toString().should.equal(b.script.toString());
   };
 
-  it("deserializes correctly a simple output", function() {
+  it("deserializes correctly a simple output", function () {
     var writer = new BufferWriter();
     output.toBufferWriter(writer);
     var deserialized = Output.fromBufferReader(
@@ -95,18 +95,18 @@ describe("Output", function() {
     expectEqualOutputs(output, deserialized);
   });
 
-  it("can instantiate from an object", function() {
+  it("can instantiate from an object", function () {
     var out = new Output(output.toObject());
     should.exist(out);
   });
 
-  it("can set a script from a buffer", function() {
+  it("can set a script from a buffer", function () {
     var newOutput = new Output(output.toObject());
     newOutput.setScript(Script().add(0).toBuffer());
     newOutput.inspect().should.equal("<Output (0 sats) <Script: OP_0>>");
   });
 
-  it("has a inspect property", function() {
+  it("has a inspect property", function () {
     output.inspect().should.equal("<Output (0 sats) <Script: >>");
   });
 
@@ -114,24 +114,24 @@ describe("Output", function() {
     notions: 1100000000,
     script: new Script(
       "OP_2 21 0x038282263212c609d9ea2a6e3e172de238d8c39" +
-        "cabd5ac1ca10646e23fd5f51508 21 0x038282263212c609d9ea2a6e3e172de23" +
-        "8d8c39cabd5ac1ca10646e23fd5f51508 OP_2 OP_CHECKMULTISIG OP_EQUAL"
+      "cabd5ac1ca10646e23fd5f51508 21 0x038282263212c609d9ea2a6e3e172de23" +
+      "8d8c39cabd5ac1ca10646e23fd5f51508 OP_2 OP_CHECKMULTISIG OP_EQUAL"
     )
   });
 
-  it("toBufferWriter", function() {
+  it("toBufferWriter", function () {
     output2
       .toBufferWriter()
       .toBuffer()
       .toString("hex")
       .should.equal(
         "00ab904100000000485215038282263212c609d9ea2a6e3e172de2" +
-          "38d8c39cabd5ac1ca10646e23fd5f5150815038282263212c609d9ea2a6e3e172d" +
-          "e238d8c39cabd5ac1ca10646e23fd5f5150852ae87"
+        "38d8c39cabd5ac1ca10646e23fd5f5150815038282263212c609d9ea2a6e3e172d" +
+        "e238d8c39cabd5ac1ca10646e23fd5f5150852ae87"
       );
   });
 
-  it("roundtrips to/from object", function() {
+  it("roundtrips to/from object", function () {
     var newOutput = new Output({
       notions: 50,
       script: new Script().add(0)
@@ -140,7 +140,7 @@ describe("Output", function() {
     expectEqualOutputs(newOutput, otherOutput);
   });
 
-  it("toObject will handle an invalid (null) script", function() {
+  it("toObject will handle an invalid (null) script", function () {
     // block 000000000000000b7e48f88e86ceee3e97b4df7c139f5411d14735c1b3c36791 (livenet)
     // transaction index 2
     // txid ebc9fa1196a59e192352d76c0f6e73167046b9d37b8302b6bb6968dfd279b767
@@ -154,7 +154,7 @@ describe("Output", function() {
     obj.outputs[6].script.should.equal("4e");
   });
 
-  it("#toObject roundtrip will handle an invalid (null) script", function() {
+  it("#toObject roundtrip will handle an invalid (null) script", function () {
     var invalidOutputScript = Buffer.from("0100000000000000014c", "hex");
     var br = new thoughtcore.encoding.BufferReader(invalidOutputScript);
     var output = Output.fromBufferReader(br);
@@ -163,25 +163,25 @@ describe("Output", function() {
     should.equal(output2._scriptBuffer.toString("hex"), "4c");
   });
 
-  it("inspect will work with an invalid (null) script", function() {
+  it("inspect will work with an invalid (null) script", function () {
     var invalidOutputScript = Buffer.from("0100000000000000014c", "hex");
     var br = new thoughtcore.encoding.BufferReader(invalidOutputScript);
     var output = Output.fromBufferReader(br);
     output.inspect().should.equal("<Output (1 sats) 4c>");
   });
 
-  it("roundtrips to/from JSON", function() {
+  it("roundtrips to/from JSON", function () {
     var json = JSON.stringify(output2);
     var o3 = new Output(JSON.parse(json));
     JSON.stringify(o3).should.equal(json);
   });
 
-  it("setScript fails with invalid input", function() {
+  it("setScript fails with invalid input", function () {
     var out = new Output(output2.toJSON());
     out.setScript.bind(out, 45).should.throw("Invalid argument type: script");
   });
 
-  it("sets script to null if it is an InvalidBuffer", function() {
+  it("sets script to null if it is an InvalidBuffer", function () {
     var output = new Output({
       notions: 1000,
       script: Buffer.from("4c", "hex")

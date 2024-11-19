@@ -45,8 +45,8 @@ function pbkdf2(key, salt, iterations, dkLen) {
   for (var i = 1; i <= l; i++) {
     block1[salt.length + 0] = (i >> 24 & 0xff);
     block1[salt.length + 1] = (i >> 16 & 0xff);
-    block1[salt.length + 2] = (i >> 8  & 0xff);
-    block1[salt.length + 3] = (i >> 0  & 0xff);
+    block1[salt.length + 2] = (i >> 8 & 0xff);
+    block1[salt.length + 3] = (i >> 0 & 0xff);
 
     U = crypto.createHmac('sha512', key).update(block1).digest();
 

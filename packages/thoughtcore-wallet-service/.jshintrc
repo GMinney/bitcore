@@ -12,7 +12,7 @@
   "latedef": "nofunc",
   "maxcomplexity": 10,
   "maxdepth": 4,
-  "maxerr": 99999, 
+  "maxerr": 99999,
   "maxlen": 120,
   "maxparams": 4,
   "maxstatements": 15,

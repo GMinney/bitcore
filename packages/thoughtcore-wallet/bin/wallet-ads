@@ -99,7 +99,7 @@ var storage = new FileStorage({
 });
 
 let walletInfo; // wallet Details
-storage.load(function(err, walletData) {
+storage.load(function (err, walletData) {
   if (err) console.log(err);
   else {
     walletInfo = JSON.parse(walletData);
@@ -107,7 +107,7 @@ storage.load(function(err, walletData) {
 });
 
 
-utils.getClient(clientArgs, { 
+utils.getClient(clientArgs, {
   mustExist: true
 }, function (client) {
 
@@ -116,11 +116,11 @@ utils.getClient(clientArgs, {
   let messageHashBuf = Hash.sha256(buf);
   const signature = ECDSA.sign(messageHashBuf, b.PrivateKey(walletInfo.cred.requestPrivKey), 'little').toString();
 
-  const finalAd = {...allAdArgs,  signature};
+  const finalAd = { ...allAdArgs, signature };
 
   client.createAdvertisement(finalAd, (err, result) => {
     utils.die(err);
-    if(!result) {
+    if (!result) {
       console.log('Couldn\'t create advertisement');
     }
     else {

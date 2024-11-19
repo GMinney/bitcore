@@ -11,7 +11,7 @@ import { mockStorage } from '../../helpers';
 import { unitAfterHelper, unitBeforeHelper } from '../../helpers/unit';
 const thoughtcoreLib = require('thoughtcore-lib');
 
-describe('Transaction Model', function() {
+describe('Transaction Model', function () {
   before(unitBeforeHelper);
   after(unitAfterHelper);
 
@@ -29,7 +29,7 @@ describe('Transaction Model', function() {
     const tx = thoughtcoreLib.Transaction(TransactionFixture.transaction) as ThoughtTransaction;
     let batches = 0;
 
-    const mintStream = new Readable({ objectMode: true, read: () => {} });
+    const mintStream = new Readable({ objectMode: true, read: () => { } });
     const done = new Promise(r =>
       mintStream
         .on('data', (mintOps: MintOp[]) => {
@@ -57,7 +57,7 @@ describe('Transaction Model', function() {
     const tx = thoughtcoreLib.Transaction(TransactionFixture.transaction) as ThoughtTransaction;
     let batches = 0;
 
-    const mintStream = new Readable({ objectMode: true, read: () => {} });
+    const mintStream = new Readable({ objectMode: true, read: () => { } });
     const done = new Promise(r =>
       mintStream
         .on('data', (mintOps: MintOp[]) => {
@@ -85,7 +85,7 @@ describe('Transaction Model', function() {
     let batches = 0;
     const CURRENT_HEIGHT = 8534;
 
-    const spentStream = new Readable({ objectMode: true, read: () => {} });
+    const spentStream = new Readable({ objectMode: true, read: () => { } });
     const done = new Promise(r =>
       spentStream
         .on('data', (spentOps: SpendOp[]) => {
@@ -124,7 +124,7 @@ describe('Transaction Model', function() {
         ])
       }));
 
-      const mintStream = new Readable({ objectMode: true, read: () => {} });
+      const mintStream = new Readable({ objectMode: true, read: () => { } });
       let done = new Promise(r =>
         mintStream
           .on('data', (mintOps: MintOp[]) => {
@@ -165,7 +165,7 @@ describe('Transaction Model', function() {
         toArray: sandbox.stub().resolves(tx.inputs.map(getCoinForInput))
       }));
 
-      const txStream = new Readable({ objectMode: true, read: () => {} });
+      const txStream = new Readable({ objectMode: true, read: () => { } });
       let done = new Promise(r =>
         txStream
           .on('data', (spentOps: TxOp[]) => {

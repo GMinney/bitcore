@@ -7,9 +7,9 @@ var should = chai.should();
 var { TxProposal } = require('../../ts_build/lib/model/txproposal');
 var Thoughtcore = require('thoughtcore-lib');
 
-describe('TxProposal', function() {
-  describe('#create', function() {
-    it('should create a TxProposal', function() {
+describe('TxProposal', function () {
+  describe('#create', function () {
+    it('should create a TxProposal', function () {
       var txp = TxProposal.create(aTxpOpts());
       should.exist(txp);
       txp.outputs.length.should.equal(2);
@@ -18,15 +18,15 @@ describe('TxProposal', function() {
     });
   });
 
-  describe('#fromObj', function() {
-    it('should copy a TxProposal', function() {
+  describe('#fromObj', function () {
+    it('should copy a TxProposal', function () {
       var txp = TxProposal.fromObj(aTXP());
       should.exist(txp);
       txp.amount.should.equal(aTXP().amount);
     });
 
-    it('should copy a TxProposal, with actions', function() {
-      let txpObj  = aTXP();
+    it('should copy a TxProposal, with actions', function () {
+      let txpObj = aTXP();
 
 
       txpObj.version = 2;
@@ -38,7 +38,7 @@ describe('TxProposal', function() {
         signatures: 'ss',
         xpub: 'xx',
       }];
-      
+
       var txp = TxProposal.fromObj(txpObj);
       should.exist(txp);
       txp.amount.should.equal(aTXP().amount);
@@ -46,23 +46,23 @@ describe('TxProposal', function() {
 
 
 
-    it('should default to THT coin', function() {
+    it('should default to THT coin', function () {
       var txp = TxProposal.fromObj(aTXP());
       should.exist(txp);
       txp.coin.should.equal('tht');
     });
   });
 
-  describe('#getTotalAmount', function() {
-    it('should compute total amount', function() {
+  describe('#getTotalAmount', function () {
+    it('should compute total amount', function () {
       var x = TxProposal.fromObj(aTXP());
       var total = x.getTotalAmount();
       total.should.equal(x.amount);
     });
   });
 
-  describe('#sign', function() {
-    it('should sign 2-2 (txp version 3, tht tx version 1)', function() {
+  describe('#sign', function () {
+    it('should sign 2-2 (txp version 3, tht tx version 1)', function () {
       var txp = TxProposal.fromObj(aTXP());
       txp.sign('1', theSignatures, theXPub);
       txp.isAccepted().should.equal(false);
@@ -73,16 +73,16 @@ describe('TxProposal', function() {
     });
   });
 
-  describe('#getRawTx', function() {
-    it('should generate correct raw transaction for signed 2-2, tx version 1', function() {
+  describe('#getRawTx', function () {
+    it('should generate correct raw transaction for signed 2-2, tx version 1', function () {
       var txp = TxProposal.fromObj(aTXP());
       txp.sign('1', theSignatures, theXPub);
       txp.getRawTx().should.equal(theRawTx);
     });
   });
 
-  describe('#reject', function() {
-    it('should reject 2-2', function() {
+  describe('#reject', function () {
+    it('should reject 2-2', function () {
       var txp = TxProposal.fromObj(aTXP());
       txp.reject('1');
       txp.isAccepted().should.equal(false);
@@ -90,8 +90,8 @@ describe('TxProposal', function() {
     });
   });
 
-  describe('#reject & #sign', function() {
-    it('should finally reject', function() {
+  describe('#reject & #sign', function () {
+    it('should finally reject', function () {
       var txp = TxProposal.fromObj(aTXP());
       txp.sign('1', theSignatures);
       txp.isAccepted().should.equal(false);
@@ -109,7 +109,7 @@ var theXPub = 'xpub661MyMwAqRbcFLRkhYzK8eQdoywNHJVsJCMQNDoMks5bZymuMcyDgYfnVQYq2
 var theSignatures = ['304402201d210f731fa8cb8473ce49554382ad5d950c963d48b173a0591f13ed8cee10ce022027b30dc3a55c46b1f977a72491d338fc14b6d13a7b1a7c5a35950d8543c1ced6'];
 var theRawTx = '0100000001ab069f7073be9b491bb1ad4233a45d2e383082ccc7206df905662d6d8499e66e08000000910047304402201d210f731fa8cb8473ce49554382ad5d950c963d48b173a0591f13ed8cee10ce022027b30dc3a55c46b1f977a72491d338fc14b6d13a7b1a7c5a35950d8543c1ced6014752210319008ffe1b3e208f5ebed8f46495c056763f87b07930a7027a92ee477fb0cb0f2103b5f035af8be40d0db5abb306b7754949ab39032cf99ad177691753b37d10130152aeffffffff0380969800000000001976a91451224bca38efcaa31d5340917c3f3f713b8b20e488ac002d3101000000001976a91451224bca38efcaa31d5340917c3f3f713b8b20e488ac70f62b040000000017a914778192003f0e9e1d865c082179cc3dae5464b03d8700000000';
 
-var aTxpOpts = function() {
+var aTxpOpts = function () {
   var opts = {
     coin: 'tht',
     network: 'livenet',
@@ -123,12 +123,12 @@ var aTxpOpts = function() {
     toAddress: "18PzpUFkFZE8zKWUPvfykkTxmB9oMR8qP7",
     amount: 20000000,
     message: "second message"
-  }, ];
+  },];
 
   return opts;
 };
 
-var aTXP = function() {
+var aTXP = function () {
   var txp = {
     "version": 3,
     "createdOn": 1423146231,
@@ -174,7 +174,7 @@ var aTXP = function() {
       "toAddress": "18PzpUFkFZE8zKWUPvfykkTxmB9oMR8qP7",
       "amount": 20000000,
       "message": "second message"
-    }, ],
+    },],
     "outputOrder": [0, 1, 2]
   };
 

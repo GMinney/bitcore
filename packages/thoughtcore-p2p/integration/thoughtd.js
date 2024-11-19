@@ -39,16 +39,16 @@ var txHash = {
 };
 
 // These tests require a running thoughtd instance
-describe('Integration with ' + network.name + ' thoughtd', function() {
+describe('Integration with ' + network.name + ' thoughtd', function () {
 
   this.timeout(15000);
   var opts = {
     host: 'localhost',
     network: network.name
   };
-  it('handshakes', function(cb) {
+  it('handshakes', function (cb) {
     var peer = new Peer(opts);
-    peer.once('version', function(m) {
+    peer.once('version', function (m) {
       m.version.should.be.above(70000);
       m.services.toString().should.equal('1');
       Math.abs(new Date() - m.timestamp).should.be.below(10000); // less than 10 seconds of time difference
@@ -56,44 +56,44 @@ describe('Integration with ' + network.name + ' thoughtd', function() {
       m.startHeight.should.be.above(300000);
       cb();
     });
-    peer.once('verack', function(m) {
+    peer.once('verack', function (m) {
       should.exist(m);
       m.command.should.equal('verack');
     });
     peer.connect();
   });
-  var connect = function(cb) {
+  var connect = function (cb) {
     var peer = new Peer(opts);
-    peer.once('ready', function() {
+    peer.once('ready', function () {
       cb(peer);
     });
-    peer.once('error', function(err) {
+    peer.once('error', function (err) {
       should.not.exist(err);
     });
     peer.connect();
   };
-  it('connects', function(cb) {
-    connect(function(peer) {
+  it('connects', function (cb) {
+    connect(function (peer) {
       peer.version.should.be.above(70000);
       _.isString(peer.subversion).should.equal(true);
       _.isNumber(peer.bestHeight).should.equal(true);
       cb();
     });
   });
-  it('handles inv', function(cb) {
+  it('handles inv', function (cb) {
     // assumes there will be at least one transaction/block
     // in the next few seconds
-    connect(function(peer) {
-      peer.once('inv', function(message) {
+    connect(function (peer) {
+      peer.once('inv', function (message) {
         message.inventory[0].hash.length.should.equal(32);
         cb();
       });
     });
   });
-  it('handles addr', function(cb) {
-    connect(function(peer) {
-      peer.once('addr', function(message) {
-        message.addresses.forEach(function(address) {
+  it('handles addr', function (cb) {
+    connect(function (peer) {
+      peer.once('addr', function (message) {
+        message.addresses.forEach(function (address) {
           (address.time instanceof Date).should.equal(true);
           should.exist(address.ip);
           (address.services instanceof BN).should.equal(true);
@@ -104,30 +104,30 @@ describe('Integration with ' + network.name + ' thoughtd', function() {
       peer.sendMessage(message);
     });
   });
-  it('requests inv detailed info', function(cb) {
-    connect(function(peer) {
-      peer.once('block', function(message) {
+  it('requests inv detailed info', function (cb) {
+    connect(function (peer) {
+      peer.once('block', function (message) {
         should.exist(message.block);
         cb();
       });
-      peer.once('tx', function(message) {
+      peer.once('tx', function (message) {
         should.exist(message.transaction);
         cb();
       });
-      peer.once('inv', function(message) {
+      peer.once('inv', function (message) {
         var get = messages.GetData(message.inventory);
         peer.sendMessage(get);
       });
     });
   });
-  it('sends tx inv and receives getdata for that tx', function(cb) {
-    connect(function(peer) {
+  it('sends tx inv and receives getdata for that tx', function (cb) {
+    connect(function (peer) {
       var type = Inventory.TYPE.TX;
       var inv = [{
         type: type,
         hash: new Buffer(Random.getRandomBuffer(32)) // needs to be random for repeatability
       }];
-      peer.once('getdata', function(message) {
+      peer.once('getdata', function (message) {
         message.inventory[0].should.deep.equal(inv[0]);
         cb();
       });
@@ -136,9 +136,9 @@ describe('Integration with ' + network.name + ' thoughtd', function() {
       peer.sendMessage(message);
     });
   });
-  it('requests block data', function(cb) {
-    connect(function(peer) {
-      peer.once('block', function(message) {
+  it('requests block data', function (cb) {
+    connect(function (peer) {
+      peer.once('block', function (message) {
         (message.block instanceof Block).should.equal(true);
         cb();
       });
@@ -147,10 +147,10 @@ describe('Integration with ' + network.name + ' thoughtd', function() {
     });
   });
   var fakeHash = 'e2dfb8afe1575bfacae1a0b4afc49af7ddda69285857267bae0e22be15f74a3a';
-  it('handles request tx data not found', function(cb) {
-    connect(function(peer) {
+  it('handles request tx data not found', function (cb) {
+    connect(function (peer) {
       var expected = messages.NotFound.forTransaction(fakeHash);
-      peer.once('notfound', function(message) {
+      peer.once('notfound', function (message) {
         message.command.should.equal('notfound');
         message.inventory[0].type.should.equal(Inventory.TYPE.TX);
         var expectedHash = expected.inventory[0].hash.toString('hex');
@@ -163,9 +163,9 @@ describe('Integration with ' + network.name + ' thoughtd', function() {
   });
   var from = [blockHash[network.name]];
   var stop = stopBlock[network.name];
-  it('gets headers', function(cb) {
-    connect(function(peer) {
-      peer.once('headers', function(message) {
+  it('gets headers', function (cb) {
+    connect(function (peer) {
+      peer.once('headers', function (message) {
         message.command.should.equal('headers');
         message.headers.length.should.equal(3);
         cb();
@@ -177,9 +177,9 @@ describe('Integration with ' + network.name + ' thoughtd', function() {
       peer.sendMessage(message);
     });
   });
-  it('gets blocks', function(cb) {
-    connect(function(peer) {
-      peer.once('inv', function(message) {
+  it('gets blocks', function (cb) {
+    connect(function (peer) {
+      peer.once('inv', function (message) {
         message.command.should.equal('inv');
         if (message.inventory.length === 2) {
           message.inventory[0].type.should.equal(Inventory.TYPE.BLOCK);
@@ -194,9 +194,9 @@ describe('Integration with ' + network.name + ' thoughtd', function() {
       peer.sendMessage(message);
     });
   });
-  var testInvGetData = function(expected, message, cb) {
-    connect(function(peer) {
-      peer.once('getdata', function(message) {
+  var testInvGetData = function (expected, message, cb) {
+    connect(function (peer) {
+      peer.once('getdata', function (message) {
         message.command.should.equal('getdata');
         message.inventory[0].type.should.equal(expected.inventory[0].type);
         var expectedHash = expected.inventory[0].hash.toString('hex');
@@ -206,13 +206,13 @@ describe('Integration with ' + network.name + ' thoughtd', function() {
       peer.sendMessage(message);
     });
   };
-  it('sends block inv and receives getdata', function(cb) {
+  it('sends block inv and receives getdata', function (cb) {
     var randomHash = new Buffer(Random.getRandomBuffer(32)); // slow buffer
     var expected = messages.GetData.forBlock(randomHash);
     var message = messages.Inventory.forBlock(randomHash);
     testInvGetData(expected, message, cb);
   });
-  it('sends tx inv and receives getdata', function(cb) {
+  it('sends tx inv and receives getdata', function (cb) {
     var randomHash = new Buffer(Random.getRandomBuffer(32)); // slow buffer
     var expected = messages.GetData.forTransaction(randomHash);
     var message = messages.Inventory.forTransaction(randomHash);

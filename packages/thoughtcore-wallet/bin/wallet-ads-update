@@ -23,14 +23,14 @@ let adArgs = {
   adId
 };
 
-utils.getClient(clientArgs, { 
+utils.getClient(clientArgs, {
   mustExist: true
 }, function (client) {
 
   if (program.activate) {
     client.activateAdvertisement(adArgs, (err, result) => {
       utils.die(err);
-      if(!result) {
+      if (!result) {
         console.log('Couldn\'t activate advertisement');
       }
       else {
@@ -41,7 +41,7 @@ utils.getClient(clientArgs, {
     client.deactivateAdvertisement(adArgs, (err, result) => {
       utils.die(err);
       console.log(err);
-      if(!result) {
+      if (!result) {
         console.log('Couldn\'t deactivate advertisement');
       }
       else {

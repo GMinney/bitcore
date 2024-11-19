@@ -37,7 +37,7 @@ module.exports = {
     } catch (e) {
       return false;
     }
-    if (typeof(parsed) === 'object') {
+    if (typeof (parsed) === 'object') {
       return true;
     }
     return false;
@@ -48,7 +48,7 @@ module.exports = {
   /**
    * Clone an array
    */
-  cloneArray: function(array) {
+  cloneArray: function (array) {
     return [].concat(array);
   },
 
@@ -60,7 +60,7 @@ module.exports = {
    * @return {Object} The target object
    */
   defineImmutable: function defineImmutable(target, values) {
-    Object.keys(values).forEach(function(key){
+    Object.keys(values).forEach(function (key) {
       Object.defineProperty(target, key, {
         configurable: false,
         enumerable: true,

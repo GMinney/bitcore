@@ -6,7 +6,7 @@ var _ = require('lodash');
 var bwc = require('thoughtcore-wallet-client');
 var Thoughtcore_ = {
   tht: bwc.Thoughtcore
-};  
+};
 
 program = utils.configureCommander(program);
 
@@ -15,7 +15,7 @@ program
   .usage('[options] <address> <amount> [note]')
   .description('Create a proposal for sending thoughts to a destination address.\n  The amount can be specified in bit, tht or sat (the default).');
 
-program.on('--help', function() {
+program.on('--help', function () {
   console.log('  Examples:');
   console.log('');
   console.log('    $ wallet-send n2HRFgtoihgAhx1qAEXcdBMjoMvAx7AcDc 500bit');
@@ -40,12 +40,12 @@ function confirmDiag(amountStr, note, cb) {
 
   rl.question(`Confirm send ${amountStr} to ${note}? (y/N)`, (answer) => {
     rl.close();
-    return cb(answer =='y');
+    return cb(answer == 'y');
   });
 };
 
 
-function send(client, address, amount, fee, note, uri) { 
+function send(client, address, amount, fee, note, uri) {
   var amount;
 
   fee = fee || 'normal';
@@ -57,11 +57,11 @@ function send(client, address, amount, fee, note, uri) {
     message: note,
     feeLevel: fee,
     payProUrl: uri,
-  }, function(err, txp) {
+  }, function (err, txp) {
     utils.die(err);
     client.publishTxProposal({
       txp: txp
-    }, function(err) {
+    }, function (err) {
       utils.die(err);
       console.log(' * Tx created: ID %s [%s] RequiredSignatures:',
         utils.shortID(txp.id), txp.status, txp.requiredSignatures);
@@ -77,7 +77,7 @@ var uri;
 
 utils.getClient(program, {
   mustExist: true
-}, function(client) {
+}, function (client) {
   var coin = client.credentials.coin;
   var thoughtcore = Thoughtcore_[coin];
 
@@ -88,12 +88,12 @@ utils.getClient(program, {
     var coin2 = 'tht';
     if (arg1.indexOf('thoughtcash') === 0) coin2 = 'bch';
     if (coin != coin2) utils.die('Wallet / Payment Coin mismatch');
-    uri  = arg1.replace(/thought(cash)?:\?r=/, '');
+    uri = arg1.replace(/thought(cash)?:\?r=/, '');
 
   } else {
 
     // BIP21
-    try { 
+    try {
 
       var parsed = new thoughtcore.URI(arg1);
       if (!parsed.r) {
@@ -116,15 +116,15 @@ utils.getClient(program, {
     console.log('Fetching Payment from: ' + uri);
     client.fetchPayPro({
       payProUrl: uri,
-    }, function(err, paypro) {
+    }, function (err, paypro) {
       if (err) {
-        utils.die(' Failed to fetch payment: ' + (_.isObject(err)? JSON.stringify(err) : err));
+        utils.die(' Failed to fetch payment: ' + (_.isObject(err) ? JSON.stringify(err) : err));
       } else if (!paypro.verified) {
         utils.die('Failed to verify payment protocol signatures');
       }
 
       var amountStr = utils.renderAmount(paypro.amount, coin);
-      confirmDiag(amountStr, paypro.memo, function(confirmed) {
+      confirmDiag(amountStr, paypro.memo, function (confirmed) {
         if (!confirmed) utils.die('User canceled');
         send(client, paypro.toAddress, paypro.amount, program.fee, paypro.memo, uri);
       });
@@ -134,7 +134,7 @@ utils.getClient(program, {
     // Grab data from CLI if not set before
     addr = addr || arg1;
     amount = amount || utils.parseAmount(args[1]);
-    note = note ||  args[2];
+    note = note || args[2];
 
     send(client, addr, amount, program.fee, note);
   }

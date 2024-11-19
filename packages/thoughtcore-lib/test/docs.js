@@ -6,9 +6,9 @@ var should = chai.should();
 var thoughtcore = require('..');
 var fs = require('fs');
 
-describe('Documentation', function() {
+describe('Documentation', function () {
 
-  it.skip('major and minor versions should match', function() {
+  it.skip('major and minor versions should match', function () {
     var versionRE = /v[0-9]+\.[0-9]+/;
     var docIndex = fs.readFileSync('./README.md', 'ascii');
     var docVersion = docIndex.match(versionRE)[0];

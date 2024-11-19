@@ -27,7 +27,7 @@ function TransactionMessage(arg, options) {
 }
 inherits(TransactionMessage, Message);
 
-TransactionMessage.prototype.setPayload = function(payload) {
+TransactionMessage.prototype.setPayload = function (payload) {
   if (this.Transaction.prototype.fromBuffer) {
     this.transaction = new this.Transaction().fromBuffer(payload);
   } else {
@@ -35,7 +35,7 @@ TransactionMessage.prototype.setPayload = function(payload) {
   }
 };
 
-TransactionMessage.prototype.getPayload = function() {
+TransactionMessage.prototype.getPayload = function () {
   return this.transaction.toBuffer();
 };
 

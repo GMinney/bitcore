@@ -19,9 +19,9 @@ function MempoolMessage(arg, options) {
 }
 inherits(MempoolMessage, Message);
 
-MempoolMessage.prototype.setPayload = function() {};
+MempoolMessage.prototype.setPayload = function () { };
 
-MempoolMessage.prototype.getPayload = function() {
+MempoolMessage.prototype.getPayload = function () {
   return BufferUtil.EMPTY_BUFFER;
 };
 

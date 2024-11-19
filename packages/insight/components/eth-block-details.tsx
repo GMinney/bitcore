@@ -1,28 +1,28 @@
 'use client';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, {useEffect, useState, memo} from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import {
   getApiRoot,
   getConvertedValue,
   getFormattedDate,
   normalizeParams,
 } from '@/lib/utilities/helper-methods';
-import {fetcher} from '@/api/api';
+import { fetcher } from '@/api/api';
 import InfiniteScrollLoadSpinner from './infinite-scroll-load-spinner';
 import Info from './info';
-import {routerFadeIn} from '@/lib/utilities/animations';
+import { routerFadeIn } from '@/lib/utilities/animations';
 import SupCurrencyLogo from './icons/sup-currency-logo';
-import {MainTitle, SecondaryTitle} from '@/assets/styles/titles';
-import {motion} from 'framer-motion';
-import {Tile, TileDescription, TileLink} from '@/assets/styles/tile';
+import { MainTitle, SecondaryTitle } from '@/assets/styles/titles';
+import { motion } from 'framer-motion';
+import { Tile, TileDescription, TileLink } from '@/assets/styles/tile';
 import CopyText from './copy-text';
-import {DisplayFlex} from '@/assets/styles/global';
-import {useNavigate} from 'react-router-dom';
-import {Grid} from '@/assets/styles/grid';
+import { DisplayFlex } from '@/assets/styles/global';
+import { useNavigate } from 'react-router-dom';
+import { Grid } from '@/assets/styles/grid';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import TransactionDetailsEth from './transaction-details-eth';
-import {SharedTile} from './shared';
+import { SharedTile } from './shared';
 import nProgress from 'nprogress';
 
 const LIMIT = 10;
@@ -33,9 +33,9 @@ interface EthDetailsProps {
   block: string;
 }
 
-const PopulateEthTsxFromBlock = (txData: any, {height}: {height: number}) => {
+const PopulateEthTsxFromBlock = (txData: any, { height }: { height: number }) => {
   const tx: any = {};
-  const {txid, fee, blockHeight, blockTime, coinbase, value, to, from, gasLimit, gasPrice} = txData;
+  const { txid, fee, blockHeight, blockTime, coinbase, value, to, from, gasLimit, gasPrice } = txData;
   tx.txid = txid;
   tx.fee = fee;
   tx.blockTime = blockTime;
@@ -49,7 +49,7 @@ const PopulateEthTsxFromBlock = (txData: any, {height}: {height: number}) => {
   return tx;
 };
 
-const EthBlockDetails: React.FC<EthDetailsProps> = ({currency, network, block}) => {
+const EthBlockDetails: React.FC<EthDetailsProps> = ({ currency, network, block }) => {
   const _normalizeParams = normalizeParams(currency, network);
   currency = _normalizeParams.currency;
   network = _normalizeParams.network;
@@ -114,7 +114,7 @@ const EthBlockDetails: React.FC<EthDetailsProps> = ({currency, network, block}) 
           {error ? <Info type={'error'} message={error} /> : null}
           {summary ? (
             <motion.div variants={routerFadeIn} animate='animate' initial='initial'>
-              <MainTitle style={{marginBottom: 8}}>
+              <MainTitle style={{ marginBottom: 8 }}>
                 Block #{summary.height}
                 <SupCurrencyLogo currency={currency} />
               </MainTitle>

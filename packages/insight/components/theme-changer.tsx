@@ -1,11 +1,11 @@
-import {useState, memo} from 'react';
-import styled, {useTheme} from 'styled-components';
-import {motion, AnimatePresence} from 'framer-motion';
+import { useState, memo } from 'react';
+import styled, { useTheme } from 'styled-components';
+import { motion, AnimatePresence } from 'framer-motion';
 import MoonSvg from '@/assets/images/moon.svg';
 import SunSvg from '@/assets/images/sun.svg';
-import {useAppDispatch} from '@/lib/utilities/hooks';
-import {changeTheme} from '@/lib/store/app.actions';
-import {Black} from '@/assets/styles/colors';
+import { useAppDispatch } from '@/lib/utilities/hooks';
+import { changeTheme } from '@/lib/store/app.actions';
+import { Black } from '@/assets/styles/colors';
 const DarkModeXValue = 15;
 const LightModeXValue = 0;
 
@@ -18,7 +18,7 @@ interface SwitchProps {
   checked: boolean;
 }
 
-const Switch = styled(motion.div)<SwitchProps>`
+const Switch = styled(motion.div) <SwitchProps>`
   width: 42px;
   height: 26px;
   background: #8f00ff;
@@ -30,12 +30,12 @@ const Switch = styled(motion.div)<SwitchProps>`
   margin-left: 21px;
 `;
 
-const Handle = styled(motion.div)<SwitchProps>`
+const Handle = styled(motion.div) <SwitchProps>`
   width: 20px;
   height: 20px;
   background-color: ${Black};
   border-radius: 15px;
-  background-image: url(${({checked}) => (checked ? MoonSvg.src : SunSvg.src)});
+  background-image: url(${({ checked }) => (checked ? MoonSvg.src : SunSvg.src)});
   background-repeat: no-repeat;
   background-size: 12px 13px;
   background-position: center;

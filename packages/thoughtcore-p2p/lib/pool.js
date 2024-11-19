@@ -62,7 +62,7 @@ function Pool(options) {
   this.relay = options.relay === false ? false : true;
 
   if (options.addrs) {
-    for(var i = 0; i < options.addrs.length; i++) {
+    for (var i = 0; i < options.addrs.length; i++) {
       this._addAddr(options.addrs[i]);
     }
   }
@@ -85,7 +85,7 @@ function Pool(options) {
   }
 
   this.on('seed', function seedEvent(ips) {
-    ips.forEach(function(ip) {
+    ips.forEach(function (ip) {
       self._addAddr({
         ip: {
           v4: ip
@@ -241,7 +241,7 @@ Pool.prototype._addConnectedPeer = function _addConnectedPeer(socket, addr) {
  * Will add disconnect and ready events for a peer and intialize
  * handlers for relay peer message events.
  */
-Pool.prototype._addPeerEventHandlers = function(peer, addr) {
+Pool.prototype._addPeerEventHandlers = function (peer, addr) {
   var self = this;
 
   peer.on('disconnect', function peerDisconnect() {
@@ -307,7 +307,7 @@ Pool.prototype._addAddr = function _addAddr(addr) {
  */
 Pool.prototype._addAddrsFromSeed = function _addAddrsFromSeed(seed) {
   var self = this;
-  dns.resolve(seed, function(err, ips) {
+  dns.resolve(seed, function (err, ips) {
     if (err) {
       self.emit('seederror', err);
       return;
@@ -329,7 +329,7 @@ Pool.prototype._addAddrsFromSeed = function _addAddrsFromSeed(seed) {
 Pool.prototype._addAddrsFromSeeds = function _addAddrsFromSeeds() {
   var self = this;
   var seeds = this.network.dnsSeeds;
-  seeds.forEach(function(seed) {
+  seeds.forEach(function (seed) {
     self._addAddrsFromSeed(seed);
   });
   return this;
@@ -349,9 +349,9 @@ Pool.prototype.inspect = function inspect() {
  * Will send a message to all of the peers in the pool.
  * @param {Message} message - An instance of the message to send
  */
-Pool.prototype.sendMessage = function(message) {
+Pool.prototype.sendMessage = function (message) {
   // broadcast to peers
-  for(var key in this._connectedPeers) {
+  for (var key in this._connectedPeers) {
     var peer = this._connectedPeers[key];
     peer.sendMessage(message);
   }
@@ -361,15 +361,15 @@ Pool.prototype.sendMessage = function(message) {
  * Will enable a listener for peer connections, when a peer connects
  * it will be added to the pool.
  */
-Pool.prototype.listen = function() {
+Pool.prototype.listen = function () {
   var self = this;
 
   // Create server
-  this.server = net.createServer(function(socket) {
+  this.server = net.createServer(function (socket) {
     var addr = {
       ip: {}
     };
-    if(net.isIPv6(socket.remoteAddress)) {
+    if (net.isIPv6(socket.remoteAddress)) {
       addr.ip.v6 = socket.remoteAddress;
     } else {
       addr.ip.v4 = socket.remoteAddress;

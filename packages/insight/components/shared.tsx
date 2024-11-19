@@ -1,4 +1,4 @@
-import {Tile, TileDescription} from '@/assets/styles/tile';
+import { Tile, TileDescription } from '@/assets/styles/tile';
 import React from 'react';
 
 export const SharedTile = ({

@@ -92,7 +92,7 @@ export class Stats {
         '_id.day': 1
       })
       .toArray()
-      .then( results => {
+      .then(results => {
         const stats = {
           byDay: _.map(results, record => {
             const day = moment(record.day).format('YYYYMMDD');
@@ -109,7 +109,7 @@ export class Stats {
       .catch(err => {
         return cb(err);
       })
-      
+
   }
 
   _getFiatRates(cb) {

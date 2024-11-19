@@ -5,17 +5,17 @@ var should = require('chai').should();
 var thoughtcore = require('..');
 var networks = thoughtcore.Networks;
 
-describe('Networks', function() {
+describe('Networks', function () {
 
   var customnet;
 
-  it('should contain all Networks', function() {
+  it('should contain all Networks', function () {
     should.exist(networks.livenet);
     should.exist(networks.testnet);
     should.exist(networks.defaultNetwork);
   });
 
-  it('should not replace testnet network with regtest', function() {
+  it('should not replace testnet network with regtest', function () {
     const beforeEnable = networks.testnet;
     networks.enableRegtest();
     networks.testnet.should.deep.equal(beforeEnable);
@@ -24,12 +24,12 @@ describe('Networks', function() {
     networks.testnet.should.deep.equal(beforeEnable);
   });
 
-  it('will get network based on string "regtest" value', function() {
+  it('will get network based on string "regtest" value', function () {
     var network = networks.get('regtest');
     network.should.equal(networks.regtest);
   });
 
-  it('should be able to define a custom Network', function() {
+  it('should be able to define a custom Network', function () {
     var custom = {
       name: 'customnet',
       alias: 'mynet',
@@ -57,13 +57,13 @@ describe('Networks', function() {
     }
   });
 
-  it('can remove a custom network', function() {
+  it('can remove a custom network', function () {
     networks.remove(customnet);
     var net = networks.get('customnet');
     should.equal(net, undefined);
   });
 
-  it('should not set a network map for an undefined value', function() {
+  it('should not set a network map for an undefined value', function () {
     var custom = {
       name: 'somenet',
       pubkeyhash: 0x13,
@@ -85,7 +85,7 @@ describe('Networks', function() {
     somenet.name.should.equal('somenet');
   });
 
-  it('can remove a custom network by name', function() {
+  it('can remove a custom network by name', function () {
     var net = networks.get('somenet');
     should.exist(net);
     networks.remove('somenet');
@@ -95,49 +95,49 @@ describe('Networks', function() {
 
   var constants = ['name', 'alias', 'pubkeyhash', 'scripthash', 'xpubkey', 'xprivkey'];
 
-  constants.forEach(function(key){
-    it('should have constant '+key+' for livenet and testnet', function(){
+  constants.forEach(function (key) {
+    it('should have constant ' + key + ' for livenet and testnet', function () {
       networks.testnet.hasOwnProperty(key).should.equal(true);
       networks.livenet.hasOwnProperty(key).should.equal(true);
     });
   });
 
-  it('tests only for the specified key', function() {
+  it('tests only for the specified key', function () {
     expect(networks.get(0x6f, 'pubkeyhash')).to.equal(networks.testnet);
     expect(networks.get(0x6f, 'privatekey')).to.equal(undefined);
   });
 
-  it('can test for multiple keys', function() {
+  it('can test for multiple keys', function () {
     expect(networks.get(0x6f, ['pubkeyhash', 'scripthash'])).to.equal(networks.testnet);
     expect(networks.get(0xc4, ['pubkeyhash', 'scripthash'])).to.equal(networks.testnet);
     expect(networks.get(0x6f, ['privatekey', 'port'])).to.equal(undefined);
   });
 
-  it('converts to string using the "name" property', function() {
+  it('converts to string using the "name" property', function () {
     networks.livenet.toString().should.equal('livenet');
   });
 
-  it('network object should be immutable', function() {
+  it('network object should be immutable', function () {
     expect(networks.testnet.name).to.equal('testnet')
-    var fn = function() { networks.testnet.name = 'livenet' }
+    var fn = function () { networks.testnet.name = 'livenet' }
     expect(fn).to.throw(TypeError)
   });
 
-  it('should have not have network magic or port for testnet', function() {
+  it('should have not have network magic or port for testnet', function () {
     var testnet = networks.get('testnet');
     var buffUtil = require('../lib/util/buffer');
     buffUtil.isBuffer(testnet.networkMagic).should.equal(false);
     isNaN(testnet.port).should.equal(true);
   });
 
-  it('should have network magic and port for testnet variant "testnet3"', function() {
+  it('should have network magic and port for testnet variant "testnet3"', function () {
     var testnet = networks.get('testnet3');
     var buffUtil = require('../lib/util/buffer');
     buffUtil.isBuffer(testnet.networkMagic).should.equal(true);
     isNaN(testnet.port).should.equal(false);
   });
 
-  it('should have network magic and port for testnet variant "signet"', function() {
+  it('should have network magic and port for testnet variant "signet"', function () {
     var testnet = networks.get('signet');
     var buffUtil = require('../lib/util/buffer');
     buffUtil.isBuffer(testnet.networkMagic).should.equal(true);

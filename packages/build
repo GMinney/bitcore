@@ -1,6 +1,6 @@
 #!/bin/sh
 
-MODULES=' crypto-wallet-core thoughtcore-wallet-service thoughtcore-wallet-client thoughtcore-client'
+MODULES='crypto-wallet-core thoughtcore-wallet-service thoughtcore-wallet-client thoughtcore-client'
 
 for i in $MODULES; 
 do

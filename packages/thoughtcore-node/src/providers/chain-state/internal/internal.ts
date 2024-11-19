@@ -180,7 +180,7 @@ export class InternalStateProvider implements IChainStateService {
     return blocks[0];
   }
 
-  async getBlockBeforeTime(params: GetBlockBeforeTimeParams): Promise<IBlock|null> {
+  async getBlockBeforeTime(params: GetBlockBeforeTimeParams): Promise<IBlock | null> {
     const { chain, network, time } = params;
     const date = new Date(time || Date.now());
     const [block] = await ThoughtBlockStorage.collection
@@ -363,7 +363,7 @@ export class InternalStateProvider implements IChainStateService {
           }
           return done();
         },
-        function(done) {
+        function (done) {
           this.push({ allMissingAddresses, totalMissingValue });
           done();
         }
@@ -594,16 +594,16 @@ export class InternalStateProvider implements IChainStateService {
     const query =
       startHeight && endHeight
         ? {
-            processed: true,
-            chain,
-            network,
-            height: { $gt: startHeight, $lt: endHeight }
-          }
+          processed: true,
+          chain,
+          network,
+          height: { $gt: startHeight, $lt: endHeight }
+        }
         : {
-            processed: true,
-            chain,
-            network
-          };
+          processed: true,
+          chain,
+          network
+        };
     const locatorBlocks = await ThoughtBlockStorage.collection
       .find(query, { sort: { height: -1 }, limit: 30 })
       .addCursorFlag('noCursorTimeout', true)

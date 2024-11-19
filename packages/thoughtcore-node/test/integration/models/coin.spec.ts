@@ -51,7 +51,7 @@ async function makeMempoolTxChain(chain: string, network: string, startingTxid: 
   return allTxids;
 }
 
-describe('Coin Model', function() {
+describe('Coin Model', function () {
   const suite = this;
   this.timeout(30000);
   before(intBeforeHelper);
@@ -184,7 +184,7 @@ describe('Coin Model', function() {
       } as ICoin;
     });
     await addTx(mempoolTx, mempoolOutputs);
-    
+
     // update existing outputs to be spent by mempool tx
     // await CoinStorage.collection.updateMany(
     //   { chain, network, mintTxid: tx1.hash },

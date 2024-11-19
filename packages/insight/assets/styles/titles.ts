@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import {size} from '@/lib/utilities/constants';
-import {motion} from 'framer-motion';
+import { size } from '@/lib/utilities/constants';
+import { motion } from 'framer-motion';
 
 export const MainTitle = styled(motion.h1)`
   font-style: normal;

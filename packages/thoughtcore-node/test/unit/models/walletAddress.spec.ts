@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { IWalletAddress, WalletAddressStorage } from '../../../src/models/walletAddress';
 import { unitAfterHelper, unitBeforeHelper } from '../../helpers/unit';
 
-describe('WalletAddress Model', function() {
+describe('WalletAddress Model', function () {
   before(unitBeforeHelper);
   after(unitAfterHelper);
 

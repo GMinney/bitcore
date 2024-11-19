@@ -1,6 +1,6 @@
 'use client';
 
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 /**
  * Define types for the state

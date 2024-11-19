@@ -29,13 +29,13 @@ function Inventory(obj) {
  * @param {Buffer|String} hash - The hash for the inventory
  * @returns {Inventory} - A new instance of Inventory
  */
-Inventory.forItem = function(type, hash) {
+Inventory.forItem = function (type, hash) {
   $.checkArgument(hash);
   if (_.isString(hash)) {
     hash = new Buffer(hash, 'hex');
     hash = BufferUtil.reverse(hash);
   }
-  return new Inventory({type: type, hash: hash});
+  return new Inventory({ type: type, hash: hash });
 };
 
 /**
@@ -43,7 +43,7 @@ Inventory.forItem = function(type, hash) {
  * @param {Buffer|String} hash - The hash for the block inventory
  * @returns {Inventory} - A new instance of Inventory
  */
-Inventory.forBlock = function(hash) {
+Inventory.forBlock = function (hash) {
   return Inventory.forItem(Inventory.TYPE.BLOCK, hash);
 };
 
@@ -52,7 +52,7 @@ Inventory.forBlock = function(hash) {
  * @param {Buffer|String} hash - The hash for the filtered block inventory
  * @returns {Inventory} - A new instance of Inventory
  */
-Inventory.forFilteredBlock = function(hash) {
+Inventory.forFilteredBlock = function (hash) {
   return Inventory.forItem(Inventory.TYPE.FILTERED_BLOCK, hash);
 };
 
@@ -61,14 +61,14 @@ Inventory.forFilteredBlock = function(hash) {
  * @param {Buffer|String} hash - The hash for the transaction inventory
  * @returns {Inventory} - A new instance of Inventory
  */
-Inventory.forTransaction = function(hash) {
+Inventory.forTransaction = function (hash) {
   return Inventory.forItem(Inventory.TYPE.TX, hash);
 };
 
 /**
  * @returns {Buffer} - Serialized inventory
  */
-Inventory.prototype.toBuffer = function() {
+Inventory.prototype.toBuffer = function () {
   var bw = new BufferWriter();
   bw.writeUInt32LE(this.type);
   bw.write(this.hash);
@@ -78,7 +78,7 @@ Inventory.prototype.toBuffer = function() {
 /**
  * @param {BufferWriter} bw - An instance of BufferWriter
  */
-Inventory.prototype.toBufferWriter = function(bw) {
+Inventory.prototype.toBufferWriter = function (bw) {
   bw.writeUInt32LE(this.type);
   bw.write(this.hash);
   return bw;
@@ -87,7 +87,7 @@ Inventory.prototype.toBufferWriter = function(bw) {
 /**
  * @param {Buffer} payload - Serialized buffer of the inventory
  */
-Inventory.fromBuffer = function(payload) {
+Inventory.fromBuffer = function (payload) {
   var parser = new BufferReader(payload);
   var obj = {};
   obj.type = parser.readUInt32LE();
@@ -98,7 +98,7 @@ Inventory.fromBuffer = function(payload) {
 /**
  * @param {BufferWriter} br - An instance of BufferWriter
  */
-Inventory.fromBufferReader = function(br) {
+Inventory.fromBufferReader = function (br) {
   var obj = {};
   obj.type = br.readUInt32LE();
   obj.hash = br.read(32);

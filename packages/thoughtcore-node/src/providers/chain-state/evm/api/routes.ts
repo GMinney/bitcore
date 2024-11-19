@@ -36,7 +36,7 @@ export class EVMRouter {
     this.getERC20TokenAllowance(router);
     this.getPriorityFee(router);
   };
-  
+
   private setMultiSigRoutes(router: Router) {
     this.getMultisigEthInfo(router);
     this.getMultisigContractInstantiationInfo(router);
@@ -105,7 +105,7 @@ export class EVMRouter {
     router.get(`/api/${this.chain}/:network/priorityFee/:percentile`, async (req, res) => {
       let { percentile, network } = req.params;
       const priorityFeePercentile = Number(percentile) || 15;
-    
+
       network = network.toLowerCase();
       try {
         let fee = await this.csp.getPriorityFee({ network, percentile: priorityFeePercentile });
@@ -120,7 +120,7 @@ export class EVMRouter {
     });
   };
 
-  private streamGnosisWalletTransactions(router: Router) { 
+  private streamGnosisWalletTransactions(router: Router) {
     router.get(`/api/${this.chain}/:network/ethmultisig/transactions/:multisigContractAddress`, async (req, res) => {
       let { network, multisigContractAddress } = req.params;
       try {

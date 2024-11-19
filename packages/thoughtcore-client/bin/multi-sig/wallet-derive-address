@@ -46,19 +46,19 @@ const parseKeys = keys => {
 };
 
 function getAddress(publicKeyRing, addressIndex, isChange, m, network, currency) {
-  const publicKeys = publicKeyRing.map(function(key) {
+  const publicKeys = publicKeyRing.map(function (key) {
     const xpub = new thoughtcoreLibs[currency].HDPublicKey(key.xpubkey);
     const changeNum = isChange ? 1 : 0;
     let path = key.path ? key.path : `m/${changeNum}/${addressIndex}`;
     if (key.path) {
       let split = path.split('/');
-      split[split.length -1] = Number(split[split.length - 1]) + addressIndex;
+      split[split.length - 1] = Number(split[split.length - 1]) + addressIndex;
       path = split.join('/');
     }
     if (isChange && key.changePath) {
       path = key.changePath
       let split = path.split('/');
-      split[split.length -1] = Number(split[split.length - 1]) + addressIndex;
+      split[split.length - 1] = Number(split[split.length - 1]) + addressIndex;
       path = split.join('/');
     }
     return xpub.derive(path).publicKey;
@@ -130,7 +130,7 @@ const main = async () => {
     }
 
     if (exportToFile) {
-      allAddresses.forEach(function(result) {
+      allAddresses.forEach(function (result) {
         fs.appendFileSync(exportToFile, `${JSON.stringify(result)}\n`, 'utf8');
       });
       console.log(`Exported Addresses to ${exportToFile}`);

@@ -46,7 +46,7 @@ const stop = async () => {
     process.exit(1);
   }
   stopping = true;
-  
+
   logger.error(`Shutting down ${process.pid}`);
   for (const service of services.reverse()) {
     await service.stop();

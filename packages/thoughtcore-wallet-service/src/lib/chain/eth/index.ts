@@ -112,7 +112,7 @@ export class EthChain implements IChain {
           amounts += txp.amount;
           return true;
         });
-        
+
         // TODO support big int
         const lockedSum = (amounts + fees) || 0;  // previously set to 0 if opts.multisigContractAddress
         const convertedBalance = this.convertThoughtcoreBalance(balance, lockedSum);

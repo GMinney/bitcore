@@ -131,7 +131,8 @@ Return: [...]
 
 Note that the scripts created two files named `irene.dat` and `tomas.dat`. With these files you can get status, generate addresses, create proposals, sign transactions, etc.The MIT License
 
-Copyright (c) 2015-2021 Thought
+Copyright (c) 2024 Thought AI, LLC. for modifications to the Thought Network
+Copyright (c) 2015-2021 BitPay
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -570,7 +570,7 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
         const result = await ExternalApiStream.onStream(transactionStream, req!, res!, { jsonl: true });
         if (!result?.success) {
           logger.error('Error mid-stream (streamWalletTransactions): %o', result.error?.log || result.error);
-        }  
+        }
         return resolve();
       } catch (err) {
         return reject(err);
@@ -843,7 +843,7 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
       }
       blockId = undefined;
     }
-  
+
     if (date) {
       startDate = new Date(date);
       endDate = new Date(date);
@@ -931,7 +931,7 @@ export class BaseEVMStateProvider extends InternalStateProvider implements IChai
     const chainId = await Number(this.getChainId({ network }));
     const blockRange = await this.getBlocksRange({ ...params, chainId });
     let isReading = false;
-  
+
     const stream = new ReadableWithEventPipe({
       objectMode: true,
       async read() {

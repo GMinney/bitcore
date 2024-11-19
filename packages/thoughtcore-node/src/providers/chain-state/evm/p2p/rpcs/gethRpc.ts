@@ -63,7 +63,7 @@ export class GethRPC implements IRpc {
   public send<T>(data: IJsonRpcRequest) {
     return new Promise<T>((resolve, reject) => {
       const provider = this.web3.eth.currentProvider as any;
-      provider.send(data, function(err, data) {
+      provider.send(data, function (err, data) {
         if (err || data.error) return reject(err || data.error);
         resolve(data.result as T);
       } as Callback<IJsonRpcResponse>);

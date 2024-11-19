@@ -7,9 +7,9 @@ var should = chai.should();
 
 var { Address } = require('../../ts_build/lib/model/address');
 
-describe('Address', function() {
-  describe('#create', function() {
-    it('should create livenet address', function() {
+describe('Address', function () {
+  describe('#create', function () {
+    it('should create livenet address', function () {
       var x = Address.create({
         address: '3KxttbKQQPWmpsnXZ3rB4mgJTuLnVR7frg',
         coin: 'tht',
@@ -21,7 +21,7 @@ describe('Address', function() {
       should.exist(x.createdOn);
       x.network.should.equal('livenet');
     });
-    it('should create testnet address', function() {
+    it('should create testnet address', function () {
       var x = Address.create({
         address: 'mp5xaa4uBj16DJt1fuA3D9fejHuCzeb7hj',
         coin: 'tht',
@@ -32,7 +32,7 @@ describe('Address', function() {
       });
       x.network.should.equal('testnet');
     });
-    it('should create testnet address when given explicit network name', function() {
+    it('should create testnet address when given explicit network name', function () {
       var x = Address.create({
         address: 'mp5xaa4uBj16DJt1fuA3D9fejHuCzeb7hj',
         coin: 'tht',
@@ -44,7 +44,7 @@ describe('Address', function() {
       });
       x.network.should.equal('testnet');
     });
-    it('should create testnet address from legacy client passing "testnet"', function() {
+    it('should create testnet address from legacy client passing "testnet"', function () {
       var x = Address.create({
         address: 'mp5xaa4uBj16DJt1fuA3D9fejHuCzeb7hj',
         coin: 'tht',
@@ -57,8 +57,8 @@ describe('Address', function() {
       x.network.should.equal('testnet');
     });
   });
-  describe('#derive', function() {
-    it('should derive multi-sig P2SH address', function() {
+  describe('#derive', function () {
+    it('should derive multi-sig P2SH address', function () {
       var address = Address.derive('wallet-id', 'P2SH', [{
         xPubKey: 'xpub686v8eJUJEqxzAtkWPyQ9nvpBHfucVsB8Q8HQHw5mxYPQtBact2rmA8wRXFYaVESK8f7WrxeU4ayALaEhicdXCX5ZHktNeRFnvFeffztiY1'
         // PubKey(xPubKey/0/0) -> 03fe466ea829aa4c9a1c289f9ba61ebc26a61816500860c8d23f94aad9af152ecd
@@ -74,7 +74,7 @@ describe('Address', function() {
       address.path.should.equal('m/0/0');
       address.type.should.equal('P2SH');
     });
-    it('should derive multi-sig P2WSH address', function() {
+    it('should derive multi-sig P2WSH address', function () {
       var address = Address.derive('wallet-id', 'P2WSH', [{
         xPubKey: 'xpub686v8eJUJEqxzAtkWPyQ9nvpBHfucVsB8Q8HQHw5mxYPQtBact2rmA8wRXFYaVESK8f7WrxeU4ayALaEhicdXCX5ZHktNeRFnvFeffztiY1'
         // PubKey(xPubKey/0/0) -> 03fe466ea829aa4c9a1c289f9ba61ebc26a61816500860c8d23f94aad9af152ecd
@@ -90,7 +90,7 @@ describe('Address', function() {
       address.path.should.equal('m/0/0');
       address.type.should.equal('P2WSH');
     });
-    it('should derive multi-sig P2WSH testnet address', function() {
+    it('should derive multi-sig P2WSH testnet address', function () {
       var address = Address.derive('wallet-id', 'P2WSH', [{
         xPubKey: 'xpub686v8eJUJEqxzAtkWPyQ9nvpBHfucVsB8Q8HQHw5mxYPQtBact2rmA8wRXFYaVESK8f7WrxeU4ayALaEhicdXCX5ZHktNeRFnvFeffztiY1'
         // PubKey(xPubKey/0/0) -> 03fe466ea829aa4c9a1c289f9ba61ebc26a61816500860c8d23f94aad9af152ecd
@@ -106,7 +106,7 @@ describe('Address', function() {
       address.path.should.equal('m/0/0');
       address.type.should.equal('P2WSH');
     });
-    it('should derive multi-sig P2WSH testnet address from legacy client passing "testnet"', function() {
+    it('should derive multi-sig P2WSH testnet address from legacy client passing "testnet"', function () {
       var address = Address.derive('wallet-id', 'P2WSH', [{
         xPubKey: 'xpub686v8eJUJEqxzAtkWPyQ9nvpBHfucVsB8Q8HQHw5mxYPQtBact2rmA8wRXFYaVESK8f7WrxeU4ayALaEhicdXCX5ZHktNeRFnvFeffztiY1'
         // PubKey(xPubKey/0/0) -> 03fe466ea829aa4c9a1c289f9ba61ebc26a61816500860c8d23f94aad9af152ecd
@@ -122,7 +122,7 @@ describe('Address', function() {
       address.path.should.equal('m/0/0');
       address.type.should.equal('P2WSH');
     });
-    it('should derive 1-of-1 P2SH address', function() {
+    it('should derive 1-of-1 P2SH address', function () {
       var address = Address.derive('wallet-id', 'P2SH', [{
         xPubKey: 'xpub686v8eJUJEqxzAtkWPyQ9nvpBHfucVsB8Q8HQHw5mxYPQtBact2rmA8wRXFYaVESK8f7WrxeU4ayALaEhicdXCX5ZHktNeRFnvFeffztiY1'
         // PubKey(xPubKey/0/0) -> 03fe466ea829aa4c9a1c289f9ba61ebc26a61816500860c8d23f94aad9af152ecd
@@ -135,7 +135,7 @@ describe('Address', function() {
       address.path.should.equal('m/0/0');
       address.type.should.equal('P2SH');
     });
-    it('should derive 1-of-1 P2PKH address', function() {
+    it('should derive 1-of-1 P2PKH address', function () {
       var address = Address.derive('wallet-id', 'P2PKH', [{
         xPubKey: 'xpub686v8eJUJEqxzAtkWPyQ9nvpBHfucVsB8Q8HQHw5mxYPQtBact2rmA8wRXFYaVESK8f7WrxeU4ayALaEhicdXCX5ZHktNeRFnvFeffztiY1'
         // PubKey(xPubKey/1/2) -> 0232c09a6edd8e2189628132d530c038e0b15b414cf3984e532358cbcfb83a7bd7
@@ -148,7 +148,7 @@ describe('Address', function() {
       address.path.should.equal('m/1/2');
       address.type.should.equal('P2PKH');
     });
-    it('should derive 1-of-1 P2WPKH address', function() {
+    it('should derive 1-of-1 P2WPKH address', function () {
       var address = Address.derive('wallet-id', 'P2WPKH', [{
         xPubKey: 'xpub686v8eJUJEqxzAtkWPyQ9nvpBHfucVsB8Q8HQHw5mxYPQtBact2rmA8wRXFYaVESK8f7WrxeU4ayALaEhicdXCX5ZHktNeRFnvFeffztiY1'
       }], 'm/1/2', 1, 'tht', 'livenet', true);
@@ -160,7 +160,7 @@ describe('Address', function() {
       address.path.should.equal('m/1/2');
       address.type.should.equal('P2WPKH');
     });
-    it('should derive 1-of-1 P2WPKH testnet address', function() {
+    it('should derive 1-of-1 P2WPKH testnet address', function () {
       var address = Address.derive('wallet-id', 'P2WPKH', [{
         xPubKey: 'xpub686v8eJUJEqxzAtkWPyQ9nvpBHfucVsB8Q8HQHw5mxYPQtBact2rmA8wRXFYaVESK8f7WrxeU4ayALaEhicdXCX5ZHktNeRFnvFeffztiY1'
       }], 'm/1/2', 1, 'tht', 'testnet3', true);
@@ -172,7 +172,7 @@ describe('Address', function() {
       address.path.should.equal('m/1/2');
       address.type.should.equal('P2WPKH');
     });
-    it('should derive 1-of-1 P2WPKH testnet address from legacy client passing "testnet"', function() {
+    it('should derive 1-of-1 P2WPKH testnet address from legacy client passing "testnet"', function () {
       var address = Address.derive('wallet-id', 'P2WPKH', [{
         xPubKey: 'xpub686v8eJUJEqxzAtkWPyQ9nvpBHfucVsB8Q8HQHw5mxYPQtBact2rmA8wRXFYaVESK8f7WrxeU4ayALaEhicdXCX5ZHktNeRFnvFeffztiY1'
       }], 'm/1/2', 1, 'tht', 'testnet', true);

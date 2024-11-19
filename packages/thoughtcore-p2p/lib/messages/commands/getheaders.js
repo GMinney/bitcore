@@ -31,7 +31,7 @@ function GetheadersMessage(arg, options) {
 }
 inherits(GetheadersMessage, Message);
 
-GetheadersMessage.prototype.setPayload = function(payload) {
+GetheadersMessage.prototype.setPayload = function (payload) {
   var parser = new BufferReader(payload);
   $.checkArgument(!parser.finished(), 'No data received in payload');
 
@@ -46,7 +46,7 @@ GetheadersMessage.prototype.setPayload = function(payload) {
   utils.checkFinished(parser);
 };
 
-GetheadersMessage.prototype.getPayload = function() {
+GetheadersMessage.prototype.getPayload = function () {
   var bw = new BufferWriter();
   bw.writeUInt32LE(this.version);
   bw.writeVarintNum(this.starts.length);

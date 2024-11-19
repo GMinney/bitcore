@@ -53,7 +53,7 @@ const main = async () => {
   console.log('Setting flag ' + (isNaN(set) ? set : Wallet.XrpAccountFlags[set]) + ' on account ' + account);
 
   const nonce = parseInt(await wallet.getNonce());
-  
+
   if (!fee) {
     const feerate = await wallet.getNetworkFee();
     fee = feerate.feerate;

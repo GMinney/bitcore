@@ -7,5 +7,5 @@ var config = {
     dbname,
   },
 };
- 
+
 module.exports = config;

@@ -44,7 +44,7 @@ RejectMessage.CCODE = {
   REJECT_CHECKPOINT: 0x43
 };
 
-RejectMessage.prototype.setPayload = function(payload) {
+RejectMessage.prototype.setPayload = function (payload) {
   var parser = new BufferReader(payload);
   this.message = parser.readVarLengthBuffer().toString('utf-8');
   this.ccode = parser.readUInt8();
@@ -53,7 +53,7 @@ RejectMessage.prototype.setPayload = function(payload) {
   utils.checkFinished(parser);
 };
 
-RejectMessage.prototype.getPayload = function() {
+RejectMessage.prototype.getPayload = function () {
   var bw = new BufferWriter();
   bw.writeVarintNum(this.message.length);
   bw.write(new Buffer(this.message, 'utf-8'));

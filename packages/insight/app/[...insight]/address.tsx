@@ -1,28 +1,28 @@
 'use client';
 
-import {fetcher} from '@/api/api';
-import React, {useEffect, useState} from 'react';
+import { fetcher } from '@/api/api';
+import React, { useEffect, useState } from 'react';
 
 import CoinList from '@/components/coin-list';
 import Info from '@/components/info';
 import CopyText from '@/components/copy-text';
 import SupCurrencyLogo from '@/components/icons/sup-currency-logo';
 
-import {getApiRoot, getConvertedValue, normalizeParams} from '@/lib/utilities/helper-methods';
-import {device} from '@/lib/utilities/constants';
+import { getApiRoot, getConvertedValue, normalizeParams } from '@/lib/utilities/helper-methods';
+import { device } from '@/lib/utilities/constants';
 
 import styled from 'styled-components';
-import {MainTitle, SecondaryTitle} from '@/assets/styles/titles';
-import {Tile, TileDescription} from '@/assets/styles/tile';
-import {TransactionBodyCol, TransactionTileBody} from '@/assets/styles/transaction';
-import {routerFadeIn} from '@/lib/utilities/animations';
-import {motion} from 'framer-motion';
-import {useParams} from 'react-router-dom';
-import {useAppDispatch} from '@/lib/utilities/hooks';
-import {changeCurrency, changeNetwork} from '@/lib/store/app.actions';
+import { MainTitle, SecondaryTitle } from '@/assets/styles/titles';
+import { Tile, TileDescription } from '@/assets/styles/tile';
+import { TransactionBodyCol, TransactionTileBody } from '@/assets/styles/transaction';
+import { routerFadeIn } from '@/lib/utilities/animations';
+import { motion } from 'framer-motion';
+import { useParams } from 'react-router-dom';
+import { useAppDispatch } from '@/lib/utilities/hooks';
+import { changeCurrency, changeNetwork } from '@/lib/store/app.actions';
 
-import {QRCodeSVG} from 'qrcode.react';
-import {White} from '@/assets/styles/colors';
+import { QRCodeSVG } from 'qrcode.react';
+import { White } from '@/assets/styles/colors';
 import nProgress from 'nprogress';
 
 const QRDiv = styled.div`
@@ -37,9 +37,9 @@ const QRDiv = styled.div`
 `;
 
 const Address: React.FC = () => {
-  const params = useParams<{currency: string; network: string; address: string}>();
-  const {address} = params;
-  let {currency, network} = params;
+  const params = useParams<{ currency: string; network: string; address: string }>();
+  const { address } = params;
+  let { currency, network } = params;
   const dispatch = useAppDispatch();
   const [numTransactions, setNumTransactions] = useState(0);
   const [error, setError] = useState('');

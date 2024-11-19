@@ -22,7 +22,7 @@ function Message(options) {
  * @returns {Buffer} - Serialized message
  * @constructor
  */
-Message.prototype.toBuffer = Message.prototype.serialize = function() {
+Message.prototype.toBuffer = Message.prototype.serialize = function () {
   $.checkState(this.network, 'Need to have a defined network to serialize message');
   var commandBuf = new Buffer(Array(12));
   commandBuf.write(this.command, 'ascii');

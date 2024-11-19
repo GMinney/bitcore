@@ -57,7 +57,7 @@ const main = async () => {
       const outputBytes = 34;
       const transactionHeader = 10;
       const calculatedNetworkFeeKb = await wallet.getNetworkFee({ target });
-      const netWorkFeeSat = calculatedNetworkFeeKb.feerate * 1E8/1000;
+      const netWorkFeeSat = calculatedNetworkFeeKb.feerate * 1E8 / 1000;
       const transactionSize = (parsedUtxos.length * utxoBytes + parsedRecipients.length * outputBytes + transactionHeader + parsedUtxos.length);
       totalTransactionFee = transactionSize * netWorkFeeSat;
     }

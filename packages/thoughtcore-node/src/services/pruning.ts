@@ -62,7 +62,7 @@ export class PruningService {
     args.OLD && logger.info(`Pruning mempool txs older than ${MEMPOOL_AGE} day(s)`);
     args.INVALID && logger.info('Pruning conflicting mempool txs');
     args.DRY && logger.info('Pruning service DRY RUN');
-    
+
     this.registerRpcs();
 
     if (args.EXIT) {

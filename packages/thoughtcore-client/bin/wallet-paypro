@@ -35,8 +35,8 @@ const main = async () => {
     method: 'GET',
     uri: payProUri,
     headers: {
-      'Accept' : 'application/payment-options',
-      'x-paypro-version' : '2'
+      'Accept': 'application/payment-options',
+      'x-paypro-version': '2'
     },
     agentOptions: {
       rejectUnauthorized: false
@@ -71,8 +71,8 @@ const main = async () => {
     uri: payProUri,
     json: { chain, currency },
     headers: {
-      'Content-Type' : 'application/payment-request',
-      'x-paypro-version' : '2'
+      'Content-Type': 'application/payment-request',
+      'x-paypro-version': '2'
     },
     agentOptions: {
       rejectUnauthorized: false
@@ -110,7 +110,7 @@ const main = async () => {
     }
     wallet = await wallet.unlock(password);
     const signedTx = await wallet.signTx({ tx: unsignedTx, passphrase: password, changeAddressIdx: changeIdx });
-    const txid = cwc.Transactions.getHash({chain, tx: signedTx});
+    const txid = cwc.Transactions.getHash({ chain, tx: signedTx });
     console.log(`signedRawTx: ${signedTx}`);
     signedTransactions.push({ tx: signedTx });
     console.log(`txid: ${txid}`);
@@ -124,20 +124,20 @@ const main = async () => {
     nonce++;
   }
 
-    // Payment Verification
-    const paymentVerificationResponse = await request({
-      method: 'POST',
-      uri: payProUri,
-      json: { chain, currency, transactions: unsignedTransactions},
-      headers: {
-        'Content-Type' : 'application/payment-verification',
-        'x-paypro-version' : '2'
-      },
-      agentOptions: {
-        rejectUnauthorized: false
-      },
-    });
-    console.log(paymentVerificationResponse);
+  // Payment Verification
+  const paymentVerificationResponse = await request({
+    method: 'POST',
+    uri: payProUri,
+    json: { chain, currency, transactions: unsignedTransactions },
+    headers: {
+      'Content-Type': 'application/payment-verification',
+      'x-paypro-version': '2'
+    },
+    agentOptions: {
+      rejectUnauthorized: false
+    },
+  });
+  console.log(paymentVerificationResponse);
 
   //  send-payment
   const sendPaymentResponse = await request({
@@ -145,8 +145,8 @@ const main = async () => {
     uri: payProUri,
     json: { chain, currency, transactions: signedTransactions },
     headers: {
-      'Content-Type' : 'application/payment',
-      'x-paypro-version' : '2'
+      'Content-Type': 'application/payment',
+      'x-paypro-version': '2'
     },
     agentOptions: {
       rejectUnauthorized: false

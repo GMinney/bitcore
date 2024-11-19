@@ -14,7 +14,7 @@ console.log('Benchmarking Block/Transaction Serialization');
 console.log('---------------------------------------');
 
 async.series([
-  function(next) {
+  function (next) {
 
     var buffers = [];
     var hashBuffers = [];
@@ -60,20 +60,20 @@ async.series([
     console.log('Starting benchmark...');
 
     var suite = new benchmark.Suite();
-    suite.add('bufferReader.readUInt64LEBN()', readUInt64LEBN, {maxTime: maxTime});
-    suite.add('bufferReader.readReverse()', readReverse, {maxTime: maxTime});
+    suite.add('bufferReader.readUInt64LEBN()', readUInt64LEBN, { maxTime: maxTime });
+    suite.add('bufferReader.readReverse()', readReverse, { maxTime: maxTime });
     suite
-      .on('cycle', function(event) {
+      .on('cycle', function (event) {
         console.log(String(event.target));
       })
-      .on('complete', function() {
+      .on('complete', function () {
         console.log('Done');
         console.log('----------------------------------------------------------------------');
         next();
       })
       .run();
   },
-  function(next) {
+  function (next) {
 
     var block1;
     var block2;
@@ -102,21 +102,21 @@ async.series([
     }
 
     var suite = new benchmark.Suite();
-    suite.add('thoughtcore', thoughtcoreTest, {maxTime: maxTime});
-    suite.add('thoughtjs', thoughtJSTest, {maxTime: maxTime});
-    suite.add('bcoin', bcoinTest, {maxTime: maxTime});
-    suite.add('fullnode', fullnodeTest, {maxTime: maxTime});
+    suite.add('thoughtcore', thoughtcoreTest, { maxTime: maxTime });
+    suite.add('thoughtjs', thoughtJSTest, { maxTime: maxTime });
+    suite.add('bcoin', bcoinTest, { maxTime: maxTime });
+    suite.add('fullnode', fullnodeTest, { maxTime: maxTime });
     suite
-      .on('cycle', function(event) {
+      .on('cycle', function (event) {
         console.log(String(event.target));
       })
-      .on('complete', function() {
+      .on('complete', function () {
         console.log('Fastest is ' + this.filter('fastest').pluck('name'));
         console.log('----------------------------------------------------------------------');
         next();
       })
       .run();
   }
-], function(err) {
+], function (err) {
   console.log('Finished');
 });

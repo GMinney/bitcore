@@ -216,17 +216,17 @@ export class TransactionModel extends BaseTransaction<IThtTransaction> {
     const { initialSyncComplete, height, chain, network } = params;
     const mintStream = new Readable({
       objectMode: true,
-      read: () => {}
+      read: () => { }
     });
 
     const spentStream = new Readable({
       objectMode: true,
-      read: () => {}
+      read: () => { }
     });
 
     const txStream = new Readable({
       objectMode: true,
-      read: () => {}
+      read: () => { }
     });
 
     this.streamMintOps({ ...params, mintStream });
@@ -617,9 +617,9 @@ export class TransactionModel extends BaseTransaction<IThtTransaction> {
     while (coin = (await batchStream.next())) {
       seen[coin.mintTxid] = true;
       yield coin;
-      
+
       if (coin.spentTxid && !seen[coin.spentTxid]) {
-        yield * this.yieldRelatedOutputs(coin.spentTxid);
+        yield* this.yieldRelatedOutputs(coin.spentTxid);
         seen[coin.spentTxid] = true;
       }
     }

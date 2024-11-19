@@ -7,17 +7,17 @@ var should = chai.should();
 var { Advertisement } = require('../../ts_build/lib/model/advertisement');
 var Thoughtcore = require('thoughtcore-lib');
 
-describe("#Advertisement", function() {
-  describe("#create", function() {
-    it("should create Advertisement", function() {
-      var x = Advertisement.create({ title: "Test Title"});
+describe("#Advertisement", function () {
+  describe("#create", function () {
+    it("should create Advertisement", function () {
+      var x = Advertisement.create({ title: "Test Title" });
 
       should.exist(x);
     });
   });
 
-  describe("#fromObj", function() {
-     it("should create Advertisement", function() {
+  describe("#fromObj", function () {
+    it("should create Advertisement", function () {
       var x = Advertisement.fromObj({ title: "Test Title" });
       should.exist(x);
     });

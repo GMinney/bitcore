@@ -13,7 +13,7 @@ var Script = thoughtcore.Script;
 var Networks = thoughtcore.Networks;
 var Signature = thoughtcore.crypto.Signature;
 
-describe('PublicKeyHashInput', function() {
+describe('PublicKeyHashInput', function () {
 
   var privateKey = new PrivateKey('KwF9LjRraetZuEjR8VqEq539z137LW5anYDUnVK11vM3mNMHTWb4');
   var publicKey = privateKey.publicKey;
@@ -45,7 +45,7 @@ describe('PublicKeyHashInput', function() {
     notions: 1000000
   };
 
-  it('can count missing signatures', function() {
+  it('can count missing signatures', function () {
     var transaction = new Transaction()
       .from(output)
       .to(address, 1000000);
@@ -55,14 +55,14 @@ describe('PublicKeyHashInput', function() {
     transaction.sign(privateKey);
     input.isFullySigned().should.equal(true);
   });
-  it('it\'s size can be estimated', function() {
+  it('it\'s size can be estimated', function () {
     var transaction = new Transaction()
       .from(output)
       .to(address, 1000000);
     var input = transaction.inputs[0];
     input._estimateSize().should.equal(148);
   });
-  it('it\'s signature can be removed', function() {
+  it('it\'s signature can be removed', function () {
     var transaction = new Transaction()
       .from(output)
       .to(address, 1000000);
@@ -72,7 +72,7 @@ describe('PublicKeyHashInput', function() {
     input.clearSignatures();
     input.isFullySigned().should.equal(false);
   });
-  it('returns an empty array if private key mismatches', function() {
+  it('returns an empty array if private key mismatches', function () {
     var transaction = new Transaction()
       .from(output)
       .to(address, 1000000);
@@ -82,7 +82,7 @@ describe('PublicKeyHashInput', function() {
   });
 
   describe('P2WPKH', function () {
-    it('can count missing signatures', function() {
+    it('can count missing signatures', function () {
       var transaction = new Transaction()
         .from(witnessOutput)
         .to(address, 1000000);
@@ -92,14 +92,14 @@ describe('PublicKeyHashInput', function() {
       transaction.sign(privateKey);
       input.isFullySigned().should.equal(true);
     });
-    it('it\'s size can be estimated', function() {
+    it('it\'s size can be estimated', function () {
       var transaction = new Transaction()
         .from(witnessOutput)
         .to(address, 1000000);
       var input = transaction.inputs[0];
       input._estimateSize().should.equal(67.75);
     });
-    it('it\'s signature can be removed', function() {
+    it('it\'s signature can be removed', function () {
       var transaction = new Transaction()
         .from(witnessOutput)
         .to(address, 1000000);
@@ -109,7 +109,7 @@ describe('PublicKeyHashInput', function() {
       input.clearSignatures();
       input.isFullySigned().should.equal(false);
     });
-    it('returns an empty array if private key mismatches', function() {
+    it('returns an empty array if private key mismatches', function () {
       var transaction = new Transaction()
         .from(witnessOutput)
         .to(address, 1000000);
@@ -117,7 +117,7 @@ describe('PublicKeyHashInput', function() {
       var signatures = input.getSignatures(transaction, new PrivateKey(), 0);
       signatures.length.should.equal(0);
     });
-    it('will get the scriptCode', function() {
+    it('will get the scriptCode', function () {
       var transaction = new Transaction()
         .from(wrappedOutput)
         .to(address, 1000000);
@@ -125,7 +125,7 @@ describe('PublicKeyHashInput', function() {
       var scriptCode = input.getScriptCode(publicKey);
       scriptCode.toString('hex').should.equal('1976a914aa48cd124896ad243298c4d370618f2352b50b5788ac');
     });
-    it('will get the notions buffer', function() {
+    it('will get the notions buffer', function () {
       var transaction = new Transaction()
         .from(wrappedOutput)
         .to(address, 1000000);
@@ -136,7 +136,7 @@ describe('PublicKeyHashInput', function() {
   });
 
   describe('P2SH-wrapped-P2WPKH', function () {
-    it('can count missing signatures', function() {
+    it('can count missing signatures', function () {
       var transaction = new Transaction()
         .from(wrappedOutput)
         .to(address, 1000000);
@@ -146,14 +146,14 @@ describe('PublicKeyHashInput', function() {
       transaction.sign(privateKey);
       input.isFullySigned().should.equal(true);
     });
-    it('it\'s size can be estimated', function() {
+    it('it\'s size can be estimated', function () {
       var transaction = new Transaction()
         .from(wrappedOutput)
         .to(address, 1000000);
       var input = transaction.inputs[0];
       input._estimateSize().should.equal(90.75);
     });
-    it('it\'s signature can be removed', function() {
+    it('it\'s signature can be removed', function () {
       var transaction = new Transaction()
         .from(wrappedOutput)
         .to(address, 1000000);
@@ -163,7 +163,7 @@ describe('PublicKeyHashInput', function() {
       input.clearSignatures();
       input.isFullySigned().should.equal(false);
     });
-    it('returns an empty array if private key mismatches', function() {
+    it('returns an empty array if private key mismatches', function () {
       var transaction = new Transaction()
         .from(wrappedOutput)
         .to(address, 1000000);
@@ -171,7 +171,7 @@ describe('PublicKeyHashInput', function() {
       var signatures = input.getSignatures(transaction, new PrivateKey(), 0);
       signatures.length.should.equal(0);
     });
-    it('will get the scriptCode', function() {
+    it('will get the scriptCode', function () {
       var transaction = new Transaction()
         .from(wrappedOutput)
         .to(address, 1000000);
@@ -179,7 +179,7 @@ describe('PublicKeyHashInput', function() {
       var scriptCode = input.getScriptCode(publicKey);
       scriptCode.toString('hex').should.equal('1976a914aa48cd124896ad243298c4d370618f2352b50b5788ac');
     });
-    it('will get the notions buffer', function() {
+    it('will get the notions buffer', function () {
       var transaction = new Transaction()
         .from(wrappedOutput)
         .to(address, 1000000);

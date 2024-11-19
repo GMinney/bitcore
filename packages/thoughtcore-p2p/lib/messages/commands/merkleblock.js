@@ -28,12 +28,12 @@ function MerkleblockMessage(arg, options) {
 }
 inherits(MerkleblockMessage, Message);
 
-MerkleblockMessage.prototype.setPayload = function(payload) {
+MerkleblockMessage.prototype.setPayload = function (payload) {
   $.checkArgument(BufferUtil.isBuffer(payload));
   this.merkleBlock = this.MerkleBlock.fromBuffer(payload);
 };
 
-MerkleblockMessage.prototype.getPayload = function() {
+MerkleblockMessage.prototype.getPayload = function () {
   return this.merkleBlock ? this.merkleBlock.toBuffer() : BufferUtil.EMPTY_BUFFER;
 };
 

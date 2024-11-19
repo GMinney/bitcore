@@ -247,7 +247,7 @@ export class TxProposal {
     x.destinationTag = opts.destinationTag;
     x.invoiceID = opts.invoiceID;
     x.multiTx = opts.multiTx; // proposal contains multiple transactions
-  
+
     return x;
   }
 

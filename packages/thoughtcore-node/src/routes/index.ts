@@ -35,7 +35,7 @@ function bootstrap(path?: string) {
     mergeParams: true
   });
   const folder = path ? path + '/' : '';
-  fs.readdirSync(__dirname + '/' + path).forEach(function(file: string) {
+  fs.readdirSync(__dirname + '/' + path).forEach(function (file: string) {
     if (file.match(/\.js$/) !== null && file !== 'index.js') {
       var route = require('./' + folder + file);
       router.use(route.path, route.router);

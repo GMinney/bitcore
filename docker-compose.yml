@@ -7,12 +7,12 @@ version: '3'
 services:
   mongo:
     image: mongo:8.0.3-noble
-    ports: 
-    - 27017:27017
-    volumes: 
-    - /data/db:/data/db
+    ports:
+      - 27017:27017
+    volumes:
+      - /data/db:/data/db
     restart: unless-stopped
-    
+
   thoughtcore-node:
     build: .
     image: thoughtcore-node
@@ -36,19 +36,5 @@ services:
 
   thought:
     image: ruimarinho/thought-core:24
-    command:
-      -printtoconsole
-      -regtest=1
-      -txindex=0
-      -listen=1
-      -server=1
-      -dnsseed=0
-      -upnp=0
-      -port=8332
-      -rpcport=8333
-      -rpcallowip=0.0.0.0/0
-      -rpcbind=0.0.0.0
-      -rpcuser=thoughtcorenodetest
-      -rpcpassword=local321
-      -fallbackfee=0.00001
+    command: -printtoconsole -regtest=1 -txindex=0 -listen=1 -server=1 -dnsseed=0 -upnp=0 -port=8332 -rpcport=8333 -rpcallowip=0.0.0.0/0 -rpcbind=0.0.0.0 -rpcuser=thoughtcorenodetest -rpcpassword=local321 -fallbackfee=0.00001
     restart: unless-stopped

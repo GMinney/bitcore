@@ -10,7 +10,7 @@ var networkMaps = {};
  * (a.k.a. "mainnet") and "testnet".
  * @constructor
  */
-function Network() {}
+function Network() { }
 
 Network.prototype.toString = function toString() {
   return this.name;
@@ -200,8 +200,8 @@ addNetwork({
   networkMagic: 0x59472ee4,
   port: 11618,
   dnsSeeds: [
-      'testnet.phee.thought.live'
-    ]
+    'testnet.phee.thought.live'
+  ]
 });
 
 /**

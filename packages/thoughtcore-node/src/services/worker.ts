@@ -47,14 +47,14 @@ export class WorkerService extends EventEmitter {
     }
   }
 
-  async stop() {}
+  async stop() { }
 
   sendTask(task: any, argument: any, done: CallbackType) {
     var worker = this.workers.shift();
     if (worker) {
       this.workers.push(worker);
       var id = (Date.now() * Math.random()).toString();
-      this.once(id, function(result: { error: any }) {
+      this.once(id, function (result: { error: any }) {
         done(result.error);
       });
       worker.worker.send({ task, argument, id });

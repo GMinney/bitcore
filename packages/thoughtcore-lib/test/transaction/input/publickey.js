@@ -5,7 +5,7 @@ var thoughtcore = require('../../..');
 var Transaction = thoughtcore.Transaction;
 var PrivateKey = thoughtcore.PrivateKey;
 
-describe('PublicKeyInput', function() {
+describe('PublicKeyInput', function () {
 
   var utxo = {
     txid: '7f3b688cb224ed83e12d9454145c26ac913687086a0a62f2ae0bc10934a4030f',
@@ -22,7 +22,7 @@ describe('PublicKeyInput', function() {
 
   var destKey = new PrivateKey();
 
-  it('will correctly sign a publickey out transaction', function() {
+  it('will correctly sign a publickey out transaction', function () {
     var tx = new Transaction();
     tx.from(utxo);
     tx.to(destKey.toAddress(), 10000);
@@ -30,7 +30,7 @@ describe('PublicKeyInput', function() {
     tx.inputs[0].script.toBuffer().length.should.be.above(0);
   });
 
-  it('count can count missing signatures', function() {
+  it('count can count missing signatures', function () {
     var tx = new Transaction();
     tx.from(utxo);
     tx.to(destKey.toAddress(), 10000);
@@ -40,7 +40,7 @@ describe('PublicKeyInput', function() {
     input.isFullySigned().should.equal(true);
   });
 
-  it('it\'s size can be estimated', function() {
+  it('it\'s size can be estimated', function () {
     var tx = new Transaction();
     tx.from(utxo);
     tx.to(destKey.toAddress(), 10000);
@@ -48,7 +48,7 @@ describe('PublicKeyInput', function() {
     input._estimateSize().should.equal(113);
   });
 
-  it('it\'s signature can be removed', function() {
+  it('it\'s signature can be removed', function () {
     var tx = new Transaction();
     tx.from(utxo);
     tx.to(destKey.toAddress(), 10000);
@@ -59,7 +59,7 @@ describe('PublicKeyInput', function() {
     input.isFullySigned().should.equal(false);
   });
 
-  it('returns an empty array if private key mismatches', function() {
+  it('returns an empty array if private key mismatches', function () {
     var tx = new Transaction();
     tx.from(utxo);
     tx.to(destKey.toAddress(), 10000);

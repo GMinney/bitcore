@@ -7,11 +7,11 @@ var Networks = thoughtcore.Networks;
 var should = chai.should();
 var URI = thoughtcore.URI;
 
-describe('URI', function() {
+describe('URI', function () {
   /* jshint maxstatements: 30 */
 
   // TODO: Split this and explain tests
-  it('parses uri strings correctly (test vector)', function() {
+  it('parses uri strings correctly (test vector)', function () {
     var uri;
 
     URI.parse.bind(URI, 'badURI').should.throw(TypeError);
@@ -32,7 +32,7 @@ describe('URI', function() {
     expect(uri.otherParam).to.be.equal(undefined);
 
     uri = URI.parse('thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj?amount=123.22' +
-                    '&other-param=something&req-extra=param');
+      '&other-param=something&req-extra=param');
     uri.address.should.equal('1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj');
     uri.amount.should.equal('123.22');
     uri['other-param'].should.equal('something');
@@ -40,78 +40,78 @@ describe('URI', function() {
   });
 
   // TODO: Split this and explain tests
-  it('URIs can be validated statically (test vector)', function() {
+  it('URIs can be validated statically (test vector)', function () {
     URI.isValid('thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj').should.equal(true);
     URI.isValid('thought:mkYY5NRvikVBY1EPtaq9fAFgquesdjqECw').should.equal(true);
 
     URI.isValid('thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj?amount=1.2')
-                .should.equal(true);
+      .should.equal(true);
     URI.isValid('thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj?amount=1.2&other=param')
-                .should.equal(true);
+      .should.equal(true);
     URI.isValid('thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj?amount=1.2&req-other=param',
-                ['req-other']).should.equal(true);
+      ['req-other']).should.equal(true);
     URI.isValid('thought:mmrqEBJxUCf42vdb3oozZtyz5mKr3Vb2Em?amount=0.1&' +
-                'r=https%3A%2F%2Ftest.thoughtnetwork.com%2Fi%2F6DKgf8cnJC388irbXk5hHu').should.equal(true);
+      'r=https%3A%2F%2Ftest.thoughtnetwork.com%2Fi%2F6DKgf8cnJC388irbXk5hHu').should.equal(true);
 
     URI.isValid('thought:').should.equal(false);
     URI.isValid('thought:badUri').should.equal(false);
     URI.isValid('thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfk?amount=bad').should.equal(false);
     URI.isValid('thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfk?amount=1.2&req-other=param')
-                .should.equal(false);
+      .should.equal(false);
     URI.isValid('thought:?r=https%3A%2F%2Ftest.thoughtnetwork.com%2Fi%2F6DKgf8cnJC388irbXk5hHu')
-                .should.equal(false);
+      .should.equal(false);
   });
 
-  it('fails on creation with no params', function() {
-    (function(){
+  it('fails on creation with no params', function () {
+    (function () {
       return new URI();
     }).should.throw(TypeError);
   });
 
-  it('do not need new keyword', function() {
+  it('do not need new keyword', function () {
     var uri = URI('thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj');
     uri.should.be.instanceof(URI);
   });
 
-  describe('instantiation from thought uri', function() {
+  describe('instantiation from thought uri', function () {
     /* jshint maxstatements: 25 */
     var uri;
 
-    it('parses address', function() {
+    it('parses address', function () {
       uri = new URI('thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj');
       uri.address.should.be.instanceof(thoughtcore.Address);
       uri.network.should.equal(Networks.livenet);
     });
 
-    it('parses amount', function() {
+    it('parses amount', function () {
       uri = URI.fromString('thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj?amount=123.22');
       uri.address.toString().should.equal('1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj');
       uri.amount.should.equal(12322000000);
       expect(uri.otherParam).to.be.equal(undefined);
     });
 
-    it('parses a testnet address', function() {
+    it('parses a testnet address', function () {
       uri = new URI('thought:mkYY5NRvikVBY1EPtaq9fAFgquesdjqECw');
       uri.address.should.be.instanceof(thoughtcore.Address);
       uri.network.should.equal(Networks.testnet);
     });
 
-    it('stores unknown parameters as "extras"', function() {
+    it('stores unknown parameters as "extras"', function () {
       uri = new URI('thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj?amount=1.2&other=param');
       uri.address.should.be.instanceof(thoughtcore.Address);
       expect(uri.other).to.be.equal(undefined);
       uri.extras.other.should.equal('param');
     });
 
-    it('throws error when a required feature is not supported', function() {
-      (function() {
+    it('throws error when a required feature is not supported', function () {
+      (function () {
         return new URI('thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj?amount=1.2&other=param&req-required=param');
       }).should.throw(Error);
     });
 
-    it('has no false negative when checking supported features', function() {
+    it('has no false negative when checking supported features', function () {
       uri = new URI('thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj?amount=1.2&other=param&' +
-                    'req-required=param', ['req-required']);
+        'req-required=param', ['req-required']);
       uri.address.should.be.instanceof(thoughtcore.Address);
       uri.amount.should.equal(120000000);
       uri.extras.other.should.equal('param');
@@ -120,7 +120,7 @@ describe('URI', function() {
   });
 
   // TODO: Split this and explain tests
-  it('should create instance from object', function() {
+  it('should create instance from object', function () {
     /* jshint maxstatements: 25 */
     var uri;
 
@@ -146,7 +146,7 @@ describe('URI', function() {
     expect(uri.other).to.be.equal(undefined);
     uri.extras.other.should.equal('param');
 
-    (function() {
+    (function () {
       return new URI({
         address: '1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj',
         'req-required': 'param'
@@ -165,18 +165,18 @@ describe('URI', function() {
     uri.extras['req-required'].should.equal('param');
   });
 
-  it('should support double slash scheme', function() {
+  it('should support double slash scheme', function () {
     var uri = new URI('thought://1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj');
     uri.address.toString().should.equal('1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj');
   });
 
-  it('should input/output String', function() {
+  it('should input/output String', function () {
     var str = 'thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj?' +
-              'message=Donation%20for%20project%20xyz&label=myLabel&other=xD';
+      'message=Donation%20for%20project%20xyz&label=myLabel&other=xD';
     URI.fromString(str).toString().should.equal(str);
   });
 
-  it('should input/output JSON', function() {
+  it('should input/output JSON', function () {
     var json = JSON.stringify({
       address: '1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj',
       message: 'Donation for project xyz',
@@ -186,14 +186,14 @@ describe('URI', function() {
     JSON.stringify(URI.fromObject(JSON.parse(json))).should.equal(json);
   });
 
-  it('should support numeric amounts', function() {
+  it('should support numeric amounts', function () {
     var uri = new URI('thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj?amount=12.10001');
     expect(uri.amount).to.be.equal(1210001000);
   });
 
-  it('should support extra arguments', function() {
+  it('should support extra arguments', function () {
     var uri = new URI('thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj?' +
-                      'message=Donation%20for%20project%20xyz&label=myLabel&other=xD');
+      'message=Donation%20for%20project%20xyz&label=myLabel&other=xD');
 
     should.exist(uri.message);
     uri.message.should.equal('Donation for project xyz');
@@ -205,7 +205,7 @@ describe('URI', function() {
     uri.extras.other.should.equal('xD');
   });
 
-  it('should generate a valid URI', function() {
+  it('should generate a valid URI', function () {
     new URI({
       address: '1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj',
     }).toString().should.equal(
@@ -223,34 +223,34 @@ describe('URI', function() {
 
   });
 
-  it('should be case insensitive to protocol', function() {
+  it('should be case insensitive to protocol', function () {
     var uri1 = new URI('bItcOin:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj');
     var uri2 = new URI('thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj');
 
     uri1.address.toString().should.equal(uri2.address.toString());
   });
 
-  it('writes correctly the "r" parameter on string serialization', function() {
+  it('writes correctly the "r" parameter on string serialization', function () {
     var originalString = 'thought:mmrqEBJxUCf42vdb3oozZtyz5mKr3Vb2Em?amount=0.1&' +
-                         'r=https%3A%2F%2Ftest.thoughtnetwork.com%2Fi%2F6DKgf8cnJC388irbXk5hHu';
+      'r=https%3A%2F%2Ftest.thoughtnetwork.com%2Fi%2F6DKgf8cnJC388irbXk5hHu';
     var uri = new URI(originalString);
     uri.toString().should.equal(originalString);
   });
 
-  it('displays nicely on the console (#inspect)', function() {
+  it('displays nicely on the console (#inspect)', function () {
     var uri = 'thought:1DP69gMMvSuYhbnxsi4EJEFufUAbDrEQfj';
     var instance = new URI(uri);
     instance.inspect().should.equal('<URI: ' + uri + '>');
   });
 
-  it('fails early when fromString isn\'t provided a string', function() {
-    expect(function() {
+  it('fails early when fromString isn\'t provided a string', function () {
+    expect(function () {
       return URI.fromString(1);
     }).to.throw();
   });
 
-  it('fails early when fromJSON isn\'t provided a valid JSON string', function() {
-    expect(function() {
+  it('fails early when fromJSON isn\'t provided a valid JSON string', function () {
+    expect(function () {
       return URI.fromJSON('¹');
     }).to.throw();
   });

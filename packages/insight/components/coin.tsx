@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {CoinsList} from '@/lib/utilities/models';
-import {FC, useEffect, useState, memo} from 'react';
-import {getApiRoot, getConvertedValue, getFormattedDate} from '@/lib/utilities/helper-methods';
-import {fetcher} from '@/api/api';
+import { CoinsList } from '@/lib/utilities/models';
+import { FC, useEffect, useState, memo } from 'react';
+import { getApiRoot, getConvertedValue, getFormattedDate } from '@/lib/utilities/helper-methods';
+import { fetcher } from '@/api/api';
 import {
   TransactionTile,
   TransactionTileBody,
@@ -11,8 +11,8 @@ import {
   SpanLink,
   TransactionBodyCol,
 } from '@/assets/styles/transaction';
-import {Tile, TileDescription, TileLink} from '@/assets/styles/tile';
-import {useNavigate} from 'react-router-dom';
+import { Tile, TileDescription, TileLink } from '@/assets/styles/tile';
+import { useNavigate } from 'react-router-dom';
 
 interface CoinProps {
   transaction: CoinsList;
@@ -20,21 +20,21 @@ interface CoinProps {
   network: any;
   order: string;
 }
-const Coin: FC<CoinProps> = ({transaction, currency, network, order}) => {
+const Coin: FC<CoinProps> = ({ transaction, currency, network, order }) => {
   const navigate = useNavigate();
   const [showTimer, setShowTimer] = useState(false);
   const [time, setTime] = useState(null);
-  const {mintTxid, height, confirmations, value, spentTxid} = transaction;
+  const { mintTxid, height, confirmations, value, spentTxid } = transaction;
 
   const gotToTx = (txid: string | undefined) => {
-    return navigate({pathname: `/${currency}/${network}/tx/${txid}`});
+    return navigate({ pathname: `/${currency}/${network}/tx/${txid}` });
   };
 
   const getTxData = async (txid: string | undefined) => {
     const apiRoot = getApiRoot(currency as string);
     const endpoint = `${apiRoot}/${currency}/${network}/tx/${txid}`;
     try {
-      const {blockTime} = await fetcher(endpoint);
+      const { blockTime } = await fetcher(endpoint);
       setTime(blockTime);
       setShowTimer(true);
     } catch (e) {

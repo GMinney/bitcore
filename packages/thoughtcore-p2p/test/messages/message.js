@@ -5,10 +5,10 @@ var P2P = require('../../');
 var Message = P2P.Messages.Message;
 var Networks = require('thoughtcore-lib').Networks;
 
-describe('Message', function() {
+describe('Message', function () {
 
-  describe('@constructor', function() {
-    it('construct with magic number and command', function() {
+  describe('@constructor', function () {
+    it('construct with magic number and command', function () {
       var message = new Message({
         network: {
           networkMagic: 0xd9b4bef9
@@ -21,13 +21,13 @@ describe('Message', function() {
     });
   });
 
-  describe('#toBuffer', function() {
-    it('serialize to a buffer', function() {
+  describe('#toBuffer', function () {
+    it('serialize to a buffer', function () {
       var message = new Message({
         command: 'command',
         network: Networks.defaultNetwork
       });
-      message.getPayload = function() {
+      message.getPayload = function () {
         return new Buffer(0);
       };
       var buffer = message.toBuffer();

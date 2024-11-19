@@ -1,11 +1,11 @@
 import * as worker from 'worker_threads';
 import { IChainConfig, IEVMNetworkConfig, IProvider } from '../../../../types/Config';
 
-const getProvider = ({ 
+const getProvider = ({
   network,
   config,
-  dataType 
-}: { network: string, dataType: string | undefined, config: IChainConfig<IEVMNetworkConfig>}) : IProvider => {
+  dataType
+}: { network: string, dataType: string | undefined, config: IChainConfig<IEVMNetworkConfig> }): IProvider => {
   if (config[network]?.provider && matchProviderType(config[network].provider, dataType)) {
     return config[network].provider!;
   }
@@ -30,7 +30,7 @@ const matchProviderType = (provider?: IProvider, type?: string): boolean => {
   if (!provider) {
     return false;
   }
-  
+
   if (!type || !provider.dataType || provider.dataType === 'combined') {
     return true;
   }
@@ -43,12 +43,12 @@ const matchProviderType = (provider?: IProvider, type?: string): boolean => {
   // undefined  : [ historical, combined, realtime ]
   if (type === provider.dataType) {
     return true;
-  }    
+  }
   return false;
 }
 
 const isValidProviderType = (expectedType, type) => {
-  const validTypes = expectedType ? ['combined', expectedType]  : ['combined'];
+  const validTypes = expectedType ? ['combined', expectedType] : ['combined'];
   return validTypes.includes(type);
 }
 

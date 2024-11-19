@@ -23,7 +23,7 @@ export interface IVerificationPeer extends BaseP2PWorker<any> {
 export class VerificationManager {
   workerClasses: { [chain: string]: Class<IVerificationPeer> } = {};
 
-  constructor() {}
+  constructor() { }
 
   register(chain: string, worker: Class<IVerificationPeer>) {
     this.workerClasses[chain] = worker;

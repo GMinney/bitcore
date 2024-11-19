@@ -17,7 +17,7 @@ function Opcode(num) {
   } else if (_.isString(num)) {
     value = Opcode.map[num];
   } else {
-    throw new TypeError('Unrecognized num type: "' + typeof(num) + '" for Opcode');
+    throw new TypeError('Unrecognized num type: "' + typeof (num) + '" for Opcode');
   }
 
   JSUtil.defineImmutable(this, {
@@ -27,17 +27,17 @@ function Opcode(num) {
   return this;
 }
 
-Opcode.fromBuffer = function(buf) {
+Opcode.fromBuffer = function (buf) {
   $.checkArgument(BufferUtil.isBuffer(buf));
   return new Opcode(Number('0x' + buf.toString('hex')));
 };
 
-Opcode.fromNumber = function(num) {
+Opcode.fromNumber = function (num) {
   $.checkArgument(_.isNumber(num));
   return new Opcode(num);
 };
 
-Opcode.fromString = function(str) {
+Opcode.fromString = function (str) {
   $.checkArgument(_.isString(str));
   var value = Opcode.map[str];
   if (typeof value === 'undefined') {
@@ -46,19 +46,19 @@ Opcode.fromString = function(str) {
   return new Opcode(value);
 };
 
-Opcode.prototype.toHex = function() {
+Opcode.prototype.toHex = function () {
   return this.num.toString(16);
 };
 
-Opcode.prototype.toBuffer = function() {
+Opcode.prototype.toBuffer = function () {
   return Buffer.from(this.toHex(), 'hex');
 };
 
-Opcode.prototype.toNumber = function() {
+Opcode.prototype.toNumber = function () {
   return this.num;
 };
 
-Opcode.prototype.toString = function() {
+Opcode.prototype.toString = function () {
   var str = Opcode.reverseMap[this.num];
   if (typeof str === 'undefined') {
     throw new Error('Opcode does not have a string representation');
@@ -66,7 +66,7 @@ Opcode.prototype.toString = function() {
   return str;
 };
 
-Opcode.smallInt = function(n) {
+Opcode.smallInt = function (n) {
   $.checkArgument(_.isNumber(n), 'Invalid Argument: n should be number');
   $.checkArgument(n >= 0 && n <= 16, 'Invalid Argument: n must be between 0 and 16');
   if (n === 0) {
@@ -80,7 +80,7 @@ Opcode.smallInt = function(n) {
  * @param {Number} opcode Opcode
  * @returns {Number}
  */
-Opcode.decodeOpN = function(opcode) {
+Opcode.decodeOpN = function (opcode) {
   if (opcode === Opcode.OP_0) {
     return 0;
   }
@@ -94,14 +94,14 @@ Opcode.decodeOpN = function(opcode) {
  * @param {Number|String} opcode 
  * @returns {Boolean}
  */
-Opcode.isOpSuccess = function(opcode) {
+Opcode.isOpSuccess = function (opcode) {
   if (typeof opcode === 'string' && !parseInt(opcode)) {
     opcode = Opcode[opcode];
   }
   return opcode == 80 || opcode == 98 || (opcode >= 126 && opcode <= 129) ||
-        (opcode >= 131 && opcode <= 134) || (opcode >= 137 && opcode <= 138) ||
-        (opcode >= 141 && opcode <= 142) || (opcode >= 149 && opcode <= 153) ||
-        (opcode >= 187 && opcode <= 254);
+    (opcode >= 131 && opcode <= 134) || (opcode >= 137 && opcode <= 138) ||
+    (opcode >= 141 && opcode <= 142) || (opcode >= 149 && opcode <= 153) ||
+    (opcode >= 187 && opcode <= 254);
 };
 
 
@@ -262,7 +262,7 @@ _.extend(Opcode, Opcode.map);
 /**
  * @returns true if opcode is one of OP_0, OP_1, ..., OP_16
  */
-Opcode.isSmallIntOp = function(opcode) {
+Opcode.isSmallIntOp = function (opcode) {
   if (opcode instanceof Opcode) {
     opcode = opcode.toNumber();
   }
@@ -275,8 +275,8 @@ Opcode.isSmallIntOp = function(opcode) {
  *
  * @returns {string} Script opcode
  */
-Opcode.prototype.inspect = function() {
-  return '<Opcode: ' + this.toString() + ', hex: '+this.toHex()+', decimal: '+this.num+'>';
+Opcode.prototype.inspect = function () {
+  return '<Opcode: ' + this.toString() + ', hex: ' + this.toHex() + ', decimal: ' + this.num + '>';
 };
 
 module.exports = Opcode;

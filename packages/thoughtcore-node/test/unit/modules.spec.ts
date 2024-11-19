@@ -8,7 +8,7 @@ import { P2P } from '../../src/services/p2p';
 import { Verification } from '../../src/services/verification';
 import { unitAfterHelper, unitBeforeHelper } from '../helpers/unit';
 
-describe('Modules', function() {
+describe('Modules', function () {
   before(unitBeforeHelper);
   after(unitAfterHelper);
 
@@ -33,7 +33,7 @@ describe('Modules', function() {
     sandbox.restore();
   });
 
-  it('should have a test which runs', function() {
+  it('should have a test which runs', function () {
     expect(true).to.equal(true);
   });
 

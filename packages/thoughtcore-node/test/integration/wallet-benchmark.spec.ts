@@ -50,12 +50,12 @@ async function getWalletUtxos(wallet: Wallet) {
   const utxos = new Array<MongoBound<ICoin>>();
   return new Promise<Array<MongoBound<ICoin>>>(resolve =>
     wallet
-    .getUtxos()
-    .pipe(new ParseApiStream())
-    .on('data', (utxo: MongoBound<ICoin>) => {
-      utxos.push(utxo);
-    })
-    .on('end', () => resolve(utxos))
+      .getUtxos()
+      .pipe(new ParseApiStream())
+      .on('data', (utxo: MongoBound<ICoin>) => {
+        utxos.push(utxo);
+      })
+      .on('end', () => resolve(utxos))
   );
 }
 
@@ -93,7 +93,7 @@ async function checkWalletReceived(receivingWallet: IWallet, txid: string, addre
   expect(txWallets).to.include(sendingWallet!._id!.toHexString());
 }
 
-describe('Wallet Benchmark', function() {
+describe('Wallet Benchmark', function () {
   const suite = this;
   this.timeout(5000000);
   let p2pWorker: ThoughtP2PWorker;

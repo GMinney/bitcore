@@ -1,9 +1,9 @@
 import TickSvg from '@/assets/images/tick.svg';
 import CopySvg from '@/assets/images/copy-icon.svg';
-import {useState, memo, FC} from 'react';
+import { useState, memo, FC } from 'react';
 import styled from 'styled-components';
-import {AnimatePresence, motion} from 'framer-motion';
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import { AnimatePresence, motion } from 'framer-motion';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Image from 'next/image';
 
 const CopyImg = styled(motion.div)`
@@ -14,7 +14,7 @@ const CopyImg = styled(motion.div)`
 interface CopyTextProps {
   text: string;
 }
-const CopyText: FC<CopyTextProps> = ({text}) => {
+const CopyText: FC<CopyTextProps> = ({ text }) => {
   const [copied, setCopied] = useState<boolean>(false);
 
   const onClickCopy = () => {
@@ -64,7 +64,7 @@ const CopyText: FC<CopyTextProps> = ({text}) => {
               exit='exit'
               initial='initial'
               animate='animate'>
-              <Image src={CopySvg.src} width={12} height={0} alt='copy' style={{height: 'auto' }}  />
+              <Image src={CopySvg.src} width={12} height={0} alt='copy' style={{ height: 'auto' }} />
             </CopyImg>
           </CopyToClipboard>
         )}

@@ -67,7 +67,7 @@ function PublicKey(data, extra) {
  * @param {*} data
  * @param {Object} extra
  */
-PublicKey.prototype._classifyArgs = function(data, extra) {
+PublicKey.prototype._classifyArgs = function (data, extra) {
   /* jshint maxcomplexity: 10 */
   var info = {
     compressed: _.isUndefined(extra.compressed) || extra.compressed
@@ -78,7 +78,7 @@ PublicKey.prototype._classifyArgs = function(data, extra) {
     info.point = data;
   } else if (data.x && data.y) {
     info = PublicKey._transformObject(data);
-  } else if (typeof(data) === 'string') {
+  } else if (typeof (data) === 'string') {
     info = PublicKey._transformDER(Buffer.from(data, 'hex'));
   } else if (PublicKey._isBuffer(data)) {
     info = PublicKey._transformDER(data);
@@ -100,7 +100,7 @@ PublicKey.prototype._classifyArgs = function(data, extra) {
  * @returns {boolean}
  * @private
  */
-PublicKey._isPrivateKey = function(param) {
+PublicKey._isPrivateKey = function (param) {
   var PrivateKey = require('./privatekey');
   return param instanceof PrivateKey;
 };
@@ -112,7 +112,7 @@ PublicKey._isPrivateKey = function(param) {
  * @returns {boolean}
  * @private
  */
-PublicKey._isBuffer = function(param) {
+PublicKey._isBuffer = function (param) {
   return (param instanceof Buffer) || (param instanceof Uint8Array);
 };
 
@@ -123,7 +123,7 @@ PublicKey._isBuffer = function(param) {
  * @returns {Object} An object with keys: point and compressed
  * @private
  */
-PublicKey._transformPrivateKey = function(privkey) {
+PublicKey._transformPrivateKey = function (privkey) {
   $.checkArgument(PublicKey._isPrivateKey(privkey), 'Must be an instance of PrivateKey');
   var info = {};
   info.point = Point.getG().mul(privkey.bn);
@@ -140,7 +140,7 @@ PublicKey._transformPrivateKey = function(privkey) {
  * @returns {Object} An object with keys: point and compressed
  * @private
  */
-PublicKey._transformDER = function(buf, strict) {
+PublicKey._transformDER = function (buf, strict) {
   /* jshint maxstatements: 30 */
   /* jshint maxcomplexity: 12 */
   $.checkArgument(PublicKey._isBuffer(buf), 'Must be a hex buffer of DER encoded public key');
@@ -187,7 +187,7 @@ PublicKey._transformDER = function(buf, strict) {
  * @returns {Object} An object with keys: point and compressed
  * @private
  */
-PublicKey._transformX = function(odd, x) {
+PublicKey._transformX = function (odd, x) {
   $.checkArgument(typeof odd === 'boolean', 'Must specify whether y is odd or not (true or false)');
   var info = {};
   info.point = Point.fromX(odd, x);
@@ -201,7 +201,7 @@ PublicKey._transformX = function(odd, x) {
  * @returns {Object} An object with keys: point and compressed
  * @private
  */
-PublicKey._transformObject = function(json) {
+PublicKey._transformObject = function (json) {
   var x = new BN(json.x, 'hex');
   var y = new BN(json.y, 'hex');
   var point = new Point(x, y);
@@ -216,7 +216,7 @@ PublicKey._transformObject = function(json) {
  * @param {PrivateKey} privkey - An instance of PrivateKey
  * @returns {PublicKey} A new valid instance of PublicKey
  */
-PublicKey.fromPrivateKey = function(privkey) {
+PublicKey.fromPrivateKey = function (privkey) {
   $.checkArgument(PublicKey._isPrivateKey(privkey), 'Must be an instance of PrivateKey');
   var info = PublicKey._transformPrivateKey(privkey);
   return new PublicKey(info.point, {
@@ -231,7 +231,7 @@ PublicKey.fromPrivateKey = function(privkey) {
  * @param {Boolean} strict (optional; Only applies to DER format) If set to false, will loosen some conditions
  * @returns {PublicKey}
  */
-PublicKey.fromBuffer = function(buf, strict) {
+PublicKey.fromBuffer = function (buf, strict) {
   $.checkArgument(PublicKey._isBuffer(buf), 'Must be a hex buffer of DER encoded public key or 32 byte X coordinate (taproot)');
   if (buf.length === 32) {
     return PublicKey.fromX(false, buf);
@@ -245,7 +245,7 @@ PublicKey.fromBuffer = function(buf, strict) {
  * @param {bool=} strict - if set to false, will loosen some conditions
  * @returns {PublicKey} A new valid instance of PublicKey
  */
-PublicKey.fromDER = function(buf, strict) {
+PublicKey.fromDER = function (buf, strict) {
   $.checkArgument(PublicKey._isBuffer(buf), 'Must be a hex buffer of DER encoded public key');
   var info = PublicKey._transformDER(buf, strict);
   return new PublicKey(info.point, {
@@ -260,7 +260,7 @@ PublicKey.fromDER = function(buf, strict) {
  * @param {boolean=} compressed - whether to store this public key as compressed format
  * @returns {PublicKey} A new valid instance of PublicKey
  */
-PublicKey.fromPoint = function(point, compressed) {
+PublicKey.fromPoint = function (point, compressed) {
   $.checkArgument(point instanceof Point, 'First argument must be an instance of Point.');
   return new PublicKey(point, {
     compressed: compressed
@@ -274,7 +274,7 @@ PublicKey.fromPoint = function(point, compressed) {
  * @param {String=} encoding - The type of string encoding
  * @returns {PublicKey} A new valid instance of PublicKey
  */
-PublicKey.fromString = function(str, encoding) {
+PublicKey.fromString = function (str, encoding) {
   var buf = Buffer.from(str, encoding || 'hex');
   var info = PublicKey._transformDER(buf);
   return new PublicKey(info.point, {
@@ -289,7 +289,7 @@ PublicKey.fromString = function(str, encoding) {
  * @param {Point} x - The x point
  * @returns {PublicKey} A new valid instance of PublicKey
  */
-PublicKey.fromX = function(odd, x) {
+PublicKey.fromX = function (odd, x) {
   var info = PublicKey._transformX(odd, x);
   return new PublicKey(info.point, {
     compressed: info.compressed
@@ -301,7 +301,7 @@ PublicKey.fromX = function(odd, x) {
  * @param {String|Buffer} hexBuf 
  * @returns {PublicKey}
  */
-PublicKey.fromTaproot = function(hexBuf) {
+PublicKey.fromTaproot = function (hexBuf) {
   if (typeof hexBuf === 'string' && JSUtil.isHexaString(hexBuf)) {
     hexBuf = Buffer.from(hexBuf, 'hex');
   }
@@ -315,7 +315,7 @@ PublicKey.fromTaproot = function(hexBuf) {
  * @param {String|Buffer} hexBuf 
  * @returns {Boolean}
  */
-PublicKey.isValidTaproot = function(hexBuf) {
+PublicKey.isValidTaproot = function (hexBuf) {
   try {
     return !!PublicKey.fromTaproot(hexBuf);
   } catch (e) {
@@ -329,7 +329,7 @@ PublicKey.isValidTaproot = function(hexBuf) {
  * @param {Buffer} merkleRoot (optional)
  * @returns {Buffer}
  */
-PublicKey.prototype.computeTapTweakHash = function(merkleRoot) {
+PublicKey.prototype.computeTapTweakHash = function (merkleRoot) {
   const taggedWriter = new TaggedHash('TapTweak');
   taggedWriter.write(this.point.x.toBuffer({ size: 32 }));
 
@@ -341,7 +341,7 @@ PublicKey.prototype.computeTapTweakHash = function(merkleRoot) {
     taggedWriter.write(merkleRoot);
   }
   const tweakHash = taggedWriter.finalize();
-  
+
   const order = Point.getN();
   $.checkState(BN.fromBuffer(tweakHash).lt(order), 'TapTweak hash failed secp256k1 order check');
   return tweakHash;
@@ -355,7 +355,7 @@ PublicKey.prototype.computeTapTweakHash = function(merkleRoot) {
  * @param {Buffer} control 
  * @returns {Boolean}
  */
-PublicKey.prototype.checkTapTweak = function(p, merkleRoot, control) {
+PublicKey.prototype.checkTapTweak = function (p, merkleRoot, control) {
   if (Buffer.isBuffer(p)) {
     p = PublicKey.fromTaproot(p);
   }
@@ -363,7 +363,7 @@ PublicKey.prototype.checkTapTweak = function(p, merkleRoot, control) {
 
   const P = p.point.liftX();
   const Q = P.add(this.point.curve.g.mul(BN.fromBuffer(tweak)));
-  
+
   return this.point.x.eq(Q.x) && Q.y.mod(new BN(2)).eq(new BN(control[0] & 1));
 };
 
@@ -373,7 +373,7 @@ PublicKey.prototype.checkTapTweak = function(p, merkleRoot, control) {
  * @param {Buffer} merkleRoot (optional)
  * @returns {{ parity: Number, tweakedPubKey: Buffer }}
  */
-PublicKey.prototype.createTapTweak = function(merkleRoot) {
+PublicKey.prototype.createTapTweak = function (merkleRoot) {
   $.checkArgument(merkleRoot == null || (Buffer.isBuffer(merkleRoot) && merkleRoot.length === 32), 'merkleRoot must be a 32 byte buffer');
 
   let t = this.computeTapTweakHash(merkleRoot);
@@ -392,7 +392,7 @@ PublicKey.prototype.createTapTweak = function(merkleRoot) {
  * @param {string} data - The encoded data in various formats
  * @returns {null|Error} An error if exists
  */
-PublicKey.getValidationError = function(data) {
+PublicKey.getValidationError = function (data) {
   var error;
   try {
     /* jshint nonew: false */
@@ -409,7 +409,7 @@ PublicKey.getValidationError = function(data) {
  * @param {string} data - The encoded data in various formats
  * @returns {Boolean} If the public key would be valid
  */
-PublicKey.isValid = function(data) {
+PublicKey.isValid = function (data) {
   return !PublicKey.getValidationError(data);
 };
 
@@ -429,7 +429,7 @@ PublicKey.prototype.toObject = PublicKey.prototype.toJSON = function toObject() 
  *
  * @returns {Buffer} A DER hex encoded buffer
  */
-PublicKey.prototype.toBuffer = PublicKey.prototype.toDER = function() {
+PublicKey.prototype.toBuffer = PublicKey.prototype.toDER = function () {
   var x = this.point.getX();
   var y = this.point.getY();
 
@@ -471,7 +471,7 @@ PublicKey.prototype._getID = function _getID() {
  * @param {string} type - Either 'pubkeyhash', 'witnesspubkeyhash', or 'scripthash'
  * @returns {Address} An address generated from the public key
  */
-PublicKey.prototype.toAddress = function(network, type) {
+PublicKey.prototype.toAddress = function (network, type) {
   var Address = require('./address');
   return Address.fromPublicKey(this, network || this.network, type);
 };
@@ -481,7 +481,7 @@ PublicKey.prototype.toAddress = function(network, type) {
  *
  * @returns {string} A DER hex encoded string
  */
-PublicKey.prototype.toString = function() {
+PublicKey.prototype.toString = function () {
   return this.toDER().toString('hex');
 };
 
@@ -490,7 +490,7 @@ PublicKey.prototype.toString = function() {
  *
  * @returns {string} Public key
  */
-PublicKey.prototype.inspect = function() {
+PublicKey.prototype.inspect = function () {
   return '<PublicKey: ' + this.toString() +
     (this.compressed ? '' : ', uncompressed') + '>';
 };

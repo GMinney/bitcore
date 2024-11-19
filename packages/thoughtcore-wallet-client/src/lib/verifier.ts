@@ -23,7 +23,7 @@ export class Verifier {
   static useTestnet() {
     this._useRegtest = false;
   }
-  
+
   /**
    * Check address
    *

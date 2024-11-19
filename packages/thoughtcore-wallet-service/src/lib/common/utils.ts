@@ -308,7 +308,7 @@ export class Utils {
       return 'mainnet';
     }
     if (network === 'regtest') {
-       return 'regtest';
+      return 'regtest';
     }
     return 'testnet';
   }

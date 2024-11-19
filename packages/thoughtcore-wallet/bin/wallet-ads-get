@@ -16,12 +16,12 @@ var clientArgs = {
   host
 }
 
-utils.getClient(clientArgs, { 
+utils.getClient(clientArgs, {
   mustExist: true
 }, function (client) {
   client.getAdvertisements({}, (err, result) => {
     utils.die(err);
-    if(!result) {
+    if (!result) {
       console.log('Couldn\'t retrieve adverts');
     }
     else {

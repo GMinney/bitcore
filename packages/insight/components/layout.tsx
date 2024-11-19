@@ -110,8 +110,8 @@ const Layout = ({ children }: { children?: ReactNode }) => {
 
 
   //       <motion.div variants={fadeIn} animate='animate' initial='initial'></motion.div>
-        
-  
+
+
   return (
     <div>
 

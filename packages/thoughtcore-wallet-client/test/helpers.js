@@ -17,8 +17,8 @@ var CWC = require('crypto-wallet-core');
 
 var Thoughtcore = CWC.ThoughtcoreLib;
 var Thoughtcore_ = {
-  tht: Thoughtcore,
-  bch: CWC.ThoughtcoreLibCash
+    tht: Thoughtcore,
+    bch: CWC.ThoughtcoreLibCash
 };
 
 var { Constants } = require('../ts_build/lib/common');
@@ -235,7 +235,7 @@ const helpers = {
         mongodb.MongoClient.connect(config.mongoDb.uri + extra, (err, in_db) => {
             if (err) return cb(err);
             let db = in_db.db(config.mongoDb.dbname + extra);
-            db.dropDatabase(function(err) {
+            db.dropDatabase(function (err) {
                 return cb(err, db);
             });
         });
@@ -370,4 +370,4 @@ const blockchainExplorerMock = {
 module.exports = {
     helpers,
     blockchainExplorerMock
-  }
+}

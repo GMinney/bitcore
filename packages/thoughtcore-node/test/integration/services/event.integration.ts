@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { Event } from '../../../src/services/event';
 import { intAfterHelper, intBeforeHelper } from '../../helpers/integration';
 
-describe('Event Service', function() {
+describe('Event Service', function () {
   const suite = this;
   this.timeout(30000);
   before(intBeforeHelper);

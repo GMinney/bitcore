@@ -19,15 +19,15 @@ var Networks = thoughtcore.Networks;
 var HDPrivateKey = thoughtcore.HDPrivateKey;
 var HDPublicKey = thoughtcore.HDPublicKey;
 
-describe('HDKeys building with static methods', function() {
+describe('HDKeys building with static methods', function () {
   var classes = [HDPublicKey, HDPrivateKey];
   var clazz, index;
 
-  _.each(classes, function(clazz) {
-    var expectStaticMethodFail = function(staticMethod, argument, message) {
+  _.each(classes, function (clazz) {
+    var expectStaticMethodFail = function (staticMethod, argument, message) {
       expect(clazz[staticMethod].bind(null, argument)).to.throw(message);
     };
-    it(clazz.name + ' fromJSON checks that a valid JSON is provided', function() {
+    it(clazz.name + ' fromJSON checks that a valid JSON is provided', function () {
       var errorMessage = 'Invalid Argument: No valid argument was provided';
       var method = 'fromObject';
       expectStaticMethodFail(method, undefined, errorMessage);
@@ -35,14 +35,14 @@ describe('HDKeys building with static methods', function() {
       expectStaticMethodFail(method, 'invalid JSON', errorMessage);
       expectStaticMethodFail(method, '{\'singlequotes\': true}', errorMessage);
     });
-    it(clazz.name + ' fromString checks that a string is provided', function() {
+    it(clazz.name + ' fromString checks that a string is provided', function () {
       var errorMessage = 'No valid string was provided';
       var method = 'fromString';
       expectStaticMethodFail(method, undefined, errorMessage);
       expectStaticMethodFail(method, null, errorMessage);
       expectStaticMethodFail(method, {}, errorMessage);
     });
-    it(clazz.name + ' fromObject checks that an object is provided', function() {
+    it(clazz.name + ' fromObject checks that an object is provided', function () {
       var errorMessage = 'No valid argument was provided';
       var method = 'fromObject';
       expectStaticMethodFail(method, undefined, errorMessage);
@@ -52,177 +52,177 @@ describe('HDKeys building with static methods', function() {
   });
 });
 
-describe('BIP32 compliance', function() {
+describe('BIP32 compliance', function () {
 
-  it('should initialize test vector 1 from the extended public key', function() {
+  it('should initialize test vector 1 from the extended public key', function () {
     new HDPublicKey(vector1_m_public).xpubkey.should.equal(vector1_m_public);
   });
 
-  it('should initialize test vector 1 from the extended private key', function() {
+  it('should initialize test vector 1 from the extended private key', function () {
     new HDPrivateKey(vector1_m_private).xprivkey.should.equal(vector1_m_private);
   });
 
-  it('can initialize a public key from an extended private key', function() {
+  it('can initialize a public key from an extended private key', function () {
     new HDPublicKey(vector1_m_private).xpubkey.should.equal(vector1_m_public);
   });
 
-  it('toString should be equal to the `xpubkey` member', function() {
+  it('toString should be equal to the `xpubkey` member', function () {
     var privateKey = new HDPrivateKey(vector1_m_private);
     privateKey.toString().should.equal(privateKey.xprivkey);
   });
 
-  it('toString should be equal to the `xpubkey` member', function() {
+  it('toString should be equal to the `xpubkey` member', function () {
     var publicKey = new HDPublicKey(vector1_m_public);
     publicKey.toString().should.equal(publicKey.xpubkey);
   });
 
-  it('should get the extended public key from the extended private key for test vector 1', function() {
+  it('should get the extended public key from the extended private key for test vector 1', function () {
     HDPrivateKey(vector1_m_private).xpubkey.should.equal(vector1_m_public);
   });
 
-  it("should get m/0' ext. private key from test vector 1", function() {
+  it("should get m/0' ext. private key from test vector 1", function () {
     var privateKey = new HDPrivateKey(vector1_m_private).derive("m/0'");
     privateKey.xprivkey.should.equal(vector1_m0h_private);
   });
 
-  it("should get m/0' ext. public key from test vector 1", function() {
+  it("should get m/0' ext. public key from test vector 1", function () {
     HDPrivateKey(vector1_m_private).derive("m/0'")
       .xpubkey.should.equal(vector1_m0h_public);
   });
 
-  it("should get m/0'/1 ext. private key from test vector 1", function() {
+  it("should get m/0'/1 ext. private key from test vector 1", function () {
     HDPrivateKey(vector1_m_private).derive("m/0'/1")
       .xprivkey.should.equal(vector1_m0h1_private);
   });
 
-  it("should get m/0'/1 ext. public key from test vector 1", function() {
+  it("should get m/0'/1 ext. public key from test vector 1", function () {
     HDPrivateKey(vector1_m_private).derive("m/0'/1")
       .xpubkey.should.equal(vector1_m0h1_public);
   });
 
-  it("should get m/0'/1 ext. public key from m/0' public key from test vector 1", function() {
+  it("should get m/0'/1 ext. public key from m/0' public key from test vector 1", function () {
     var derivedPublic = HDPrivateKey(vector1_m_private).derive("m/0'").hdPublicKey.derive("m/1");
     derivedPublic.xpubkey.should.equal(vector1_m0h1_public);
   });
 
-  it("should get m/0'/1/2' ext. private key from test vector 1", function() {
+  it("should get m/0'/1/2' ext. private key from test vector 1", function () {
     var privateKey = new HDPrivateKey(vector1_m_private);
     var derived = privateKey.derive("m/0'/1/2'");
     derived.xprivkey.should.equal(vector1_m0h12h_private);
   });
 
-  it("should get m/0'/1/2' ext. public key from test vector 1", function() {
+  it("should get m/0'/1/2' ext. public key from test vector 1", function () {
     HDPrivateKey(vector1_m_private).derive("m/0'/1/2'")
       .xpubkey.should.equal(vector1_m0h12h_public);
   });
 
-  it("should get m/0'/1/2'/2 ext. private key from test vector 1", function() {
+  it("should get m/0'/1/2'/2 ext. private key from test vector 1", function () {
     HDPrivateKey(vector1_m_private).derive("m/0'/1/2'/2")
       .xprivkey.should.equal(vector1_m0h12h2_private);
   });
 
-  it("should get m/0'/1/2'/2 ext. public key from m/0'/1/2' public key from test vector 1", function() {
+  it("should get m/0'/1/2'/2 ext. public key from m/0'/1/2' public key from test vector 1", function () {
     var derived = HDPrivateKey(vector1_m_private).derive("m/0'/1/2'").hdPublicKey;
     derived.derive("m/2").xpubkey.should.equal(vector1_m0h12h2_public);
   });
 
-  it("should get m/0'/1/2h/2 ext. public key from test vector 1", function() {
+  it("should get m/0'/1/2h/2 ext. public key from test vector 1", function () {
     HDPrivateKey(vector1_m_private).derive("m/0'/1/2'/2")
       .xpubkey.should.equal(vector1_m0h12h2_public);
   });
 
-  it("should get m/0'/1/2h/2/1000000000 ext. private key from test vector 1", function() {
+  it("should get m/0'/1/2h/2/1000000000 ext. private key from test vector 1", function () {
     HDPrivateKey(vector1_m_private).derive("m/0'/1/2'/2/1000000000")
       .xprivkey.should.equal(vector1_m0h12h21000000000_private);
   });
 
-  it("should get m/0'/1/2h/2/1000000000 ext. public key from test vector 1", function() {
+  it("should get m/0'/1/2h/2/1000000000 ext. public key from test vector 1", function () {
     HDPrivateKey(vector1_m_private).derive("m/0'/1/2'/2/1000000000")
       .xpubkey.should.equal(vector1_m0h12h21000000000_public);
   });
 
-  it("should get m/0'/1/2'/2/1000000000 ext. public key from m/0'/1/2'/2 public key from test vector 1", function() {
+  it("should get m/0'/1/2'/2/1000000000 ext. public key from m/0'/1/2'/2 public key from test vector 1", function () {
     var derived = HDPrivateKey(vector1_m_private).derive("m/0'/1/2'/2").hdPublicKey;
     derived.derive("m/1000000000").xpubkey.should.equal(vector1_m0h12h21000000000_public);
   });
 
-  it('should initialize test vector 2 from the extended public key', function() {
+  it('should initialize test vector 2 from the extended public key', function () {
     HDPublicKey(vector2_m_public).xpubkey.should.equal(vector2_m_public);
   });
 
-  it('should initialize test vector 2 from the extended private key', function() {
+  it('should initialize test vector 2 from the extended private key', function () {
     HDPrivateKey(vector2_m_private).xprivkey.should.equal(vector2_m_private);
   });
 
-  it('should get the extended public key from the extended private key for test vector 2', function() {
+  it('should get the extended public key from the extended private key for test vector 2', function () {
     HDPrivateKey(vector2_m_private).xpubkey.should.equal(vector2_m_public);
   });
 
-  it("should get m/0 ext. private key from test vector 2", function() {
+  it("should get m/0 ext. private key from test vector 2", function () {
     HDPrivateKey(vector2_m_private).derive(0).xprivkey.should.equal(vector2_m0_private);
   });
 
-  it("should get m/0 ext. public key from test vector 2", function() {
+  it("should get m/0 ext. public key from test vector 2", function () {
     HDPrivateKey(vector2_m_private).derive(0).xpubkey.should.equal(vector2_m0_public);
   });
 
-  it("should get m/0 ext. public key from m public key from test vector 2", function() {
+  it("should get m/0 ext. public key from m public key from test vector 2", function () {
     HDPrivateKey(vector2_m_private).hdPublicKey.derive(0).xpubkey.should.equal(vector2_m0_public);
   });
 
-  it("should get m/0/2147483647h ext. private key from test vector 2", function() {
+  it("should get m/0/2147483647h ext. private key from test vector 2", function () {
     HDPrivateKey(vector2_m_private).derive("m/0/2147483647'")
       .xprivkey.should.equal(vector2_m02147483647h_private);
   });
 
-  it("should get m/0/2147483647h ext. public key from test vector 2", function() {
+  it("should get m/0/2147483647h ext. public key from test vector 2", function () {
     HDPrivateKey(vector2_m_private).derive("m/0/2147483647'")
       .xpubkey.should.equal(vector2_m02147483647h_public);
   });
 
-  it("should get m/0/2147483647h/1 ext. private key from test vector 2", function() {
+  it("should get m/0/2147483647h/1 ext. private key from test vector 2", function () {
     HDPrivateKey(vector2_m_private).derive("m/0/2147483647'/1")
       .xprivkey.should.equal(vector2_m02147483647h1_private);
   });
 
-  it("should get m/0/2147483647h/1 ext. public key from test vector 2", function() {
+  it("should get m/0/2147483647h/1 ext. public key from test vector 2", function () {
     HDPrivateKey(vector2_m_private).derive("m/0/2147483647'/1")
       .xpubkey.should.equal(vector2_m02147483647h1_public);
   });
 
-  it("should get m/0/2147483647h/1 ext. public key from m/0/2147483647h public key from test vector 2", function() {
+  it("should get m/0/2147483647h/1 ext. public key from m/0/2147483647h public key from test vector 2", function () {
     var derived = HDPrivateKey(vector2_m_private).derive("m/0/2147483647'").hdPublicKey;
     derived.derive(1).xpubkey.should.equal(vector2_m02147483647h1_public);
   });
 
-  it("should get m/0/2147483647h/1/2147483646h ext. private key from test vector 2", function() {
+  it("should get m/0/2147483647h/1/2147483646h ext. private key from test vector 2", function () {
     HDPrivateKey(vector2_m_private).derive("m/0/2147483647'/1/2147483646'")
       .xprivkey.should.equal(vector2_m02147483647h12147483646h_private);
   });
 
-  it("should get m/0/2147483647h/1/2147483646h ext. public key from test vector 2", function() {
+  it("should get m/0/2147483647h/1/2147483646h ext. public key from test vector 2", function () {
     HDPrivateKey(vector2_m_private).derive("m/0/2147483647'/1/2147483646'")
       .xpubkey.should.equal(vector2_m02147483647h12147483646h_public);
   });
 
-  it("should get m/0/2147483647h/1/2147483646h/2 ext. private key from test vector 2", function() {
+  it("should get m/0/2147483647h/1/2147483646h/2 ext. private key from test vector 2", function () {
     HDPrivateKey(vector2_m_private).derive("m/0/2147483647'/1/2147483646'/2")
       .xprivkey.should.equal(vector2_m02147483647h12147483646h2_private);
   });
 
-  it("should get m/0/2147483647h/1/2147483646h/2 ext. public key from test vector 2", function() {
+  it("should get m/0/2147483647h/1/2147483646h/2 ext. public key from test vector 2", function () {
     HDPrivateKey(vector2_m_private).derive("m/0/2147483647'/1/2147483646'/2")
       .xpubkey.should.equal(vector2_m02147483647h12147483646h2_public);
   });
 
-  it("should get m/0/2147483647h/1/2147483646h/2 ext. public key from m/0/2147483647h/2147483646h public key from test vector 2", function() {
+  it("should get m/0/2147483647h/1/2147483646h/2 ext. public key from m/0/2147483647h/2147483646h public key from test vector 2", function () {
     var derivedPublic = HDPrivateKey(vector2_m_private)
       .derive("m/0/2147483647'/1/2147483646'").hdPublicKey;
     derivedPublic.derive("m/2")
       .xpubkey.should.equal(vector2_m02147483647h12147483646h2_public);
   });
 
-  it('should use full 32 bytes for private key data that is hashed (as per bip32)', function() {
+  it('should use full 32 bytes for private key data that is hashed (as per bip32)', function () {
     // https://github.com/thought/bips/blob/master/bip-0032.mediawiki
     var privateKeyBuffer = Buffer.from('00000055378cf5fafb56c711c674143f9b0ee82ab0ba2924f19b64f5ae7cdbfd', 'hex');
     var chainCodeBuffer = Buffer.from('9c8a5c863e5941f3d99453e6ba66b328bb17cf0b8dec89ed4fc5ace397a1c089', 'hex');
@@ -238,7 +238,7 @@ describe('BIP32 compliance', function() {
     derived.privateKey.toString().should.equal('3348069561d2a0fb925e74bf198762acc47dce7db27372257d2d959a9e6f8aeb');
   });
 
-  it('should NOT use full 32 bytes for private key data that is hashed with nonCompliant flag', function() {
+  it('should NOT use full 32 bytes for private key data that is hashed with nonCompliant flag', function () {
     // This is to test that the previously implemented non-compliant to BIP32
     var privateKeyBuffer = Buffer.from('00000055378cf5fafb56c711c674143f9b0ee82ab0ba2924f19b64f5ae7cdbfd', 'hex');
     var chainCodeBuffer = Buffer.from('9c8a5c863e5941f3d99453e6ba66b328bb17cf0b8dec89ed4fc5ace397a1c089', 'hex');
@@ -254,7 +254,7 @@ describe('BIP32 compliance', function() {
     derived.privateKey.toString().should.equal('4811a079bab267bfdca855b3bddff20231ff7044e648514fa099158472df2836');
   });
 
-  it('should NOT use full 32 bytes for private key data that is hashed with the nonCompliant derive method', function() {
+  it('should NOT use full 32 bytes for private key data that is hashed with the nonCompliant derive method', function () {
     // This is to test that the previously implemented non-compliant to BIP32
     var privateKeyBuffer = Buffer.from('00000055378cf5fafb56c711c674143f9b0ee82ab0ba2924f19b64f5ae7cdbfd', 'hex');
     var chainCodeBuffer = Buffer.from('9c8a5c863e5941f3d99453e6ba66b328bb17cf0b8dec89ed4fc5ace397a1c089', 'hex');
@@ -270,15 +270,15 @@ describe('BIP32 compliance', function() {
     derived.privateKey.toString().should.equal('4811a079bab267bfdca855b3bddff20231ff7044e648514fa099158472df2836');
   });
 
-  describe('edge cases', function() {
+  describe('edge cases', function () {
     var sandbox = sinon.createSandbox();
-    afterEach(function() {
+    afterEach(function () {
       sandbox.restore();
     });
-    it('will handle edge case that derived private key is invalid', function() {
-      var invalid =  Buffer.from('0000000000000000000000000000000000000000000000000000000000000000', 'hex');
-      var privateKeyBuffer =  Buffer.from('5f72914c48581fc7ddeb944a9616389200a9560177d24f458258e5b04527bcd1', 'hex');
-      var chainCodeBuffer =  Buffer.from('39816057bba9d952fe87fe998b7fd4d690a1bb58c2ff69141469e4d1dffb4b91', 'hex');
+    it('will handle edge case that derived private key is invalid', function () {
+      var invalid = Buffer.from('0000000000000000000000000000000000000000000000000000000000000000', 'hex');
+      var privateKeyBuffer = Buffer.from('5f72914c48581fc7ddeb944a9616389200a9560177d24f458258e5b04527bcd1', 'hex');
+      var chainCodeBuffer = Buffer.from('39816057bba9d952fe87fe998b7fd4d690a1bb58c2ff69141469e4d1dffb4b91', 'hex');
       var unstubbed = thoughtcore.crypto.BN.prototype.toBuffer;
       var count = 0;
       var stub = sandbox.stub(thoughtcore.crypto.BN.prototype, 'toBuffer').callsFake(function (args) {
@@ -304,7 +304,7 @@ describe('BIP32 compliance', function() {
       derived.privateKey.toString().should.equal('b15bce3608d607ee3a49069197732c656bca942ee59f3e29b4d56914c1de6825');
       thoughtcore.PrivateKey.isValid.callCount.should.equal(2);
     });
-    it('will handle edge case that a derive public key is invalid', function() {
+    it('will handle edge case that a derive public key is invalid', function () {
       var publicKeyBuffer = Buffer.from('029e58b241790284ef56502667b15157b3fc58c567f044ddc35653860f9455d099', 'hex');
       var chainCodeBuffer = Buffer.from('39816057bba9d952fe87fe998b7fd4d690a1bb58c2ff69141469e4d1dffb4b91', 'hex');
       var key = new HDPublicKey({
@@ -316,7 +316,7 @@ describe('BIP32 compliance', function() {
         publicKey: publicKeyBuffer
       });
       var unstubbed = thoughtcore.PublicKey.fromPoint;
-      thoughtcore.PublicKey.fromPoint = function() {
+      thoughtcore.PublicKey.fromPoint = function () {
         thoughtcore.PublicKey.fromPoint = unstubbed;
         throw new Error('Point cannot be equal to Infinity');
       };
@@ -327,15 +327,15 @@ describe('BIP32 compliance', function() {
     });
   });
 
-  describe('seed', function() {
+  describe('seed', function () {
 
-    it('should initialize a new BIP32 correctly from test vector 1 seed', function() {
+    it('should initialize a new BIP32 correctly from test vector 1 seed', function () {
       var seededKey = HDPrivateKey.fromSeed(vector1_master, Networks.livenet);
       seededKey.xprivkey.should.equal(vector1_m_private);
       seededKey.xpubkey.should.equal(vector1_m_public);
     });
 
-    it('should initialize a new BIP32 correctly from test vector 2 seed', function() {
+    it('should initialize a new BIP32 correctly from test vector 2 seed', function () {
       var seededKey = HDPrivateKey.fromSeed(vector2_master, Networks.livenet);
       seededKey.xprivkey.should.equal(vector2_m_private);
       seededKey.xpubkey.should.equal(vector2_m_public);

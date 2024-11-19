@@ -23,10 +23,10 @@ inherits(TaprootInput, PubKeyHashInput);
  * @param {Buffer} merkleRoot - the merkle root of the taproot tree
  * @return {Array<TransactionSignature>}
  */
-TaprootInput.prototype.getSignatures = function(transaction, privateKey, index, sigtype, hashData, signingMethod, merkleRoot) {
+TaprootInput.prototype.getSignatures = function (transaction, privateKey, index, sigtype, hashData, signingMethod, merkleRoot) {
   $.checkState(this.output instanceof Output);
   sigtype = sigtype || Signature.SIGHASH_DEFAULT;
-  
+
   const inputIndex = transaction.inputs.indexOf(this);
   const tweakedPk = privateKey.createTapTweak(merkleRoot).tweakedPrivKey;
   const signature = SighashSchnorr.sign(
@@ -51,10 +51,10 @@ TaprootInput.prototype.getSignatures = function(transaction, privateKey, index, 
 };
 
 
-TaprootInput.prototype.isValidSignature = function(transaction, signature) {
+TaprootInput.prototype.isValidSignature = function (transaction, signature) {
   $.checkState(transaction.inputs.indexOf(this) >= 0, 'Signature has no matching input');
   $.checkState(this.output instanceof Output, 'output is not instance of Output');
-  
+
   if (!this.output.script.isTaproot()) {
     return false;
   }
@@ -73,7 +73,7 @@ TaprootInput.prototype.isValidSignature = function(transaction, signature) {
  * Query whether the input is signed
  * @return {boolean}
  */
-TaprootInput.prototype.isFullySigned = function() {
+TaprootInput.prototype.isFullySigned = function () {
   return this.output.script.isTaproot() || this.hasWitnesses();
 };
 
@@ -87,7 +87,7 @@ TaprootInput.prototype.isFullySigned = function() {
  * @param {number} signature.sigtype
  * @return {TaprootInput} this, for chaining
  */
-TaprootInput.prototype.addSignature = function(transaction, signature) {
+TaprootInput.prototype.addSignature = function (transaction, signature) {
   if (this.isValidSignature(transaction, signature)) {
     this.setWitnesses([
       signature.signature.toBuffer(),

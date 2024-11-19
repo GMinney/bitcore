@@ -22,7 +22,7 @@ function GetdataMessage(arg, options) {
 }
 inherits(GetdataMessage, Message);
 
-GetdataMessage.prototype.setPayload = function(payload) {
+GetdataMessage.prototype.setPayload = function (payload) {
   this.inventory = [];
 
   var parser = new BufferReader(payload);
@@ -30,13 +30,13 @@ GetdataMessage.prototype.setPayload = function(payload) {
   for (var i = 0; i < count; i++) {
     var type = parser.readUInt32LE();
     var hash = parser.read(32);
-    this.inventory.push({type: type, hash: hash});
+    this.inventory.push({ type: type, hash: hash });
   }
 
   utils.checkFinished(parser);
 };
 
-GetdataMessage.prototype.getPayload = function() {
+GetdataMessage.prototype.getPayload = function () {
   var bw = new BufferWriter();
   utils.writeInventory(this.inventory, bw);
   return bw.concat();

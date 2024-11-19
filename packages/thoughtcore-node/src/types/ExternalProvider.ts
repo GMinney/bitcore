@@ -6,6 +6,6 @@ import { StreamAddressUtxosParams, StreamTransactionParams } from './namespaces/
 
 export interface IExternalProvider {
   getBlockNumberByDate(params: { date: Date | string } & ChainId): Promise<number>;
-  getTransaction(params: StreamTransactionParams & ChainId): Promise<MongoBound<IEVMTransaction>|undefined>;
+  getTransaction(params: StreamTransactionParams & ChainId): Promise<MongoBound<IEVMTransaction> | undefined>;
   streamAddressTransactions(params: StreamAddressUtxosParams & ChainId): Promise<ExternalApiStream>;
 }

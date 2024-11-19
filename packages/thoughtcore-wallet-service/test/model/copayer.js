@@ -8,16 +8,16 @@ var { Wallet } = require('../../ts_build/lib/model/wallet');
 var { Copayer } = require('../../ts_build/lib/model/copayer');
 
 
-describe('Copayer', function() {
+describe('Copayer', function () {
 
-  describe('#fromObj', function() {
-    it('read a copayer', function() {
+  describe('#fromObj', function () {
+    it('read a copayer', function () {
       var c = Copayer.fromObj(testWallet.copayers[0]);
       c.name.should.equal('copayer 1');
     });
   });
-  describe('#createAddress', function() {
-    it('should create an address', function() {
+  describe('#createAddress', function () {
+    it('should create an address', function () {
       var w = Wallet.fromObj(testWallet);
       var c = Copayer.fromObj(testWallet.copayers[2]);
       should.exist(c.requestPubKeys);
@@ -55,7 +55,7 @@ var testWallet = {
   }, {
     xPubKey: 'xpub661MyMwAqRbcFXUfkjfSaRwxJbAPpzNUvTiNFjgZwDJ8sZuhyodkP24L4LvsrgThYAAwKkVVSSmL7Ts7o9EHEHPB3EE89roAra7njoSeiMd',
     requestPubKey: '0246c30040eda1e36e02629ae8cd2a845fcfa947239c4c703f7ea7550d39cfb43a'
-  }, ],
+  },],
   copayers: [{
     addressManager: {
       receiveAddressIndex: 0,

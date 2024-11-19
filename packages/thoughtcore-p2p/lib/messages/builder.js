@@ -63,25 +63,25 @@ function builder(options) {
     commands: {}
   };
 
-  exported.add = function(key, Command) {
-    exported.commands[key] = function(obj) {
+  exported.add = function (key, Command) {
+    exported.commands[key] = function (obj) {
       return new Command(obj, options);
     };
 
     exported.commands[key]._constructor = Command;
 
-    exported.commands[key].fromBuffer = function(buffer) {
+    exported.commands[key].fromBuffer = function (buffer) {
       var message = exported.commands[key]();
       message.setPayload(buffer);
       return message;
     };
   };
 
-  Object.keys(exported.commandsMap).forEach(function(key) {
+  Object.keys(exported.commandsMap).forEach(function (key) {
     exported.add(key, require('./commands/' + key));
   });
 
-  exported.inventoryCommands.forEach(function(command) {
+  exported.inventoryCommands.forEach(function (command) {
 
     // add forTransaction methods
     exported.commands[command].forTransaction = function forTransaction(hash) {

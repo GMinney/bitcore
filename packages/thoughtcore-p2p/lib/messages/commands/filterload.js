@@ -26,12 +26,12 @@ function FilterloadMessage(arg, options) {
 }
 inherits(FilterloadMessage, Message);
 
-FilterloadMessage.prototype.setPayload = function(payload) {
+FilterloadMessage.prototype.setPayload = function (payload) {
   this.filter = BloomFilter.fromBuffer(payload);
 };
 
-FilterloadMessage.prototype.getPayload = function() {
-  if(this.filter) {
+FilterloadMessage.prototype.getPayload = function () {
+  if (this.filter) {
     return this.filter.toBuffer();
   } else {
     return BufferUtil.EMPTY_BUFFER;

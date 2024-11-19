@@ -24,7 +24,7 @@ export class Lock {
       // Lock taken?
       if (err && err.message && err.message.indexOf('E11000 ') !== -1) {
         // Lock expired?
-        this.storage.clearExpiredLock(token, () => {});
+        this.storage.clearExpiredLock(token, () => { });
         // Waiting time for lock has expired
         if (timeLeft < 0) {
           return cb('LOCKED');
@@ -47,7 +47,7 @@ export class Lock {
         // Lock available
       } else {
         return cb(null, icb => {
-          if (!icb) icb = () => {};
+          if (!icb) icb = () => { };
           this.storage.releaseLock(token, icb);
         });
       }
@@ -61,7 +61,7 @@ export class Lock {
       if (err == 'LOCKED') return cb(Errors.WALLET_BUSY);
       if (err) return cb(err);
 
-      const _cb = function() {
+      const _cb = function () {
         cb.apply(null, arguments);
         release();
       };

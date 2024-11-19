@@ -32,7 +32,7 @@ function GetblocksMessage(arg, options) {
 }
 inherits(GetblocksMessage, Message);
 
-GetblocksMessage.prototype.setPayload = function(payload) {
+GetblocksMessage.prototype.setPayload = function (payload) {
   var parser = new BufferReader(payload);
   $.checkArgument(!parser.finished(), 'No data received in payload');
 
@@ -47,7 +47,7 @@ GetblocksMessage.prototype.setPayload = function(payload) {
   utils.checkFinished(parser);
 };
 
-GetblocksMessage.prototype.getPayload = function() {
+GetblocksMessage.prototype.getPayload = function () {
   var bw = new BufferWriter();
   bw.writeUInt32LE(this.version);
   bw.writeVarintNum(this.starts.length);

@@ -5,12 +5,12 @@
 // import { wait } from '../utils/wait';
 // import { Config, ConfigService } from './config';
 // import { IBlock } from '../types/Block';
-import { 
+import {
   // BaseP2PWorker, 
-  P2pManager 
+  P2pManager
 } from './p2p';
 
-export class ExternalSyncManager extends P2pManager{
+export class ExternalSyncManager extends P2pManager {
 
 }
 

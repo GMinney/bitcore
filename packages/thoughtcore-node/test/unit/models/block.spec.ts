@@ -13,7 +13,7 @@ import { mockStorage } from '../../helpers';
 import { mockCollection } from '../../helpers/index.js';
 import { unitAfterHelper, unitBeforeHelper } from '../../helpers/unit';
 
-describe('Block Model', function() {
+describe('Block Model', function () {
   before(unitBeforeHelper);
   after(unitAfterHelper);
 

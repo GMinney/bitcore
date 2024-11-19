@@ -75,7 +75,7 @@ async function startGulp(name, opts) {
 
   task['test:karma'] = function () {
     let command = karmaPath + '  start ' + buildPath + 'karma.conf.js --single-run '
-    exec($({command}), function (err, stdout, stderr) {
+    exec($({ command }), function (err, stdout, stderr) {
       console.log(stdout);
       console.log(stderr);
       //console.log(err)
@@ -104,7 +104,7 @@ async function startGulp(name, opts) {
     }
 
     task['browser:uncompressed'] = function () {
-      exec($({browserifyCommand}), function (err, stdout, stderr) {
+      exec($({ browserifyCommand }), function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         //console.log(err)
@@ -131,7 +131,7 @@ async function startGulp(name, opts) {
 
     task['browser:maketests'] = function () {
       let command = 'find test/ -type f -name "*.js" | xargs ' + browserifyPath + ' -t brfs -o tests.js';
-      exec($({command}), function (err, stdout, stderr) {
+      exec($({ command }), function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         //console.log(err)

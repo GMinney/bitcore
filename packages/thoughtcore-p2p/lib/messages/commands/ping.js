@@ -27,14 +27,14 @@ function PingMessage(arg, options) {
 }
 inherits(PingMessage, Message);
 
-PingMessage.prototype.setPayload = function(payload) {
+PingMessage.prototype.setPayload = function (payload) {
   var parser = new BufferReader(payload);
   this.nonce = parser.read(8);
 
   utils.checkFinished(parser);
 };
 
-PingMessage.prototype.getPayload = function() {
+PingMessage.prototype.getPayload = function () {
   return this.nonce;
 };
 

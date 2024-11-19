@@ -36,17 +36,17 @@ function Output(args) {
       Object.defineProperty(this, 'isValid', {
         configurable: false,
         enumerable: false,
-        get: function() {
+        get: function () {
           this._isValid || this._branch.length === 0;
         },
-        set: function(isValid) {
+        set: function (isValid) {
           this._isValid = isValid;
         }
       });
       Object.defineProperty(this, 'isComplete', {
         configurable: false,
         enumerable: false,
-        get: function() {
+        get: function () {
           return this.isValid && (this._branch.length === 0 || (this._branch.length === 1 && !!this._branch[0]));
         }
       });
@@ -59,7 +59,7 @@ function Output(args) {
 Object.defineProperty(Output.prototype, 'script', {
   configurable: false,
   enumerable: true,
-  get: function() {
+  get: function () {
     if (this._script) {
       return this._script;
     } else {
@@ -73,10 +73,10 @@ Object.defineProperty(Output.prototype, 'script', {
 Object.defineProperty(Output.prototype, 'notions', {
   configurable: false,
   enumerable: true,
-  get: function() {
+  get: function () {
     return this._notions;
   },
-  set: function(num) {
+  set: function (num) {
     if (num instanceof BN) {
       this._notionsBN = num;
       this._notions = num.toNumber();
@@ -98,7 +98,7 @@ Object.defineProperty(Output.prototype, 'notions', {
   }
 });
 
-Output.prototype.invalidNotions = function() {
+Output.prototype.invalidNotions = function () {
   if (this._notions > MAX_SAFE_INTEGER) {
     return 'transaction txout notions greater than max safe integer';
   }
@@ -119,16 +119,16 @@ Output.prototype.toObject = Output.prototype.toJSON = function toObject() {
   return obj;
 };
 
-Output.fromObject = function(data) {
+Output.fromObject = function (data) {
   return new Output(data);
 };
 
-Output.prototype.setScriptFromBuffer = function(buffer) {
+Output.prototype.setScriptFromBuffer = function (buffer) {
   this._scriptBuffer = buffer;
   try {
     this._script = Script.fromBuffer(this._scriptBuffer);
     this._script._isOutput = true;
-  } catch(e) {
+  } catch (e) {
     if (e instanceof errors.Script.InvalidBuffer) {
       this._script = null;
     } else {
@@ -137,7 +137,7 @@ Output.prototype.setScriptFromBuffer = function(buffer) {
   }
 };
 
-Output.prototype.setScript = function(script) {
+Output.prototype.setScript = function (script) {
   if (script instanceof Script) {
     this._scriptBuffer = script.toBuffer();
     this._script = script;
@@ -154,7 +154,7 @@ Output.prototype.setScript = function(script) {
   return this;
 };
 
-Output.prototype.inspect = function() {
+Output.prototype.inspect = function () {
   var scriptStr;
   if (this.script) {
     scriptStr = this.script.inspect();
@@ -164,7 +164,7 @@ Output.prototype.inspect = function() {
   return '<Output (' + this.notions + ' sats) ' + scriptStr + '>';
 };
 
-Output.fromBufferReader = function(br) {
+Output.fromBufferReader = function (br) {
   var obj = {};
   obj.notions = br.readUInt64LEBN();
   var size = br.readVarintNum();
@@ -176,7 +176,7 @@ Output.fromBufferReader = function(br) {
   return new Output(obj);
 };
 
-Output.prototype.toBufferWriter = function(writer) {
+Output.prototype.toBufferWriter = function (writer) {
   if (!writer) {
     writer = new BufferWriter();
   }
@@ -187,7 +187,7 @@ Output.prototype.toBufferWriter = function(writer) {
   return writer;
 };
 
-Output.prototype.calculateSize = function() {
+Output.prototype.calculateSize = function () {
   let result = 8; // notions
   result += BufferWriter.varintBufNum(this._scriptBuffer.length).length;
   result += this._scriptBuffer.length;
@@ -204,7 +204,7 @@ Output.prototype.calculateSize = function() {
  * @param {Number} leafVersion 
  * @param {Boolean} track If true, the leaf will be included in GetSpendData() output
  */
-Output.prototype.add = function(depth, script, leafVersion, track = true) {
+Output.prototype.add = function (depth, script, leafVersion, track = true) {
   $.checkArgument((leafVersion & ~Interpreter.TAPROOT_LEAF_MASK) === 0, 'invalid leafVersion');
   if (!this.isValid) {
     return;
@@ -227,7 +227,7 @@ Output.prototype.add = function(depth, script, leafVersion, track = true) {
 };
 
 
-Output.prototype._insertNode = function(node, depth) {
+Output.prototype._insertNode = function (node, depth) {
   $.checkArgument(depth >= 0 && depth <= Interpreter.TAPROOT_CONTROL_MAX_NODE_COUNT, 'invalid depth');
   /* We cannot insert a leaf at a lower depth while a deeper branch is unfinished. Doing
    * so would mean the Add() invocations do not correspond to a DFS traversal of a
@@ -256,7 +256,7 @@ Output.prototype._insertNode = function(node, depth) {
   }
 };
 
-Output.prototype._combineNodes = function(a, b) {
+Output.prototype._combineNodes = function (a, b) {
   const ret = {
     hash: null,
     leaves: []
@@ -286,7 +286,7 @@ Output.prototype._combineNodes = function(a, b) {
  *  internal_key.IsFullyValid() must be true.
  * @param {PublicKey} pubKey 
  */
-Output.prototype.finalize = function(pubKey) {
+Output.prototype.finalize = function (pubKey) {
   $.checkState(this.isComplete === true, 'finalize can only be called when isComplete is true');
   const ret = pubKey.createTapTweak(this._branch.length === 0 ? null : this._branch[0].hash);
 

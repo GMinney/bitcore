@@ -19,7 +19,7 @@ var tx_valid = require('../data/thoughtd/tx_valid');
 var tx_invalid = require('../data/thoughtd/tx_invalid');
 
 //the script string format used in thoughtd data tests
-Script.fromThoughtdString = function(str) {
+Script.fromThoughtdString = function (str) {
   var bw = new BufferWriter();
   var tokens = str.split(' ');
   for (var i = 0; i < tokens.length; i++) {
@@ -61,9 +61,9 @@ Script.fromThoughtdString = function(str) {
 
 
 
-describe('Interpreter', function() {
+describe('Interpreter', function () {
 
-  it('should make a new interp', function() {
+  it('should make a new interp', function () {
     var interp = new Interpreter();
     (interp instanceof Interpreter).should.equal(true);
     interp.stack.length.should.equal(0);
@@ -76,9 +76,9 @@ describe('Interpreter', function() {
     interp.flags.should.equal(0);
   });
 
-  describe('@castToBool', function() {
+  describe('@castToBool', function () {
 
-    it('should cast these bufs to bool correctly', function() {
+    it('should cast these bufs to bool correctly', function () {
       Interpreter.castToBool(new BN(0).toSM({
         endian: 'little'
       })).should.equal(false);
@@ -99,8 +99,8 @@ describe('Interpreter', function() {
 
   });
 
-  describe('#verifyWitnessProgram', function() {
-    it('will return true if witness program greater than 0', function() {
+  describe('#verifyWitnessProgram', function () {
+    it('will return true if witness program greater than 0', function () {
       var si = Interpreter();
       var version = 1;
       var program = Buffer.from('bcbd1db07ce89d1f4050645c26c90ce78b67eff78460002a4d5c10410958e064', 'hex');
@@ -109,7 +109,7 @@ describe('Interpreter', function() {
       var flags = 0;
       si.verifyWitnessProgram(version, program, witness, notions, flags).should.equal(true);
     });
-    it('will return false with error if witness length is 0', function() {
+    it('will return false with error if witness length is 0', function () {
       var si = Interpreter();
       var version = 0;
       var program = Buffer.from('bcbd1db07ce89d1f4050645c26c90ce78b67eff78460002a4d5c10410958e064', 'hex');
@@ -119,12 +119,12 @@ describe('Interpreter', function() {
       si.verifyWitnessProgram(version, program, witness, notions, flags).should.equal(false);
       si.errstr.should.equal('SCRIPT_ERR_WITNESS_PROGRAM_WITNESS_EMPTY');
     });
-    it('will return false if program hash mismatch (version 0, 32 byte program)', function() {
+    it('will return false if program hash mismatch (version 0, 32 byte program)', function () {
       var si = Interpreter();
       var version = 0;
       var program = Buffer.from('0000000000000000000000000000000000000000000000000000000000000000', 'hex');
       var witness = [
-         Buffer.from('0000000000000000000000000000000000000000000000000000000000000000', 'hex'),
+        Buffer.from('0000000000000000000000000000000000000000000000000000000000000000', 'hex'),
         Buffer.from('0000000000000000000000000000000000000000000000000000000000000000', 'hex')
       ];
       var notions = 1;
@@ -132,7 +132,7 @@ describe('Interpreter', function() {
       si.verifyWitnessProgram(version, program, witness, notions, flags).should.equal(false);
       si.errstr.should.equal('SCRIPT_ERR_WITNESS_PROGRAM_MISMATCH');
     });
-    it('will return false if witness stack doesn\'t have two items (version 0, 20 byte program)', function() {
+    it('will return false if witness stack doesn\'t have two items (version 0, 20 byte program)', function () {
       var si = Interpreter();
       var version = 0;
       var program = Buffer.from('b8bcb07f6344b42ab04250c86a6e8b75d3fdbbc6', 'hex');
@@ -146,7 +146,7 @@ describe('Interpreter', function() {
       si.verifyWitnessProgram(version, program, witness, notions, flags).should.equal(false);
       si.errstr.should.equal('SCRIPT_ERR_WITNESS_PROGRAM_MISMATCH');
     });
-    it('will return false if program wrong length for version 0', function() {
+    it('will return false if program wrong length for version 0', function () {
       var si = Interpreter();
       var version = 0;
       var program = Buffer.from('b8bcb07f6344b42ab04250c86a6e8b75d3', 'hex');
@@ -158,7 +158,7 @@ describe('Interpreter', function() {
       si.verifyWitnessProgram(version, program, witness, notions, flags).should.equal(false);
       si.errstr.should.equal('SCRIPT_ERR_WITNESS_PROGRAM_WRONG_LENGTH');
     });
-    it('will return false with discourage upgradable witness program', function() {
+    it('will return false with discourage upgradable witness program', function () {
       var si = Interpreter();
       var version = 1;
       var program = Buffer.from('b8bcb07f6344b42ab04250c86a6e8b75d3fdbbc6', 'hex');
@@ -171,7 +171,7 @@ describe('Interpreter', function() {
       si.verifyWitnessProgram(version, program, witness, notions, flags).should.equal(false);
       si.errstr.should.equal('SCRIPT_ERR_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM');
     });
-    it('will return false with error if stack doesn\'t have exactly one item', function() {
+    it('will return false with error if stack doesn\'t have exactly one item', function () {
       var si = Interpreter();
       si.evaluate = sinon.stub().returns(true);
       var version = 0;
@@ -185,9 +185,9 @@ describe('Interpreter', function() {
       si.verifyWitnessProgram(version, program, witness, notions, flags).should.equal(false);
       si.errstr.should.equal('SCRIPT_ERR_EVAL_FALSE');
     });
-    it('will return false if last item in stack casts to false', function() {
+    it('will return false if last item in stack casts to false', function () {
       var si = Interpreter();
-      si.evaluate = function() {
+      si.evaluate = function () {
         si.stack = [Buffer.from('00', 'hex')];
         return true;
       };
@@ -204,9 +204,9 @@ describe('Interpreter', function() {
     });
   });
 
-  describe('#verify', function() {
+  describe('#verify', function () {
 
-    it('should verify these trivial scripts', function() {
+    it('should verify these trivial scripts', function () {
       var verified;
       var si = Interpreter();
       verified = si.verify(Script('OP_1'), Script('OP_1'));
@@ -229,7 +229,7 @@ describe('Interpreter', function() {
       verified.should.equal(true);
     });
 
-    it('should verify these simple transaction', function() {
+    it('should verify these simple transaction', function () {
       // first we create a transaction
       var privateKey = new PrivateKey('cSBnVM4xvxarwGQuAfQFwqDg9k5tErHUHzgWsEfD4zdwUasvqRVY');
       var publicKey = privateKey.publicKey;
@@ -287,7 +287,7 @@ describe('Interpreter', function() {
 
   var getFlags = function getFlags(flagstr) {
     var flags = 0;
-    
+
     for (let flag of flagstr.split(',')) {
       flag = flag.trim();
       if (FLAG_MAP[flag] === undefined) {
@@ -298,7 +298,7 @@ describe('Interpreter', function() {
     return flags;
   };
 
-  var testFixture = function(vector, expected, witness, amount) {
+  var testFixture = function (vector, expected, witness, amount) {
     var amount = amount || 0;
     var scriptSig = Script.fromThoughtdString(vector[0]);
     var scriptPubkey = Script.fromThoughtdString(vector[1]);
@@ -338,11 +338,11 @@ describe('Interpreter', function() {
     var verified = interp.verify(scriptSig, scriptPubkey, spendtx, 0, flags, witness, amount);
     verified.should.equal(expected);
   };
-  describe('thoughtd script evaluation fixtures', function() {
+  describe('thoughtd script evaluation fixtures', function () {
 
-    var testAllFixtures = function(set) {
+    var testAllFixtures = function (set) {
       var c = 0;
-      set.forEach(function(vector) {
+      set.forEach(function (vector) {
         if (vector.length === 1) {
           return;
         }
@@ -351,9 +351,9 @@ describe('Interpreter', function() {
         var witness, amount;
         if (_.isArray(vector[0])) {
           var extra = vector.shift();
-          amount = extra.pop()  * 1e8;
-          witness = extra.map(function(x) { 
-            return Buffer.from(x,'hex');
+          amount = extra.pop() * 1e8;
+          witness = extra.map(function (x) {
+            return Buffer.from(x, 'hex');
           });
         } else {
           return;
@@ -366,7 +366,7 @@ describe('Interpreter', function() {
         var comment = descstr ? (' (' + descstr + ')') : '';
         it('should ' + vector[3] + ' script_tests ' +
           'vector #' + c + ': ' + fullScriptString + comment,
-          function() {
+          function () {
             testFixture(vector, expected, witness, amount);
           });
       });
@@ -374,8 +374,8 @@ describe('Interpreter', function() {
     testAllFixtures(script_tests);
 
   });
-  describe('thoughtd transaction evaluation fixtures', function() {
-    var test_txs = function(set, expected) {
+  describe('thoughtd transaction evaluation fixtures', function () {
+    var test_txs = function (set, expected) {
       var c = 0;
       for (const vector of set) {
         if (vector.length === 1) {
@@ -383,7 +383,7 @@ describe('Interpreter', function() {
         }
         c++;
         var cc = c; //copy to local
-        it('should pass tx_' + (expected ? '' : 'in') + 'valid vector ' + cc, function() {
+        it('should pass tx_' + (expected ? '' : 'in') + 'valid vector ' + cc, function () {
           var inputs = vector[0];
           var txhex = vector[1];
 
@@ -431,7 +431,7 @@ describe('Interpreter', function() {
   });
 
 
-  const allConsensusFlags = function() {
+  const allConsensusFlags = function () {
     const ret = [];
     for (let i = 0; i < 128; ++i) {
       let flag = 0;
@@ -454,19 +454,19 @@ describe('Interpreter', function() {
     return ret;
   }
 
-  describe('thoughtd script asset tests', function() {
+  describe('thoughtd script asset tests', function () {
     this.timeout(60000); // Some tests run a little long
 
     for (let i = 0; i < script_asset_tests.length; i++) {
       let test = script_asset_tests[i];
-      it(`script asset test vector ${i}: ${test.comment}`, function() {
-        const tx =  new Transaction(test.tx);
+      it(`script asset test vector ${i}: ${test.comment}`, function () {
+        const tx = new Transaction(test.tx);
         const prevOuts = [];
         for (let j in test.prevouts) {
           let prevout = test.prevouts[j];
-          const poBuffReader = new BufferReader(Buffer.from(prevout,'hex'));
+          const poBuffReader = new BufferReader(Buffer.from(prevout, 'hex'));
           prevout = Transaction.Output.fromBufferReader(poBuffReader);
-          
+
           const utxo = new Transaction.UnspentOutput({
             notions: prevout.notions,
             address: prevout.script.toAddress(),

@@ -28,7 +28,7 @@ const main = async () => {
     console.log('Next address index:', wallet.addressIndex);
     return;
   }
-  
+
   try {
     const password = await promptly.password('Wallet Password:');
     wallet = await Wallet.loadWallet({ name, path, storageType });

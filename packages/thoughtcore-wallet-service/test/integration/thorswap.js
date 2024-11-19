@@ -46,7 +46,7 @@ describe('Thorswap integration', () => {
 
     fakeRequest = {
       get: (_url, _opts, _cb) => { return _cb(null, { data: 'data' }) },
-      post: (_url, _opts, _cb) => { return _cb(null, { body: 'data'}) },
+      post: (_url, _opts, _cb) => { return _cb(null, { body: 'data' }) },
     };
 
     helpers.beforeEach((res) => {
@@ -54,7 +54,7 @@ describe('Thorswap integration', () => {
         wallet = w;
         const priv = TestData.copayers[0].privKey_1H_0;
         const sig = helpers.signMessage('hello world', priv);
-  
+
         WalletService.getInstanceWithAuth({
           // test assumes wallet's copayer[0] is TestData's copayer[0]
           copayerId: wallet.copayers[0].id,
@@ -292,7 +292,7 @@ describe('Thorswap integration', () => {
       }
     });
 
-    it('should work properly if req is OK with txn param only', async() => {
+    it('should work properly if req is OK with txn param only', async () => {
       server.request = fakeRequest;
       try {
         const data = await server.thorswapGetSwapTx(req);
@@ -302,7 +302,7 @@ describe('Thorswap integration', () => {
       }
     });
 
-    it('should work properly if req is OK with hash param only', async() => {
+    it('should work properly if req is OK with hash param only', async () => {
       delete req.body.txn;
       req.body.hash = 'hash1';
       server.request = fakeRequest;
@@ -314,7 +314,7 @@ describe('Thorswap integration', () => {
       }
     });
 
-    it('should return error if it does not have any of the required parameters', async() => {
+    it('should return error if it does not have any of the required parameters', async () => {
       delete req.body.txn;
       delete req.body.hash;
       server.request = fakeRequest;
@@ -328,7 +328,7 @@ describe('Thorswap integration', () => {
       }
     });
 
-    it('should return error if post returns error', async() => {
+    it('should return error if post returns error', async () => {
       req.body.txn = 'txn1';
       const fakeRequest2 = {
         post: (_url, _opts, _cb) => { return _cb(new Error('Error')) },
@@ -344,7 +344,7 @@ describe('Thorswap integration', () => {
       }
     });
 
-    it('should return error if Thorswap is commented in config', async() => {
+    it('should return error if Thorswap is commented in config', async () => {
       config.thorswap = undefined;
       server.request = fakeRequest;
 

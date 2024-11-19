@@ -8,25 +8,25 @@ var thoughtcore = require('../..');
 var errors = thoughtcore.errors;
 var BufferUtil = thoughtcore.util.buffer;
 
-describe('buffer utils', function() {
+describe('buffer utils', function () {
 
-  describe('equals', function() {
-    it('recognizes these two equal buffers', function() {
+  describe('equals', function () {
+    it('recognizes these two equal buffers', function () {
       var bufferA = Buffer.from([1, 2, 3]);
       var bufferB = Buffer.from('010203', 'hex');
       BufferUtil.equal(bufferA, bufferB).should.equal(true);
     });
-    it('no false positive: returns false with two different buffers', function() {
+    it('no false positive: returns false with two different buffers', function () {
       var bufferA = Buffer.from([1, 2, 3]);
       var bufferB = Buffer.from('010204', 'hex');
       BufferUtil.equal(bufferA, bufferB).should.equal(false);
     });
-    it('coverage: quickly realizes a difference in size and returns false', function() {
+    it('coverage: quickly realizes a difference in size and returns false', function () {
       var bufferA = Buffer.from([1, 2, 3]);
       var bufferB = Buffer.from([]);
       BufferUtil.equal(bufferA, bufferB).should.equal(false);
     });
-    it('"equals" is an an alias for "equal"', function() {
+    it('"equals" is an an alias for "equal"', function () {
       var bufferA = Buffer.from([1, 2, 3]);
       var bufferB = Buffer.from([1, 2, 3]);
       BufferUtil.equal(bufferA, bufferB).should.equal(true);
@@ -34,16 +34,16 @@ describe('buffer utils', function() {
     });
   });
 
-  describe('fill', function() {
-    it('checks arguments', function() {
-      expect(function() {
+  describe('fill', function () {
+    it('checks arguments', function () {
+      expect(function () {
         BufferUtil.fill('something');
       }).to.throw(errors.InvalidArgumentType);
-      expect(function() {
+      expect(function () {
         BufferUtil.fill(Buffer.from([0, 0, 0]), 'invalid');
       }).to.throw(errors.InvalidArgumentType);
     });
-    it('works correctly for a small buffer', function() {
+    it('works correctly for a small buffer', function () {
       var buffer = BufferUtil.fill(Buffer.alloc(10), 6);
       for (var i = 0; i < 10; i++) {
         buffer[i].should.equal(6);
@@ -51,83 +51,83 @@ describe('buffer utils', function() {
     });
   });
 
-  describe('isBuffer', function() {
-    it('has no false positive', function() {
+  describe('isBuffer', function () {
+    it('has no false positive', function () {
       expect(BufferUtil.isBuffer(1)).to.equal(false);
     });
-    it('has no false negative', function() {
+    it('has no false negative', function () {
       expect(BufferUtil.isBuffer(Buffer.alloc(0))).to.equal(true);
     });
   });
 
-  describe('emptyBuffer', function() {
-    it('creates a buffer filled with zeros', function() {
+  describe('emptyBuffer', function () {
+    it('creates a buffer filled with zeros', function () {
       var buffer = BufferUtil.emptyBuffer(10);
       expect(buffer.length).to.equal(10);
       for (var i = 0; i < 10; i++) {
         expect(buffer[i]).to.equal(0);
       }
     });
-    it('checks arguments', function() {
-      expect(function() {
+    it('checks arguments', function () {
+      expect(function () {
         BufferUtil.emptyBuffer('invalid');
       }).to.throw(errors.InvalidArgumentType);
     });
   });
 
-  describe('single byte buffer <=> integer', function() {
-    it('integerAsSingleByteBuffer should return a buffer of length 1', function() {
+  describe('single byte buffer <=> integer', function () {
+    it('integerAsSingleByteBuffer should return a buffer of length 1', function () {
       expect(BufferUtil.integerAsSingleByteBuffer(100)[0]).to.equal(100);
     });
-    it('should check the type', function() {
-      expect(function() {
+    it('should check the type', function () {
+      expect(function () {
         BufferUtil.integerAsSingleByteBuffer('invalid');
       }).to.throw(errors.InvalidArgumentType);
-      expect(function() {
+      expect(function () {
         BufferUtil.integerFromSingleByteBuffer('invalid');
       }).to.throw(errors.InvalidArgumentType);
     });
-    it('works correctly for edge cases', function() {
+    it('works correctly for edge cases', function () {
       expect(BufferUtil.integerAsSingleByteBuffer(255)[0]).to.equal(255);
       expect(BufferUtil.integerAsSingleByteBuffer(-1)[0]).to.equal(255);
     });
-    it('does a round trip', function() {
+    it('does a round trip', function () {
       expect(BufferUtil.integerAsSingleByteBuffer(
         BufferUtil.integerFromSingleByteBuffer(Buffer.from([255]))
       )[0]).to.equal(255);
     });
   });
 
-  describe('4byte buffer integer <=> integer', function() {
-    it('integerAsBuffer should return a buffer of length 4', function() {
+  describe('4byte buffer integer <=> integer', function () {
+    it('integerAsBuffer should return a buffer of length 4', function () {
       expect(BufferUtil.integerAsBuffer(100).length).to.equal(4);
     });
-    it('is little endian', function() {
+    it('is little endian', function () {
       expect(BufferUtil.integerAsBuffer(100)[3]).to.equal(100);
     });
-    it('should check the type', function() {
-      expect(function() {
+    it('should check the type', function () {
+      expect(function () {
         BufferUtil.integerAsBuffer('invalid');
       }).to.throw(errors.InvalidArgumentType);
-      expect(function() {
+      expect(function () {
         BufferUtil.integerFromBuffer('invalid');
       }).to.throw(errors.InvalidArgumentType);
     });
-    it('works correctly for edge cases', function() {
+    it('works correctly for edge cases', function () {
       expect(BufferUtil.integerAsBuffer(4294967295)[0]).to.equal(255);
       expect(BufferUtil.integerAsBuffer(4294967295)[3]).to.equal(255);
       expect(BufferUtil.integerAsBuffer(-1)[0]).to.equal(255);
       expect(BufferUtil.integerAsBuffer(-1)[3]).to.equal(255);
     });
-    it('does a round trip', function() {
+    it('does a round trip', function () {
       expect(BufferUtil.integerFromBuffer(
         BufferUtil.integerAsBuffer(10000)
       )).to.equal(10000);
     });
   });
 
-  describe('reverse', function() {
-    it('reverses a buffer', function() {
+  describe('reverse', function () {
+    it('reverses a buffer', function () {
       // http://bit.ly/1J2Ai4x
       var original = Buffer.from([255, 0, 128]);
       var reversed = BufferUtil.reverse(original);

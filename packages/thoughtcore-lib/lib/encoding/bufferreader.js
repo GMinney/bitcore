@@ -28,14 +28,14 @@ var BufferReader = function BufferReader(buf) {
   }
 };
 
-BufferReader.prototype.set = function(obj) {
+BufferReader.prototype.set = function (obj) {
   this.buf = obj.buf || this.buf || undefined;
   this.pos = obj.pos || this.pos || 0;
   return this;
 };
 
-BufferReader.prototype.eof = function() {
-  if(this.buf) {
+BufferReader.prototype.eof = function () {
+  if (this.buf) {
     return this.pos >= this.buf.length;
   } else {
     return true;
@@ -44,63 +44,63 @@ BufferReader.prototype.eof = function() {
 
 BufferReader.prototype.finished = BufferReader.prototype.eof;
 
-BufferReader.prototype.read = function(len) {
+BufferReader.prototype.read = function (len) {
   $.checkArgument(!_.isUndefined(len), 'Must specify a length');
   var buf = this.buf.slice(this.pos, this.pos + len);
   this.pos = this.pos + len;
   return buf;
 };
 
-BufferReader.prototype.readAll = function() {
+BufferReader.prototype.readAll = function () {
   var buf = this.buf.slice(this.pos, this.buf.length);
   this.pos = this.buf.length;
   return buf;
 };
 
-BufferReader.prototype.readUInt8 = function() {
+BufferReader.prototype.readUInt8 = function () {
   var val = this.buf.readUInt8(this.pos);
   this.pos = this.pos + 1;
   return val;
 };
 
-BufferReader.prototype.readUInt16BE = function() {
+BufferReader.prototype.readUInt16BE = function () {
   var val = this.buf.readUInt16BE(this.pos);
   this.pos = this.pos + 2;
   return val;
 };
 
-BufferReader.prototype.readUInt16LE = function() {
+BufferReader.prototype.readUInt16LE = function () {
   var val = this.buf.readUInt16LE(this.pos);
   this.pos = this.pos + 2;
   return val;
 };
 
-BufferReader.prototype.readUInt32BE = function() {
+BufferReader.prototype.readUInt32BE = function () {
   var val = this.buf.readUInt32BE(this.pos);
   this.pos = this.pos + 4;
   return val;
 };
 
-BufferReader.prototype.readUInt32LE = function() {
+BufferReader.prototype.readUInt32LE = function () {
   var val = this.buf.readUInt32LE(this.pos);
   this.pos = this.pos + 4;
   return val;
 };
 
-BufferReader.prototype.readInt32LE = function() {
+BufferReader.prototype.readInt32LE = function () {
   var val = this.buf.readInt32LE(this.pos);
   this.pos = this.pos + 4;
   return val;
 };
 
-BufferReader.prototype.readUInt64BEBN = function() {
+BufferReader.prototype.readUInt64BEBN = function () {
   var buf = this.buf.slice(this.pos, this.pos + 8);
   var bn = BN.fromBuffer(buf);
   this.pos = this.pos + 8;
   return bn;
 };
 
-BufferReader.prototype.readUInt64LEBN = function() {
+BufferReader.prototype.readUInt64LEBN = function () {
   var second = this.buf.readUInt32LE(this.pos);
   var first = this.buf.readUInt32LE(this.pos + 4);
   var combined = (first * 0x100000000) + second;
@@ -121,7 +121,7 @@ BufferReader.prototype.readUInt64LEBN = function() {
   return bn;
 };
 
-BufferReader.prototype.readVarintNum = function() {
+BufferReader.prototype.readVarintNum = function () {
   var first = this.readUInt8();
   switch (first) {
     case 0xFD:
@@ -145,7 +145,7 @@ BufferReader.prototype.readVarintNum = function() {
 /**
  * reads a length prepended buffer
  */
-BufferReader.prototype.readVarLengthBuffer = function() {
+BufferReader.prototype.readVarLengthBuffer = function () {
   var len = this.readVarintNum();
   var buf = this.read(len);
   $.checkState(buf.length === len, 'Invalid length while reading varlength buffer. ' +
@@ -153,7 +153,7 @@ BufferReader.prototype.readVarLengthBuffer = function() {
   return buf;
 };
 
-BufferReader.prototype.readVarintBuf = function() {
+BufferReader.prototype.readVarintBuf = function () {
   var first = this.buf.readUInt8(this.pos);
   switch (first) {
     case 0xFD:
@@ -167,7 +167,7 @@ BufferReader.prototype.readVarintBuf = function() {
   }
 };
 
-BufferReader.prototype.readVarintBN = function() {
+BufferReader.prototype.readVarintBN = function () {
   var first = this.readUInt8();
   switch (first) {
     case 0xFD:
@@ -181,7 +181,7 @@ BufferReader.prototype.readVarintBN = function() {
   }
 };
 
-BufferReader.prototype.reverse = function() {
+BufferReader.prototype.reverse = function () {
   var buf = Buffer.alloc(this.buf.length);
   for (var i = 0; i < buf.length; i++) {
     buf[i] = this.buf[this.buf.length - 1 - i];
@@ -190,7 +190,7 @@ BufferReader.prototype.reverse = function() {
   return this;
 };
 
-BufferReader.prototype.readReverse = function(len) {
+BufferReader.prototype.readReverse = function (len) {
   if (_.isUndefined(len)) {
     len = this.buf.length;
   }

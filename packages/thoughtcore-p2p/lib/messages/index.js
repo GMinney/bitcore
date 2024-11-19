@@ -1,4 +1,4 @@
- 'use strict';
+'use strict';
 
 var thoughtcore = require('thoughtcore-lib');
 var BufferUtil = thoughtcore.util.buffer;
@@ -19,7 +19,7 @@ function Messages(options) {
   this.builder = Messages.builder(options);
 
   // map message constructors by name
-  for(var key in this.builder.commandsMap) {
+  for (var key in this.builder.commandsMap) {
     var name = this.builder.commandsMap[key];
     this[name] = this.builder.commands[key];
   }
@@ -38,7 +38,7 @@ Messages.builder = require('./builder');
 /**
  * @param {Buffers} dataBuffer
  */
-Messages.prototype.parseBuffer = function(dataBuffer) {
+Messages.prototype.parseBuffer = function (dataBuffer) {
   /* jshint maxstatements: 18 */
   if (dataBuffer.length < Messages.MINIMUM_LENGTH) {
     return;
@@ -74,11 +74,11 @@ Messages.prototype.parseBuffer = function(dataBuffer) {
   return this._buildFromBuffer(command, payload);
 };
 
-Messages.prototype._discardUntilNextMessage = function(dataBuffer) {
+Messages.prototype._discardUntilNextMessage = function (dataBuffer) {
   $.checkArgument(dataBuffer);
   $.checkState(this.network, 'network must be set');
   var i = 0;
-  for (;;) {
+  for (; ;) {
     // check if it's the beginning of a new message
     var packageNumber = dataBuffer.slice(0, 4).toString('hex');
     if (packageNumber === this.network.networkMagic.toString('hex')) {
@@ -96,14 +96,14 @@ Messages.prototype._discardUntilNextMessage = function(dataBuffer) {
   }
 };
 
-Messages.prototype._buildFromBuffer = function(command, payload) {
+Messages.prototype._buildFromBuffer = function (command, payload) {
   if (!this.builder.commands[command]) {
     throw new Error('Unsupported message command: ' + command);
   }
   return this.builder.commands[command].fromBuffer(payload);
 };
 
-Messages.prototype.add = function(key, name, Command) {
+Messages.prototype.add = function (key, name, Command) {
   this.builder.add(key, Command);
   this[name] = this.builder.commands[key];
 };

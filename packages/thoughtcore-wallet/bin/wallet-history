@@ -17,7 +17,7 @@ program
 
 var args = program.args;
 
-var skip = 0, total = 0 ,
+var skip = 0, total = 0,
   limit = program.limit, got, page = 1000;
 console.warn("* TX History:")
 
@@ -39,7 +39,7 @@ function formatDate(date) {
 
 
 if (program.format == 'csv') {
-  converter = function(txs) {
+  converter = function (txs) {
 
     var ret = '';
     var _amount, _note, _copayers, _creator, _comment;
@@ -56,19 +56,19 @@ if (program.format == 'csv') {
       if (it.actions && it.actions.length > 1) {
         for (var i = 0; i < it.actions.length; i++) {
           _copayers +=
-          it.actions[i].copayerName + ':' + it.actions[i].type + ' - ';
+            it.actions[i].copayerName + ':' + it.actions[i].type + ' - ';
         }
         _creator =
-        it.creatorName && it.creatorName != 'undefined'
-        ? it.creatorName
-        : '';
+          it.creatorName && it.creatorName != 'undefined'
+            ? it.creatorName
+            : '';
       }
-      _amount = (it.action == 'sent' ? '-' : '') + (amount /1e8).toFixed(8);
+      _amount = (it.action == 'sent' ? '-' : '') + (amount / 1e8).toFixed(8);
       _note = it.message || '';
       _comment = it.note ? it.note.body : '';
 
       if (it.action == 'moved')
-        _note += ' Moved:' + (it.amount /1e8).toFixed(8);
+        _note += ' Moved:' + (it.amount / 1e8).toFixed(8);
 
       csvContent.push({
         Date: formatDate(it.time * 1000),
@@ -104,77 +104,77 @@ if (program.format == 'csv') {
     return ret;
   };
 } else if (program.format == 'json') {
-} else if (program.format) { 
+} else if (program.format) {
   utils.die('Unknown format ' + program.format);
 }
 
 
-var allTxs=[];
+var allTxs = [];
 
 utils.getClient(program, { mustExist: true }, function (client) {
- async.doWhilst(
-   function(cb) {
-     client.getTxHistory({
-       skip: skip,
-       limit: page+ 1,
-       includeExtendedInfo: program.info,
-     }, function(err, txs) {
-       if (err) return cb(err);
+  async.doWhilst(
+    function (cb) {
+      client.getTxHistory({
+        skip: skip,
+        limit: page + 1,
+        includeExtendedInfo: program.info,
+      }, function (err, txs) {
+        if (err) return cb(err);
 
-       if (_.isEmpty(txs))
-        return;
+        if (_.isEmpty(txs))
+          return;
 
-       got =  txs.length;
-       if (got > page) {
-         txs.pop();
-       }
+        got = txs.length;
+        if (got > page) {
+          txs.pop();
+        }
 
-       if (program.output) {
-         allTxs = allTxs.concat(txs);
-         fs.writeFile(program.output,converter(allTxs), {
-           encoding: 'utf8'
-         }, function(err) {
-           if (err) console.error(err);
-           console.warn('Output file updated')
-         });
-       } else {
-         _.each(txs, function(tx) {
-           var time = moment(tx.time * 1000).fromNow();
-           var amount = utils.renderAmount(tx.amount);
-           var confirmations = tx.confirmations || 0;
-           var proposal = tx.proposalId ? '["' + tx.message + '" by ' + tx.creatorName + '] ' : '';
-           var direction;
-           switch (tx.action) {
-             case 'received':
-               direction = '<=';
-               break;
-             case 'moved':
-               direction = '==';
-               break;
-             case 'sent':
-               direction = '=>';
-               break;
-             default:
-               direction = tx.action;
-               break;
-           }
-           console.log("\t%s: %s %s %s %s(%s confirmations)", time, direction, tx.action, amount, proposal, confirmations);
-         });
-       }
-       return cb();
-     });
-   },
-   function() {
-     total = total + got;
-     var cont = got > page && (!limit || total < limit);
-     if (cont) {
-       skip+= page;
-       console.warn('* Skip:', skip);
-     }
-     return cont;
-   },
-   function (err) {
-     if (err) console.log(err);
-   }
- );
+        if (program.output) {
+          allTxs = allTxs.concat(txs);
+          fs.writeFile(program.output, converter(allTxs), {
+            encoding: 'utf8'
+          }, function (err) {
+            if (err) console.error(err);
+            console.warn('Output file updated')
+          });
+        } else {
+          _.each(txs, function (tx) {
+            var time = moment(tx.time * 1000).fromNow();
+            var amount = utils.renderAmount(tx.amount);
+            var confirmations = tx.confirmations || 0;
+            var proposal = tx.proposalId ? '["' + tx.message + '" by ' + tx.creatorName + '] ' : '';
+            var direction;
+            switch (tx.action) {
+              case 'received':
+                direction = '<=';
+                break;
+              case 'moved':
+                direction = '==';
+                break;
+              case 'sent':
+                direction = '=>';
+                break;
+              default:
+                direction = tx.action;
+                break;
+            }
+            console.log("\t%s: %s %s %s %s(%s confirmations)", time, direction, tx.action, amount, proposal, confirmations);
+          });
+        }
+        return cb();
+      });
+    },
+    function () {
+      total = total + got;
+      var cont = got > page && (!limit || total < limit);
+      if (cont) {
+        skip += page;
+        console.warn('* Skip:', skip);
+      }
+      return cont;
+    },
+    function (err) {
+      if (err) console.log(err);
+    }
+  );
 });

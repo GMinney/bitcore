@@ -27,14 +27,14 @@ function PongMessage(arg, options) {
 }
 inherits(PongMessage, Message);
 
-PongMessage.prototype.setPayload = function(payload) {
+PongMessage.prototype.setPayload = function (payload) {
   var parser = new BufferReader(payload);
   this.nonce = parser.read(8);
 
   utils.checkFinished(parser);
 };
 
-PongMessage.prototype.getPayload = function() {
+PongMessage.prototype.getPayload = function () {
   return this.nonce;
 };
 

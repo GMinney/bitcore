@@ -184,9 +184,9 @@ describe('Utils', () => {
         }],
         expected: '12 345,67899999',
       }, {
-          args: [104236872412, 'eth'],
-          expected: '0.00000010',
-        }
+        args: [104236872412, 'eth'],
+        expected: '0.00000010',
+      }
       ];
 
       _.each(cases, (testCase) => {

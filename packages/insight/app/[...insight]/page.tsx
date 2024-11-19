@@ -16,7 +16,7 @@ export default function Insight() {
   const colorScheme = theme === 'dark' ? ThoughtDarkTheme : ThoughtLightTheme;
   nProgress.configure({ showSpinner: false });
   return (
-      <NoSSR>
+    <NoSSR>
       <ThemeProvider theme={colorScheme}>
         <GlobalStyles />
 
@@ -26,9 +26,9 @@ export default function Insight() {
           }}>
           <Body />
         </SWRConfig>
-        
+
       </ThemeProvider>
-      </NoSSR>
+    </NoSSR>
   );
 }
 

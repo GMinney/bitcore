@@ -245,7 +245,7 @@ var idProperty = {
   /**
    * @returns {string} - The big endian hash buffer of the header
    */
-  get: function() {
+  get: function () {
     if (!this._id) {
       this._id = BufferReader(this._getHash()).readReverse().toString('hex');
     }

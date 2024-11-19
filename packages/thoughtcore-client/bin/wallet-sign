@@ -47,7 +47,7 @@ const main = async () => {
       console.log(JSON.stringify(signedTx));
     }
     if (txfile) {
-      const readStream = fs.createReadStream(txfile, {flags: 'r', encoding: 'utf8'});
+      const readStream = fs.createReadStream(txfile, { flags: 'r', encoding: 'utf8' });
       readStream
         .pipe(StreamUtil.jsonlBufferToObjectMode()).on('error', console.error)
         .pipe(StreamUtil.signTxStream(wallet, encryptedKeys, utxos, thoughtCorePassword)).on('error', console.error)

@@ -16,9 +16,9 @@ function FilterclearMessage(arg, options) {
 }
 inherits(FilterclearMessage, Message);
 
-FilterclearMessage.prototype.setPayload = function() {};
+FilterclearMessage.prototype.setPayload = function () { };
 
-FilterclearMessage.prototype.getPayload = function() {
+FilterclearMessage.prototype.getPayload = function () {
   return BufferUtil.EMPTY_BUFFER;
 };
 

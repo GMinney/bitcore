@@ -69,7 +69,7 @@ Storage.start()
       await wait(250);
       txs = await TransactionStorage.collection.find({ chain, network: oldNetwork }).project({ _id: 1 }).limit(batchSize).toArray()
     }
-    
+
     console.log(`Updating ${chain} ${oldNetwork} => ${newNetwork} blocks in 10 seconds...`);
     !quit && await wait(10000);
     console.log(`Updating ${chain} ${oldNetwork} blocks...`);

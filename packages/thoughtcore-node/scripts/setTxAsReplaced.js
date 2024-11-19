@@ -49,7 +49,7 @@ Storage.start()
       console.log('No tx found for txid.');
       return;
     }
-    
+
     if (tx.replacedByTxid) {
       console.log('Tx already has replacement txid: ' + tx.replacedByTxid);
       if (!force) {
@@ -62,7 +62,7 @@ Storage.start()
       console.log('Replacement tx not found for replacementTxid');
       return;
     }
-    
+
     if (real) {
       const res = await TransactionStorage.collection.updateOne(
         { chain, network, txid },

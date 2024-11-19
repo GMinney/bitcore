@@ -22,7 +22,7 @@ module.exports = [{
   message: 'Invalid network: must be "livenet" or "testnet", got {0}'
 }, {
   name: 'InvalidArgument',
-  message: function() {
+  message: function () {
     return 'Invalid Argument' + (arguments[0] ? (': ' + arguments[0]) : '') +
       (arguments[1] ? (' Documentation: ' + docsURL + arguments[1]) : '');
   }
@@ -31,7 +31,7 @@ module.exports = [{
   message: 'Abstract Method Invocation: {0}'
 }, {
   name: 'InvalidArgumentType',
-  message: function() {
+  message: function () {
     return 'Invalid Argument for ' + arguments[2] + ', expected ' + arguments[1] + ' but got ' + typeof arguments[0];
   }
 }, {
@@ -69,7 +69,7 @@ module.exports = [{
     }, {
       name: 'BlockHeightOutOfRange',
       message: 'Block Height can only be between 0 and 65535'
-    } , {
+    }, {
       name: 'LockTimeRange',
       message: 'Seconds needs to be more that 0 and less that 33553920'
     }

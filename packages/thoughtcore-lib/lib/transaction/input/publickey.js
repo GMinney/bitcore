@@ -30,7 +30,7 @@ inherits(PublicKeyInput, Input);
  * @param {String} signingMethod DEPRECATED - method used to sign input - 'ecdsa' or 'schnorr'
  * @return {Array} of objects that can be
  */
-PublicKeyInput.prototype.getSignatures = function(transaction, privateKey, index, sigtype, hashData, signingMethod) {
+PublicKeyInput.prototype.getSignatures = function (transaction, privateKey, index, sigtype, hashData, signingMethod) {
   $.checkState(this.output instanceof Output);
   sigtype = sigtype || Signature.SIGHASH_ALL;
   signingMethod = signingMethod || 'ecdsa'; // unused. Keeping for consistency with other libs
@@ -58,7 +58,7 @@ PublicKeyInput.prototype.getSignatures = function(transaction, privateKey, index
  * @param {String} signingMethod - method used to sign - 'ecdsa' or 'schnorr' (future signing method)
  * @return {PublicKeyInput} this, for chaining
  */
-PublicKeyInput.prototype.addSignature = function(transaction, signature, signingMethod) {
+PublicKeyInput.prototype.addSignature = function (transaction, signature, signingMethod) {
   $.checkState(this.isValidSignature(transaction, signature, signingMethod), 'Signature is invalid');
   this.setScript(Script.buildPublicKeyIn(
     signature.signature.toDER(),
@@ -71,7 +71,7 @@ PublicKeyInput.prototype.addSignature = function(transaction, signature, signing
  * Clear the input's signature
  * @return {PublicKeyHashInput} this, for chaining
  */
-PublicKeyInput.prototype.clearSignatures = function() {
+PublicKeyInput.prototype.clearSignatures = function () {
   this.setScript(Script.empty());
   return this;
 };
@@ -80,13 +80,13 @@ PublicKeyInput.prototype.clearSignatures = function() {
  * Query whether the input is signed
  * @return {boolean}
  */
-PublicKeyInput.prototype.isFullySigned = function() {
+PublicKeyInput.prototype.isFullySigned = function () {
   return this.script.isPublicKeyIn();
 };
 
 PublicKeyInput.SCRIPT_MAX_SIZE = 73; // sigsize (1 + 72)
 
-PublicKeyInput.prototype._estimateSize = function() {
+PublicKeyInput.prototype._estimateSize = function () {
   return this._getBaseSize() + PublicKeyInput.SCRIPT_MAX_SIZE;
 };
 

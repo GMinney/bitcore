@@ -28,7 +28,7 @@ export class BaseModule implements IService {
       Libs: typeof Libs;
       Verification: typeof Verification;
     } = { P2P, Storage, Event, Api, Config, CSP: ChainStateProvider, Libs, Verification }
-  ) {}
+  ) { }
 
   async start() {
     for (const service of this.internalServices) {

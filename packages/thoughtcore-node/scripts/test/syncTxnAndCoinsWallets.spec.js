@@ -8,29 +8,29 @@ const { TransactionStorage } = require('../../build/src/models/transaction');
 const { CoinStorage } = require('../../build/src/models/coin');
 
 
-describe('syncTxnAndCoinsWallets', function() {
+describe('syncTxnAndCoinsWallets', function () {
   this.timeout(20000);
 
   const DB_NAME = 'thoughtcore_mocha_scripts';
-  before(async function() {
+  before(async function () {
     if (!Storage.connected) {
       await Storage.start({ dbName: DB_NAME });
     }
-    
+
     await TransactionStorage.collection.deleteMany({});
     await CoinStorage.collection.deleteMany({});
 
     await setupDb();
   });
 
-  after(async function() {
+  after(async function () {
     if (Storage.connected) {
       await Storage.stop();
     }
   });
 
-  it('should add wallets to txns from coins', async function() {
-    const buf = execSync(__dirname + '/../syncTxnAndCoinsWallets.js --chain THT --network mainnet --startHeight 784431 --endHeight 784432 --no-dry --no-log-file', { env: { ...process.env, DB_NAME }});
+  it('should add wallets to txns from coins', async function () {
+    const buf = execSync(__dirname + '/../syncTxnAndCoinsWallets.js --chain THT --network mainnet --startHeight 784431 --endHeight 784432 --no-dry --no-log-file', { env: { ...process.env, DB_NAME } });
 
     for (const t of txnsAndCoins) {
       const tx = await TransactionStorage.collection.findOne({ txid: t.txid });
@@ -87,7 +87,7 @@ const txnsAndCoins = [
     "outputCount": 2,
     "value": 6570756,
     "wallets": [wallets[0]],
-  
+
     COINS: [
       {
         "_id": "64384b2f4d124e9051827d7b",
@@ -153,7 +153,7 @@ const txnsAndCoins = [
     "outputCount": 2,
     "value": 168600724,
     "wallets": [],
-  
+
     COINS: [
       {
         "_id": "64348de24657342b7081ba6b",
@@ -219,7 +219,7 @@ const txnsAndCoins = [
     "outputCount": 2,
     "value": 635151892,
     "wallets": [],
-  
+
     COINS: [
       {
         "_id": "64384bb94d124e905184eb15",

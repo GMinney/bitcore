@@ -177,7 +177,7 @@ export class EVMP2pWorker extends BaseP2PWorker<IEVMBlock> {
           );
         }
         disconnected = !connected;
-      } catch (e) {}
+      } catch (e) { }
       await wait(2000);
     }
   }

@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var program = require('commander');
-var utils  = require('./cli-utils');
+var utils = require('./cli-utils');
 program = utils.configureCommander(program);
 
 program
@@ -11,7 +11,7 @@ program
 
 var args = program.args;
 utils.getClient(program, { mustExist: true }, function (client) {
-  client.getStatus({}, function(err, res) {
+  client.getStatus({}, function (err, res) {
     utils.die(err);
 
     var x = res.wallet;
@@ -21,11 +21,11 @@ utils.getClient(program, { mustExist: true }, function (client) {
       console.log('  Missing copayers:', x.n - x.copayers.length);
       console.log('  Wallet secret:', x.secret);
     }
-    console.log('* Copayers:', _.map(x.copayers,'name').join(', '));
+    console.log('* Copayers:', _.map(x.copayers, 'name').join(', '));
 
 
     if (program.verbose) {
-        console.log('* Wallet Raw Data:', x);
+      console.log('* Wallet Raw Data:', x);
     }
 
     var x = res.balance;

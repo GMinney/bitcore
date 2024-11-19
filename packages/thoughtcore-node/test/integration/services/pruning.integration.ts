@@ -10,7 +10,7 @@ import { resetDatabase } from '../../helpers';
 import { intAfterHelper, intBeforeHelper } from '../../helpers/integration';
 import { RPC, RPCTransaction } from '../../../src/rpc';
 
-describe('Pruning Service', function() {
+describe('Pruning Service', function () {
   const suite = this;
   this.timeout(30000);
   const sandbox = sinon.createSandbox();

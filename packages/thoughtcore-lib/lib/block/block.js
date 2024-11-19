@@ -54,7 +54,7 @@ Block._from = function _from(arg) {
  */
 Block._fromObject = function _fromObject(data) {
   var transactions = [];
-  data.transactions.forEach(function(tx) {
+  data.transactions.forEach(function (tx) {
     if (tx instanceof Transaction) {
       transactions.push(tx);
     } else {
@@ -140,7 +140,7 @@ Block.fromRawBlock = function fromRawBlock(data) {
  */
 Block.prototype.toObject = Block.prototype.toJSON = function toObject() {
   var transactions = [];
-  this.transactions.forEach(function(tx) {
+  this.transactions.forEach(function (tx) {
     transactions.push(tx.toObject());
   });
   return {
@@ -245,7 +245,7 @@ Block.prototype.validMerkleRoot = function validMerkleRoot() {
 /**
  * @returns {Buffer} - The little endian hash buffer of the header
  */
-Block.prototype._getHash = function() {
+Block.prototype._getHash = function () {
   return this.header._getHash();
 };
 
@@ -255,7 +255,7 @@ var idProperty = {
   /**
    * @returns {string} - The big endian hash buffer of the header
    */
-  get: function() {
+  get: function () {
     if (!this._id) {
       this._id = this.header.id;
     }

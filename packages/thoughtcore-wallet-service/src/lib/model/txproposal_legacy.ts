@@ -117,7 +117,7 @@ export class TxProposalLegacy {
     x.txid = obj.txid;
     x.broadcastedOn = obj.broadcastedOn;
     x.inputPaths = obj.inputPaths;
-    x.actions = _.map(obj.actions, function(action) {
+    x.actions = _.map(obj.actions, function (action) {
       return TxProposalAction.fromObj(action);
     });
     x.outputOrder = obj.outputOrder;
@@ -161,7 +161,7 @@ export class TxProposalLegacy {
 
   getTotalAmount() {
     if (this.type == TxProposalLegacy.Types.MULTIPLEOUTPUTS || this.type == TxProposalLegacy.Types.EXTERNAL) {
-      return _.map(this.outputs, 'amount').reduce(function(total, n) {
+      return _.map(this.outputs, 'amount').reduce(function (total, n) {
         return total + n;
       }, 0);
     } else {

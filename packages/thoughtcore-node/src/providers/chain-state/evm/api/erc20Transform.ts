@@ -14,7 +14,7 @@ export class Erc20RelatedFilterTransform extends TransformWithEventPipe {
       // Get all effects where contractAddress is tokenAddress
       const tokenRelatedInternalTxs = tx.effects.filter(
         (effect: any) => effect.contractAddress === this.tokenAddress
-        );
+      );
 
       // Create a tx object for each erc20 transfer
       for (let internalTx of tokenRelatedInternalTxs) {
@@ -29,7 +29,7 @@ export class Erc20RelatedFilterTransform extends TransformWithEventPipe {
         _tx.callStack = internalTx.callStack;
         this.push(_tx);
       }
-    } 
-    return done(); 
+    }
+    return done();
   }
 }

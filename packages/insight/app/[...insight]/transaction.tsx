@@ -1,7 +1,7 @@
 'use client';
 
-import {getApiRoot, getFormattedDate, normalizeParams} from '@/lib/utilities/helper-methods';
-import {fetcher} from '@/api/api';
+import { getApiRoot, getFormattedDate, normalizeParams } from '@/lib/utilities/helper-methods';
+import { fetcher } from '@/api/api';
 import TransactionSummary from '@/components/transaction-summary';
 import TransactionSummaryEth from '@/components/transaction-summary-eth';
 import TransactionDetailsEth from '@/components/transaction-details-eth';
@@ -10,27 +10,27 @@ import CopyText from '@/components/copy-text';
 import Info from '@/components/info';
 import SupCurrencyLogo from '@/components/icons/sup-currency-logo';
 
-import {MainTitle, SecondaryTitle} from '@/assets/styles/titles';
-import {Tile, TileDescription} from '@/assets/styles/tile';
-import {DisplayFlex, ConfirmationLabel} from '@/assets/styles/global';
-import {TransactionBodyCol, TransactionTileBody} from '@/assets/styles/transaction';
-import {motion} from 'framer-motion';
-import {routerFadeIn} from '@/lib/utilities/animations';
-import {Link, useNavigate, useParams, useSearchParams} from 'react-router-dom';
-import {useAppDispatch} from '@/lib/utilities/hooks';
-import React, {useEffect, useState} from 'react';
-import {changeCurrency, changeNetwork} from '@/lib/store/app.actions';
+import { MainTitle, SecondaryTitle } from '@/assets/styles/titles';
+import { Tile, TileDescription } from '@/assets/styles/tile';
+import { DisplayFlex, ConfirmationLabel } from '@/assets/styles/global';
+import { TransactionBodyCol, TransactionTileBody } from '@/assets/styles/transaction';
+import { motion } from 'framer-motion';
+import { routerFadeIn } from '@/lib/utilities/animations';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useAppDispatch } from '@/lib/utilities/hooks';
+import React, { useEffect, useState } from 'react';
+import { changeCurrency, changeNetwork } from '@/lib/store/app.actions';
 import nProgress from 'nprogress';
 import ConfirmedWav from '@/assets/sounds/confirmed.wav';
 import NotConfirmedWav from '@/assets/sounds/notConfirmed.wav';
-import {playSoundEffect} from '@/lib/utilities/sound';
+import { playSoundEffect } from '@/lib/utilities/sound';
 
 
 const TransactionHash: React.FC = () => {
   const navigate = useNavigate();
-  const params = useParams<{currency: string; network: string; tx: string}>();
-  const {tx} = params;
-  let {currency, network} = params;
+  const params = useParams<{ currency: string; network: string; tx: string }>();
+  const { tx } = params;
+  let { currency, network } = params;
   const [isLoading, setIsLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const refvoutParam = searchParams.get('refVout');
@@ -75,9 +75,9 @@ const TransactionHash: React.FC = () => {
       fetcher(`${baseUrl}/tx/${tx}/coins`),
     ])
       .then(([_transaction, _tip, _coins]) => {
-        const {height} = _tip;
-        const {blockHeight, coinbase} = _transaction;
-        const {inputs, outputs} = _coins;
+        const { height } = _tip;
+        const { blockHeight, coinbase } = _transaction;
+        const { inputs, outputs } = _coins;
 
         _transaction.inputs = inputs;
         _transaction.outputs = outputs;
@@ -102,7 +102,7 @@ const TransactionHash: React.FC = () => {
     return () => {
       clearInterval(confInterval as NodeJS.Timeout);
       confInterval = null;
-    };  
+    };
   }, [network, currency, tx]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -125,8 +125,8 @@ const TransactionHash: React.FC = () => {
         fetcher(`${baseUrl}/block/tip`)
       ])
         .then(([_txRefresh, _newTip]) => {
-          const {blockHeight} = _txRefresh;
-          const {height} = _newTip;
+          const { blockHeight } = _txRefresh;
+          const { height } = _newTip;
           const confirmations = blockHeight > 0 ? height - blockHeight + 1 : blockHeight;
           if (confirmations !== -1) { // conf status has changed from unconfirmed
             clearInterval(confInterval as NodeJS.Timeout);
@@ -145,7 +145,7 @@ const TransactionHash: React.FC = () => {
             setTransaction(transaction);
           }
         })
-        .catch(() => {/**/})
+        .catch(() => {/**/ })
         .finally(() => {
           setIsLoading(false);
           nProgress.done();
@@ -162,7 +162,7 @@ const TransactionHash: React.FC = () => {
 
           {transaction && currency && network ? (
             <motion.div variants={routerFadeIn} animate='animate' initial='initial'>
-              <MainTitle style={{marginBottom: 8}}>
+              <MainTitle style={{ marginBottom: 8 }}>
                 Transaction
                 <SupCurrencyLogo currency={currency} />
               </MainTitle>
@@ -189,11 +189,10 @@ const TransactionHash: React.FC = () => {
                   />
                 ) : (
                   <Info
-                    message={`This transaction was replaced by another transaction that ${
-                      transaction.chain === 'ETH'
-                        ? 'used the same nonce'
-                        : 'spent some of it\'s inputs'
-                    }.`}
+                    message={`This transaction was replaced by another transaction that ${transaction.chain === 'ETH'
+                      ? 'used the same nonce'
+                      : 'spent some of it\'s inputs'
+                      }.`}
                     type={'error'}
                   />
                 ))

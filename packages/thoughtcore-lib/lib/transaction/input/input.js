@@ -15,11 +15,11 @@ var MAXINT = 0xffffffff; // Math.pow(2, 32) - 1;
 var DEFAULT_SEQNUMBER = MAXINT;
 var DEFAULT_LOCKTIME_SEQNUMBER = MAXINT - 1;
 var DEFAULT_RBF_SEQNUMBER = MAXINT - 2;
-const SEQUENCE_LOCKTIME_DISABLE_FLAG =  Math.pow(2,31); // (1 << 31);
-const SEQUENCE_LOCKTIME_TYPE_FLAG = Math.pow(2,22); // (1 << 22);
+const SEQUENCE_LOCKTIME_DISABLE_FLAG = Math.pow(2, 31); // (1 << 31);
+const SEQUENCE_LOCKTIME_TYPE_FLAG = Math.pow(2, 22); // (1 << 22);
 const SEQUENCE_LOCKTIME_MASK = 0xffff;
 const SEQUENCE_LOCKTIME_GRANULARITY = 512; // 512 seconds
-const SEQUENCE_BLOCKDIFF_LIMIT = Math.pow(2,16)-1; // 16 bits 
+const SEQUENCE_BLOCKDIFF_LIMIT = Math.pow(2, 16) - 1; // 16 bits 
 
 
 function Input(params) {
@@ -40,7 +40,7 @@ Input.SEQUENCE_LOCKTIME_TYPE_FLAG = SEQUENCE_LOCKTIME_TYPE_FLAG;
 Object.defineProperty(Input.prototype, 'script', {
   configurable: false,
   enumerable: true,
-  get: function() {
+  get: function () {
     if (this.isNull()) {
       return null;
     }
@@ -52,13 +52,13 @@ Object.defineProperty(Input.prototype, 'script', {
   }
 });
 
-Input.fromObject = function(obj) {
+Input.fromObject = function (obj) {
   $.checkArgument(_.isObject(obj));
   var input = new Input();
   return input._fromObject(obj);
 };
 
-Input.prototype._fromObject = function(params) {
+Input.prototype._fromObject = function (params) {
   var prevTxId;
   if (typeof params.prevTxId === 'string' && JSUtil.isHexa(params.prevTxId)) {
     prevTxId = Buffer.from(params.prevTxId, 'hex');
@@ -97,7 +97,7 @@ Input.prototype.toObject = Input.prototype.toJSON = function toObject() {
   return obj;
 };
 
-Input.fromBufferReader = function(br) {
+Input.fromBufferReader = function (br) {
   var input = new Input();
   input.prevTxId = br.readReverse(32);
   input.outputIndex = br.readUInt32LE();
@@ -108,7 +108,7 @@ Input.fromBufferReader = function(br) {
   return input;
 };
 
-Input.prototype.toBufferWriter = function(writer) {
+Input.prototype.toBufferWriter = function (writer) {
   if (!writer) {
     writer = new BufferWriter();
   }
@@ -121,7 +121,7 @@ Input.prototype.toBufferWriter = function(writer) {
   return writer;
 };
 
-Input.prototype.setScript = function(script) {
+Input.prototype.setScript = function (script) {
   this._script = null;
   if (script instanceof Script) {
     this._script = script;
@@ -155,52 +155,52 @@ Input.prototype.setScript = function(script) {
  *     public key associated with the private key provided
  * @abstract
  */
-Input.prototype.getSignatures = function() {
+Input.prototype.getSignatures = function () {
   throw new errors.AbstractMethodInvoked(
     'Trying to sign unsupported output type (only P2PKH and P2SH multisig inputs are supported)' +
     ' for input: ' + JSON.stringify(this)
   );
 };
 
-Input.prototype.getNotionsBuffer = function() {
+Input.prototype.getNotionsBuffer = function () {
   $.checkState(this.output instanceof Output);
   $.checkState(this.output._notionsBN);
   return new BufferWriter().writeUInt64LEBN(this.output._notionsBN).toBuffer();
 };
 
 
-Input.prototype.isFullySigned = function() {
+Input.prototype.isFullySigned = function () {
   throw new errors.AbstractMethodInvoked('Input#isFullySigned');
 };
 
-Input.prototype.isFinal = function() {
+Input.prototype.isFinal = function () {
   return this.sequenceNumber !== Input.MAXINT;
 };
 
-Input.prototype.addSignature = function() {
+Input.prototype.addSignature = function () {
   throw new errors.AbstractMethodInvoked('Input#addSignature');
 };
 
-Input.prototype.clearSignatures = function() {
+Input.prototype.clearSignatures = function () {
   throw new errors.AbstractMethodInvoked('Input#clearSignatures');
 };
 
-Input.prototype.hasWitnesses = function() {
+Input.prototype.hasWitnesses = function () {
   if (this.witnesses && this.witnesses.length > 0) {
     return true;
   }
   return false;
 };
 
-Input.prototype.getWitnesses = function() {
+Input.prototype.getWitnesses = function () {
   return this.witnesses;
 };
 
-Input.prototype.setWitnesses = function(witnesses) {
+Input.prototype.setWitnesses = function (witnesses) {
   this.witnesses = witnesses;
 };
 
-Input.prototype.isValidSignature = function(transaction, signature, signingMethod) {
+Input.prototype.isValidSignature = function (transaction, signature, signingMethod) {
   signingMethod = signingMethod || 'ecdsa'; // unused. Keeping for consistency with other libs
   // FIXME: Refactor signature so this is not necessary
   signature.signature.nhashtype = signature.sigtype;
@@ -216,16 +216,16 @@ Input.prototype.isValidSignature = function(transaction, signature, signingMetho
 /**
  * @returns true if this is a coinbase input (represents no input)
  */
-Input.prototype.isNull = function() {
+Input.prototype.isNull = function () {
   return this.prevTxId.toString('hex') === '0000000000000000000000000000000000000000000000000000000000000000' &&
     this.outputIndex === 0xffffffff;
 };
 
-Input.prototype._estimateSize = function() {
+Input.prototype._estimateSize = function () {
   return this.toBufferWriter().toBuffer().length;
 };
 
-Input.prototype._getBaseSize = function() {
+Input.prototype._getBaseSize = function () {
   return 32 + 4 + 4; // outpoint (32 + 4) + sequence (4)
 };
 
@@ -237,15 +237,15 @@ Input.prototype._getBaseSize = function() {
  * @param {Number} time in seconds
  * @return {Transaction} this
  */
-Input.prototype.lockForSeconds = function(seconds) {
+Input.prototype.lockForSeconds = function (seconds) {
   $.checkArgument(_.isNumber(seconds));
-  if (seconds < 0 ||  seconds >= SEQUENCE_LOCKTIME_GRANULARITY * SEQUENCE_LOCKTIME_MASK) {
+  if (seconds < 0 || seconds >= SEQUENCE_LOCKTIME_GRANULARITY * SEQUENCE_LOCKTIME_MASK) {
     throw new errors.Transaction.Input.LockTimeRange();
   }
   seconds = parseInt(Math.floor(seconds / SEQUENCE_LOCKTIME_GRANULARITY));
 
   // SEQUENCE_LOCKTIME_DISABLE_FLAG = 1 
-  this.sequenceNumber = seconds | SEQUENCE_LOCKTIME_TYPE_FLAG ;
+  this.sequenceNumber = seconds | SEQUENCE_LOCKTIME_TYPE_FLAG;
   return this;
 };
 
@@ -255,14 +255,14 @@ Input.prototype.lockForSeconds = function(seconds) {
  * @param {Number} height
  * @return {Transaction} this
  */
-Input.prototype.lockUntilBlockHeight = function(heightDiff) {
+Input.prototype.lockUntilBlockHeight = function (heightDiff) {
   $.checkArgument(_.isNumber(heightDiff));
   if (heightDiff < 0 || heightDiff >= SEQUENCE_BLOCKDIFF_LIMIT) {
     throw new errors.Transaction.Input.BlockHeightOutOfRange();
   }
   // SEQUENCE_LOCKTIME_TYPE_FLAG = 0
   // SEQUENCE_LOCKTIME_DISABLE_FLAG = 0
-  this.sequenceNumber = heightDiff ;
+  this.sequenceNumber = heightDiff;
   return this;
 };
 
@@ -274,7 +274,7 @@ Input.prototype.lockUntilBlockHeight = function(heightDiff) {
  *  if is set to block height lock, returns a block height (number)
  *  else it returns a Date object.
  */
-Input.prototype.getLockTime = function() {
+Input.prototype.getLockTime = function () {
   if (this.sequenceNumber & SEQUENCE_LOCKTIME_DISABLE_FLAG) {
     return null;
   }

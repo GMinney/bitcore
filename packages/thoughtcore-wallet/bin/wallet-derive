@@ -10,7 +10,7 @@ program
   .usage('[options] <path>')
   .description('Derive from an arbitrary path from a private key.');
 
-program.on('--help', function() {
+program.on('--help', function () {
   console.log('  Examples:');
   console.log('');
   console.log('    $ wallet-derive "m/44\'/0\'/0\'"');
@@ -33,7 +33,7 @@ function getExtendedPublicKey(client, path) {
 
 utils.getClient(program, {
   mustExist: true
-}, function(client) {
+}, function (client) {
   var xpub = getExtendedPublicKey(client, path);
   var pub = new Thoughtcore.HDPublicKey(xpub).publicKey;
   var address = pub.toAddress().toString();

@@ -15,13 +15,13 @@ var args = program.args;
 var txpid = args[0] || '';
 
 utils.getClient(program, { mustExist: true }, function (client, key, err) {
-  client.getTxProposals({}, function(err, txps) {
+  client.getTxProposals({}, function (err, txps) {
     if (err)
       utils.die(err);
 
     var txp = utils.findOneTxProposal(txps, txpid);
     let signatures = key.sign(client.getRootPath(), txp);
-    client.pushSignatures(txp, signatures, function(err, tx) {
+    client.pushSignatures(txp, signatures, function (err, tx) {
       utils.die(err);
       console.log('Transaction signed by you.');
     });

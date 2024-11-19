@@ -39,7 +39,7 @@ class Migration {
   }
 
   async endProcess() {
-    if (Storage.connected){
+    if (Storage.connected) {
       await Storage.stop();
     }
     process.exit();
@@ -65,8 +65,8 @@ class Migration {
         args[dryRunIdx + 1] == undefined || args[dryRunIdx + 1] == 'true'
           ? true
           : args[dryRunIdx + 1] == 'false'
-          ? false
-          : true;
+            ? false
+            : true;
     }
 
     const chainIdx = args.findIndex(i => i == '--chain');
@@ -132,7 +132,7 @@ class Migration {
         });
         isUnspent = !!coinData;
       } catch (e) {
-        if (e.message && e.message.match(`No info found for ${data.mintTxid}`)){
+        if (e.message && e.message.match(`No info found for ${data.mintTxid}`)) {
           // Coin must be spent or actually pending in mempool - do nothing
         } else {
           // Lets log the error in case it is config related
@@ -187,8 +187,8 @@ migration
   .catch(err => {
     console.error(err);
     migration.endProcess()
-    .catch(err => { 
-      console.error(err);
-      process.exit(1);
-    });
+      .catch(err => {
+        console.error(err);
+        process.exit(1);
+      });
   });

@@ -49,19 +49,19 @@ export class MultiThreadSync extends EventEmitter {
       chain: this.chain,
       isEVM: true, // Assuming this is an EVM-compatible chain
       host: providerConfig.host,
-      port: typeof providerConfig.port === 'number' ? providerConfig.port : 80, 
+      port: typeof providerConfig.port === 'number' ? providerConfig.port : 80,
       protocol: providerConfig.protocol,
       currencyConfig: {},
-      options: providerConfig.options || {}, 
-      dataType: providerConfig.dataType || 'realtime', 
-      rpcPort: '', 
-      user: '', 
-      rpcUser: '', 
-      pass: '', 
-      rpcPass: '', 
-      tokens: {} 
+      options: providerConfig.options || {},
+      dataType: providerConfig.dataType || 'realtime',
+      rpcPort: '',
+      user: '',
+      rpcUser: '',
+      pass: '',
+      rpcPass: '',
+      tokens: {}
     };
-    
+
     const rpc = new CryptoRpc(rpcConfig).get(this.chain);
     return rpc;
   }
@@ -104,8 +104,7 @@ export class MultiThreadSync extends EventEmitter {
         if (this.resolvingGaps) {
           logger.info(
             `${timestamp()} | Filling gaps... | Chain: ${chain} | Network: ${network} | On gap ${this.gapsLength -
-              this.syncQueue.length} of ${this.gapsLength} | Height: ${
-              this.syncQueue[0] ? this.syncQueue[0].toString().padStart(7) : this.syncHeight
+            this.syncQueue.length} of ${this.gapsLength} | Height: ${this.syncQueue[0] ? this.syncQueue[0].toString().padStart(7) : this.syncHeight
             }`
           );
         } else {
@@ -139,7 +138,7 @@ export class MultiThreadSync extends EventEmitter {
 
   threadMessageHandler(thread: Thread) {
     const self = this;
-    return function(msg) {
+    return function (msg) {
       logger.debug('Received sync thread message: ' + JSON.stringify(msg));
 
       switch (msg.message) {
@@ -165,7 +164,7 @@ export class MultiThreadSync extends EventEmitter {
     // If last block was found and there's more to sync
     if (gimmeAnotherBlock && moreBlocksToGive) {
       // If queue is empty, then !atTip must be true, so add next block to queue
-      if (this.syncQueue.length === 0) {   
+      if (this.syncQueue.length === 0) {
         this.addBlockToQueue(this.syncHeight++);
       }
       const blockNum = this.syncQueue.shift();
@@ -224,7 +223,7 @@ export class MultiThreadSync extends EventEmitter {
 
       thread.on('message', this.threadMessageHandler(thread));
 
-      thread.on('exit', function(code) {
+      thread.on('exit', function (code) {
         self.syncingThreads--;
         self.threads.splice(
           self.threads.findIndex(t => t.threadId === thread.threadId),

@@ -22,7 +22,7 @@ class Buffers {
   }
 }
 
-Buffers.prototype.skip = function(i) {
+Buffers.prototype.skip = function (i) {
   if (i === 0) {
     return;
   }

@@ -36,7 +36,7 @@ inherits(TaggedHash, BufferWriter);
  * as defined by BIP-340: SHA256(SHA256(tag), SHA256(tag), message)
  * @returns {Buffer}
  */
-TaggedHash.prototype.finalize = function() {
+TaggedHash.prototype.finalize = function () {
   return Buffer.from(Hash.sha256(this.toBuffer()));
 };
 
@@ -45,8 +45,8 @@ TaggedHash.prototype.finalize = function() {
  */
 Object.defineProperties(TaggedHash, {
   TAPSIGHASH: { get: () => new TaggedHash('TapSighash') },
-  TAPLEAF:    { get: () => new TaggedHash('TapLeaf') },
-  TAPBRANCH:  { get: () => new TaggedHash('TapBranch') }
+  TAPLEAF: { get: () => new TaggedHash('TapLeaf') },
+  TAPBRANCH: { get: () => new TaggedHash('TapBranch') }
 });
 
 module.exports = TaggedHash;

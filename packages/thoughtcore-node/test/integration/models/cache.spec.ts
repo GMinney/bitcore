@@ -6,7 +6,7 @@ import { intAfterHelper, intBeforeHelper } from '../../helpers/integration';
 import { EVMTransactionStorage } from '../../../src/providers/chain-state/evm/models/transaction';
 import { TEST_OP_ETH_TO_ETH1, TEST_OP_ETH_TO_ETH2, TEST_OP_ERC20_TO_ERC201, TEST_OP_ERC20_TO_ERC202, TEST_OP_ERC20Token_TO_ETH1, TEST_OP_ERC20Token_TO_ETH2, TEST_OP_ETH_TO_ERC201, TEST_OP_ETH_TO_ERC202, TEST_OP_TRANSFER_ERC20_TO_ERC201, TEST_OP_TRANSFER_ERC20_TO_ERC202 } from '../../data/test-ops';
 
-describe('Cache Model', function() {
+describe('Cache Model', function () {
   const key = 'key';
   const value = { hello: 'world' };
   const walletKey = 'wallet-key';
@@ -99,8 +99,8 @@ describe('Cache Model', function() {
     await CacheStorage.setGlobal(key2, value, CacheStorage.Times.Hour);
     await CacheStorage.setGlobal(otherKey, value, CacheStorage.Times.Hour);
 
-    await  EVMTransactionStorage.expireBalanceCache(op1);
-    await  EVMTransactionStorage.expireBalanceCache(op2);
+    await EVMTransactionStorage.expireBalanceCache(op1);
+    await EVMTransactionStorage.expireBalanceCache(op2);
 
     const got1 = await CacheStorage.getGlobal(key1);
     const got2 = await CacheStorage.getGlobal(key2);
@@ -128,8 +128,8 @@ describe('Cache Model', function() {
     const key1 = `getBalanceForAddress-${chain}-${network}-${address1.toLowerCase()}`;
     const key2 = `getBalanceForAddress-${chain}-${network}-${address2.toLowerCase()}`;
 
-    const op1 =  TEST_OP_TRANSFER_ERC20_TO_ERC201;
-    const op2 =  TEST_OP_TRANSFER_ERC20_TO_ERC202;
+    const op1 = TEST_OP_TRANSFER_ERC20_TO_ERC201;
+    const op2 = TEST_OP_TRANSFER_ERC20_TO_ERC202;
 
     await CacheStorage.setGlobal(keyToken1, value, CacheStorage.Times.Hour);
     await CacheStorage.setGlobal(keyToken2, value, CacheStorage.Times.Hour);
@@ -137,8 +137,8 @@ describe('Cache Model', function() {
     await CacheStorage.setGlobal(key2, value, CacheStorage.Times.Hour);
     await CacheStorage.setGlobal(otherKey, value, CacheStorage.Times.Hour);
 
-    await  EVMTransactionStorage.expireBalanceCache(op1);
-    await  EVMTransactionStorage.expireBalanceCache(op2);
+    await EVMTransactionStorage.expireBalanceCache(op1);
+    await EVMTransactionStorage.expireBalanceCache(op2);
 
     const gotToken1 = await CacheStorage.getGlobal(keyToken1);
     const gotToken2 = await CacheStorage.getGlobal(keyToken2);
@@ -167,16 +167,16 @@ describe('Cache Model', function() {
 
     const key = `getBalanceForAddress-${chain}-${network}-${address.toLowerCase()}`;
 
-     const op1 =  TEST_OP_ERC20_TO_ERC201;
-     const op2 =  TEST_OP_ERC20_TO_ERC202;
+    const op1 = TEST_OP_ERC20_TO_ERC201;
+    const op2 = TEST_OP_ERC20_TO_ERC202;
 
     await CacheStorage.setGlobal(keyToken1, value, CacheStorage.Times.Hour);
     await CacheStorage.setGlobal(keyToken2, value, CacheStorage.Times.Hour);
     await CacheStorage.setGlobal(key, value, CacheStorage.Times.Hour);
     await CacheStorage.setGlobal(otherKey, value, CacheStorage.Times.Hour);
 
-    await  EVMTransactionStorage.expireBalanceCache(op1);
-    await  EVMTransactionStorage.expireBalanceCache(op2);
+    await EVMTransactionStorage.expireBalanceCache(op1);
+    await EVMTransactionStorage.expireBalanceCache(op2);
 
     const gotToken1 = await CacheStorage.getGlobal(keyToken1);
     const gotToken2 = await CacheStorage.getGlobal(keyToken2);
@@ -198,15 +198,15 @@ describe('Cache Model', function() {
     const keyToken = `getBalanceForAddress-${chain}-${network}-${address.toLowerCase()}-${tokenAddress.toLowerCase()}`;
     const key = `getBalanceForAddress-${chain}-${network}-${address.toLowerCase()}`;
 
-     const op1 = TEST_OP_ERC20Token_TO_ETH1;
-     const op2 = TEST_OP_ERC20Token_TO_ETH2;
+    const op1 = TEST_OP_ERC20Token_TO_ETH1;
+    const op2 = TEST_OP_ERC20Token_TO_ETH2;
 
     await CacheStorage.setGlobal(keyToken, value, CacheStorage.Times.Hour);
     await CacheStorage.setGlobal(key, value, CacheStorage.Times.Hour);
     await CacheStorage.setGlobal(otherKey, value, CacheStorage.Times.Hour);
 
-    await  EVMTransactionStorage.expireBalanceCache(op1);
-    await  EVMTransactionStorage.expireBalanceCache(op2);
+    await EVMTransactionStorage.expireBalanceCache(op1);
+    await EVMTransactionStorage.expireBalanceCache(op2);
 
     const gotToken = await CacheStorage.getGlobal(keyToken);
     const got = await CacheStorage.getGlobal(key);
@@ -226,15 +226,15 @@ describe('Cache Model', function() {
     const keyToken = `getBalanceForAddress-${chain}-${network}-${address.toLowerCase()}-${tokenAddress.toLowerCase()}`;
     const key = `getBalanceForAddress-${chain}-${network}-${address.toLowerCase()}`;
 
-     const op1 = TEST_OP_ETH_TO_ERC201;
-     const op2 =  TEST_OP_ETH_TO_ERC202;
+    const op1 = TEST_OP_ETH_TO_ERC201;
+    const op2 = TEST_OP_ETH_TO_ERC202;
 
     await CacheStorage.setGlobal(keyToken, value, CacheStorage.Times.Hour);
     await CacheStorage.setGlobal(key, value, CacheStorage.Times.Hour);
     await CacheStorage.setGlobal(otherKey, value, CacheStorage.Times.Hour);
 
-    await  EVMTransactionStorage.expireBalanceCache(op1);
-    await  EVMTransactionStorage.expireBalanceCache(op2);
+    await EVMTransactionStorage.expireBalanceCache(op1);
+    await EVMTransactionStorage.expireBalanceCache(op2);
 
     const gotToken = await CacheStorage.getGlobal(keyToken);
     const got = await CacheStorage.getGlobal(key);

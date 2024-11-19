@@ -16,14 +16,14 @@ var { WalletService } = require('../ts_build/lib/server');
 
 
 
-describe('ExpressApp', function() {
-  beforeEach(()=>{
+describe('ExpressApp', function () {
+  beforeEach(() => {
     log.level = 'error';
     config.disableLogs = true;
   });
-  describe('#constructor', function() {
-    it('will set an express app', function() {
-      var {ExpressApp: TestExpressApp} = proxyquire('../ts_build/lib/expressapp', {});
+  describe('#constructor', function () {
+    it('will set an express app', function () {
+      var { ExpressApp: TestExpressApp } = proxyquire('../ts_build/lib/expressapp', {});
       var express = new TestExpressApp({
       });
       should.exist(express.app);
@@ -31,12 +31,12 @@ describe('ExpressApp', function() {
       should.exist(express.app.enable);
     });
   });
-  describe('#start', function() {
-    it('will listen at the specified port', function(done) {
+  describe('#start', function () {
+    it('will listen at the specified port', function (done) {
       var initialize = sinon.stub().callsArg(1);
-      var {ExpressApp: TestExpressApp} = proxyquire('../ts_build/lib/expressapp', {
+      var { ExpressApp: TestExpressApp } = proxyquire('../ts_build/lib/expressapp', {
         './server': {
-          WalletService : {
+          WalletService: {
             initialize: initialize,
             getServiceVersion: WalletService.getServiceVersion
           }
@@ -44,14 +44,14 @@ describe('ExpressApp', function() {
       });
       var app = new TestExpressApp();
       var options = {};
-      app.start(config, function(err) {
+      app.start(config, function (err) {
         should.not.exist(err);
         initialize.callCount.should.equal(1);
         done();
-      });           
+      });
     });
 
-    describe('Routes', function() {
+    describe('Routes', function () {
       var testPort = 3239;
       var testHost = 'http://127.0.0.1';
       var httpServer;
@@ -61,31 +61,31 @@ describe('ExpressApp', function() {
         });
         httpServer = http.Server(app.app);
 
-        app.start(config, function(err) {
+        app.start(config, function (err) {
           should.not.exist(err);
           httpServer.listen(testPort);
           done();
         });
       };
 
-      afterEach(function() {
+      afterEach(function () {
         httpServer.close();
       });
 
-      it('/v2/wallets', function(done) {
+      it('/v2/wallets', function (done) {
         var server = {
           getStatus: sinon.stub().callsArgWith(1, null, {}),
         };
-        var {ExpressApp: TestExpressApp} = proxyquire('../ts_build/lib/expressapp', {
+        var { ExpressApp: TestExpressApp } = proxyquire('../ts_build/lib/expressapp', {
           './server': {
-            WalletService:  {
+            WalletService: {
               initialize: sinon.stub().callsArg(1),
               getServiceVersion: WalletService.getServiceVersion,
               getInstanceWithAuth: sinon.stub().callsArgWith(1, null, server),
             }
           }
         });
-        start(TestExpressApp, function() {
+        start(TestExpressApp, function () {
           var requestOptions = {
             url: testHost + ':' + testPort + config.basePath + '/v2/wallets',
             headers: {
@@ -93,7 +93,7 @@ describe('ExpressApp', function() {
               'x-signature': 'signature'
             }
           };
-          request(requestOptions, function(err, res, body) {
+          request(requestOptions, function (err, res, body) {
             should.not.exist(err);
             should.exist(res.headers['x-service-version']);
             res.headers['x-service-version'].should.equal('bws-' + require('../package').version);
@@ -104,11 +104,11 @@ describe('ExpressApp', function() {
         });
       });
 
-      it('/v1/addresses', function(done) {
+      it('/v1/addresses', function (done) {
         var server = {
           getMainAddresses: sinon.stub().callsArgWith(1, null, {}),
         };
-        var {ExpressApp: TestExpressApp} = proxyquire('../ts_build/lib/expressapp', {
+        var { ExpressApp: TestExpressApp } = proxyquire('../ts_build/lib/expressapp', {
           './server': {
             WalletService: {
               initialize: sinon.stub().callsArg(1),
@@ -117,7 +117,7 @@ describe('ExpressApp', function() {
             }
           }
         });
-        start(TestExpressApp, function() {
+        start(TestExpressApp, function () {
           var requestOptions = {
             url: testHost + ':' + testPort + config.basePath + '/v1/addresses?limit=4&reverse=1',
             headers: {
@@ -125,7 +125,7 @@ describe('ExpressApp', function() {
               'x-signature': 'signature'
             }
           };
-          request(requestOptions, function(err, res, body) {
+          request(requestOptions, function (err, res, body) {
             should.not.exist(err);
             res.statusCode.should.equal(200);
             var args = server.getMainAddresses.getCalls()[0].args[0];
@@ -136,106 +136,106 @@ describe('ExpressApp', function() {
         });
       });
 
-  
-      it('latest-copay-version', function(done) {
 
-          var htmlString = {
-            "url": "https://api.github.com/repos/thoughtnetwork/wallet/releases/21158137",
-            "assets_url": "https://api.github.com/repos/thoughtnetwork/wallet/releases/21158137/assets",
-            "upload_url": "https://uploads.github.com/repos/thoughtnetwork/wallet/releases/21158137/assets{?name,label}",
-            "html_url": "https://github.com/thoughtnetwork/wallet/releases/tag/v8.2.2",
-            "id": 21158137,
-            "node_id": "MDc6UmVsZWFzZTIxMTU4MTM3",
-            "tag_name": "v8.2.2",
-            "target_commitish": "master",
-            "name": "v8.2.2",
-            "draft": false,
-            "author": {
-              "login": "cmgustavo",
-              "id": 237435,
-              "node_id": "MDQ6VXNlcjIzNzQzNQ==",
-              "avatar_url": "https://avatars3.githubusercontent.com/u/237435?v=4",
-              "gravatar_id": "",
-              "url": "https://api.github.com/users/cmgustavo",
-              "html_url": "https://github.com/cmgustavo",
-              "followers_url": "https://api.github.com/users/cmgustavo/followers",
-              "following_url": "https://api.github.com/users/cmgustavo/following{/other_user}",
-              "gists_url": "https://api.github.com/users/cmgustavo/gists{/gist_id}",
-              "starred_url": "https://api.github.com/users/cmgustavo/starred{/owner}{/repo}",
-              "subscriptions_url": "https://api.github.com/users/cmgustavo/subscriptions",
-              "organizations_url": "https://api.github.com/users/cmgustavo/orgs",
-              "repos_url": "https://api.github.com/users/cmgustavo/repos",
-              "events_url": "https://api.github.com/users/cmgustavo/events{/privacy}",
-              "received_events_url": "https://api.github.com/users/cmgustavo/received_events",
-              "type": "User",
-              "site_admin": false
-            },
-            "prerelease": false,
-            "created_at": "2019-10-29T14:09:01Z",
-            "published_at": "2019-11-01T19:50:37Z",
-            "assets": [
-          
-            ],
-            "tarball_url": "https://api.github.com/repos/thoughtnetwork/wallet/tarball/v7.1.1",
-            "zipball_url": "https://api.github.com/repos/thoughtnetwork/wallet/zipball/v7.1.1",
-            "body": "### Changelog\r\n\r\nNEW\r\n\r\n* ETH Testnet support\r\n* EUR Gift Cards\r\n* Export Key to another wallet as QR code\r\n\r\nBUG FIXES\r\n\r\n* Open app from ETH link (only Desktop)\r\n* Clear badge of pending notification (iOS)\r\n* UI issues on Settings Page\r\n* Send-max for top up cards\r\n\r\n### Download\r\n\r\n<table>\r\n<tbody>\r\n<tr>\r\n<td>App</td>\r\n<td>for Mac OS</td>\r\n<td>for Windows</td>\r\n<td>for Linux</td>\r\n</tr>\r\n<tr>\r\n<td>\r\n<a href=\"https://thoughtnetwork.com/wallet\" target=\"_blank\"><img src=\"https://user-images.githubusercontent.com/237435/48089088-68afa480-e1e2-11e8-83a8-361d0440528c.png\" alt=\"Thought\"></a>\r\n</td>\r\n<td>\r\n<a href=\"https://itunes.apple.com/us/app/thoughtnetwork/id1440200291?ls=1&mt=12\" target=\"_blank\"><img src=\"https://user-images.githubusercontent.com/237435/48092454-7ddd0100-e1eb-11e8-9e13-3fe80bba7f00.png\" alt=\"mac\" width=\"120\"></a>\r\n</td>\r\n<td>\r\n<a href=\"https://www.microsoft.com/store/apps/9NBR15SK4ZJV\" target=\"_blank\"><img src=\"https://user-images.githubusercontent.com/237435/48092465-82091e80-e1eb-11e8-9e06-36b36cd44021.png\" alt=\"windows\" width=\"120\"></a>\r\n</td>\r\n<td>\r\n<a href=\"https://snapcraft.io/thoughtnetwork\" target=\"_blank\"><img src=\"https://user-images.githubusercontent.com/237435/48092664-09ef2880-e1ec-11e8-94a2-184446cb7183.png\" alt=\"linux\" width=\"120\"></a>\r\n</td>\r\n</tr>\r\n<tr>\r\n<td>\r\n<a href=\"https://copay.io\" target=\"_blank\"><img src=\"https://user-images.githubusercontent.com/237435/48089097-6cdbc200-e1e2-11e8-9e54-363d54ae8fc6.png\" alt=\"Copay\"></a>\r\n</td>\r\n<td>\r\n<a href=\"https://itunes.apple.com/us/app/copay/id1440201813\" target=\"_blank\"><img src=\"https://user-images.githubusercontent.com/237435/48092454-7ddd0100-e1eb-11e8-9e13-3fe80bba7f00.png\" alt=\"mac\" width=\"120\"></a>\r\n</td>\r\n<td>\r\n<a href=\"https://www.microsoft.com/store/apps/9MZGT30HL9DF\" target=\"_blank\"><img src=\"https://user-images.githubusercontent.com/237435/48092465-82091e80-e1eb-11e8-9e06-36b36cd44021.png\" alt=\"windows\" width=\"120\"></a>\r\n</td>\r\n<td>\r\n<a href=\"https://snapcraft.io/copay\" target=\"_blank\"><img src=\"https://user-images.githubusercontent.com/237435/48092664-09ef2880-e1ec-11e8-94a2-184446cb7183.png\" alt=\"linux\" width=\"120\"></a>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>"
-          };
-          
-          
-          var server = {
-            storage: {
-              storeGlobalCache: sinon.stub().callsArgWith(2, null),
-              checkAndUseGlobalCache: sinon.stub().callsArgWith(2, null, 'v8.2.2'),
+      it('latest-copay-version', function (done) {
+
+        var htmlString = {
+          "url": "https://api.github.com/repos/thoughtnetwork/wallet/releases/21158137",
+          "assets_url": "https://api.github.com/repos/thoughtnetwork/wallet/releases/21158137/assets",
+          "upload_url": "https://uploads.github.com/repos/thoughtnetwork/wallet/releases/21158137/assets{?name,label}",
+          "html_url": "https://github.com/thoughtnetwork/wallet/releases/tag/v8.2.2",
+          "id": 21158137,
+          "node_id": "MDc6UmVsZWFzZTIxMTU4MTM3",
+          "tag_name": "v8.2.2",
+          "target_commitish": "master",
+          "name": "v8.2.2",
+          "draft": false,
+          "author": {
+            "login": "cmgustavo",
+            "id": 237435,
+            "node_id": "MDQ6VXNlcjIzNzQzNQ==",
+            "avatar_url": "https://avatars3.githubusercontent.com/u/237435?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/cmgustavo",
+            "html_url": "https://github.com/cmgustavo",
+            "followers_url": "https://api.github.com/users/cmgustavo/followers",
+            "following_url": "https://api.github.com/users/cmgustavo/following{/other_user}",
+            "gists_url": "https://api.github.com/users/cmgustavo/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/cmgustavo/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/cmgustavo/subscriptions",
+            "organizations_url": "https://api.github.com/users/cmgustavo/orgs",
+            "repos_url": "https://api.github.com/users/cmgustavo/repos",
+            "events_url": "https://api.github.com/users/cmgustavo/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/cmgustavo/received_events",
+            "type": "User",
+            "site_admin": false
+          },
+          "prerelease": false,
+          "created_at": "2019-10-29T14:09:01Z",
+          "published_at": "2019-11-01T19:50:37Z",
+          "assets": [
+
+          ],
+          "tarball_url": "https://api.github.com/repos/thoughtnetwork/wallet/tarball/v7.1.1",
+          "zipball_url": "https://api.github.com/repos/thoughtnetwork/wallet/zipball/v7.1.1",
+          "body": "### Changelog\r\n\r\nNEW\r\n\r\n* ETH Testnet support\r\n* EUR Gift Cards\r\n* Export Key to another wallet as QR code\r\n\r\nBUG FIXES\r\n\r\n* Open app from ETH link (only Desktop)\r\n* Clear badge of pending notification (iOS)\r\n* UI issues on Settings Page\r\n* Send-max for top up cards\r\n\r\n### Download\r\n\r\n<table>\r\n<tbody>\r\n<tr>\r\n<td>App</td>\r\n<td>for Mac OS</td>\r\n<td>for Windows</td>\r\n<td>for Linux</td>\r\n</tr>\r\n<tr>\r\n<td>\r\n<a href=\"https://thoughtnetwork.com/wallet\" target=\"_blank\"><img src=\"https://user-images.githubusercontent.com/237435/48089088-68afa480-e1e2-11e8-83a8-361d0440528c.png\" alt=\"Thought\"></a>\r\n</td>\r\n<td>\r\n<a href=\"https://itunes.apple.com/us/app/thoughtnetwork/id1440200291?ls=1&mt=12\" target=\"_blank\"><img src=\"https://user-images.githubusercontent.com/237435/48092454-7ddd0100-e1eb-11e8-9e13-3fe80bba7f00.png\" alt=\"mac\" width=\"120\"></a>\r\n</td>\r\n<td>\r\n<a href=\"https://www.microsoft.com/store/apps/9NBR15SK4ZJV\" target=\"_blank\"><img src=\"https://user-images.githubusercontent.com/237435/48092465-82091e80-e1eb-11e8-9e06-36b36cd44021.png\" alt=\"windows\" width=\"120\"></a>\r\n</td>\r\n<td>\r\n<a href=\"https://snapcraft.io/thoughtnetwork\" target=\"_blank\"><img src=\"https://user-images.githubusercontent.com/237435/48092664-09ef2880-e1ec-11e8-94a2-184446cb7183.png\" alt=\"linux\" width=\"120\"></a>\r\n</td>\r\n</tr>\r\n<tr>\r\n<td>\r\n<a href=\"https://copay.io\" target=\"_blank\"><img src=\"https://user-images.githubusercontent.com/237435/48089097-6cdbc200-e1e2-11e8-9e54-363d54ae8fc6.png\" alt=\"Copay\"></a>\r\n</td>\r\n<td>\r\n<a href=\"https://itunes.apple.com/us/app/copay/id1440201813\" target=\"_blank\"><img src=\"https://user-images.githubusercontent.com/237435/48092454-7ddd0100-e1eb-11e8-9e13-3fe80bba7f00.png\" alt=\"mac\" width=\"120\"></a>\r\n</td>\r\n<td>\r\n<a href=\"https://www.microsoft.com/store/apps/9MZGT30HL9DF\" target=\"_blank\"><img src=\"https://user-images.githubusercontent.com/237435/48092465-82091e80-e1eb-11e8-9e06-36b36cd44021.png\" alt=\"windows\" width=\"120\"></a>\r\n</td>\r\n<td>\r\n<a href=\"https://snapcraft.io/copay\" target=\"_blank\"><img src=\"https://user-images.githubusercontent.com/237435/48092664-09ef2880-e1ec-11e8-94a2-184446cb7183.png\" alt=\"linux\" width=\"120\"></a>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>"
+        };
+
+
+        var server = {
+          storage: {
+            storeGlobalCache: sinon.stub().callsArgWith(2, null),
+            checkAndUseGlobalCache: sinon.stub().callsArgWith(2, null, 'v8.2.2'),
+          }
+        };
+
+        var { ExpressApp: TestExpressApp } = proxyquire('../ts_build/lib/expressapp', {
+          './server': {
+            WalletService: {
+              initialize: sinon.stub().callsArg(1),
+              getServiceVersion: WalletService.getServiceVersion,
+              getInstance: sinon.stub().returns(server),
+            }
+          }
+        });
+
+        start(TestExpressApp, function () {
+          var requestOptions = {
+            url: testHost + ':' + testPort + config.basePath + '/latest-version',
+            headers: {
+              'x-identity': 'identity',
+              'x-signature': 'signature'
             }
           };
-          
-          var {ExpressApp: TestExpressApp} = proxyquire('../ts_build/lib/expressapp', {
-            './server': {
-              WalletService: {
-                initialize: sinon.stub().callsArg(1),
-                getServiceVersion: WalletService.getServiceVersion,
-                getInstance: sinon.stub().returns(server),
-              }
-            }
+          request(requestOptions, function (err, res, body) {
+            should.not.exist(err);
+            res.statusCode.should.equal(200);
+            server.storage.checkAndUseGlobalCache.getCalls()[0].args[0].should.equal('latest-copay-version');
+            server.storage.checkAndUseGlobalCache.getCalls()[0].args[1].should.equal(360000);
+            server.storage.checkAndUseGlobalCache.getCalls()[0].args[2].should.exist;
+            body.should.equal(JSON.stringify({ "version": htmlString['tag_name'] }));
+            done();
           });
-          
-          start(TestExpressApp, function() {
-            var requestOptions = {
-              url: testHost + ':' + testPort + config.basePath + '/latest-version',
-              headers: {
-                'x-identity': 'identity',
-                'x-signature': 'signature'
-              }
-            };
-            request(requestOptions, function(err, res, body) {
-              should.not.exist(err);
-              res.statusCode.should.equal(200);
-              server.storage.checkAndUseGlobalCache.getCalls()[0].args[0].should.equal('latest-copay-version');
-              server.storage.checkAndUseGlobalCache.getCalls()[0].args[1].should.equal(360000);
-              server.storage.checkAndUseGlobalCache.getCalls()[0].args[2].should.exist;
-              body.should.equal(JSON.stringify({"version":htmlString['tag_name']}));
-              done();
-            });
-          });
+        });
       });
 
-      it('/v1/sendmaxinfo', function(done) {
+      it('/v1/sendmaxinfo', function (done) {
         var server = {
           getSendMaxInfo: sinon.stub().callsArgWith(1, null, {
             amount: 123
           }),
         };
-        var {ExpressApp: TestExpressApp} = proxyquire('../ts_build/lib/expressapp', {
+        var { ExpressApp: TestExpressApp } = proxyquire('../ts_build/lib/expressapp', {
           './server': {
-            WalletService : {
+            WalletService: {
               initialize: sinon.stub().callsArg(1),
               getServiceVersion: WalletService.getServiceVersion,
               getInstanceWithAuth: sinon.stub().callsArgWith(1, null, server),
             }
           }
         });
-        
-        start(TestExpressApp, function() {
+
+        start(TestExpressApp, function () {
           var requestOptions = {
             url: testHost + ':' + testPort + config.basePath + '/v1/sendmaxinfo?feePerKb=10000&returnInputs=1',
             headers: {
@@ -243,7 +243,7 @@ describe('ExpressApp', function() {
               'x-signature': 'signature'
             }
           };
-          request(requestOptions, function(err, res, body) {
+          request(requestOptions, function (err, res, body) {
             should.not.exist(err);
             res.statusCode.should.equal(200);
             var args = server.getSendMaxInfo.getCalls()[0].args[0];
@@ -255,21 +255,21 @@ describe('ExpressApp', function() {
         });
       });
 
-      describe('Balance', function() {
-        it('should handle cache argument', function(done) {
+      describe('Balance', function () {
+        it('should handle cache argument', function (done) {
           var server = {
             getBalance: sinon.stub().callsArgWith(1, null, {}),
           };
-          var {ExpressApp: TestExpressApp} = proxyquire('../ts_build/lib/expressapp', {
+          var { ExpressApp: TestExpressApp } = proxyquire('../ts_build/lib/expressapp', {
             './server': {
-              WalletService : {
+              WalletService: {
                 initialize: sinon.stub().callsArg(1),
                 getServiceVersion: WalletService.getServiceVersion,
                 getInstanceWithAuth: sinon.stub().callsArgWith(1, null, server),
               }
             }
           });
-          start(TestExpressApp, function() {
+          start(TestExpressApp, function () {
             var reqOpts = {
               url: testHost + ':' + testPort + config.basePath + '/v1/balance',
               headers: {
@@ -277,14 +277,14 @@ describe('ExpressApp', function() {
                 'x-signature': 'signature'
               }
             };
-            request(reqOpts, function(err, res, body) {
+            request(reqOpts, function (err, res, body) {
               should.not.exist(err);
               res.statusCode.should.equal(200);
               var args = server.getBalance.getCalls()[0].args[0];
               should.not.exist(args.twoStep);
 
               reqOpts.url += '?twoStep=1';
-              request(reqOpts, function(err, res, body) {
+              request(reqOpts, function (err, res, body) {
                 should.not.exist(err);
                 res.statusCode.should.equal(200);
                 var args = server.getBalance.getCalls()[1].args[0];
@@ -297,10 +297,10 @@ describe('ExpressApp', function() {
         });
       });
 
-      describe('v1/wallets/all', function() {
-        it('should return a wallet for each identity/sig pair given', function(done) {
+      describe('v1/wallets/all', function () {
+        it('should return a wallet for each identity/sig pair given', function (done) {
           var server = {
-            getStatus: sinon.stub().callsArgWith(1, null, 
+            getStatus: sinon.stub().callsArgWith(1, null,
               {
                 walletId: "walletId",
                 success: true,
@@ -361,16 +361,16 @@ describe('ExpressApp', function() {
             ),
             walletId: 'walletId',
           };
-          var {ExpressApp: TestExpressApp} = proxyquire('../ts_build/lib/expressapp', {
+          var { ExpressApp: TestExpressApp } = proxyquire('../ts_build/lib/expressapp', {
             './server': {
-              WalletService : {
+              WalletService: {
                 initialize: sinon.stub().callsArg(1),
                 getServiceVersion: WalletService.getServiceVersion,
                 getInstanceWithAuth: sinon.stub().callsArgWith(1, null, server),
               }
             }
           });
-          start(TestExpressApp, function() {
+          start(TestExpressApp, function () {
             var reqOpts = {
               url: testHost + ':' + testPort + config.basePath + '/v1/wallets/all',
               headers: {
@@ -379,7 +379,7 @@ describe('ExpressApp', function() {
               }
             };
             reqOpts.url += '?includeExtendedInfo=1';
-            request(reqOpts, function(err, res, body) {
+            request(reqOpts, function (err, res, body) {
               should.not.exist(err);
               res.statusCode.should.equal(200);
               var bodyObj = JSON.parse(body);
@@ -393,15 +393,15 @@ describe('ExpressApp', function() {
         });
       });
 
-      describe('/v1/notifications', function(done) {
+      describe('/v1/notifications', function (done) {
         var server, clock, TestExpressApp;
-        beforeEach(function() {
+        beforeEach(function () {
           clock = sinon.useFakeTimers(2000000000, 'Date');
 
           server = {
             getNotifications: sinon.stub().callsArgWith(1, null, {})
           };
-          var {ExpressApp} = proxyquire('../ts_build/lib/expressapp', {
+          var { ExpressApp } = proxyquire('../ts_build/lib/expressapp', {
             './server': {
               WalletService: {
                 initialize: sinon.stub().callsArg(1),
@@ -412,12 +412,12 @@ describe('ExpressApp', function() {
           });
           TestExpressApp = ExpressApp;
         });
-        afterEach(function() {
+        afterEach(function () {
           clock.restore();
         });
 
-        it('should fetch notifications from a specified id', function(done) {
-          start(TestExpressApp, function() {
+        it('should fetch notifications from a specified id', function (done) {
+          start(TestExpressApp, function () {
             var requestOptions = {
               url: testHost + ':' + testPort + config.basePath + '/v1/notifications' + '?notificationId=123',
               headers: {
@@ -425,7 +425,7 @@ describe('ExpressApp', function() {
                 'x-signature': 'signature'
               }
             };
-            request(requestOptions, function(err, res, body) {
+            request(requestOptions, function (err, res, body) {
               should.not.exist(err);
               res.statusCode.should.equal(200);
               body.should.equal('{}');
@@ -437,8 +437,8 @@ describe('ExpressApp', function() {
             });
           });
         });
-        it('should allow custom minTs within limits', function(done) {
-          start(TestExpressApp, function() {
+        it('should allow custom minTs within limits', function (done) {
+          start(TestExpressApp, function () {
             var requestOptions = {
               url: testHost + ':' + testPort + config.basePath + '/v1/notifications' + '?timeSpan=30',
               headers: {
@@ -446,7 +446,7 @@ describe('ExpressApp', function() {
                 'x-signature': 'signature'
               }
             };
-            request(requestOptions, function(err, res, body) {
+            request(requestOptions, function (err, res, body) {
               should.not.exist(err);
               res.statusCode.should.equal(200);
               server.getNotifications.calledWith({
@@ -457,17 +457,17 @@ describe('ExpressApp', function() {
             });
           });
         });
-        it('should limit minTs to Defaults.MAX_NOTIFICATIONS_TIMESPAN', function(done) {
-          start(TestExpressApp, function() {
-            var overLimit  = Defaults.MAX_NOTIFICATIONS_TIMESPAN * 2;
+        it('should limit minTs to Defaults.MAX_NOTIFICATIONS_TIMESPAN', function (done) {
+          start(TestExpressApp, function () {
+            var overLimit = Defaults.MAX_NOTIFICATIONS_TIMESPAN * 2;
             var requestOptions = {
-              url: testHost + ':' + testPort + config.basePath + '/v1/notifications' + '?timeSpan=' + overLimit ,
+              url: testHost + ':' + testPort + config.basePath + '/v1/notifications' + '?timeSpan=' + overLimit,
               headers: {
                 'x-identity': 'identity',
                 'x-signature': 'signature'
               }
             };
-            request(requestOptions, function(err, res, body) {
+            request(requestOptions, function (err, res, body) {
               should.not.exist(err);
               res.statusCode.should.equal(200);
               body.should.equal('{}');
@@ -480,8 +480,8 @@ describe('ExpressApp', function() {
             });
           });
         });
-        it('v1/advertisements', function(done) {
-          start(TestExpressApp, function() {
+        it('v1/advertisements', function (done) {
+          start(TestExpressApp, function () {
             var requestOptions = {
               url: testHost + ':' + testPort + config.basePath + '/v1/advertisements',
               headers: {
@@ -492,20 +492,20 @@ describe('ExpressApp', function() {
           });
           done();
         });
-        it('Server under maintenance check, should return 503 status code', function(done) {
+        it('Server under maintenance check, should return 503 status code', function (done) {
           var server = {
             getStatus: sinon.stub().callsArgWith(1, null, {}),
           };
-          var {ExpressApp: TestExpressApp} = proxyquire('../ts_build/lib/expressapp', {
+          var { ExpressApp: TestExpressApp } = proxyquire('../ts_build/lib/expressapp', {
             './server': {
-              WalletService:  {
+              WalletService: {
                 initialize: sinon.stub().callsArg(1),
                 getServiceVersion: WalletService.getServiceVersion,
                 getInstanceWithAuth: sinon.stub().callsArgWith(1, null, server),
               }
             }
           });
-          start(TestExpressApp, function(err, data) {
+          start(TestExpressApp, function (err, data) {
             var requestOptions = {
               //test link, for either a 503 or 200 code response
               url: testHost + ':' + testPort + config.basePath + "/v2/wallets",
@@ -514,8 +514,8 @@ describe('ExpressApp', function() {
                 'x-signature': 'signature'
               }
             };
-            request(requestOptions, function(err,res,body){
-              if(config.maintenanceOpts.maintenanceMode === true) {
+            request(requestOptions, function (err, res, body) {
+              if (config.maintenanceOpts.maintenanceMode === true) {
                 should.not.exist(err);
                 res.statusCode.should.equal(503);
                 body.should.equal(`{"code":503,"message":"Thoughtcore Wallet Service is currently under maintenance. Please periodically check https://status.thoughtnetwork.com/ to stay up to date with our current status."}`);
@@ -527,24 +527,24 @@ describe('ExpressApp', function() {
             });
           });
         });
-        
+
       });
-      describe('Clear cache', function(done) {
-        it('/v1/clearcache/', function(done) {
-          let resolveStub = sinon.stub().callsFake( () => { return Promise.resolve(true)});
+      describe('Clear cache', function (done) {
+        it('/v1/clearcache/', function (done) {
+          let resolveStub = sinon.stub().callsFake(() => { return Promise.resolve(true) });
           let server = {
             clearWalletCache: resolveStub
           };
-          let {ExpressApp: TestExpressApp} = proxyquire('../ts_build/lib/expressapp', {
+          let { ExpressApp: TestExpressApp } = proxyquire('../ts_build/lib/expressapp', {
             './server': {
-              WalletService:  {
+              WalletService: {
                 initialize: sinon.stub().callsArg(1),
                 getServiceVersion: WalletService.getServiceVersion,
                 getInstanceWithAuth: sinon.stub().callsArgWith(1, null, server)
               }
             }
           });
-          start(TestExpressApp, function() {
+          start(TestExpressApp, function () {
             let requestOptions = {
               url: testHost + ':' + testPort + config.basePath + '/v1/clearcache/',
               headers: {
@@ -553,13 +553,13 @@ describe('ExpressApp', function() {
               },
               method: 'post'
             };
-            request(requestOptions, function(err, res, body) {
+            request(requestOptions, function (err, res, body) {
               should.not.exist(err);
               res.statusCode.should.equal(200);
               done();
             });
           });
-        });  
+        });
       })
     });
   });

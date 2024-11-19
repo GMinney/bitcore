@@ -2,11 +2,11 @@ import { expect } from 'chai';
 import { Config } from '../../../src/services/config';
 import { unitAfterHelper, unitBeforeHelper } from '../../helpers/unit';
 
-describe('Config', function() {
+describe('Config', function () {
   before(unitBeforeHelper);
   after(unitAfterHelper);
 
-  it('should have a test which runs', function() {
+  it('should have a test which runs', function () {
     expect(true).to.equal(true);
   });
 

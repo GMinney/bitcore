@@ -31,7 +31,7 @@ function MerkleBlock(arg) {
     info = MerkleBlock._fromBufferReader(BufferReader(arg));
   } else if (_.isObject(arg)) {
     var header;
-    if(arg.header instanceof BlockHeader) {
+    if (arg.header instanceof BlockHeader) {
       header = arg.header;
     } else {
       header = BlockHeader.fromObject(arg.header);
@@ -61,7 +61,7 @@ function MerkleBlock(arg) {
   } else {
     throw new TypeError('Unrecognized argument for MerkleBlock');
   }
-  _.extend(this,info);
+  _.extend(this, info);
   this._flagBitsUsed = 0;
   this._hashesUsed = 0;
 
@@ -133,19 +133,19 @@ MerkleBlock.prototype.validMerkleTree = function validMerkleTree() {
   $.checkState(_.isArray(this.hashes), 'MerkleBlock hashes is not an array');
 
   // Can't have more hashes than numTransactions
-  if(this.hashes.length > this.numTransactions) {
+  if (this.hashes.length > this.numTransactions) {
     return false;
   }
 
   // Can't have more flag bits than num hashes
-  if(this.flags.length * 8 < this.hashes.length) {
+  if (this.flags.length * 8 < this.hashes.length) {
     return false;
   }
 
   var height = this._calcTreeHeight();
   var opts = { hashesUsed: 0, flagBitsUsed: 0 };
   var root = this._traverseMerkleTree(height, 0, opts);
-  if(opts.hashesUsed !== this.hashes.length) {
+  if (opts.hashesUsed !== this.hashes.length) {
     return false;
   }
   return BufferUtil.equals(root, this.header.merkleRoot);
@@ -160,24 +160,24 @@ MerkleBlock.prototype.filterdTxsHash = function filterdTxsHash() {
   $.checkState(_.isArray(this.hashes), 'MerkleBlock hashes is not an array');
 
   // Can't have more hashes than numTransactions
-  if(this.hashes.length > this.numTransactions) {
+  if (this.hashes.length > this.numTransactions) {
     throw new errors.MerkleBlock.InvalidMerkleTree();
   }
 
   // Can't have more flag bits than num hashes
-  if(this.flags.length * 8 < this.hashes.length) {
+  if (this.flags.length * 8 < this.hashes.length) {
     throw new errors.MerkleBlock.InvalidMerkleTree();
   }
 
   // If there is only one hash the filter do not match any txs in the block
-  if(this.hashes.length === 1) {
+  if (this.hashes.length === 1) {
     return [];
   };
 
   var height = this._calcTreeHeight();
   var opts = { hashesUsed: 0, flagBitsUsed: 0 };
   var txs = this._traverseMerkleTree(height, 0, opts, true);
-  if(opts.hashesUsed !== this.hashes.length) {
+  if (opts.hashesUsed !== this.hashes.length) {
     throw new errors.MerkleBlock.InvalidMerkleTree();
   }
   return txs;
@@ -207,26 +207,26 @@ MerkleBlock.prototype._traverseMerkleTree = function traverseMerkleTree(depth, p
   opts.hashesUsed = opts.hashesUsed || 0;
   var checkForTxs = checkForTxs || false;
 
-  if(opts.flagBitsUsed > this.flags.length * 8) {
+  if (opts.flagBitsUsed > this.flags.length * 8) {
     return null;
   }
   var isParentOfMatch = (this.flags[opts.flagBitsUsed >> 3] >>> (opts.flagBitsUsed++ & 7)) & 1;
-  if(depth === 0 || !isParentOfMatch) {
-    if(opts.hashesUsed >= this.hashes.length) {
+  if (depth === 0 || !isParentOfMatch) {
+    if (opts.hashesUsed >= this.hashes.length) {
       return null;
     }
     var hash = this.hashes[opts.hashesUsed++];
-    if(depth === 0 && isParentOfMatch) {
+    if (depth === 0 && isParentOfMatch) {
       opts.txs.push(hash);
     }
     return Buffer.from(hash, 'hex');
   } else {
-    var left = this._traverseMerkleTree(depth-1, pos*2, opts);
+    var left = this._traverseMerkleTree(depth - 1, pos * 2, opts);
     var right = left;
-    if(pos*2+1 < this._calcTreeWidth(depth-1)) {
-      right = this._traverseMerkleTree(depth-1, pos*2+1, opts);
+    if (pos * 2 + 1 < this._calcTreeWidth(depth - 1)) {
+      right = this._traverseMerkleTree(depth - 1, pos * 2 + 1, opts);
     }
-    if (checkForTxs){
+    if (checkForTxs) {
       return opts.txs;
     } else {
       return Hash.sha256sha256(new Buffer.concat([left, right]));
@@ -265,10 +265,10 @@ MerkleBlock.prototype._calcTreeHeight = function calcTreeHeight() {
 MerkleBlock.prototype.hasTransaction = function hasTransaction(tx) {
   $.checkArgument(!_.isUndefined(tx), 'tx cannot be undefined');
   $.checkArgument(tx instanceof Transaction || typeof tx === 'string',
-      'Invalid tx given, tx must be a "string" or "Transaction"');
+    'Invalid tx given, tx must be a "string" or "Transaction"');
 
   var hash = tx;
-  if(tx instanceof Transaction) {
+  if (tx instanceof Transaction) {
     // We need to reverse the id hash for the lookup
     hash = BufferUtil.reverse(Buffer.from(tx.id, 'hex')).toString('hex');
   }

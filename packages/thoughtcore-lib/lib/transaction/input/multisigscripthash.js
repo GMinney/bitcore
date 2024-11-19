@@ -29,8 +29,8 @@ function MultiSigScriptHashInput(input, pubkeys, threshold, signatures, opts) {
   signatures = signatures || input.signatures;
   if (opts.noSorting) {
     this.publicKeys = pubkeys;
-  } else  {
-    this.publicKeys = _.sortBy(pubkeys, function(publicKey) { return publicKey.toString('hex'); });
+  } else {
+    this.publicKeys = _.sortBy(pubkeys, function (publicKey) { return publicKey.toString('hex'); });
   }
   this.redeemScript = Script.buildMultisigOut(this.publicKeys, threshold, opts);
   var nested = Script.buildWitnessMultisigOutFromScript(this.redeemScript);
@@ -64,16 +64,16 @@ function MultiSigScriptHashInput(input, pubkeys, threshold, signatures, opts) {
 }
 inherits(MultiSigScriptHashInput, Input);
 
-MultiSigScriptHashInput.prototype.toObject = function() {
+MultiSigScriptHashInput.prototype.toObject = function () {
   var obj = Input.prototype.toObject.apply(this, arguments);
   obj.threshold = this.threshold;
-  obj.publicKeys = this.publicKeys.map(function(publicKey) { return publicKey.toString(); });
+  obj.publicKeys = this.publicKeys.map(function (publicKey) { return publicKey.toString(); });
   obj.signatures = this._serializeSignatures();
   return obj;
 };
 
-MultiSigScriptHashInput.prototype._deserializeSignatures = function(signatures) {
-  return signatures.map(function(signature) {
+MultiSigScriptHashInput.prototype._deserializeSignatures = function (signatures) {
+  return signatures.map(function (signature) {
     if (!signature) {
       return undefined;
     }
@@ -81,8 +81,8 @@ MultiSigScriptHashInput.prototype._deserializeSignatures = function(signatures) 
   });
 };
 
-MultiSigScriptHashInput.prototype._serializeSignatures = function() {
-  return this.signatures.map(function(signature) {
+MultiSigScriptHashInput.prototype._serializeSignatures = function () {
+  return this.signatures.map(function (signature) {
     if (!signature) {
       return undefined;
     }
@@ -90,7 +90,7 @@ MultiSigScriptHashInput.prototype._serializeSignatures = function() {
   });
 };
 
-MultiSigScriptHashInput.prototype.getScriptCode = function() {
+MultiSigScriptHashInput.prototype.getScriptCode = function () {
   var writer = new BufferWriter();
   if (!this.redeemScript.hasCodeseparators()) {
     var redeemScriptBuffer = this.redeemScript.toBuffer();
@@ -102,13 +102,13 @@ MultiSigScriptHashInput.prototype.getScriptCode = function() {
   return writer.toBuffer();
 };
 
-MultiSigScriptHashInput.prototype.getSighash = function(transaction, privateKey, index, sigtype) {
+MultiSigScriptHashInput.prototype.getSighash = function (transaction, privateKey, index, sigtype) {
   var hash;
   if (this.nestedWitness || this.type === Address.PayToWitnessScriptHash) {
     var scriptCode = this.getScriptCode();
     var notionsBuffer = this.getNotionsBuffer();
     hash = SighashWitness.sighash(transaction, sigtype, index, scriptCode, notionsBuffer);
-  } else  {
+  } else {
     hash = Sighash.sighash(transaction, sigtype, index, this.redeemScript);
   }
   return hash;
@@ -125,7 +125,7 @@ MultiSigScriptHashInput.prototype.getSighash = function(transaction, privateKey,
  * @param {Buffer} merkleRoot - unused for this input type
  * @return {Array<TransactionSignature>}
  */
-MultiSigScriptHashInput.prototype.getSignatures = function(transaction, privateKey, index, sigtype, hashData, signingMethod, merkleRoot) {
+MultiSigScriptHashInput.prototype.getSignatures = function (transaction, privateKey, index, sigtype, hashData, signingMethod, merkleRoot) {
   $.checkState(this.output instanceof Output);
   sigtype = sigtype || Signature.SIGHASH_ALL;
   signingMethod = signingMethod || 'ecdsa'; // unused. Keeping for consistency with other libs
@@ -138,7 +138,7 @@ MultiSigScriptHashInput.prototype.getSignatures = function(transaction, privateK
         var scriptCode = this.getScriptCode();
         var notionsBuffer = this.getNotionsBuffer();
         signature = SighashWitness.sign(transaction, privateKey, sigtype, index, scriptCode, notionsBuffer);
-      } else  {
+      } else {
         signature = Sighash.sign(transaction, privateKey, sigtype, index, this.redeemScript);
       }
       results.push(new TransactionSignature({
@@ -154,17 +154,17 @@ MultiSigScriptHashInput.prototype.getSignatures = function(transaction, privateK
   return results;
 };
 
-MultiSigScriptHashInput.prototype.addSignature = function(transaction, signature, signingMethod) {
+MultiSigScriptHashInput.prototype.addSignature = function (transaction, signature, signingMethod) {
   $.checkState(!this.isFullySigned(), 'All needed signatures have already been added');
   $.checkArgument(this.publicKeyIndex[signature.publicKey.toString()] != null,
-                  'Signature has no matching public key');
+    'Signature has no matching public key');
   $.checkState(this.isValidSignature(transaction, signature, signingMethod), 'Invalid Signature!');
   this.signatures[this.publicKeyIndex[signature.publicKey.toString()]] = signature;
   this._updateScript();
   return this;
 };
 
-MultiSigScriptHashInput.prototype._updateScript = function() {
+MultiSigScriptHashInput.prototype._updateScript = function () {
   if (this.nestedWitness || this.type === Address.PayToWitnessScriptHash) {
     var stack = [
       Buffer.alloc(0),
@@ -187,10 +187,10 @@ MultiSigScriptHashInput.prototype._updateScript = function() {
   return this;
 };
 
-MultiSigScriptHashInput.prototype._createSignatures = function() {
+MultiSigScriptHashInput.prototype._createSignatures = function () {
   return this.signatures
-    .filter(function(signature) { return signature != null; })
-    .map(function(signature) {
+    .filter(function (signature) { return signature != null; })
+    .map(function (signature) {
       return BufferUtil.concat([
         signature.signature.toDER(),
         BufferUtil.integerAsSingleByteBuffer(signature.sigtype)
@@ -198,32 +198,32 @@ MultiSigScriptHashInput.prototype._createSignatures = function() {
     });
 };
 
-MultiSigScriptHashInput.prototype.clearSignatures = function() {
+MultiSigScriptHashInput.prototype.clearSignatures = function () {
   this.signatures = new Array(this.publicKeys.length);
   this._updateScript();
 };
 
-MultiSigScriptHashInput.prototype.isFullySigned = function() {
+MultiSigScriptHashInput.prototype.isFullySigned = function () {
   return this.countSignatures() === this.threshold;
 };
 
-MultiSigScriptHashInput.prototype.countMissingSignatures = function() {
+MultiSigScriptHashInput.prototype.countMissingSignatures = function () {
   return this.threshold - this.countSignatures();
 };
 
-MultiSigScriptHashInput.prototype.countSignatures = function() {
-  return this.signatures.reduce(function(sum, signature) {
+MultiSigScriptHashInput.prototype.countSignatures = function () {
+  return this.signatures.reduce(function (sum, signature) {
     return sum + (!!signature);
   }, 0);
 };
 
-MultiSigScriptHashInput.prototype.publicKeysWithoutSignature = function() {
+MultiSigScriptHashInput.prototype.publicKeysWithoutSignature = function () {
   return this.publicKeys.filter((publicKey) => {
     return !(this.signatures[this.publicKeyIndex[publicKey.toString()]]);
   });
 };
 
-MultiSigScriptHashInput.prototype.isValidSignature = function(transaction, signature, signingMethod) {
+MultiSigScriptHashInput.prototype.isValidSignature = function (transaction, signature, signingMethod) {
   signingMethod = signingMethod || 'ecdsa'; // unused. Keeping for consistency with other libs
   if (this.nestedWitness || this.type === Address.PayToWitnessScriptHash) {
     signature.signature.nhashtype = signature.sigtype;
@@ -255,7 +255,7 @@ MultiSigScriptHashInput.MAX_SIGNATURE_SIZE = 74; // size (1) + DER (<=72) + sigh
 MultiSigScriptHashInput.MAX_PUBKEY_SIZE = 34; // size (1) + DER (<=33)
 MultiSigScriptHashInput.REDEEM_SCRIPT_SIZE = 34; // OP_0 (1) + scriptHash (1 + 32)
 
-MultiSigScriptHashInput.prototype._estimateSize = function() {
+MultiSigScriptHashInput.prototype._estimateSize = function () {
   let result = this._getBaseSize();
   const WITNESS_DISCOUNT = 4;
   const witnessSize = MultiSigScriptHashInput.MAX_OPCODES_SIZE +

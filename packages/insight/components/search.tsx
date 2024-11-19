@@ -1,14 +1,14 @@
 //'use client'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {FC, memo} from 'react';
-import {determineInputType, searchValue} from '@/lib/utilities/search-helper-methods';
-import {useNavigate} from 'react-router-dom';
-import styled, {useTheme} from 'styled-components';
+import { FC, memo } from 'react';
+import { determineInputType, searchValue } from '@/lib/utilities/search-helper-methods';
+import { useNavigate } from 'react-router-dom';
+import styled, { useTheme } from 'styled-components';
 import SearchLightSvg from '@/assets/images/search-light.svg';
 import SearchDarkSvg from '@/assets/images/search-dark.svg';
-import {LightBlack, Slate} from '@/assets/styles/colors';
-import {useAppSelector} from '@/lib/utilities/hooks';
+import { LightBlack, Slate } from '@/assets/styles/colors';
+import { useAppSelector } from '@/lib/utilities/hooks';
 
 
 
@@ -18,7 +18,7 @@ const SearchInput = styled.input.attrs<{ $searchicon?: string }>(props => ({ $se
 
   background: url(${props => (props.$searchicon)}) no-repeat scroll 7px 7px;
   padding-left: 40px;
-  border-bottom: ${({theme: {colors}}) => `${borderbottom}` ? `1px solid ${colors.borderColor}` : 'none'};
+  border-bottom: ${({ theme: { colors } }) => `${borderbottom}` ? `1px solid ${colors.borderColor}` : 'none'};
   border-top: none;
   border-left: none;
   border-right: none;
@@ -26,7 +26,7 @@ const SearchInput = styled.input.attrs<{ $searchicon?: string }>(props => ({ $se
   width: 100%;
   font-size: 16px;
   line-height: 25px;
-  color: ${({theme: {dark}}) => (dark ? Slate : LightBlack)};
+  color: ${({ theme: { dark } }) => (dark ? Slate : LightBlack)};
 
   &:focus-visible {
     outline: none;
@@ -46,10 +46,10 @@ interface SearchProps {
   setErrorMessage?: any;
 }
 
-const Search: FC<SearchProps> = ({id, setErrorMessage}) => {
+const Search: FC<SearchProps> = ({ id, setErrorMessage }) => {
   const navigate = useNavigate();
   const theme = useTheme();
-  const {currency, network} = useAppSelector(({APP}) => APP);
+  const { currency, network } = useAppSelector(({ APP }) => APP);
 
   const searchIcon: string = theme.dark ? SearchDarkSvg.src : SearchLightSvg.src;
   const searchId = id || 'search';
@@ -88,7 +88,7 @@ const Search: FC<SearchProps> = ({id, setErrorMessage}) => {
     });
 
     if (resFiltered.length !== 0) {
-      const matches: {blocks: any[]; txs: any[]; addresses: any[]} = {
+      const matches: { blocks: any[]; txs: any[]; addresses: any[] } = {
         blocks: [],
         txs: [],
         addresses: [],
@@ -123,7 +123,7 @@ const Search: FC<SearchProps> = ({id, setErrorMessage}) => {
           );
         } else if (matches.txs.length) {
           navigate(`/${matches.txs[0].chain}/${matches.txs[0].network}/tx/${matches.txs[0].txid}`, {
-            state: {transactionData: matches.txs[0]},
+            state: { transactionData: matches.txs[0] },
           });
         } else {
           navigate(

@@ -25,7 +25,7 @@ function BlockMessage(arg, options) {
 }
 inherits(BlockMessage, Message);
 
-BlockMessage.prototype.setPayload = function(payload) {
+BlockMessage.prototype.setPayload = function (payload) {
   if (this.Block.prototype.fromRaw) {
     this.block = this.Block.fromRaw(payload);
   } else {
@@ -33,7 +33,7 @@ BlockMessage.prototype.setPayload = function(payload) {
   }
 };
 
-BlockMessage.prototype.getPayload = function() {
+BlockMessage.prototype.getPayload = function () {
   if (this.Block.prototype.toRaw) {
     return this.block.toRaw();
   }

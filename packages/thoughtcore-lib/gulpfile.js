@@ -1,4 +1,10 @@
 'use strict';
 
 var startGulp = require('thoughtcore-build');
-module.exports = startGulp('lib');
+
+function defaultTask(cb) {
+  startGulp('lib')
+  cb();
+}
+
+exports.default = defaultTask

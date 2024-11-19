@@ -28,14 +28,14 @@ function FilteraddMessage(arg, options) {
 }
 inherits(FilteraddMessage, Message);
 
-FilteraddMessage.prototype.setPayload = function(payload) {
+FilteraddMessage.prototype.setPayload = function (payload) {
   $.checkArgument(payload);
   var parser = new BufferReader(payload);
   this.data = parser.readVarLengthBuffer();
   utils.checkFinished(parser);
 };
 
-FilteraddMessage.prototype.getPayload = function() {
+FilteraddMessage.prototype.getPayload = function () {
   var bw = new BufferWriter();
   bw.writeVarintNum(this.data.length);
   bw.write(this.data);

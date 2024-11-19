@@ -373,7 +373,7 @@ export class PayProV2 {
 
     try {
       host = url.parse(requestUrl).hostname;
-    } catch (e) {}
+    } catch (e) { }
 
     if (!host) {
       throw new Error('Invalid requestUrl');

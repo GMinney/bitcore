@@ -7,7 +7,7 @@ import { CacheTimes, Confirmations, SetCache } from '../middleware';
 
 const router = require('express').Router({ mergeParams: true });
 
-router.get('/', async function(req: Request, res: Response) {
+router.get('/', async function (req: Request, res: Response) {
   let { chain, network } = req.params;
   let { sinceBlock, date, limit, since, direction, paging } = req.query as any;
   if (limit) {
@@ -29,7 +29,7 @@ router.get('/', async function(req: Request, res: Response) {
   }
 });
 
-router.get('/tip', async function(req: Request, res: Response) {
+router.get('/tip', async function (req: Request, res: Response) {
   let { chain, network } = req.params;
   try {
     let tip = await ChainStateProvider.getLocalTip({ chain, network });
@@ -40,7 +40,7 @@ router.get('/tip', async function(req: Request, res: Response) {
   }
 });
 
-router.get('/:blockId', async function(req: Request, res: Response) {
+router.get('/:blockId', async function (req: Request, res: Response) {
   let { chain, network, blockId } = req.params;
   try {
     let block = await ChainStateProvider.getBlock({ chain, network, blockId });
@@ -59,7 +59,7 @@ router.get('/:blockId', async function(req: Request, res: Response) {
 });
 
 // return all { txids, inputs, ouputs} for a blockHash paginated at max 500 per page, to limit reqs and overload
-router.get('/:blockHash/coins/:limit/:pgnum', async function(req: Request, res: Response) {
+router.get('/:blockHash/coins/:limit/:pgnum', async function (req: Request, res: Response) {
   let { chain, network, blockHash, limit, pgnum } = req.params;
 
   let pageNumber;
@@ -82,10 +82,10 @@ router.get('/:blockHash/coins/:limit/:pgnum', async function(req: Request, res: 
       numOfTxs < maxLimit
         ? await TransactionStorage.collection.find({ chain, network, blockHash }).toArray()
         : await TransactionStorage.collection
-            .find({ chain, network, blockHash })
-            .skip(skips)
-            .limit(maxLimit)
-            .toArray();
+          .find({ chain, network, blockHash })
+          .skip(skips)
+          .limit(maxLimit)
+          .toArray();
 
     if (!txs) {
       return res.status(422).send('No txs for page');
@@ -128,7 +128,7 @@ router.get('/:blockHash/coins/:limit/:pgnum', async function(req: Request, res: 
   }
 });
 
-router.get('/before-time/:time', async function(req: Request, res: Response) {
+router.get('/before-time/:time', async function (req: Request, res: Response) {
   let { chain, network, time } = req.params;
   try {
     const block = await ChainStateProvider.getBlockBeforeTime({ chain, network, time });

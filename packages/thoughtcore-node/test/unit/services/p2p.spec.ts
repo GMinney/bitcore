@@ -12,11 +12,11 @@ class MockP2PWorker extends BaseP2PWorker<any> {
     this.started = true;
   }
 }
-describe('P2P Service', function() {
+describe('P2P Service', function () {
   before(unitBeforeHelper);
   after(unitAfterHelper);
 
-  it('should have a test which runs', function() {
+  it('should have a test which runs', function () {
     expect(true).to.equal(true);
   });
 

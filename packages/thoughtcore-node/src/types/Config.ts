@@ -32,7 +32,7 @@ export interface IProvider {
 }
 
 interface IExternalSyncConfig {
-  type?:  'sparse' | 'full'; // sparsely sync chain data based on criteria or sync all data
+  type?: 'sparse' | 'full'; // sparsely sync chain data based on criteria or sync all data
   time?: string // cron time of block sync intervals
 }
 

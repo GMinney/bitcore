@@ -26,7 +26,7 @@ function PublicKeyHashInput() {
 }
 inherits(PublicKeyHashInput, Input);
 
-PublicKeyHashInput.prototype.getRedeemScript = function(publicKey) {
+PublicKeyHashInput.prototype.getRedeemScript = function (publicKey) {
   if (!this.redeemScript) {
     var redeemScript = Script.buildWitnessV0Out(publicKey);
     if (Script.buildScriptHashOut(redeemScript).equals(this.output.script)) {
@@ -39,7 +39,7 @@ PublicKeyHashInput.prototype.getRedeemScript = function(publicKey) {
   return this.redeemScript;
 };
 
-PublicKeyHashInput.prototype.getScriptCode = function(publicKey) {
+PublicKeyHashInput.prototype.getScriptCode = function (publicKey) {
   var writer = new BufferWriter();
   var script;
   if (this.output.script.isScriptHashOut()) {
@@ -53,7 +53,7 @@ PublicKeyHashInput.prototype.getScriptCode = function(publicKey) {
   return writer.toBuffer();
 };
 
-PublicKeyHashInput.prototype.getSighash = function(transaction, privateKey, index, sigtype) {
+PublicKeyHashInput.prototype.getSighash = function (transaction, privateKey, index, sigtype) {
   var scriptCode = this.getScriptCode(privateKey);
   var notionsBuffer = this.getNotionsBuffer();
   return SighashWitness.sighash(transaction, sigtype, index, scriptCode, notionsBuffer);
@@ -69,7 +69,7 @@ PublicKeyHashInput.prototype.getSighash = function(transaction, privateKey, inde
  * @param {Buffer} merkleRoot - unused for this input type
  * @return {Array<TransactionSignature>}
  */
-PublicKeyHashInput.prototype.getSignatures = function(transaction, privateKey, index, sigtype, hashData, signingMethod, merkleRoot) {
+PublicKeyHashInput.prototype.getSignatures = function (transaction, privateKey, index, sigtype, hashData, signingMethod, merkleRoot) {
   $.checkState(this.output instanceof Output);
   hashData = hashData || Hash.sha256ripemd160(privateKey.publicKey.toBuffer());
   sigtype = sigtype || Signature.SIGHASH_ALL;
@@ -116,7 +116,7 @@ PublicKeyHashInput.prototype.getSignatures = function(transaction, privateKey, i
  * @param {String} signingMethod - method used to sign - 'ecdsa' or 'schnorr' (future signing method)
  * @return {PublicKeyHashInput} this, for chaining
  */
-PublicKeyHashInput.prototype.addSignature = function(transaction, signature, signingMethod) {
+PublicKeyHashInput.prototype.addSignature = function (transaction, signature, signingMethod) {
   $.checkState(this.isValidSignature(transaction, signature, signingMethod), 'Signature is invalid');
 
   if (this.output.script.isWitnessPublicKeyHashOut() || this.output.script.isScriptHashOut()) {
@@ -141,7 +141,7 @@ PublicKeyHashInput.prototype.addSignature = function(transaction, signature, sig
  * Clear the input's signature
  * @return {PublicKeyHashInput} this, for chaining
  */
-PublicKeyHashInput.prototype.clearSignatures = function() {
+PublicKeyHashInput.prototype.clearSignatures = function () {
   this.setScript(Script.empty());
   this.setWitnesses([]);
   return this;
@@ -151,11 +151,11 @@ PublicKeyHashInput.prototype.clearSignatures = function() {
  * Query whether the input is signed
  * @return {boolean}
  */
-PublicKeyHashInput.prototype.isFullySigned = function() {
+PublicKeyHashInput.prototype.isFullySigned = function () {
   return this.script.isPublicKeyHashIn() || this.hasWitnesses();
 };
 
-PublicKeyHashInput.prototype.isValidSignature = function(transaction, signature, signingMethod) {
+PublicKeyHashInput.prototype.isValidSignature = function (transaction, signature, signingMethod) {
   signingMethod = signingMethod || 'ecdsa'; // unused. Keeping for consistency with other libs
   // FIXME: Refactor signature so this is not necessary
   signature.signature.nhashtype = signature.sigtype;
@@ -185,7 +185,7 @@ PublicKeyHashInput.prototype.isValidSignature = function(transaction, signature,
 PublicKeyHashInput.SCRIPT_MAX_SIZE = 73 + 34; // sigsize (1 + 72) + pubkey (1 + 33)
 PublicKeyHashInput.REDEEM_SCRIPT_SIZE = 1 + 22; // len (1) OP_0 (1) pubkeyhash (1 + 20)
 
-PublicKeyHashInput.prototype._estimateSize = function() {
+PublicKeyHashInput.prototype._estimateSize = function () {
   let result = this._getBaseSize();
   result += 1; // script size
   const WITNESS_DISCOUNT = 4;

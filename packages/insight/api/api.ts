@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import {urlSafetyCheck} from '@/lib/utilities/helper-methods';
+import { urlSafetyCheck } from '@/lib/utilities/helper-methods';
 import axios, { AxiosRequestConfig } from 'axios';
 
 export const fetcher = (url: string, config?: AxiosRequestConfig) => axios.get(url, config).then(res => res.data);

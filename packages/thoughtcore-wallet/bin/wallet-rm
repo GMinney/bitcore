@@ -13,14 +13,14 @@ var args = program.args;
 var txpid = args[0] || '';
 
 utils.getClient(program, { mustExist: true }, function (client) {
-  client.getTxProposals({doNotVerify: true}, function(err, txps) {
+  client.getTxProposals({ doNotVerify: true }, function (err, txps) {
     utils.die(err);
 
     if (program.verbose)
       console.log('* Raw Server Response:\n', txps); //TODO
 
     var txp = utils.findOneTxProposal(txps, txpid);
-    client.removeTxProposal(txp, function(err) {
+    client.removeTxProposal(txp, function (err) {
       utils.die(err);
 
       console.log('Transaction removed.');

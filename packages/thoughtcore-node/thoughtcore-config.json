@@ -1,39 +1,38 @@
 {
-    "thoughtcoreNode": {
-      "chains": {
-        "THT": {
-          "mainnet": {
-            "chainSource": "p2p",
-            "trustedPeers": [
-              {
-                "host": "phi.thought.live",
-                "port": 10618
-              }
-            ],
-            "rpc": {
-              "host": "127.0.0.1",
-              "port": 10617,
-              "username": "username",
-              "password": "password"
+  "thoughtcoreNode": {
+    "chains": {
+      "THT": {
+        "mainnet": {
+          "chainSource": "p2p",
+          "trustedPeers": [
+            {
+              "host": "phi.thought.live",
+              "port": 10618
             }
-          },
-          "regtest": {
-            "chainSource": "p2p",
-            "trustedPeers": [
-              {
-                "host": "127.0.0.1",
-                "port": 20020
-              }
-            ],
-            "rpc": {
+          ],
+          "rpc": {
+            "host": "127.0.0.1",
+            "port": 10617,
+            "username": "username",
+            "password": "password"
+          }
+        },
+        "regtest": {
+          "chainSource": "p2p",
+          "trustedPeers": [
+            {
               "host": "127.0.0.1",
-              "port": 20021,
-              "username": "username",
-              "password": "password"
+              "port": 20020
             }
+          ],
+          "rpc": {
+            "host": "127.0.0.1",
+            "port": 20021,
+            "username": "username",
+            "password": "password"
           }
         }
-        
       }
     }
   }
+}

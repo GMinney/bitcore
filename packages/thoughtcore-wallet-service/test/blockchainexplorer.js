@@ -6,9 +6,9 @@ var sinon = require('sinon');
 var should = chai.should();
 var { BlockChainExplorer } = require('../ts_build/lib/blockchainexplorer');
 
-describe('BlockChain explorer', function() {
-  describe('#constructor', function() {
-    it('should return a blockchain explorer with basic methods', function() {
+describe('BlockChain explorer', function () {
+  describe('#constructor', function () {
+    it('should return a blockchain explorer with basic methods', function () {
       var exp = new BlockChainExplorer({
         coin: 'tht',
         network: 'testnet3',
@@ -41,7 +41,7 @@ describe('BlockChain explorer', function() {
       exp2.should.respondTo('addAddresses');
 
     });
-    it('should fail on unsupported provider', function() {
+    it('should fail on unsupported provider', function () {
       try {
         var exp = new BlockChainExplorer({
           provider: 'dummy',
@@ -53,8 +53,8 @@ describe('BlockChain explorer', function() {
       }
     });
   });
-  describe('#v8', function() {
-    it.skip('should sign registration', function() {
+  describe('#v8', function () {
+    it.skip('should sign registration', function () {
       var exp = new BlockChainExplorer({
         provider: 'v8',
         coin: 'tht',

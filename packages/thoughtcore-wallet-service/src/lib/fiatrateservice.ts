@@ -57,7 +57,7 @@ export class FiatRateService {
   }
 
   _fetch(cb?) {
-    cb = cb || function() {};
+    cb = cb || function () { };
     const coins = Object.values(Constants.THOUGHTNETWORK_SUPPORTED_COINS);
     const provider = this.providers[0];
 

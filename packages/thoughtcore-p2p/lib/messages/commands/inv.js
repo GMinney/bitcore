@@ -23,7 +23,7 @@ function InvMessage(arg, options) {
 }
 inherits(InvMessage, Message);
 
-InvMessage.prototype.setPayload = function(payload) {
+InvMessage.prototype.setPayload = function (payload) {
   this.inventory = [];
 
   var parser = new BufferReader(payload);
@@ -31,13 +31,13 @@ InvMessage.prototype.setPayload = function(payload) {
   for (var i = 0; i < count; i++) {
     var type = parser.readUInt32LE();
     var hash = parser.read(32);
-    this.inventory.push({type: type, hash: hash});
+    this.inventory.push({ type: type, hash: hash });
   }
 
   utils.checkFinished(parser);
 };
 
-InvMessage.prototype.getPayload = function() {
+InvMessage.prototype.getPayload = function () {
   var bw = new BufferWriter();
   utils.writeInventory(this.inventory, bw);
   return bw.concat();

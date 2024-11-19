@@ -17,9 +17,9 @@ function GetaddrMessage(arg, options) {
 }
 inherits(GetaddrMessage, Message);
 
-GetaddrMessage.prototype.setPayload = function() {};
+GetaddrMessage.prototype.setPayload = function () { };
 
-GetaddrMessage.prototype.getPayload = function() {
+GetaddrMessage.prototype.getPayload = function () {
   return BufferUtil.EMPTY_BUFFER;
 };
 

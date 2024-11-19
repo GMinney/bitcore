@@ -7,7 +7,7 @@ import { SpentHeightIndicators } from '../../../src/types/Coin';
 import { mockModel, mockStorage } from '../../helpers/index.js';
 import { unitAfterHelper, unitBeforeHelper } from '../../helpers/unit';
 
-describe('Coin Model', function() {
+describe('Coin Model', function () {
   before(unitBeforeHelper);
   after(unitAfterHelper);
 

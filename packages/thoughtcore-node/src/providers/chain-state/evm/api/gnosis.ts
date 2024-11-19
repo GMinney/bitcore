@@ -1,5 +1,5 @@
 import { Readable } from 'stream';
-import { Transaction, AbiItem,  } from 'web3-types';
+import { Transaction, AbiItem, } from 'web3-types';
 import { ChainStateProvider } from '../..';
 import { Config } from '../../../../services/config';
 import { IEVMNetworkConfig } from '../../../../types/Config';
@@ -14,13 +14,13 @@ import { EVMTransactionStorage } from '../models/transaction';
 import { EventLog } from 'web3-types';
 import { BaseEVMStateProvider } from './csp';
 
-interface MULTISIGInstantiation extends EventLog{
+interface MULTISIGInstantiation extends EventLog {
   returnValues: {
     [key: string]: any;
   }
 };
 
-interface MULTISIGTxInfo extends EventLog{
+interface MULTISIGTxInfo extends EventLog {
   returnValues: {
     [key: string]: any;
   }
@@ -43,7 +43,7 @@ export class GnosisApi {
 
   private MULTISIG_TX_PROPOSAL_EXPIRE_TIME = 48 * 3600 * 1000;
 
-  async multisigFor(chain: string,network: string, address: string) {
+  async multisigFor(chain: string, network: string, address: string) {
     const { web3 } = await getCSP(chain).getWeb3(network);
     const contract = new web3.eth.Contract(MultisigAbi as AbiItem[], address);
     return contract;

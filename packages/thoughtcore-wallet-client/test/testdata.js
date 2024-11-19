@@ -92,12 +92,12 @@ exports.payProJson = {
     }
   },
   'tht': {
-    body:  Buffer.from(body.tht),
+    body: Buffer.from(body.tht),
     headers: {
       'x-identity': '1EMqSoDzMdBuuvM2RUnup3FnDeo6wuHxEg',
       signature: '8eb262abc4333eef8286f1bebcebb364bb240113319e85c106f9499d813c94337af0104362798d77f57baf8f1fc04723a69c7eaa66e308fb2ac0386873fd1ef9',
       digest: 'SHA-256=6f49d6fe37d7a8049dcb804d05f4a0c0ad0c7e50f12cd17a792a76e975b62a06',
-        'x-signature-type': 'ecc',
+      'x-signature-type': 'ecc',
     },
   }
 };
@@ -109,7 +109,7 @@ exports.payProJsonV2Body = bodyV2 = {
 
 exports.payProJsonV2 = {
   'tht': {
-    body:  Buffer.from(bodyV2.tht),
+    body: Buffer.from(bodyV2.tht),
     headers: {
       'x-identity': '1DbY94wCcLRM1Y6RGFg457JyqBbsYxzfiN',
       signature: '61e74de80655486d11490baa2da96bac8d2f7332b349e7de869f451fe80fb8892ecb69d48bc8d19ee96396bf0c7aeeaffcd84538cd96e600567499ab99f1d7ac',

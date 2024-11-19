@@ -1,7 +1,7 @@
 'use strict';
 
 // karma.conf.js
-module.exports = function(config) {
+module.exports = function (config) {
 
   config.set({
     browsers: ['Firefox'],
@@ -9,12 +9,12 @@ module.exports = function(config) {
     detectBrowsers: {
       enabled: true,
       usePhantomJS: false,
-      postDetection: function(availableBrowser) {
+      postDetection: function (availableBrowser) {
         // modify to enable additional browsers if available
         var runBrowsers = ['Firefox', 'Chrome'];
         var browsers = [];
-        for(var i = 0; i < runBrowsers.length; i++) {
-          if(~availableBrowser.indexOf(runBrowsers[i])) {
+        for (var i = 0; i < runBrowsers.length; i++) {
+          if (~availableBrowser.indexOf(runBrowsers[i])) {
             browsers.push(runBrowsers[i]);
           }
         }

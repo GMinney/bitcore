@@ -2,9 +2,9 @@ import { ethers } from 'ethers';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 import { Constants } from '../../constants';
-import { 
+import {
   EVM_CHAIN_DEFAULT_TESTNET as defaultTestnet,
-  EVM_CHAIN_NETWORK_TO_CHAIN_ID as chainIds 
+  EVM_CHAIN_NETWORK_TO_CHAIN_ID as chainIds
 } from '../../constants/chains';
 import { Key } from '../../derivation';
 import { MULTISENDAbi } from '../erc20/abi';

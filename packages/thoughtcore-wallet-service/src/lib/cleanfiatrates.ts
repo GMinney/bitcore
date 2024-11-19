@@ -2,14 +2,14 @@ import * as async from 'async';
 import * as _ from 'lodash';
 import moment from 'moment';
 import * as mongodb from 'mongodb';
-import {Document, WithId} from 'mongodb';
+import { Document, WithId } from 'mongodb';
 import config from '../config.ts';
 import logger from './logger.ts';
 import { Storage } from './storage.ts';
 
 const ObjectID = mongodb.ObjectId;
 
-var objectIdDate = function(date) {
+var objectIdDate = function (date) {
   return Math.floor(date.getTime() / 1000).toString(16) + '0000000000000000';
 };
 
@@ -21,7 +21,7 @@ export class CleanFiatRates {
   from: Date;
   to: Date;
 
-  constructor() {}
+  constructor() { }
 
   run(cb) {
     let dbConfig = config.storageOpts.mongoDb;
@@ -37,20 +37,20 @@ export class CleanFiatRates {
 
     try {
       mongodb.MongoClient.connect(dbConfig.uri)
-      .then(client => {
-        this.db = client.db(dbConfig.dbname);
-        this.client = client;
-        this.cleanFiatRates(cb);
-        this.client.close().catch(err => {});
-      })
-      .catch(err => {
-        logger.error('%o', err);
-        return cb(null);
-      });
+        .then(client => {
+          this.db = client.db(dbConfig.dbname);
+          this.client = client;
+          this.cleanFiatRates(cb);
+          this.client.close().catch(err => { });
+        })
+        .catch(err => {
+          logger.error('%o', err);
+          return cb(null);
+        });
     } catch (err) {
       return cb(err);
     }
-      
+
   }
 
   cleanFiatRates(cb) {
@@ -103,7 +103,7 @@ export class CleanFiatRates {
       })
       .sort({ _id: 1 })
       .toArray()
-      .then( results => {
+      .then(results => {
 
         const datesToKeep = [];
 

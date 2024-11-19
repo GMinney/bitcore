@@ -76,7 +76,7 @@ export class ErigonRPC implements IRpc {
   public send<T>(data: IJsonRpcRequest) {
     return new Promise<T>((resolve, reject) => {
       const provider = this.web3.eth.currentProvider as any; // Import type HttpProvider web3-core
-      provider.send(data, function(err, data) {
+      provider.send(data, function (err, data) {
         if (err) return reject(err);
         resolve(data.result as T);
       } as Callback<IJsonRpcResponse>);

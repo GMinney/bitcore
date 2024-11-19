@@ -13,15 +13,15 @@ export class BlockCypherClass implements IFeeProvider {
     mainnet: FeeCacheType;
     testnet: FeeCacheType
   } = {
-    mainnet: {
-      timestamp: 0,
-      response: null
-    },
-    testnet: {
-      timestamp: 0,
-      response: null
-    }
-  };
+      mainnet: {
+        timestamp: 0,
+        response: null
+      },
+      testnet: {
+        timestamp: 0,
+        response: null
+      }
+    };
 
   public async getFee(network: NetworkType, nblocks: number): Promise<number> {
     try {

@@ -7,16 +7,16 @@ var _ = thoughtcore.deps._;
 var utils;
 
 module.exports = utils = {
-  checkInventory: function(arg) {
+  checkInventory: function (arg) {
     $.checkArgument(
       _.isUndefined(arg) ||
-        (Array.isArray(arg) && arg.length === 0) ||
-        (Array.isArray(arg) && !_.isUndefined(arg[0].type) && !_.isUndefined(arg[0].hash)),
+      (Array.isArray(arg) && arg.length === 0) ||
+      (Array.isArray(arg) && !_.isUndefined(arg[0].type) && !_.isUndefined(arg[0].hash)),
       'Argument is expected to be an array of inventory objects'
     );
   },
   checkFinished: function checkFinished(parser) {
-    if(!parser.finished()) {
+    if (!parser.finished()) {
       throw new Error('Data still available after parsing');
     }
   },
@@ -24,7 +24,7 @@ module.exports = utils = {
     return thoughtcore.crypto.Random.getRandomBuffer(8);
   },
   writeIP: function writeIP(ip, bw) {
-    var words = ip.v6.split(':').map(function(s) {
+    var words = ip.v6.split(':').map(function (s) {
       return new Buffer(s, 'hex');
     });
     for (var i = 0; i < words.length; i++) {
@@ -45,7 +45,7 @@ module.exports = utils = {
   },
   writeInventory: function writeInventory(inventory, bw) {
     bw.writeVarintNum(inventory.length);
-    inventory.forEach(function(value) {
+    inventory.forEach(function (value) {
       bw.writeUInt32LE(value.type);
       bw.write(value.hash);
     });
@@ -85,7 +85,7 @@ module.exports = utils = {
     var starts = obj.starts;
     var stop = obj.stop;
     if (starts) {
-      starts = starts.map(function(hash) {
+      starts = starts.map(function (hash) {
         if (_.isString(hash)) {
           return BufferUtil.reverse(new Buffer(hash, 'hex'));
         } else {

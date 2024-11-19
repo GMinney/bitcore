@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {FC, memo} from 'react';
-import {CoinsListEth, TransactionEth} from '@/lib/utilities/models';
-import {getConvertedValue, getFormattedDate} from '@/lib/utilities/helper-methods';
+import { FC, memo } from 'react';
+import { CoinsListEth, TransactionEth } from '@/lib/utilities/models';
+import { getConvertedValue, getFormattedDate } from '@/lib/utilities/helper-methods';
 import {
   TransactionBodyCol,
   TransactionTile,
@@ -11,9 +11,9 @@ import {
   TransactionTileFlex,
   SpanLink,
 } from '@/assets/styles/transaction';
-import {Tile, TileDescription} from '@/assets/styles/tile';
+import { Tile, TileDescription } from '@/assets/styles/tile';
 import ArrowSvg from '@/assets/images/arrow.svg';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Image from 'next/image';
 
 interface TransactionDetailsEthProps {
@@ -27,14 +27,14 @@ const TransactionDetailsEth: FC<TransactionDetailsEthProps> = ({
   network,
 }) => {
   const navigate = useNavigate();
-  const {txid, blockTime, blockHeight, coinbase, from, to, fee, confirmations, value} = transaction;
+  const { txid, blockTime, blockHeight, coinbase, from, to, fee, confirmations, value } = transaction;
 
   const goToAddress = (address: any) => {
     return navigate(`/${currency}/${network}/address/${address}`);
   };
 
   const goToTx = (tx: any) => {
-    return navigate({pathname: `/${currency}/${network}/tx/${tx}`});
+    return navigate({ pathname: `/${currency}/${network}/tx/${tx}` });
   };
 
   return (

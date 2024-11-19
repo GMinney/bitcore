@@ -53,15 +53,15 @@ const main = async () => {
           wallet.name = name;
         }
         let storage = new Storage({
-            path,
-            errorIfExists: false,
-            createIfMissing: true,
-            storageType
-          });
+          path,
+          errorIfExists: false,
+          createIfMissing: true,
+          storageType
+        });
         let alreadyExists;
         try {
           alreadyExists = await this.loadWallet({ storage, name, storageType });
-        } catch (err) {}
+        } catch (err) { }
         if (alreadyExists) {
           throw new Error('Wallet already exists');
         }

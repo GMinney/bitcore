@@ -7,30 +7,30 @@ var errors = thoughtcore.errors;
 var $ = thoughtcore.util.preconditions;
 var PrivateKey = thoughtcore.PrivateKey;
 
-describe('preconditions', function() {
+describe('preconditions', function () {
 
-  it('can be used to assert state', function() {
-    (function() {
+  it('can be used to assert state', function () {
+    (function () {
       $.checkState(false, 'testing');
     }).should.throw(errors.InvalidState);
   });
-  it('throws no false negative', function() {
-    (function() {
+  it('throws no false negative', function () {
+    (function () {
       $.checkState(true, 'testing');
     }).should.not.throw();
   });
 
-  it('can be used to check an argument', function() {
-    (function() {
+  it('can be used to check an argument', function () {
+    (function () {
       $.checkArgument(false, 'testing');
     }).should.throw(errors.InvalidArgument);
 
-    (function() {
+    (function () {
       $.checkArgument(true, 'testing');
     }).should.not.throw(errors.InvalidArgument);
   });
 
-  it('can be used to check an argument type', function() {
+  it('can be used to check an argument type', function () {
     var error;
     try {
       $.checkArgumentType(1, 'string', 'argumentName');
@@ -40,13 +40,13 @@ describe('preconditions', function() {
     }
     should.exist(error);
   });
-  it('has no false negatives when used to check an argument type', function() {
-    (function() {
+  it('has no false negatives when used to check an argument type', function () {
+    (function () {
       $.checkArgumentType('a String', 'string', 'argumentName');
     }).should.not.throw();
   });
 
-  it('can be used to check an argument type for a class', function() {
+  it('can be used to check an argument type for a class', function () {
     var error;
     try {
       $.checkArgumentType(1, PrivateKey);
@@ -57,18 +57,18 @@ describe('preconditions', function() {
     }
     should.exist(error);
   });
-  it('has no false negatives when checking a type for a class', function() {
-    (function() {
+  it('has no false negatives when checking a type for a class', function () {
+    (function () {
       $.checkArgumentType(new PrivateKey(), PrivateKey);
     }).should.not.throw();
   });
 
-  it('formats correctly a message on InvalidArgument()', function() {
+  it('formats correctly a message on InvalidArgument()', function () {
     var error = new errors.InvalidArgument();
     error.message.should.equal('Invalid Argument');
   });
 
-  it('formats correctly a message on checkArgument', function() {
+  it('formats correctly a message on checkArgument', function () {
     var error;
     try {
       $.checkArgument(null, 'parameter must be provided');

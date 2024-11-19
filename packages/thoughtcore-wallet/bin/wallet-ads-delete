@@ -23,12 +23,12 @@ let adArgs = {
 };
 
 // need to load credentials, like in ./wallet-ads
-utils.getClient(clientArgs, { 
+utils.getClient(clientArgs, {
   mustExist: true
 }, function (client) {
   client.deleteAdvertisement(adArgs, (err, result) => {
     utils.die(err);
-    if(!result) {
+    if (!result) {
       console.log('Couldn\'t delete advertisement');
     }
     else {

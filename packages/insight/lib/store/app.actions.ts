@@ -1,3 +1,3 @@
-import {appSlice} from './app.reducer';
+import { appSlice } from './app.reducer';
 
-export const {changeTheme, changeNetwork, changeCurrency} = appSlice.actions;
+export const { changeTheme, changeNetwork, changeCurrency } = appSlice.actions;

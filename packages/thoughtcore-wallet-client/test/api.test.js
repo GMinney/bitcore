@@ -62,7 +62,7 @@ var createTxsV8 = (nr, bcHeight, txs) => {
 };
 
 var db;
-describe('client API', function() {
+describe('client API', function () {
   // DONT USE LAMBAS HERE!!! https://stackoverflow.com/questions/23492043/change-default-timeout-for-mocha, or this.timeout() will BREAK!
   //
   var clients, app, sandbox, storage, keys, i;
@@ -1453,7 +1453,7 @@ describe('client API', function() {
     var k;
 
     beforeEach(done => {
-      k = new Key({ seedType:'new'});
+      k = new Key({ seedType: 'new' });
       db.dropDatabase(err => {
         return done(err);
       });
@@ -1652,7 +1652,7 @@ describe('client API', function() {
         clients[0].isComplete().should.equal(false);
         clients[0].credentials.isComplete().should.equal(false);
 
-        let k2 = new Key({ seedType:'new'});
+        let k2 = new Key({ seedType: 'new' });
         clients[1].fromString(
           k2.createCredentials(null, {
             coin: 'tht',
@@ -1727,7 +1727,7 @@ describe('client API', function() {
         },
         (err, secret) => {
           should.not.exist(err);
-          let k2 = new Key({ seedType:'new'});
+          let k2 = new Key({ seedType: 'new' });
           clients[1].fromString(
             k2.createCredentials(null, {
               coin: 'tht',
@@ -1770,7 +1770,7 @@ describe('client API', function() {
         },
         (err, secret) => {
           should.not.exist(err);
-          let k2 = new Key({ seedType:'new'});
+          let k2 = new Key({ seedType: 'new' });
           clients[1].fromString(
             k2.createCredentials(null, {
               coin: 'tht',
@@ -2234,7 +2234,7 @@ describe('client API', function() {
     });
 
     it('should create Thought Cash wallet', done => {
-      let k = new Key({ seedType:'new'});
+      let k = new Key({ seedType: 'new' });
       clients[0].fromString(
         k.createCredentials(null, {
           coin: 'bch',
@@ -2536,7 +2536,7 @@ describe('client API', function() {
     });
 
     it('should save and retrieve matic token addresses', done => {
-      helpers.createAndJoinWallet(clients, keys, 1, 1, {coin: 'matic', chain: 'matic'}, () => {
+      helpers.createAndJoinWallet(clients, keys, 1, 1, { coin: 'matic', chain: 'matic' }, () => {
         clients[0].getPreferences((err, preferences) => {
           should.not.exist(err);
           preferences.should.be.empty;
@@ -2560,7 +2560,7 @@ describe('client API', function() {
     });
 
     it('should save and retrieve matic multisig address', done => {
-      helpers.createAndJoinWallet(clients, keys, 1, 1, {coin: 'matic', chain: 'matic'}, () => {
+      helpers.createAndJoinWallet(clients, keys, 1, 1, { coin: 'matic', chain: 'matic' }, () => {
         clients[0].getPreferences((err, preferences) => {
           should.not.exist(err);
           preferences.should.be.empty;
@@ -2589,7 +2589,7 @@ describe('client API', function() {
     });
 
     it('should save and retrieve op token addresses', done => {
-      helpers.createAndJoinWallet(clients, keys, 1, 1, {coin: 'eth', chain: 'op'}, () => {
+      helpers.createAndJoinWallet(clients, keys, 1, 1, { coin: 'eth', chain: 'op' }, () => {
         clients[0].getPreferences((err, preferences) => {
           should.not.exist(err);
           preferences.should.be.empty;
@@ -2613,7 +2613,7 @@ describe('client API', function() {
     });
 
     it('should save and retrieve base token addresses', done => {
-      helpers.createAndJoinWallet(clients, keys, 1, 1, {coin: 'eth', chain: 'base'}, () => {
+      helpers.createAndJoinWallet(clients, keys, 1, 1, { coin: 'eth', chain: 'base' }, () => {
         clients[0].getPreferences((err, preferences) => {
           should.not.exist(err);
           preferences.should.be.empty;
@@ -2637,7 +2637,7 @@ describe('client API', function() {
     });
 
     it('should save and retrieve arb token addresses', done => {
-      helpers.createAndJoinWallet(clients, keys, 1, 1, {coin: 'eth', chain: 'arb'}, () => {
+      helpers.createAndJoinWallet(clients, keys, 1, 1, { coin: 'eth', chain: 'arb' }, () => {
         clients[0].getPreferences((err, preferences) => {
           should.not.exist(err);
           preferences.should.be.empty;
@@ -2854,7 +2854,7 @@ describe('client API', function() {
         });
       });
     });
-    it('should be able to create address in all copayers in a 2-3 wallet', function(done) {
+    it('should be able to create address in all copayers in a 2-3 wallet', function (done) {
       this.timeout(5000);
       helpers.createAndJoinWallet(clients, keys, 2, 3, {}, () => {
         clients[0].createAddress((err, x) => {
@@ -2935,7 +2935,7 @@ describe('client API', function() {
         );
       });
     });
-    it('should be able to derive 25 addresses', function(done) {
+    it('should be able to derive 25 addresses', function (done) {
       this.timeout(5000);
       var num = 25;
       helpers.createAndJoinWallet(clients, keys, 1, 1, {}, () => {
@@ -2970,7 +2970,7 @@ describe('client API', function() {
       it('should be able to create address in 1-of-1 wallet', done => {
         var xPriv =
           'xprv9s21ZrQH143K3GJpoapnV8SFfukcVBSfeCficPSGfubmSFDxo1kuHnLisriDvSnRRuL2Qrg5ggqHKNVpxR86QEC8w35uxmGoggxtQTPvfUu';
-        let k  = new Key({ seedData: xPriv, seedType: 'extendedPrivateKey'});
+        let k = new Key({ seedData: xPriv, seedType: 'extendedPrivateKey' });
 
         clients[0].fromString(
           k.createCredentials(null, {
@@ -3029,7 +3029,7 @@ describe('client API', function() {
 
   describe('Notifications', () => {
     var clock;
-    beforeEach(function(done) {
+    beforeEach(function (done) {
       this.timeout(5000);
       clock = sinon.useFakeTimers({ now: 1234000, toFake: ['Date'] });
       helpers.createAndJoinWallet(clients, keys, 2, 2, {}, () => {
@@ -3661,7 +3661,7 @@ describe('client API', function() {
     });
   });
 
-  describe('Transaction Proposal signing', function() {
+  describe('Transaction Proposal signing', function () {
     this.timeout(5000);
     var setup = (m, n, coin, network, cb) => {
       helpers.createAndJoinWallet(
@@ -3783,7 +3783,7 @@ describe('client API', function() {
           );
         });
       });
-      
+
       it('Should sign proposal with no change', done => {
         var toAddress = 'n2TBMPzPECGUfcT2EByiTJ12TPZkhN2mN5';
         var opts = {
@@ -4446,7 +4446,7 @@ describe('client API', function() {
     });
   });
 
-  describe('Payment Protocol V2', function() {
+  describe('Payment Protocol V2', function () {
     var PP, oldreq, DATA, postArgs;
     var header = {};
     var mockRequest = (bodyBuf, headers) => {
@@ -4459,8 +4459,8 @@ describe('client API', function() {
                 header[_k] = _v;
               }
             },
-            query: _opts => {},
-            agent: _opts => {},
+            query: _opts => { },
+            agent: _opts => { },
             end: cb => {
               return cb(null, {
                 headers: headers || {},
@@ -4484,7 +4484,7 @@ describe('client API', function() {
                 postArgs.push(_opts);
               }
             },
-            agent: _opts => {},
+            agent: _opts => { },
             end: cb => {
               return cb(null, {
                 headers: headers || {},
@@ -4529,7 +4529,7 @@ describe('client API', function() {
         opts: { network: 'livenet', useNativeSegwit: true },
         expectedSize: 187, // from decode-tx
       }
- 
+
     ];
 
     let cas = 0;
@@ -4554,7 +4554,7 @@ describe('client API', function() {
 
                 Client.PayProV2.selectPaymentOption(opts).then(paypro => {
                   //              http.getCall(0).args[0].coin.should.equal('tht');
-                  
+
                   helpers.createAndPublishTxProposal(
                     clients[0],
                     {
@@ -4573,7 +4573,7 @@ describe('client API', function() {
             });
           });
         });
-        it('Should send the signed tx in paypro. case: ' + cas++, function(done) {
+        it('Should send the signed tx in paypro. case: ' + cas++, function (done) {
           clients[0].getTxProposals({}, (err, txps) => {
             should.not.exist(err);
             let signatures = keys[0].sign(clients[0].getRootPath(), txps[0]);
@@ -4581,28 +4581,28 @@ describe('client API', function() {
               should.not.exist(err);
               let signatures = keys[1].sign(clients[1].getRootPath(), txps[0]);
               clients[1].pushSignatures(txps[0], signatures, (err, xx, paypro) => {
-              should.not.exist(err);
- 
-              xx.status.should.equal('accepted');
-
-              let spy = sinon.spy(Client.PayProV2.request, 'post');
-              clients[0].broadcastTxProposal(xx, (err, zz, memo) => {
                 should.not.exist(err);
-                spy.called.should.be.true;
 
-                // unsigned
-                let size = x.expectedSize;
-                postArgs[0].transactions[0].weightedSize.should.within(
-                  size - 10,
-                  size + 10
-                );
+                xx.status.should.equal('accepted');
 
-                // signed
-                postArgs[1].transactions[0].weightedSize.should.within(size-10, size+10);
-                done();
+                let spy = sinon.spy(Client.PayProV2.request, 'post');
+                clients[0].broadcastTxProposal(xx, (err, zz, memo) => {
+                  should.not.exist(err);
+                  spy.called.should.be.true;
+
+                  // unsigned
+                  let size = x.expectedSize;
+                  postArgs[0].transactions[0].weightedSize.should.within(
+                    size - 10,
+                    size + 10
+                  );
+
+                  // signed
+                  postArgs[1].transactions[0].weightedSize.should.within(size - 10, size + 10);
+                  done();
+                });
               });
             });
-          });
           });
         });
       });
@@ -4933,7 +4933,7 @@ describe('client API', function() {
 
       it('Should send the signed tx in paypro', done => {
         clients[0].getTxProposals({}, (err, txps) => {
-          should.not.exist(err,err);
+          should.not.exist(err, err);
           let signatures = keys[0].sign(clients[0].getRootPath(), txps[0]);
           clients[0].pushSignatures(txps[0], signatures, (err, xx, paypro) => {
             should.not.exist(err, err);
@@ -5220,7 +5220,7 @@ describe('client API', function() {
     });
   });
 
-  describe('Transactions Signatures and Rejection', function() {
+  describe('Transactions Signatures and Rejection', function () {
     this.timeout(5000);
     it('Send and broadcast in 1-1 wallet THT', done => {
       helpers.createAndJoinWallet(clients, keys, 1, 1, {}, w => {
@@ -5315,7 +5315,7 @@ describe('client API', function() {
       });
     });
 
-    it('Prevent signing of TXs with lower Nonces in 1-1 wallet ETH', function(done) {
+    it('Prevent signing of TXs with lower Nonces in 1-1 wallet ETH', function (done) {
       helpers.createAndJoinWallet(clients, keys, 1, 1, { coin: 'eth' }, w => {
         clients[0].createAddress((err, x0) => {
           should.not.exist(err);
@@ -5351,7 +5351,7 @@ describe('client API', function() {
               txp2.status.should.equal('pending');
               txp2.outputs[0].message.should.equal('output 0');
               txp2.message.should.equal('hello');
-              
+
               let signatures = keys[0].sign(clients[0].getRootPath(), txp2);
               clients[0].pushSignatures(txp2, signatures, err => {
                 should.exist(err);
@@ -5637,7 +5637,7 @@ describe('client API', function() {
         });
       });
     });
-    it('should get transaction history decorated with proposal & notes', function(done) {
+    it('should get transaction history decorated with proposal & notes', function (done) {
       this.timeout(5000);
       async.waterfall(
         [
@@ -6438,7 +6438,7 @@ describe('client API', function() {
                       recoveryClient2.credentials.coin.should.equal('gusd');
                       should.exist(recoveryClient2.credentials.chain);
                       recoveryClient2.credentials.chain.should.equal('eth');
-                    recoveryClient2.credentials.walletId.should.equal(`${walletId}-${tokenAddresses[1]}`);
+                      recoveryClient2.credentials.walletId.should.equal(`${walletId}-${tokenAddresses[1]}`);
                       done();
                     });
                   });
@@ -6507,7 +6507,7 @@ describe('client API', function() {
 
           clients[0].savePreferences({ tokenAddresses }, err => {
             should.not.exist(err);
-              Client.serverAssistedImport(
+            Client.serverAssistedImport(
               { words, includeTestnetWallets: true },
               {
                 clientFactory: () => {
@@ -6549,7 +6549,7 @@ describe('client API', function() {
             err => {
               should.not.exist(err);
               Client.serverAssistedImport(
-                { words, includeTestnetWallets: true  },
+                { words, includeTestnetWallets: true },
                 {
                   clientFactory: () => {
                     return helpers.newClient(app);
@@ -6596,7 +6596,7 @@ describe('client API', function() {
           clients[0].savePreferences({ maticTokenAddresses }, err => {
             should.not.exist(err);
             Client.serverAssistedImport(
-              { words, includeTestnetWallets: true  },
+              { words, includeTestnetWallets: true },
               {
                 clientFactory: () => {
                   return helpers.newClient(app);
@@ -6641,7 +6641,7 @@ describe('client API', function() {
 
           clients[0].savePreferences({ maticTokenAddresses }, err => {
             should.not.exist(err);
-              Client.serverAssistedImport(
+            Client.serverAssistedImport(
               { words, includeTestnetWallets: true },
               {
                 clientFactory: () => {
@@ -6683,7 +6683,7 @@ describe('client API', function() {
             err => {
               should.not.exist(err);
               Client.serverAssistedImport(
-                { words, includeTestnetWallets: true  },
+                { words, includeTestnetWallets: true },
                 {
                   clientFactory: () => {
                     return helpers.newClient(app);
@@ -6730,7 +6730,7 @@ describe('client API', function() {
           clients[0].savePreferences({ opTokenAddresses }, err => {
             should.not.exist(err);
             Client.serverAssistedImport(
-              { words, includeTestnetWallets: true  },
+              { words, includeTestnetWallets: true },
               {
                 clientFactory: () => {
                   return helpers.newClient(app);
@@ -6762,7 +6762,7 @@ describe('client API', function() {
           });
         });
       });
-      
+
       it('should not fail to gain access to op wallet with unknown tokens addresses from mnemonic (Case 3)', done => {
         helpers.createAndJoinWallet(clients, keys, 1, 1, { coin: 'eth', chain: 'op' }, () => {
           var words = keys[0].get(null, true).mnemonic;
@@ -6775,7 +6775,7 @@ describe('client API', function() {
 
           clients[0].savePreferences({ opTokenAddresses }, err => {
             should.not.exist(err);
-              Client.serverAssistedImport(
+            Client.serverAssistedImport(
               { words, includeTestnetWallets: true },
               {
                 clientFactory: () => {
@@ -6850,7 +6850,7 @@ describe('client API', function() {
           );
         });
       });
-      
+
       it('should be able to gain access to base tokens wallets from mnemonic (Case 2)', done => {
         helpers.createAndJoinWallet(clients, keys, 1, 1, { coin: 'eth', chain: 'base' }, () => {
           var words = keys[0].get(null, true).mnemonic;
@@ -6864,7 +6864,7 @@ describe('client API', function() {
           clients[0].savePreferences({ baseTokenAddresses }, err => {
             should.not.exist(err);
             Client.serverAssistedImport(
-              { words, includeTestnetWallets: true  },
+              { words, includeTestnetWallets: true },
               {
                 clientFactory: () => {
                   return helpers.newClient(app);
@@ -6906,10 +6906,10 @@ describe('client API', function() {
           var baseTokenAddresses = [
             '0x9da9bc12b19b22d7c55798f722a1b6747ae9a710',
           ];
-      
+
           clients[0].savePreferences({ baseTokenAddresses }, err => {
             should.not.exist(err);
-              Client.serverAssistedImport(
+            Client.serverAssistedImport(
               { words, includeTestnetWallets: true },
               {
                 clientFactory: () => {
@@ -6998,7 +6998,7 @@ describe('client API', function() {
           clients[0].savePreferences({ arbTokenAddresses }, err => {
             should.not.exist(err);
             Client.serverAssistedImport(
-              { words, includeTestnetWallets: true  },
+              { words, includeTestnetWallets: true },
               {
                 clientFactory: () => {
                   return helpers.newClient(app);
@@ -7040,10 +7040,10 @@ describe('client API', function() {
           var arbTokenAddresses = [
             '0x9da9bc12b19b22d7c55798f722a1b6747ae9a710',
           ];
-      
+
           clients[0].savePreferences({ arbTokenAddresses }, err => {
             should.not.exist(err);
-              Client.serverAssistedImport(
+            Client.serverAssistedImport(
               { words, includeTestnetWallets: true },
               {
                 clientFactory: () => {
@@ -7068,7 +7068,7 @@ describe('client API', function() {
         });
       });
 
-      
+
       it('should be able to gain access to two TESTNET tht/bch 1-1 wallets from mnemonic', done => {
         let key = new Key({ seedType: 'new' });
         helpers.createAndJoinWallet(clients, keys, 1, 1, { key: key }, () => {
@@ -7123,7 +7123,7 @@ describe('client API', function() {
               should.not.exist(err);
               should.exist(addr);
               Client.serverAssistedImport(
-                { words, includeTestnetWallets: true},
+                { words, includeTestnetWallets: true },
                 {
                   clientFactory: () => {
                     return helpers.newClient(app);
@@ -7270,9 +7270,9 @@ describe('client API', function() {
 
       it('should be able to gain access to three arb accounts from mnemonic and add wallet info correctly to all of them', done => {
         let key = new Key({ seedType: 'new' });
-        helpers.createAndJoinWallet(clients, keys, 1, 1, {key, coin: 'eth', chain: 'arb'}, () => {
-          helpers.createAndJoinWallet(clients, keys, 1, 1, {key, coin: 'eth', chain: 'arb', account: 1}, () => {
-            helpers.createAndJoinWallet(clients, keys, 1, 1, {key, coin: 'eth', chain: 'arb', account: 2}, () => {
+        helpers.createAndJoinWallet(clients, keys, 1, 1, { key, coin: 'eth', chain: 'arb' }, () => {
+          helpers.createAndJoinWallet(clients, keys, 1, 1, { key, coin: 'eth', chain: 'arb', account: 1 }, () => {
+            helpers.createAndJoinWallet(clients, keys, 1, 1, { key, coin: 'eth', chain: 'arb', account: 2 }, () => {
               var words = keys[0].get(null, true).mnemonic;
               var walletName = clients[0].credentials.walletName;
               var copayerName = clients[0].credentials.copayerName;
@@ -7464,7 +7464,7 @@ describe('client API', function() {
         });
       });
 
-      it("should be able to gain access to a OLD 44' 2-2 wallet from mnemonic", function(done) {
+      it("should be able to gain access to a OLD 44' 2-2 wallet from mnemonic", function (done) {
         helpers.createAndJoinWallet(
           clients,
           keys,
@@ -7517,7 +7517,7 @@ describe('client API', function() {
         );
       });
 
-      it("should be able to gain access to a OLD 44' 2-3 wallet from mnemonic", function(done) {
+      it("should be able to gain access to a OLD 44' 2-3 wallet from mnemonic", function (done) {
         this.timeout(5000);
         helpers.createAndJoinWallet(
           clients,
@@ -7571,31 +7571,31 @@ describe('client API', function() {
         );
       });
 
-      it('should be able to restore with equal keyid an old bch wallet and an old multisig tht wallet', function(done) {  
+      it('should be able to restore with equal keyid an old bch wallet and an old multisig tht wallet', function (done) {
         var words = 'famous ship happy oyster retire sponsor disease friend parent wise grunt voyage';
-        let k1 = new Key({ seedData: words, seedType: 'mnemonic', useLegacyCoinType: false, useLegacyPurpose: true}); // old bch wallets: /[44,48]/[0,0]'/
-        let k2 = new Key({ seedData: words, seedType: 'mnemonic', useLegacyCoinType: true,  useLegacyPurpose: false });  // old THT/BCH  multisig wallets: /[44]/[0,145]'/
-        helpers.createAndJoinWallet(clients, keys, 2, 2, { key: k1, network: 'livenet'}, () => {
-        // first create a "old" bch wallet (coin = 0).
-        clients[1].fromString(
-          k2.createCredentials(null, {
-            coin: 'bch',
-            network: 'livenet',
-            account: 0,
-            n: 1
-          })
-        );
-        clients[1].createWallet(
-          'mywallet',
-          'creator',
-          1,
-          1,
-          {
-            coin: 'bch',
-            network: 'livenet'
-          },
-          (err, secret) => {
-            should.not.exist(err);
+        let k1 = new Key({ seedData: words, seedType: 'mnemonic', useLegacyCoinType: false, useLegacyPurpose: true }); // old bch wallets: /[44,48]/[0,0]'/
+        let k2 = new Key({ seedData: words, seedType: 'mnemonic', useLegacyCoinType: true, useLegacyPurpose: false });  // old THT/BCH  multisig wallets: /[44]/[0,145]'/
+        helpers.createAndJoinWallet(clients, keys, 2, 2, { key: k1, network: 'livenet' }, () => {
+          // first create a "old" bch wallet (coin = 0).
+          clients[1].fromString(
+            k2.createCredentials(null, {
+              coin: 'bch',
+              network: 'livenet',
+              account: 0,
+              n: 1
+            })
+          );
+          clients[1].createWallet(
+            'mywallet',
+            'creator',
+            1,
+            1,
+            {
+              coin: 'bch',
+              network: 'livenet'
+            },
+            (err, secret) => {
+              should.not.exist(err);
               Client.serverAssistedImport(
                 { words, includeTestnetWallets: false, includeLegacyWallets: true },
                 {
@@ -7613,8 +7613,8 @@ describe('client API', function() {
                   done();
                 });
             });
-          });
         });
+      });
 
       it('should be able to see txp messages after gaining access', done => {
         helpers.createAndJoinWallet(clients, keys, 1, 1, {}, () => {
@@ -7730,7 +7730,7 @@ describe('client API', function() {
         });
       });
 
-      it('should be able to recover funds from recreated wallet', function(done) {
+      it('should be able to recover funds from recreated wallet', function (done) {
         this.timeout(10000);
         helpers.createAndJoinWallet(clients, keys, 2, 2, {}, () => {
           clients[0].createAddress((err, addr) => {
@@ -7937,7 +7937,7 @@ describe('client API', function() {
       importedClient = null;
     });
 
-    it('should be able to restore a  useLegacyCoinType wallet', function(done) {
+    it('should be able to restore a  useLegacyCoinType wallet', function (done) {
       this.timeout(5000);
 
       var check = x => {

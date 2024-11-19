@@ -15,7 +15,7 @@ export class THTTxProvider {
     }>,
     fee: number
   ) {
-    utxos = utxos.sort(function(a, b) {
+    utxos = utxos.sort(function (a, b) {
       return a.mintHeight - b.mintHeight;
     });
 

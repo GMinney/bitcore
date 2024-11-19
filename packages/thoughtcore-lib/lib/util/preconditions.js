@@ -4,17 +4,17 @@ var errors = require('../errors');
 var _ = require('lodash');
 
 module.exports = {
-  checkState: function(condition, message) {
+  checkState: function (condition, message) {
     if (!condition) {
       throw new errors.InvalidState(message);
     }
   },
-  checkArgument: function(condition, argumentName, message, docsPath) {
+  checkArgument: function (condition, argumentName, message, docsPath) {
     if (!condition) {
       throw new errors.InvalidArgument(argumentName, message, docsPath);
     }
   },
-  checkArgumentType: function(argument, type, argumentName) {
+  checkArgumentType: function (argument, type, argumentName) {
     argumentName = argumentName || '(unknown name)';
     if (_.isString(type)) {
       if (type === 'Buffer') {
@@ -32,7 +32,7 @@ module.exports = {
       }
     }
   },
-  isType: function(argument, type, argumentName) {
+  isType: function (argument, type, argumentName) {
     try {
       this.checkArgumentType(argument, type, argumentName);
       return true;

@@ -193,7 +193,7 @@ export class Wallet {
     let alreadyExists;
     try {
       alreadyExists = await this.loadWallet({ storage, name, storageType });
-    } catch (err) {}
+    } catch (err) { }
     if (alreadyExists) {
       throw new Error('Wallet already exists');
     }
@@ -544,7 +544,7 @@ export class Wallet {
       });
     } else if (!signingKeys) {
       addresses.push(keys[0]);
-      utxos.forEach(function(element) {
+      utxos.forEach(function (element) {
         let keyToDecrypt = keys.find(key => key.address === element.address);
         addresses.push(keyToDecrypt);
       });
@@ -731,7 +731,7 @@ export class Wallet {
         console.log(`Bumping fee rate to ${params.feeRate} sats/byte`);
       }
 
-    // EVM chains
+      // EVM chains
     } else {
       const { nonce, gasLimit, gasPrice, to, data, value, chainId, type } = existingTx;
       // converting gasLimit and value with toString avoids a bigNumber warning
@@ -742,7 +742,7 @@ export class Wallet {
       params.chainId = chainId;
       params.type = type;
       params.recipients = [{ address: to, amount: value.toString() }];
-      
+
       // TODO fix type2 support
       if (false && existingTx.type === 2) {
         if (feeRate) {
@@ -752,7 +752,7 @@ export class Wallet {
           // params.maxGasFee = (await wallet.getNetworkFee({ target: feeTarget })).feerate;
           // console.log(`Bumping max gas price to ${Web3.utils.fromWei(params.maxGasFee.toString(), 'gwei')} gwei`);
         }
-        if (feePriority) {    
+        if (feePriority) {
           params.maxPriorityFee = Web3.utils.toWei(feePriority.toString(), 'gwei');
         } else {
           // TODO placeholder until for type2 support is merged in another PR
@@ -760,7 +760,7 @@ export class Wallet {
           // console.log(`Bumping max priority fee to ${Web3.utils.fromWei(params.maxPriorityFee.toString(), 'gwei')} gwei`);
         }
 
-      // type 0
+        // type 0
       } else {
         if (feeRate) {
           params.gasPrice = Web3.utils.toWei(feeRate.toString(), 'gwei');
@@ -770,7 +770,7 @@ export class Wallet {
           console.log(`Bumping gas price to ${Web3.utils.fromWei(params.gasPrice.toString(), 'gwei')} gwei`);
         }
       }
-      
+
     }
 
     const tx: string = await this.newTx(params);
@@ -796,7 +796,7 @@ export const AddressTypes = {
     // witnesspubkeyhash
     witnesspubkeyhash: 'witnesspubkeyhash',
     p2wpkh: 'witnesspubkeyhash',
-    
+
     // taproot
     taproot: 'taproot',
     p2tr: 'taproot'

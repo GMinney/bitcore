@@ -44,7 +44,7 @@ var sighash = function sighash(transaction, sighashType, inputNumber, scriptCode
   }
 
   if (!(sighashType & Signature.SIGHASH_ANYONECANPAY) &&
-      (sighashType & 0x1f) !== Signature.SIGHASH_SINGLE && (sighashType & 0x1f) !== Signature.SIGHASH_NONE) {
+    (sighashType & 0x1f) !== Signature.SIGHASH_SINGLE && (sighashType & 0x1f) !== Signature.SIGHASH_NONE) {
 
     var sequenceBuffers = [];
     for (var m = 0; m < transaction.inputs.length; m++) {

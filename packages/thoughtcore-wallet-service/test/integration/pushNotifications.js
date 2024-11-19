@@ -15,50 +15,50 @@ var sjcl = require('sjcl');
 var { WalletService } = require('../../ts_build/lib/server');
 var { PushNotificationsService } = require('../../ts_build/lib/pushnotificationsservice');
 const { Storage } = require('../../ts_build/lib/storage')
-const ObjectID  = require('mongodb').ObjectID;
+const ObjectID = require('mongodb').ObjectID;
 
 var TestData = require('../testdata');
 var helpers = require('./helpers');
 const TOKENS = ['0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', '0x8E870D67F660D95d5be530380D0eC0bd388289E1', '0x056Fd409E1d7A124BD7017459dFEa2F387b6d5Cd'];
 const CUSTOM_TOKENS = ['0x0d8775f648430679a709e98d2b0cb6250d2887ef'];
 
-describe('Push notifications', function() {
+describe('Push notifications', function () {
   this.timeout(5000);
   var server, wallet, requestStub, getTokenDataStub, pushNotificationsService, walletId;
 
 
 
-  before(function(done) {
+  before(function (done) {
     helpers.before((res) => {
       done();
     });
   });
 
 
-  after(function(done) {
+  after(function (done) {
     helpers.after(done);
   });
 
-  describe('Single wallet', function() {
-    beforeEach(function(done) {
-      helpers.beforeEach(function(res) {
-        helpers.createAndJoinWallet(1, 1, function(s, w) {
+  describe('Single wallet', function () {
+    beforeEach(function (done) {
+      helpers.beforeEach(function (res) {
+        helpers.createAndJoinWallet(1, 1, function (s, w) {
           server = s;
           wallet = w;
 
           var i = 0;
-          async.eachSeries(w.copayers, function(copayer, next) {
-            helpers.getAuthServer(copayer.id, function(server) {
+          async.eachSeries(w.copayers, function (copayer, next) {
+            helpers.getAuthServer(copayer.id, function (server) {
               async.parallel([
 
-                function(done) {
+                function (done) {
                   server.savePreferences({
                     email: 'copayer' + (++i) + '@domain.com',
                     language: 'en',
                     unit: 'bit',
                   }, done);
                 },
-                function(done) {
+                function (done) {
                   server.pushNotificationsSubscribe({
                     token: '1234',
                     packageName: 'com.wallet',
@@ -69,7 +69,7 @@ describe('Push notifications', function() {
               ], next);
 
             });
-          }, function(err) {
+          }, function (err) {
             should.not.exist(err);
 
             requestStub = sinon.stub();
@@ -89,7 +89,7 @@ describe('Push notifications', function() {
                 pushServerUrl: 'http://localhost:8000',
                 authorizationKey: 'secret',
               },
-            }, function(err) {
+            }, function (err) {
               should.not.exist(err);
               done();
             });
@@ -98,12 +98,12 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should build each notifications using preferences of the copayers', function(done) {
+    it('should build each notifications using preferences of the copayers', function (done) {
       server.savePreferences({
         language: 'en',
         unit: 'bit',
-      }, function(err) {
-        server.createAddress({}, function(err, address) {
+      }, function (err) {
+        server.createAddress({}, function (err, address) {
           should.not.exist(err);
 
           // Simulate incoming tx notification
@@ -113,10 +113,10 @@ describe('Push notifications', function() {
             amount: 12300000,
           }, {
             isGlobal: true
-          }, function(err) {
-            setTimeout(function() {
+          }, function (err) {
+            setTimeout(function () {
               var calls = requestStub.getCalls();
-              var args = _.map(calls, function(c) {
+              var args = _.map(calls, function (c) {
                 return c.args[0];
               });
               calls.length.should.equal(2); // NewAddress, NewIncomingTx
@@ -131,8 +131,8 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should notify auto-payments to creator', function(done) {
-      server.createAddress({}, function(err, address) {
+    it('should notify auto-payments to creator', function (done) {
+      server.createAddress({}, function (err, address) {
         should.not.exist(err);
 
         // Simulate incoming tx notification
@@ -142,10 +142,10 @@ describe('Push notifications', function() {
           amount: 12300000,
         }, {
           isGlobal: false
-        }, function(err) {
-          setTimeout(function() {
+        }, function (err) {
+          setTimeout(function () {
             var calls = requestStub.getCalls();
-            var args = _.map(calls, function(c) {
+            var args = _.map(calls, function (c) {
               return c.args[0];
             });
             calls.length.should.equal(2); // NewAdress, NewIncomingTx
@@ -156,8 +156,8 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should show the correct template for zero amount outgoin transactions', function(done) {
-      server.createAddress({}, function(err, address) {
+    it('should show the correct template for zero amount outgoin transactions', function (done) {
+      server.createAddress({}, function (err, address) {
         should.not.exist(err);
 
         // Simulate zero amount outgoing tx notification
@@ -168,10 +168,10 @@ describe('Push notifications', function() {
           amount: 0,
         }, {
           isGlobal: false
-        }, function(err) {
-          setTimeout(function() {
+        }, function (err) {
+          setTimeout(function () {
             var calls = requestStub.getCalls();
-            var args = _.map(calls, function(c) {
+            var args = _.map(calls, function (c) {
               return c.args[0];
             });
             calls.length.should.equal(2); // NewOutgoingTx
@@ -186,8 +186,8 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should show the correct template for non zero amount outgoing transactions', function(done) {
-      server.createAddress({}, function(err, address) {
+    it('should show the correct template for non zero amount outgoing transactions', function (done) {
+      server.createAddress({}, function (err, address) {
         should.not.exist(err);
 
         server._notify('NewOutgoingTx', {
@@ -196,10 +196,10 @@ describe('Push notifications', function() {
           amount: 12345
         }, {
           isGlobal: false
-        }, function(err) {
-          setTimeout(function() {
+        }, function (err) {
+          setTimeout(function () {
             var calls = requestStub.getCalls();
-            var args = _.map(calls, function(c) {
+            var args = _.map(calls, function (c) {
               return c.args[0];
             });
             calls.length.should.equal(2); // NewOutgoingTx
@@ -214,8 +214,8 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should notify copayers when payment is received', function(done) {
-      server.createAddress({}, function(err, address) {
+    it('should notify copayers when payment is received', function (done) {
+      server.createAddress({}, function (err, address) {
         should.not.exist(err);
 
         // Simulate incoming tx notification
@@ -225,10 +225,10 @@ describe('Push notifications', function() {
           amount: 12300000,
         }, {
           isGlobal: true
-        }, function(err) {
-          setTimeout(function() {
+        }, function (err) {
+          setTimeout(function () {
             var calls = requestStub.getCalls();
-            var args = _.map(calls, function(c) {
+            var args = _.map(calls, function (c) {
               return c.args[0];
             });
             calls.length.should.equal(2); // NewAdress, NewIncomingTx
@@ -239,22 +239,22 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should notify copayers when tx is confirmed if they are subscribed', function(done) {
-      server.createAddress({}, function(err, address) {
+    it('should notify copayers when tx is confirmed if they are subscribed', function (done) {
+      server.createAddress({}, function (err, address) {
         should.not.exist(err);
 
         server.txConfirmationSubscribe({
           txid: '123'
-        }, function(err) {
+        }, function (err) {
           should.not.exist(err);
 
           // Simulate tx confirmation notification
           server._notify('TxConfirmation', {
             txid: '123',
-          }, function(err) {
-            setTimeout(function() {
+          }, function (err) {
+            setTimeout(function () {
               var calls = requestStub.getCalls();
-              var args = _.map(calls, function(c) {
+              var args = _.map(calls, function (c) {
                 return c.args[0];
               });
               calls.length.should.equal(2); // NewAdress, TxConfirmation
@@ -266,8 +266,8 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should notify creator when txp is accepted by himself and the app is open', function(done) {
-      server.createAddress({}, function(err, address) {
+    it('should notify creator when txp is accepted by himself and the app is open', function (done) {
+      server.createAddress({}, function (err, address) {
         should.not.exist(err);
 
         // Simulate txp accepted by creator
@@ -275,10 +275,10 @@ describe('Push notifications', function() {
           txid: '123'
         }, {
           isGlobal: true
-        }, function(err) {
-          setTimeout(function() {
+        }, function (err) {
+          setTimeout(function () {
             var calls = requestStub.getCalls();
-            var args = _.map(calls, function(c) {
+            var args = _.map(calls, function (c) {
               return c.args[0];
             });
             calls.length.should.equal(2); // NewAdress, TxProposalAcceptedBy
@@ -292,8 +292,8 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should notify creator when txp is finally accepeted by himself and the app is open', function(done) {
-      server.createAddress({}, function(err, address) {
+    it('should notify creator when txp is finally accepeted by himself and the app is open', function (done) {
+      server.createAddress({}, function (err, address) {
         should.not.exist(err);
 
         // Simulate txp accepted by creator
@@ -301,10 +301,10 @@ describe('Push notifications', function() {
           txid: '123'
         }, {
           isGlobal: true
-        }, function(err) {
-          setTimeout(function() {
+        }, function (err) {
+          setTimeout(function () {
             var calls = requestStub.getCalls();
-            var args = _.map(calls, function(c) {
+            var args = _.map(calls, function (c) {
               return c.args[0];
             });
             calls.length.should.equal(2); // NewAdress, TxProposalFinallyAccepted
@@ -318,8 +318,8 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should notify creator when txp is rejected by himself and the app is open', function(done) {
-      server.createAddress({}, function(err, address) {
+    it('should notify creator when txp is rejected by himself and the app is open', function (done) {
+      server.createAddress({}, function (err, address) {
         should.not.exist(err);
 
         // Simulate txp rejected by creator
@@ -327,10 +327,10 @@ describe('Push notifications', function() {
           txid: '1234'
         }, {
           isGlobal: true
-        }, function(err) {
-          setTimeout(function() {
+        }, function (err) {
+          setTimeout(function () {
             var calls = requestStub.getCalls();
-            var args = _.map(calls, function(c) {
+            var args = _.map(calls, function (c) {
               return c.args[0];
             });
             calls.length.should.equal(2); // NewAdress, TxProposalRejectedBy
@@ -344,8 +344,8 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should notify creator when txp is removed and the app is open', function(done) {
-      server.createAddress({}, function(err, address) {
+    it('should notify creator when txp is removed and the app is open', function (done) {
+      server.createAddress({}, function (err, address) {
         should.not.exist(err);
 
         // Simulate txp removed
@@ -353,10 +353,10 @@ describe('Push notifications', function() {
           txid: '1234'
         }, {
           isGlobal: true
-        }, function(err) {
-          setTimeout(function() {
+        }, function (err) {
+          setTimeout(function () {
             var calls = requestStub.getCalls();
-            var args = _.map(calls, function(c) {
+            var args = _.map(calls, function (c) {
               return c.args[0];
             });
             calls.length.should.equal(2); // NewAdress, TxProposalRemoved
@@ -369,7 +369,7 @@ describe('Push notifications', function() {
         });
       });
 
-      it('should use different template for new incoming tx if network is testnet', function(done) {
+      it('should use different template for new incoming tx if network is testnet', function (done) {
         server.createAddress({}, (err, address) => {
           should.not.exist(err);
 
@@ -382,10 +382,10 @@ describe('Push notifications', function() {
           }, (err) => {
             should.not.exist(err);
 
-            setTimeout(function() {
+            setTimeout(function () {
               var calls = requestStub.getCalls();
               calls.length.should.equal(2);
-              var args = _.map(calls, function(c) {
+              var args = _.map(calls, function (c) {
                 return c.args[0];
               });
               args[1].body.notification.title.should.contain('New payment received');
@@ -398,25 +398,25 @@ describe('Push notifications', function() {
     });
   });
 
-  describe('Shared wallet', function() {
-    beforeEach(function(done) {
-      helpers.beforeEach(function(res) {
-        helpers.createAndJoinWallet(2, 3, function(s, w) {
+  describe('Shared wallet', function () {
+    beforeEach(function (done) {
+      helpers.beforeEach(function (res) {
+        helpers.createAndJoinWallet(2, 3, function (s, w) {
           server = s;
           wallet = w;
           var i = 0;
-          async.eachSeries(w.copayers, function(copayer, next) {
-            helpers.getAuthServer(copayer.id, function(server) {
+          async.eachSeries(w.copayers, function (copayer, next) {
+            helpers.getAuthServer(copayer.id, function (server) {
               async.parallel([
 
-                function(done) {
+                function (done) {
                   server.savePreferences({
                     email: 'copayer' + (++i) + '@domain.com',
                     language: 'en',
                     unit: 'bit',
                   }, done);
                 },
-                function(done) {
+                function (done) {
                   server.pushNotificationsSubscribe({
                     token: '1234',
                     packageName: 'com.wallet',
@@ -427,7 +427,7 @@ describe('Push notifications', function() {
               ], next);
 
             });
-          }, function(err) {
+          }, function (err) {
             should.not.exist(err);
 
             requestStub = sinon.stub();
@@ -447,7 +447,7 @@ describe('Push notifications', function() {
                 pushServerUrl: 'http://localhost:8000',
                 authorizationKey: 'secret',
               },
-            }, function(err) {
+            }, function (err) {
               should.not.exist(err);
               done();
             });
@@ -456,13 +456,13 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should build each notifications using preferences of the copayers', function(done) {
+    it('should build each notifications using preferences of the copayers', function (done) {
       server.savePreferences({
         email: 'copayer1@domain.com',
         language: 'es',
         unit: 'tht',
-      }, function(err) {
-        server.createAddress({}, function(err, address) {
+      }, function (err) {
+        server.createAddress({}, function (err, address) {
           should.not.exist(err);
 
           // Simulate incoming tx notification
@@ -472,10 +472,10 @@ describe('Push notifications', function() {
             amount: 12300000,
           }, {
             isGlobal: true
-          }, function(err) {
-            setTimeout(function() {
+          }, function (err) {
+            setTimeout(function () {
               var calls = requestStub.getCalls();
-              var args = _.map(calls, function(c) {
+              var args = _.map(calls, function (c) {
                 return c.args[0];
               });
 
@@ -496,8 +496,8 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should notify copayers when payment is received', function(done) {
-      server.createAddress({}, function(err, address) {
+    it('should notify copayers when payment is received', function (done) {
+      server.createAddress({}, function (err, address) {
         should.not.exist(err);
 
         // Simulate incoming tx notification
@@ -507,8 +507,8 @@ describe('Push notifications', function() {
           amount: 12300000,
         }, {
           isGlobal: true
-        }, function(err) {
-          setTimeout(function() {
+        }, function (err) {
+          setTimeout(function () {
             var calls = requestStub.getCalls();
             calls.length.should.equal(6);
 
@@ -518,8 +518,8 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should notify auto-payments to creator', function(done) {
-      server.createAddress({}, function(err, address) {
+    it('should notify auto-payments to creator', function (done) {
+      server.createAddress({}, function (err, address) {
         should.not.exist(err);
 
         // Simulate incoming tx notification
@@ -529,8 +529,8 @@ describe('Push notifications', function() {
           amount: 12300000,
         }, {
           isGlobal: false
-        }, function(err) {
-          setTimeout(function() {
+        }, function (err) {
+          setTimeout(function () {
             var calls = requestStub.getCalls();
             calls.length.should.equal(6);
 
@@ -540,9 +540,9 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should notify copayers a new tx proposal has been created', function(done) {
-      helpers.stubUtxos(server, wallet, [1, 1], function() {
-        server.createAddress({}, function(err, address) {
+    it('should notify copayers a new tx proposal has been created', function (done) {
+      helpers.stubUtxos(server, wallet, [1, 1], function () {
+        server.createAddress({}, function (err, address) {
           should.not.exist(err);
           server._notify('NewTxProposal', {
             txid: '999',
@@ -550,8 +550,8 @@ describe('Push notifications', function() {
             amount: 12300000,
           }, {
             isGlobal: false
-          }, function(err) {
-            setTimeout(function() {
+          }, function (err) {
+            setTimeout(function () {
               var calls = requestStub.getCalls();
               calls.length.should.equal(8);
 
@@ -562,8 +562,8 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should notify copayers a tx has been finally rejected', function(done) {
-      helpers.stubUtxos(server, wallet, 1, function() {
+    it('should notify copayers a tx has been finally rejected', function (done) {
+      helpers.stubUtxos(server, wallet, 1, function () {
         var txOpts = {
           outputs: [{
             toAddress: '18PzpUFkFZE8zKWUPvfykkTxmB9oMR8qP7',
@@ -575,28 +575,28 @@ describe('Push notifications', function() {
         var txpId;
         async.waterfall([
 
-          function(next) {
-            helpers.createAndPublishTx(server, txOpts, TestData.copayers[0].privKey_1H_0, function(tx) {
+          function (next) {
+            helpers.createAndPublishTx(server, txOpts, TestData.copayers[0].privKey_1H_0, function (tx) {
               next(null, tx);
             });
           },
-          function(txp, next) {
+          function (txp, next) {
             txpId = txp.id;
-            async.eachSeries(_.range(1, 3), function(i, next) {
+            async.eachSeries(_.range(1, 3), function (i, next) {
               var copayer = TestData.copayers[i];
-              helpers.getAuthServer(copayer.id44tht, function(server) {
+              helpers.getAuthServer(copayer.id44tht, function (server) {
                 server.rejectTx({
                   txProposalId: txp.id,
                 }, next);
               });
             }, next);
           },
-        ], function(err) {
+        ], function (err) {
           should.not.exist(err);
 
-          setTimeout(function() {
+          setTimeout(function () {
             var calls = requestStub.getCalls();
-            var args = _.map(_.takeRight(calls, 2), function(c) {
+            var args = _.map(_.takeRight(calls, 2), function (c) {
               return c.args[0];
             });
 
@@ -607,8 +607,8 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should notify copayers a new outgoing tx has been created', function(done) {
-      helpers.stubUtxos(server, wallet, 1, function() {
+    it('should notify copayers a new outgoing tx has been created', function (done) {
+      helpers.stubUtxos(server, wallet, 1, function () {
         var txOpts = {
           outputs: [{
             toAddress: '18PzpUFkFZE8zKWUPvfykkTxmB9oMR8qP7',
@@ -620,40 +620,40 @@ describe('Push notifications', function() {
         var txp;
         async.waterfall([
 
-          function(next) {
-            helpers.createAndPublishTx(server, txOpts, TestData.copayers[0].privKey_1H_0, function(tx) {
+          function (next) {
+            helpers.createAndPublishTx(server, txOpts, TestData.copayers[0].privKey_1H_0, function (tx) {
               next(null, tx);
             });
           },
-          function(t, next) {
+          function (t, next) {
             txp = t;
-            async.eachSeries(_.range(1, 3), function(i, next) {
+            async.eachSeries(_.range(1, 3), function (i, next) {
               var copayer = TestData.copayers[i];
-              helpers.getAuthServer(copayer.id44tht, function(s) {
+              helpers.getAuthServer(copayer.id44tht, function (s) {
                 server = s;
                 var signatures = helpers.clientSign(txp, copayer.xPrivKey_44H_0H_0H);
                 server.signTx({
                   txProposalId: txp.id,
                   signatures: signatures,
-                }, function(err, t) {
+                }, function (err, t) {
                   txp = t;
                   next();
                 });
               });
             }, next);
           },
-          function(next) {
+          function (next) {
             helpers.stubBroadcast(txp.txid);
             server.broadcastTx({
               txProposalId: txp.id,
             }, next);
           },
-        ], function(err) {
+        ], function (err) {
           should.not.exist(err);
 
-          setTimeout(function() {
+          setTimeout(function () {
             var calls = requestStub.getCalls();
-            var args = _.map(_.takeRight(calls, 3), function(c) {
+            var args = _.map(_.takeRight(calls, 3), function (c) {
               return c.args[0];
             });
             args[0].body.notification.title.should.contain('Payment sent');
@@ -670,9 +670,9 @@ describe('Push notifications', function() {
     });
   });
 
-  describe('joinWallet', function() {
-    beforeEach(function(done) {
-      helpers.beforeEach(function(res) {
+  describe('joinWallet', function () {
+    beforeEach(function (done) {
+      helpers.beforeEach(function (res) {
         server = new WalletService();
         var walletOpts = {
           name: 'my wallet',
@@ -680,7 +680,7 @@ describe('Push notifications', function() {
           n: 3,
           pubKey: TestData.keyPair.pub,
         };
-        server.createWallet(walletOpts, function(err, wId) {
+        server.createWallet(walletOpts, function (err, wId) {
           should.not.exist(err);
           walletId = wId;
           should.exist(walletId);
@@ -701,7 +701,7 @@ describe('Push notifications', function() {
               pushServerUrl: 'http://localhost:8000',
               authorizationKey: 'secret',
             },
-          }, function(err) {
+          }, function (err) {
             should.not.exist(err);
             done();
           });
@@ -709,8 +709,8 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should notify copayers when a new copayer just joined into your wallet except the one who joined', function(done) {
-      async.eachSeries(_.range(3), function(i, next) {
+    it('should notify copayers when a new copayer just joined into your wallet except the one who joined', function (done) {
+      async.eachSeries(_.range(3), function (i, next) {
         var copayerOpts = helpers.getSignedCopayerOpts({
           walletId: walletId,
           name: 'copayer ' + (i + 1),
@@ -719,10 +719,10 @@ describe('Push notifications', function() {
           customData: 'custom data ' + (i + 1),
         });
 
-        server.joinWallet(copayerOpts, function(err, res) {
+        server.joinWallet(copayerOpts, function (err, res) {
           if (err) return next(err);
 
-          helpers.getAuthServer(res.copayerId, function(server) {
+          helpers.getAuthServer(res.copayerId, function (server) {
             server.pushNotificationsSubscribe({
               token: 'token:' + copayerOpts.name,
               packageName: 'com.wallet',
@@ -731,23 +731,23 @@ describe('Push notifications', function() {
             }, next);
           });
         });
-      }, function(err) {
+      }, function (err) {
         should.not.exist(err);
-        setTimeout(function() {
+        setTimeout(function () {
           var calls = requestStub.getCalls();
-          var args = _.filter(_.map(calls, function(call) {
+          var args = _.filter(_.map(calls, function (call) {
             return call.args[0];
-          }), function(arg) {
+          }), function (arg) {
             return arg.body.notification.title == 'New copayer';
           });
 
-          server.getWallet(null, function(err, wallet) {
+          server.getWallet(null, function (err, wallet) {
             /*
               First call - copayer2 joined
               copayer2 should notify to copayer1
               copayer2 should NOT be notifyed
             */
-            var hashedCopayerIds = _.map(wallet.copayers, function(copayer) {
+            var hashedCopayerIds = _.map(wallet.copayers, function (copayer) {
               return sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(copayer.id));
             });
             hashedCopayerIds[0].should.equal((args[0].body.data.copayerId));
@@ -784,11 +784,11 @@ describe('Push notifications', function() {
           wallet = w;
 
           var i = 0;
-          async.eachSeries(w.copayers, function(copayer, next) {
-            helpers.getAuthServer(copayer.id, function(server) {
+          async.eachSeries(w.copayers, function (copayer, next) {
+            helpers.getAuthServer(copayer.id, function (server) {
               async.parallel([
 
-                function(done) {
+                function (done) {
                   server.savePreferences({
                     email: 'copayer' + (++i) + '@domain.com',
                     language: 'en',
@@ -796,7 +796,7 @@ describe('Push notifications', function() {
                     tokenAddresses: CUSTOM_TOKENS,
                   }, done);
                 },
-                function(done) {
+                function (done) {
                   server.pushNotificationsSubscribe({
                     token: '1234',
                     packageName: 'com.wallet',
@@ -807,10 +807,10 @@ describe('Push notifications', function() {
               ], next);
 
             });
-          }, function(err) {
+          }, function (err) {
             should.not.exist(err);
             pushNotificationsService = new PushNotificationsService();
-            requestStub = sinon.stub(pushNotificationsService, '_makeRequest').callsFake(()=>{});
+            requestStub = sinon.stub(pushNotificationsService, '_makeRequest').callsFake(() => { });
             requestStub.yields();
             getTokenDataStub = sinon.stub(pushNotificationsService, 'getTokenData').callsFake(() => TestData.OneInch_ETH_Tokens.tokens);
             pushNotificationsService.start({
@@ -826,7 +826,7 @@ describe('Push notifications', function() {
                 pushServerUrl: 'http://localhost:8000',
                 authorizationKey: 'secret',
               },
-            }, function(err) {
+            }, function (err) {
               should.not.exist(err);
               done();
             });
@@ -839,10 +839,10 @@ describe('Push notifications', function() {
       server.savePreferences({
         language: 'en',
         unit: 'bit',
-      }, function(err) {
+      }, function (err) {
         server.createAddress({}, (err, address) => {
           should.not.exist(err);
-          
+
           // Simulate incoming tx notification
           server._notify('NewIncomingTx', {
             txid: '997',
@@ -852,10 +852,10 @@ describe('Push notifications', function() {
           }, {
             isGlobal: true
           }, (err) => {
-            setTimeout(function() {
+            setTimeout(function () {
               var calls = requestStub.getCalls();
               calls.length.should.equal(2);
-              var args = _.map(_.takeRight(calls, 2), function(c) {
+              var args = _.map(_.takeRight(calls, 2), function (c) {
                 return c.args[0];
               });
               args[1].notification.title.should.contain('New payment received');
@@ -878,11 +878,11 @@ describe('Push notifications', function() {
           wallet = w;
 
           var i = 0;
-          async.eachSeries(w.copayers, function(copayer, next) {
-            helpers.getAuthServer(copayer.id, function(server) {
+          async.eachSeries(w.copayers, function (copayer, next) {
+            helpers.getAuthServer(copayer.id, function (server) {
               async.parallel([
 
-                function(done) {
+                function (done) {
                   server.savePreferences({
                     email: 'copayer' + (++i) + '@domain.com',
                     language: 'en',
@@ -890,7 +890,7 @@ describe('Push notifications', function() {
                     tokenAddresses: TOKENS,
                   }, done);
                 },
-                function(done) {
+                function (done) {
                   server.pushNotificationsSubscribe({
                     token: '1234',
                     packageName: 'com.wallet',
@@ -901,7 +901,7 @@ describe('Push notifications', function() {
               ], next);
 
             });
-          }, function(err) {
+          }, function (err) {
             should.not.exist(err);
 
             requestStub = sinon.stub();
@@ -922,7 +922,7 @@ describe('Push notifications', function() {
                 pushServerUrl: 'http://localhost:8000',
                 authorizationKey: 'secret',
               },
-            }, function(err) {
+            }, function (err) {
               should.not.exist(err);
               done();
             });
@@ -935,7 +935,7 @@ describe('Push notifications', function() {
       server.savePreferences({
         language: 'en',
         unit: 'bit',
-      }, function(err) {
+      }, function (err) {
         server.createAddress({}, (err, address) => {
           should.not.exist(err);
 
@@ -948,10 +948,10 @@ describe('Push notifications', function() {
           }, {
             isGlobal: true
           }, (err) => {
-            setTimeout(function() {
+            setTimeout(function () {
               var calls = requestStub.getCalls();
               calls.length.should.equal(2);
-              var args = _.map(_.takeRight(calls, 2), function(c) {
+              var args = _.map(_.takeRight(calls, 2), function (c) {
                 return c.args[0];
               });
               args[1].body.notification.title.should.contain('New payment received');
@@ -968,7 +968,7 @@ describe('Push notifications', function() {
       server.savePreferences({
         language: 'es',
         unit: 'bit',
-      }, function(err) {
+      }, function (err) {
         server.createAddress({}, (err, address) => {
           should.not.exist(err);
 
@@ -981,10 +981,10 @@ describe('Push notifications', function() {
           }, {
             isGlobal: true
           }, (err) => {
-            setTimeout(function() {
+            setTimeout(function () {
               var calls = requestStub.getCalls();
               calls.length.should.equal(2);
-              var args = _.map(_.takeRight(calls, 2), function(c) {
+              var args = _.map(_.takeRight(calls, 2), function (c) {
                 return c.args[0];
               });
               args[1].body.notification.title.should.contain('Nuevo pago recibido');
@@ -1000,7 +1000,7 @@ describe('Push notifications', function() {
       server.savePreferences({
         language: 'en',
         unit: 'bit',
-      }, function(err) {
+      }, function (err) {
         server.createAddress({}, (err, address) => {
           should.not.exist(err);
 
@@ -1013,10 +1013,10 @@ describe('Push notifications', function() {
           }, {
             isGlobal: true
           }, (err) => {
-            setTimeout(function() {
+            setTimeout(function () {
               var calls = requestStub.getCalls();
               calls.length.should.equal(2);
-              var args = _.map(_.takeRight(calls, 2), function(c) {
+              var args = _.map(_.takeRight(calls, 2), function (c) {
                 return c.args[0];
               });
               args[1].body.notification.title.should.contain('New payment received');
@@ -1033,7 +1033,7 @@ describe('Push notifications', function() {
       server.savePreferences({
         language: 'en',
         unit: 'bit',
-      }, function(err) {
+      }, function (err) {
         server.createAddress({}, (err, address) => {
           should.not.exist(err);
 
@@ -1046,7 +1046,7 @@ describe('Push notifications', function() {
           }, {
             isGlobal: true
           }, (err) => {
-            setTimeout(function() {
+            setTimeout(function () {
               var calls = requestStub.getCalls();
               calls.length.should.equal(1);
               done();
@@ -1057,28 +1057,28 @@ describe('Push notifications', function() {
     });
   });
 
-  describe('Any wallet', function() {
-    beforeEach(function(done) {
-      helpers.beforeEach(function(res) {
-        helpers.createAndJoinWallet(1, 1, function(s, w) {
+  describe('Any wallet', function () {
+    beforeEach(function (done) {
+      helpers.beforeEach(function (res) {
+        helpers.createAndJoinWallet(1, 1, function (s, w) {
           server = s;
           wallet = w;
 
           var i = 0;
-          async.eachSeries(w.copayers, function(copayer, next) {
-            helpers.getAuthServer(copayer.id, function(server) {
+          async.eachSeries(w.copayers, function (copayer, next) {
+            helpers.getAuthServer(copayer.id, function (server) {
               async.parallel([
 
-                function(done) {
+                function (done) {
                   server.savePreferences({
                     email: 'copayer' + (++i) + '@domain.com',
                     language: 'en',
                     unit: 'bit',
                   }, done);
                 },
-                function(done) {
+                function (done) {
                   server.pushNotificationsSubscribe({
-                   token: 'DEVICE_TOKEN',
+                    token: 'DEVICE_TOKEN',
                     packageName: 'com.wallet',
                     platform: 'Android',
                     walletId: '123'
@@ -1092,7 +1092,7 @@ describe('Push notifications', function() {
               ], next);
 
             });
-          }, function(err) {
+          }, function (err) {
             should.not.exist(err);
 
             requestStub = sinon.stub();
@@ -1112,7 +1112,7 @@ describe('Push notifications', function() {
                 pushServerUrl: 'http://localhost:8000',
                 authorizationKey: 'secret',
               },
-            }, function(err) {
+            }, function (err) {
               should.not.exist(err);
               done();
             });
@@ -1121,133 +1121,133 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should notify NewBlock to all devices subscribed in the last 10 minutes', function(done) {
+    it('should notify NewBlock to all devices subscribed in the last 10 minutes', function (done) {
       var collections = Storage.collections;
       const oldSubscription = {
-         "_id" : new ObjectID("5fb57ecde3de1d285042a551"),
-         "version" : "1.0.0",
-         "createdOn" : 1605729997,
-         "copayerId" : wallet.copayers[0].id,
-         "token" : "DEVICE_TOKEN3",
-         "packageName" : "com.my-other-wallet2",
-         "platform" : "any",
-         "walletId" : "123"
+        "_id": new ObjectID("5fb57ecde3de1d285042a551"),
+        "version": "1.0.0",
+        "createdOn": 1605729997,
+        "copayerId": wallet.copayers[0].id,
+        "token": "DEVICE_TOKEN3",
+        "packageName": "com.my-other-wallet2",
+        "platform": "any",
+        "walletId": "123"
       }
 
-      server.storage.db.collection(collections.PUSH_NOTIFICATION_SUBS).insertOne(oldSubscription,function(err) {
+      server.storage.db.collection(collections.PUSH_NOTIFICATION_SUBS).insertOne(oldSubscription, function (err) {
         should.not.exist(err);
 
         // Simulate new block notification
         server._notify('NewBlock', {
           hash: 'dummy hash',
         }, {
-            isGlobal: true
-          }, function(err) {
-            should.not.exist(err);
-            setTimeout(function() {
-              var calls = requestStub.getCalls();
-              var args = _.map(calls, function(c) {
-                return c.args[0];
-              });
-              calls.length.should.equal(2); // DEVICE_TOKEN, DEVICE_TOKEN2
-              should.not.exist(args[0].body.notification);
-              should.exist(args[0].body.data);
-              should.not.exist(args[1].body.notification);
-              should.exist(args[1].body.data);
-              done();
-            }, 100);
-          });
+          isGlobal: true
+        }, function (err) {
+          should.not.exist(err);
+          setTimeout(function () {
+            var calls = requestStub.getCalls();
+            var args = _.map(calls, function (c) {
+              return c.args[0];
+            });
+            calls.length.should.equal(2); // DEVICE_TOKEN, DEVICE_TOKEN2
+            should.not.exist(args[0].body.notification);
+            should.exist(args[0].body.data);
+            should.not.exist(args[1].body.notification);
+            should.exist(args[1].body.data);
+            done();
+          }, 100);
         });
       });
+    });
 
-    it('should notify only one NewBlock push notification for each device', function(done) {
-        var collections = Storage.collections;
-        const subs = [{
-           "version" : "1.0.0",
-           "createdOn" : Math.floor(Date.now() / 1000),
-           "copayerId" : wallet.copayers[0].id,
-           "token" : "DEVICE_TOKEN",
-           "packageName" : "com.my-other-wallet",
-           "platform" : "any",
-           "walletId" : "123"
-        },
-        {
-          "version" : "1.0.0",
-          "createdOn" : Math.floor(Date.now() / 1000),
-          "copayerId" : wallet.copayers[0].id,
-          "token" : "DEVICE_TOKEN2",
-          "packageName" : "com.my-other-wallet2",
-          "platform" : "any",
-          "walletId" : "123"
-        },
-        {
-          "version" : "1.0.0",
-          "createdOn" : Math.floor(Date.now() / 1000),
-          "copayerId" : wallet.copayers[0].id,
-          "token" : "DEVICE_TOKEN2",
-          "packageName" : "com.my-other-wallet2",
-          "platform" : "any",
-          "walletId" : "123"
-        },
-        {
-          "version" : "1.0.0",
-          "createdOn" : Math.floor(Date.now() / 1000),
-          "copayerId" : wallet.copayers[0].id,
-          "token" : "DEVICE_TOKEN3",
-          "packageName" : "com.my-other-wallet3",
-          "platform" : "any",
-          "walletId" : "123"
-        }];
+    it('should notify only one NewBlock push notification for each device', function (done) {
+      var collections = Storage.collections;
+      const subs = [{
+        "version": "1.0.0",
+        "createdOn": Math.floor(Date.now() / 1000),
+        "copayerId": wallet.copayers[0].id,
+        "token": "DEVICE_TOKEN",
+        "packageName": "com.my-other-wallet",
+        "platform": "any",
+        "walletId": "123"
+      },
+      {
+        "version": "1.0.0",
+        "createdOn": Math.floor(Date.now() / 1000),
+        "copayerId": wallet.copayers[0].id,
+        "token": "DEVICE_TOKEN2",
+        "packageName": "com.my-other-wallet2",
+        "platform": "any",
+        "walletId": "123"
+      },
+      {
+        "version": "1.0.0",
+        "createdOn": Math.floor(Date.now() / 1000),
+        "copayerId": wallet.copayers[0].id,
+        "token": "DEVICE_TOKEN2",
+        "packageName": "com.my-other-wallet2",
+        "platform": "any",
+        "walletId": "123"
+      },
+      {
+        "version": "1.0.0",
+        "createdOn": Math.floor(Date.now() / 1000),
+        "copayerId": wallet.copayers[0].id,
+        "token": "DEVICE_TOKEN3",
+        "packageName": "com.my-other-wallet3",
+        "platform": "any",
+        "walletId": "123"
+      }];
 
-        server.storage.db.collection(collections.PUSH_NOTIFICATION_SUBS).insertMany(subs,function(err) {
+      server.storage.db.collection(collections.PUSH_NOTIFICATION_SUBS).insertMany(subs, function (err) {
+        should.not.exist(err);
+
+        // Simulate new block notification
+        server._notify('NewBlock', {
+          hash: 'dummy hash',
+        }, {
+          isGlobal: true
+        }, function (err) {
           should.not.exist(err);
-
-          // Simulate new block notification
-          server._notify('NewBlock', {
-            hash: 'dummy hash',
-          }, {
-              isGlobal: true
-          }, function(err) {
-            should.not.exist(err);
-            setTimeout(function() {
-              var calls = requestStub.getCalls();
-              var args = _.map(calls, function(c) {
-                return c.args[0];
-              });
-              calls.length.should.equal(3); // DEVICE_TOKEN, DEVICE_TOKEN2, DEVICE_TOKEN3
-              should.not.exist(args[0].body.notification);
-              should.exist(args[0].body.data);
-              should.not.exist(args[1].body.notification);
-              should.exist(args[1].body.data);
-              should.not.exist(args[2].body.notification);
-              should.exist(args[2].body.data);
-              done();
-            }, 100);
-          });
+          setTimeout(function () {
+            var calls = requestStub.getCalls();
+            var args = _.map(calls, function (c) {
+              return c.args[0];
+            });
+            calls.length.should.equal(3); // DEVICE_TOKEN, DEVICE_TOKEN2, DEVICE_TOKEN3
+            should.not.exist(args[0].body.notification);
+            should.exist(args[0].body.data);
+            should.not.exist(args[1].body.notification);
+            should.exist(args[1].body.data);
+            should.not.exist(args[2].body.notification);
+            should.exist(args[2].body.data);
+            done();
+          }, 100);
+        });
       });
     });
   });
 
-  describe('Single wallet - Braze', function() {
-    beforeEach(function(done) {
-      helpers.beforeEach(function(res) {
-        helpers.createAndJoinWallet(1, 1, function(s, w) {
+  describe('Single wallet - Braze', function () {
+    beforeEach(function (done) {
+      helpers.beforeEach(function (res) {
+        helpers.createAndJoinWallet(1, 1, function (s, w) {
           server = s;
           wallet = w;
 
           var i = 0;
-          async.eachSeries(w.copayers, function(copayer, next) {
-            helpers.getAuthServer(copayer.id, function(server) {
+          async.eachSeries(w.copayers, function (copayer, next) {
+            helpers.getAuthServer(copayer.id, function (server) {
               async.parallel([
 
-                function(done) {
+                function (done) {
                   server.savePreferences({
                     email: 'copayer' + (++i) + '@domain.com',
                     language: 'en',
                     unit: 'bit',
                   }, done);
                 },
-                function(done) {
+                function (done) {
                   server.pushNotificationsBrazeSubscribe({
                     externalUserId: '1234',
                     packageName: 'com.wallet',
@@ -1258,7 +1258,7 @@ describe('Push notifications', function() {
               ], next);
 
             });
-          }, function(err) {
+          }, function (err) {
             should.not.exist(err);
 
             requestStub = sinon.stub();
@@ -1278,7 +1278,7 @@ describe('Push notifications', function() {
                 pushServerUrlBraze: 'http://localhost:8000',
                 authorizationKeyBraze: 'secret',
               },
-            }, function(err) {
+            }, function (err) {
               should.not.exist(err);
               done();
             });
@@ -1287,12 +1287,12 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should build each notifications using preferences of the copayers', function(done) {
+    it('should build each notifications using preferences of the copayers', function (done) {
       server.savePreferences({
         language: 'en',
         unit: 'bit',
-      }, function(err) {
-        server.createAddress({}, function(err, address) {
+      }, function (err) {
+        server.createAddress({}, function (err, address) {
           should.not.exist(err);
 
           // Simulate incoming tx notification
@@ -1302,10 +1302,10 @@ describe('Push notifications', function() {
             amount: 12300000,
           }, {
             isGlobal: true
-          }, function(err) {
-            setTimeout(function() {
+          }, function (err) {
+            setTimeout(function () {
               var calls = requestStub.getCalls();
-              var args = _.map(calls, function(c) {
+              var args = _.map(calls, function (c) {
                 return c.args[0];
               });
               calls.length.should.equal(2); // NewAddress, NewIncomingTx
@@ -1335,26 +1335,26 @@ describe('Push notifications', function() {
     });
   });
 
-  describe('Single wallet - Should use braze subscription if both set', function() {
-    beforeEach(function(done) {
-      helpers.beforeEach(function(res) {
-        helpers.createAndJoinWallet(1, 1, function(s, w) {
+  describe('Single wallet - Should use braze subscription if both set', function () {
+    beforeEach(function (done) {
+      helpers.beforeEach(function (res) {
+        helpers.createAndJoinWallet(1, 1, function (s, w) {
           server = s;
           wallet = w;
 
           var i = 0;
-          async.eachSeries(w.copayers, function(copayer, next) {
-            helpers.getAuthServer(copayer.id, function(server) {
+          async.eachSeries(w.copayers, function (copayer, next) {
+            helpers.getAuthServer(copayer.id, function (server) {
               async.parallel([
 
-                function(done) {
+                function (done) {
                   server.savePreferences({
                     email: 'copayer' + (++i) + '@domain.com',
                     language: 'en',
                     unit: 'bit',
                   }, done);
                 },
-                function(done) {
+                function (done) {
                   server.pushNotificationsSubscribe({
                     token: '1234',
                     packageName: 'com.wallet',
@@ -1370,7 +1370,7 @@ describe('Push notifications', function() {
               ], next);
 
             });
-          }, function(err) {
+          }, function (err) {
             should.not.exist(err);
 
             requestStub = sinon.stub();
@@ -1392,7 +1392,7 @@ describe('Push notifications', function() {
                 authorizationKey: 'secret',
                 authorizationKeyBraze: 'secret',
               },
-            }, function(err) {
+            }, function (err) {
               should.not.exist(err);
               done();
             });
@@ -1401,12 +1401,12 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should build each notifications using preferences of the copayers', function(done) {
+    it('should build each notifications using preferences of the copayers', function (done) {
       server.savePreferences({
         language: 'en',
         unit: 'bit',
-      }, function(err) {
-        server.createAddress({}, function(err, address) {
+      }, function (err) {
+        server.createAddress({}, function (err, address) {
           should.not.exist(err);
 
           // Simulate incoming tx notification
@@ -1416,10 +1416,10 @@ describe('Push notifications', function() {
             amount: 12300000,
           }, {
             isGlobal: true
-          }, function(err) {
-            setTimeout(function() {
+          }, function (err) {
+            setTimeout(function () {
               var calls = requestStub.getCalls();
-              var args = _.map(calls, function(c) {
+              var args = _.map(calls, function (c) {
                 return c.args[0];
               });
               calls.length.should.equal(2); // NewAddress, NewIncomingTx
@@ -1450,26 +1450,26 @@ describe('Push notifications', function() {
     });
   });
 
-  describe('Any wallet - Should use braze subscription if both set', function() {
-    beforeEach(function(done) {
-      helpers.beforeEach(function(res) {
-        helpers.createAndJoinWallet(1, 1, function(s, w) {
+  describe('Any wallet - Should use braze subscription if both set', function () {
+    beforeEach(function (done) {
+      helpers.beforeEach(function (res) {
+        helpers.createAndJoinWallet(1, 1, function (s, w) {
           server = s;
           wallet = w;
 
           var i = 0;
-          async.eachSeries(w.copayers, function(copayer, next) {
-            helpers.getAuthServer(copayer.id, function(server) {
+          async.eachSeries(w.copayers, function (copayer, next) {
+            helpers.getAuthServer(copayer.id, function (server) {
               async.parallel([
 
-                function(done) {
+                function (done) {
                   server.savePreferences({
                     email: 'copayer' + (++i) + '@domain.com',
                     language: 'en',
                     unit: 'bit',
                   }, done);
                 },
-                function(done) {
+                function (done) {
                   server.pushNotificationsSubscribe({
                     token: 'DEVICE_TOKEN',
                     packageName: 'com.wallet',
@@ -1495,7 +1495,7 @@ describe('Push notifications', function() {
               ], next);
 
             });
-          }, function(err) {
+          }, function (err) {
             should.not.exist(err);
 
             requestStub = sinon.stub();
@@ -1517,7 +1517,7 @@ describe('Push notifications', function() {
                 authorizationKey: 'secret',
                 authorizationKeyBraze: 'secret',
               },
-            }, function(err) {
+            }, function (err) {
               should.not.exist(err);
               done();
             });
@@ -1526,190 +1526,190 @@ describe('Push notifications', function() {
       });
     });
 
-    it('should notify NewBlock to all devices subscribed in the last 10 minutes', function(done) {
+    it('should notify NewBlock to all devices subscribed in the last 10 minutes', function (done) {
       var collections = Storage.collections;
       const oldSubscription = {
-         "_id" : new ObjectID("5fb57ecde3de1d285042a551"),
-         "version" : "1.0.0",
-         "createdOn" : 1605729997,
-         "copayerId" : wallet.copayers[0].id,
-         "externalUserId" : "DEVICE_EXTERNAL_USER_ID3",
-         "packageName" : "com.my-other-wallet2",
-         "platform" : "any",
-         "walletId" : "123"
+        "_id": new ObjectID("5fb57ecde3de1d285042a551"),
+        "version": "1.0.0",
+        "createdOn": 1605729997,
+        "copayerId": wallet.copayers[0].id,
+        "externalUserId": "DEVICE_EXTERNAL_USER_ID3",
+        "packageName": "com.my-other-wallet2",
+        "platform": "any",
+        "walletId": "123"
       }
 
-      server.storage.db.collection(collections.PUSH_NOTIFICATION_SUBS).insertOne(oldSubscription,function(err) {
+      server.storage.db.collection(collections.PUSH_NOTIFICATION_SUBS).insertOne(oldSubscription, function (err) {
         should.not.exist(err);
 
         // Simulate new block notification
         server._notify('NewBlock', {
           hash: 'dummy hash',
         }, {
-            isGlobal: true
-          }, function(err) {
-            should.not.exist(err);
-            setTimeout(function() {
-              var calls = requestStub.getCalls();
-              var args = _.map(calls, function(c) {
-                return c.args[0];
-              });
+          isGlobal: true
+        }, function (err) {
+          should.not.exist(err);
+          setTimeout(function () {
+            var calls = requestStub.getCalls();
+            var args = _.map(calls, function (c) {
+              return c.args[0];
+            });
 
-              calls.length.should.equal(2); // DEVICE_EXTERNAL_USER_ID, DEVICE_EXTERNAL_USER_ID2
-              should.not.exist(args[0].body.messages.apple_push.alert.title);
-              should.not.exist(args[0].body.messages.apple_push.alert.body);
-              should.not.exist(args[0].body.messages.android_push.alert);
-              should.not.exist(args[0].body.messages.android_push.title);
-              should.not.exist(args[1].body.messages.apple_push.alert.title);
-              should.not.exist(args[1].body.messages.apple_push.alert.body);
-              should.not.exist(args[1].body.messages.android_push.alert);
-              should.not.exist(args[1].body.messages.android_push.title);
+            calls.length.should.equal(2); // DEVICE_EXTERNAL_USER_ID, DEVICE_EXTERNAL_USER_ID2
+            should.not.exist(args[0].body.messages.apple_push.alert.title);
+            should.not.exist(args[0].body.messages.apple_push.alert.body);
+            should.not.exist(args[0].body.messages.android_push.alert);
+            should.not.exist(args[0].body.messages.android_push.title);
+            should.not.exist(args[1].body.messages.apple_push.alert.title);
+            should.not.exist(args[1].body.messages.apple_push.alert.body);
+            should.not.exist(args[1].body.messages.android_push.alert);
+            should.not.exist(args[1].body.messages.android_push.title);
 
-              should.exist(args[0].body.messages.apple_push.extra);
-              should.exist(args[0].body.messages.apple_push.custom_uri);
-              should.exist(args[0].body.messages.android_push.extra);
-              should.exist(args[0].body.messages.android_push.custom_uri);
-              should.exist(args[0].body.messages.android_push.send_to_sync);
-              should.exist(args[0].body.messages.apple_push['content-available']);
-              should.exist(args[1].body.messages.apple_push.extra);
-              should.exist(args[1].body.messages.apple_push.custom_uri);
-              should.exist(args[1].body.messages.android_push.extra);
-              should.exist(args[1].body.messages.android_push.custom_uri);
-              should.exist(args[1].body.messages.android_push.send_to_sync);
-              should.exist(args[1].body.messages.apple_push['content-available']);
-              done();
-            }, 100);
-          });
+            should.exist(args[0].body.messages.apple_push.extra);
+            should.exist(args[0].body.messages.apple_push.custom_uri);
+            should.exist(args[0].body.messages.android_push.extra);
+            should.exist(args[0].body.messages.android_push.custom_uri);
+            should.exist(args[0].body.messages.android_push.send_to_sync);
+            should.exist(args[0].body.messages.apple_push['content-available']);
+            should.exist(args[1].body.messages.apple_push.extra);
+            should.exist(args[1].body.messages.apple_push.custom_uri);
+            should.exist(args[1].body.messages.android_push.extra);
+            should.exist(args[1].body.messages.android_push.custom_uri);
+            should.exist(args[1].body.messages.android_push.send_to_sync);
+            should.exist(args[1].body.messages.apple_push['content-available']);
+            done();
+          }, 100);
         });
       });
+    });
 
-    it('should notify only one NewBlock push notification for each device', function(done) {
-        var collections = Storage.collections;
-        const subs = [{
-           "version" : "1.0.0",
-           "createdOn" : Math.floor(Date.now() / 1000),
-           "copayerId" : wallet.copayers[0].id,
-           "token" : "DEVICE_TOKEN",
-           "packageName" : "com.my-other-wallet",
-           "platform" : "any",
-           "walletId" : "123"
-        },
-        {
-          "version" : "1.0.0",
-          "createdOn" : Math.floor(Date.now() / 1000),
-          "copayerId" : wallet.copayers[0].id,
-          "token" : "DEVICE_TOKEN2",
-          "packageName" : "com.my-other-wallet2",
-          "platform" : "any",
-          "walletId" : "123"
-        },
-        {
-          "version" : "1.0.0",
-          "createdOn" : Math.floor(Date.now() / 1000),
-          "copayerId" : wallet.copayers[0].id,
-          "token" : "DEVICE_TOKEN2",
-          "packageName" : "com.my-other-wallet2",
-          "platform" : "any",
-          "walletId" : "123"
-        },
-        {
-          "version" : "1.0.0",
-          "createdOn" : Math.floor(Date.now() / 1000),
-          "copayerId" : wallet.copayers[0].id,
-          "token" : "DEVICE_TOKEN3",
-          "packageName" : "com.my-other-wallet3",
-          "platform" : "any",
-          "walletId" : "123"
-        },
-        {
-          "version" : "1.0.0",
-          "createdOn" : Math.floor(Date.now() / 1000),
-          "copayerId" : wallet.copayers[0].id,
-          "externalUserId" : "DEVICE_EXTERNAL_USER_ID",
-          "packageName" : "com.my-other-wallet",
-          "platform" : "any",
-          "walletId" : "123"
-       },
-       {
-         "version" : "1.0.0",
-         "createdOn" : Math.floor(Date.now() / 1000),
-         "copayerId" : wallet.copayers[0].id,
-         "externalUserId" : "DEVICE_EXTERNAL_USER_ID2",
-         "packageName" : "com.my-other-wallet2",
-         "platform" : "any",
-         "walletId" : "123"
-       },
-       {
-         "version" : "1.0.0",
-         "createdOn" : Math.floor(Date.now() / 1000),
-         "copayerId" : wallet.copayers[0].id,
-         "externalUserId" : "DEVICE_EXTERNAL_USER_ID2",
-         "packageName" : "com.my-other-wallet2",
-         "platform" : "any",
-         "walletId" : "123"
-       },
-       {
-         "version" : "1.0.0",
-         "createdOn" : Math.floor(Date.now() / 1000),
-         "copayerId" : wallet.copayers[0].id,
-         "externalUserId" : "DEVICE_EXTERNAL_USER_ID3",
-         "packageName" : "com.my-other-wallet3",
-         "platform" : "any",
-         "walletId" : "123"
-       }];
+    it('should notify only one NewBlock push notification for each device', function (done) {
+      var collections = Storage.collections;
+      const subs = [{
+        "version": "1.0.0",
+        "createdOn": Math.floor(Date.now() / 1000),
+        "copayerId": wallet.copayers[0].id,
+        "token": "DEVICE_TOKEN",
+        "packageName": "com.my-other-wallet",
+        "platform": "any",
+        "walletId": "123"
+      },
+      {
+        "version": "1.0.0",
+        "createdOn": Math.floor(Date.now() / 1000),
+        "copayerId": wallet.copayers[0].id,
+        "token": "DEVICE_TOKEN2",
+        "packageName": "com.my-other-wallet2",
+        "platform": "any",
+        "walletId": "123"
+      },
+      {
+        "version": "1.0.0",
+        "createdOn": Math.floor(Date.now() / 1000),
+        "copayerId": wallet.copayers[0].id,
+        "token": "DEVICE_TOKEN2",
+        "packageName": "com.my-other-wallet2",
+        "platform": "any",
+        "walletId": "123"
+      },
+      {
+        "version": "1.0.0",
+        "createdOn": Math.floor(Date.now() / 1000),
+        "copayerId": wallet.copayers[0].id,
+        "token": "DEVICE_TOKEN3",
+        "packageName": "com.my-other-wallet3",
+        "platform": "any",
+        "walletId": "123"
+      },
+      {
+        "version": "1.0.0",
+        "createdOn": Math.floor(Date.now() / 1000),
+        "copayerId": wallet.copayers[0].id,
+        "externalUserId": "DEVICE_EXTERNAL_USER_ID",
+        "packageName": "com.my-other-wallet",
+        "platform": "any",
+        "walletId": "123"
+      },
+      {
+        "version": "1.0.0",
+        "createdOn": Math.floor(Date.now() / 1000),
+        "copayerId": wallet.copayers[0].id,
+        "externalUserId": "DEVICE_EXTERNAL_USER_ID2",
+        "packageName": "com.my-other-wallet2",
+        "platform": "any",
+        "walletId": "123"
+      },
+      {
+        "version": "1.0.0",
+        "createdOn": Math.floor(Date.now() / 1000),
+        "copayerId": wallet.copayers[0].id,
+        "externalUserId": "DEVICE_EXTERNAL_USER_ID2",
+        "packageName": "com.my-other-wallet2",
+        "platform": "any",
+        "walletId": "123"
+      },
+      {
+        "version": "1.0.0",
+        "createdOn": Math.floor(Date.now() / 1000),
+        "copayerId": wallet.copayers[0].id,
+        "externalUserId": "DEVICE_EXTERNAL_USER_ID3",
+        "packageName": "com.my-other-wallet3",
+        "platform": "any",
+        "walletId": "123"
+      }];
 
-        server.storage.db.collection(collections.PUSH_NOTIFICATION_SUBS).insertMany(subs,function(err) {
+      server.storage.db.collection(collections.PUSH_NOTIFICATION_SUBS).insertMany(subs, function (err) {
+        should.not.exist(err);
+
+        // Simulate new block notification
+        server._notify('NewBlock', {
+          hash: 'dummy hash',
+        }, {
+          isGlobal: true
+        }, function (err) {
           should.not.exist(err);
+          setTimeout(function () {
+            var calls = requestStub.getCalls();
+            var args = _.map(calls, function (c) {
+              return c.args[0];
+            });
+            calls.length.should.equal(3); // DEVICE_EXTERNAL_USER_ID, DEVICE_EXTERNAL_USER_ID2, DEVICE_EXTERNAL_USER_ID3
 
-          // Simulate new block notification
-          server._notify('NewBlock', {
-            hash: 'dummy hash',
-          }, {
-              isGlobal: true
-          }, function(err) {
-            should.not.exist(err);
-            setTimeout(function() {
-              var calls = requestStub.getCalls();
-              var args = _.map(calls, function(c) {
-                return c.args[0];
-              });
-              calls.length.should.equal(3); // DEVICE_EXTERNAL_USER_ID, DEVICE_EXTERNAL_USER_ID2, DEVICE_EXTERNAL_USER_ID3
+            should.not.exist(args[0].body.messages.apple_push.alert.title);
+            should.not.exist(args[0].body.messages.apple_push.alert.body);
+            should.not.exist(args[0].body.messages.android_push.alert);
+            should.not.exist(args[0].body.messages.android_push.title);
+            should.not.exist(args[1].body.messages.apple_push.alert.title);
+            should.not.exist(args[1].body.messages.apple_push.alert.body);
+            should.not.exist(args[1].body.messages.android_push.alert);
+            should.not.exist(args[1].body.messages.android_push.title);
+            should.not.exist(args[2].body.messages.apple_push.alert.title);
+            should.not.exist(args[2].body.messages.apple_push.alert.body);
+            should.not.exist(args[2].body.messages.android_push.alert);
+            should.not.exist(args[2].body.messages.android_push.title);
 
-              should.not.exist(args[0].body.messages.apple_push.alert.title);
-              should.not.exist(args[0].body.messages.apple_push.alert.body);
-              should.not.exist(args[0].body.messages.android_push.alert);
-              should.not.exist(args[0].body.messages.android_push.title);
-              should.not.exist(args[1].body.messages.apple_push.alert.title);
-              should.not.exist(args[1].body.messages.apple_push.alert.body);
-              should.not.exist(args[1].body.messages.android_push.alert);
-              should.not.exist(args[1].body.messages.android_push.title);
-              should.not.exist(args[2].body.messages.apple_push.alert.title);
-              should.not.exist(args[2].body.messages.apple_push.alert.body);
-              should.not.exist(args[2].body.messages.android_push.alert);
-              should.not.exist(args[2].body.messages.android_push.title);
+            should.exist(args[0].body.messages.android_push.send_to_sync);
+            should.exist(args[0].body.messages.apple_push['content-available']);
+            should.exist(args[1].body.messages.android_push.send_to_sync);
+            should.exist(args[1].body.messages.apple_push['content-available']);
+            should.exist(args[2].body.messages.android_push.send_to_sync);
+            should.exist(args[2].body.messages.apple_push['content-available']);
 
-              should.exist(args[0].body.messages.android_push.send_to_sync);
-              should.exist(args[0].body.messages.apple_push['content-available']);
-              should.exist(args[1].body.messages.android_push.send_to_sync);
-              should.exist(args[1].body.messages.apple_push['content-available']);
-              should.exist(args[2].body.messages.android_push.send_to_sync);
-              should.exist(args[2].body.messages.apple_push['content-available']);
-
-              should.exist(args[0].body.messages.apple_push.extra);
-              should.exist(args[0].body.messages.apple_push.custom_uri);
-              should.exist(args[0].body.messages.android_push.extra);
-              should.exist(args[0].body.messages.android_push.custom_uri);
-              should.exist(args[1].body.messages.apple_push.extra);
-              should.exist(args[1].body.messages.apple_push.custom_uri);
-              should.exist(args[1].body.messages.android_push.extra);
-              should.exist(args[1].body.messages.android_push.custom_uri);
-              should.exist(args[2].body.messages.apple_push.extra);
-              should.exist(args[2].body.messages.apple_push.custom_uri);
-              should.exist(args[2].body.messages.android_push.extra);
-              should.exist(args[2].body.messages.android_push.custom_uri)
-              done();
-            }, 100);
-          });
+            should.exist(args[0].body.messages.apple_push.extra);
+            should.exist(args[0].body.messages.apple_push.custom_uri);
+            should.exist(args[0].body.messages.android_push.extra);
+            should.exist(args[0].body.messages.android_push.custom_uri);
+            should.exist(args[1].body.messages.apple_push.extra);
+            should.exist(args[1].body.messages.apple_push.custom_uri);
+            should.exist(args[1].body.messages.android_push.extra);
+            should.exist(args[1].body.messages.android_push.custom_uri);
+            should.exist(args[2].body.messages.apple_push.extra);
+            should.exist(args[2].body.messages.apple_push.custom_uri);
+            should.exist(args[2].body.messages.android_push.extra);
+            should.exist(args[2].body.messages.android_push.custom_uri)
+            done();
+          }, 100);
+        });
       });
     });
   });

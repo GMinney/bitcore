@@ -4,7 +4,7 @@ var chai = require('chai');
 var should = chai.should();
 var Buffers = require('../lib/buffers');
 
-describe('Buffers', function() {
+describe('Buffers', function () {
 
   var buffs = function buffs() {
     var b = new Buffers();
@@ -15,7 +15,7 @@ describe('Buffers', function() {
     return b;
   };
 
-  it('set buffers to empty if "i" is greater than the total length', function() {
+  it('set buffers to empty if "i" is greater than the total length', function () {
     var b = buffs();
     b.length.should.equal(8);
     b.skip(100);
@@ -23,7 +23,7 @@ describe('Buffers', function() {
     b.length.should.equal(0);
   });
 
-  it('set buffers to empty if "i" is equal than the total length', function() {
+  it('set buffers to empty if "i" is equal than the total length', function () {
     var b = buffs();
     b.length.should.equal(8);
     b.skip(8);
@@ -31,20 +31,20 @@ describe('Buffers', function() {
     b.length.should.equal(0);
   });
 
-  it('do not skip if "i" is zero', function() {
+  it('do not skip if "i" is zero', function () {
     var b = buffs();
     b.skip(0);
     b.length.should.equal(8);
   });
 
-  it('remove part of the first buffer', function() {
+  it('remove part of the first buffer', function () {
     var b = buffs();
     b.skip(1);
     b.length.should.equal(7);
     b.buffers[0].should.deep.equal(new Buffer('23', 'hex'));
   });
 
-  it('remove the first three buffers', function() {
+  it('remove the first three buffers', function () {
     var b = buffs();
     b.skip(6);
     b.length.should.equal(2);
@@ -53,7 +53,7 @@ describe('Buffers', function() {
     should.not.exist(b.buffers[3]);
   });
 
-  it('remove part of the fourth buffer', function() {
+  it('remove part of the fourth buffer', function () {
     var b = buffs();
     b.skip(7);
     b.length.should.equal(1);

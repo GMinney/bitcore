@@ -1,13 +1,13 @@
-import {FC, memo} from 'react';
-import {TransactionEth} from '@/lib/utilities/models';
-import {getConvertedValue, getFormattedDate} from '@/lib/utilities/helper-methods';
-import {SharedTile} from './shared';
+import { FC, memo } from 'react';
+import { TransactionEth } from '@/lib/utilities/models';
+import { getConvertedValue, getFormattedDate } from '@/lib/utilities/helper-methods';
+import { SharedTile } from './shared';
 
 interface TransactionSummaryEthProps {
   transaction: TransactionEth;
 }
-const TransactionSummaryEth: FC<TransactionSummaryEthProps> = ({transaction}) => {
-  const {gasLimit, gasPrice, fee, from, to, nonce, blockTime, confirmations} = transaction;
+const TransactionSummaryEth: FC<TransactionSummaryEthProps> = ({ transaction }) => {
+  const { gasLimit, gasPrice, fee, from, to, nonce, blockTime, confirmations } = transaction;
   return (
     <>
       <SharedTile title='From' description={from} />

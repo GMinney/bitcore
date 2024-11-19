@@ -8,18 +8,18 @@ var should = chai.should();
 var { ChainService } = require('../../ts_build/lib/chain');
 
 
-describe('Chain MATIC', function() {
- 
-  it('should transform addresses to the db', function() {
+describe('Chain MATIC', function () {
 
-    let x = {address: '0x01'};
+  it('should transform addresses to the db', function () {
+
+    let x = { address: '0x01' };
     ChainService.addressToStorageTransform('matic', 'abc', x);
     x.address.should.equal('0x01:abc');
   });
 
-  it('should transform addresses from the db', function() {
+  it('should transform addresses from the db', function () {
 
-    let x = {address: '0x01:dfg'};
+    let x = { address: '0x01:dfg' };
     ChainService.addressFromStorageTransform('matic', 'dfg', x);
     x.address.should.equal('0x01');
   });

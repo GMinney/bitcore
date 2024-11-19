@@ -42,10 +42,10 @@ function UnspentOutput(data) {
     throw new Error('Invalid outputIndex, received ' + outputIndex);
   }
   $.checkArgument(!_.isUndefined(data.scriptPubKey) || !_.isUndefined(data.script),
-                  'Must provide the scriptPubKey for that output!');
+    'Must provide the scriptPubKey for that output!');
   var script = new Script(data.scriptPubKey || data.script);
   $.checkArgument(!_.isUndefined(data.amount) || !_.isUndefined(data.notions),
-                      'Must provide an amount for the output');
+    'Must provide an amount for the output');
   var amount = !_.isUndefined(data.amount) ? new Unit.fromTHT(data.amount).toNotions() : data.notions;
   $.checkArgument(_.isNumber(amount), 'Amount must be a number');
   JSUtil.defineImmutable(this, {
@@ -61,16 +61,16 @@ function UnspentOutput(data) {
  * Provide an informative output when displaying this object in the console
  * @returns string
  */
-UnspentOutput.prototype.inspect = function() {
+UnspentOutput.prototype.inspect = function () {
   return '<UnspentOutput: ' + this.txId + ':' + this.outputIndex +
-         ', notions: ' + this.notions + ', address: ' + this.address + '>';
+    ', notions: ' + this.notions + ', address: ' + this.address + '>';
 };
 
 /**
  * String representation: just "txid:index"
  * @returns string
  */
-UnspentOutput.prototype.toString = function() {
+UnspentOutput.prototype.toString = function () {
   return this.txId + ':' + this.outputIndex;
 };
 
@@ -79,7 +79,7 @@ UnspentOutput.prototype.toString = function() {
  * @param {object|string} data
  * @return UnspentOutput
  */
-UnspentOutput.fromObject = function(data) {
+UnspentOutput.fromObject = function (data) {
   return new UnspentOutput(data);
 };
 

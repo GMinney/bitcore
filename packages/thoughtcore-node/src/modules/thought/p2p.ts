@@ -78,24 +78,21 @@ export class ThoughtP2PWorker extends BaseP2PWorker<IThtBlock> {
   setupListeners() {
     this.pool.on('peerready', peer => {
       logger.info(
-        `${timestamp()} | Connected to peer: ${peer.host}:${peer.port.toString().padEnd(5)} | Chain: ${
-          this.chain
+        `${timestamp()} | Connected to peer: ${peer.host}:${peer.port.toString().padEnd(5)} | Chain: ${this.chain
         } | Network: ${this.network}`
       );
     });
 
     this.pool.on('peerconnect', peer => {
       logger.info(
-        `${timestamp()} | Connected to peer: ${peer.host}:${peer.port.toString().padEnd(5)} | Chain: ${
-          this.chain
+        `${timestamp()} | Connected to peer: ${peer.host}:${peer.port.toString().padEnd(5)} | Chain: ${this.chain
         } | Network: ${this.network}`
       );
     });
 
     this.pool.on('peerdisconnect', peer => {
       logger.warn(
-        `${timestamp()} | Not connected to peer: ${peer.host}:${peer.port.toString().padEnd(5)} | Chain: ${
-          this.chain
+        `${timestamp()} | Not connected to peer: ${peer.host}:${peer.port.toString().padEnd(5)} | Chain: ${this.chain
         } | Network: ${this.network}`
       );
     });

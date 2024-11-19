@@ -23,7 +23,7 @@ var Signature = function Signature(r, s, isSchnorr) {
 };
 
 /* jshint maxcomplexity: 7 */
-Signature.prototype.set = function(obj) {
+Signature.prototype.set = function (obj) {
   this.r = obj.r || this.r || undefined;
   this.s = obj.s || this.s || undefined;
 
@@ -36,7 +36,7 @@ Signature.prototype.set = function(obj) {
   return this;
 };
 
-Signature.fromCompact = function(buf) {
+Signature.fromCompact = function (buf) {
   $.checkArgument(BufferUtil.isBuffer(buf), 'Argument is expected to be a Buffer');
 
   var sig = new Signature();
@@ -63,17 +63,17 @@ Signature.fromCompact = function(buf) {
   return sig;
 };
 
-Signature.fromDER = Signature.fromBuffer = function(buf, strict) {
+Signature.fromDER = Signature.fromBuffer = function (buf, strict) {
   var sig = new Signature();
 
   // Schnorr Signatures use 65 byte for in tx r [len] 32 , s [len] 32, nhashtype
   // NOTE: this check is not very reliable. You should use .fromSchnorr directly if you know it's a schnorr sig.
-  if((buf.length === 64 || buf.length === 65) && buf[0] != 0x30) {
+  if ((buf.length === 64 || buf.length === 65) && buf[0] != 0x30) {
     return Signature.fromSchnorr(buf);
   }
-  
+
   $.checkArgument(!(buf.length === 64 && buf[0] === 0x30), new Error('64 DER (ecdsa) signatures not allowed'));
-  
+
   var obj = Signature.parseDER(buf, strict);
 
   sig.r = obj.r;
@@ -83,7 +83,7 @@ Signature.fromDER = Signature.fromBuffer = function(buf, strict) {
 };
 
 // The format used in a tx
-Signature.fromTxFormat = function(buf) {
+Signature.fromTxFormat = function (buf) {
   var nhashtype = buf.readUInt8(buf.length - 1);
   var derbuf = buf.slice(0, buf.length - 1);
   var sig = new Signature.fromDER(derbuf, false);
@@ -91,7 +91,7 @@ Signature.fromTxFormat = function(buf) {
   return sig;
 };
 
-Signature.fromString = function(str) {
+Signature.fromString = function (str) {
   var buf = Buffer.from(str, 'hex');
   return Signature.fromDER(buf);
 };
@@ -100,7 +100,7 @@ Signature.fromString = function(str) {
 /**
  * In order to mimic the non-strict DER encoding of OpenSSL, set strict = false.
  */
-Signature.parseDER = function(buf, strict) {
+Signature.parseDER = function (buf, strict) {
   $.checkArgument(BufferUtil.isBuffer(buf), new Error('DER formatted signature should be a buffer'));
   if (_.isUndefined(strict)) {
     strict = true;
@@ -155,7 +155,7 @@ Signature.parseDER = function(buf, strict) {
 };
 
 
-Signature.prototype.toCompact = function(i, compressed) {
+Signature.prototype.toCompact = function (i, compressed) {
   i = typeof i === 'number' ? i : this.i;
   compressed = typeof compressed === 'boolean' ? compressed : this.compressed;
 
@@ -180,8 +180,8 @@ Signature.prototype.toCompact = function(i, compressed) {
 /**
  * Returns either a DER encoded buffer or a Schnorr encoded buffer if isSchnor == true
  */
-Signature.prototype.toBuffer = Signature.prototype.toDER = function() {
-  if(this.isSchnorr) {
+Signature.prototype.toBuffer = Signature.prototype.toDER = function () {
+  if (this.isSchnorr) {
     const hashTypeBuf = !this.nhashtype || this.nhashtype === Signature.SIGHASH_DEFAULT ? Buffer.alloc(0) : Buffer.from([this.nhashtype]);
     return Buffer.concat([this.r.toBuffer({ size: 32 }), this.s.toBuffer({ size: 32 }), hashTypeBuf]);
   }
@@ -206,7 +206,7 @@ Signature.prototype.toBuffer = Signature.prototype.toDER = function() {
   return der;
 };
 
-Signature.prototype.toString = function() {
+Signature.prototype.toString = function () {
   var buf = this.toDER();
   return buf.toString('hex');
 };
@@ -223,7 +223,7 @@ Signature.prototype.toString = function() {
  *
  * See https://thoughttalk.org/index.php?topic=8392.msg127623#msg127623
  */
-Signature.isTxDER = function(buf) {
+Signature.isTxDER = function (buf) {
   if (buf.length < 9) {
     //  Non-canonical signature: too short
     return false;
@@ -294,7 +294,7 @@ Signature.isTxDER = function(buf) {
  * See also ECDSA signature algorithm which enforces this.
  * See also BIP 62, "low S values in signatures"
  */
-Signature.prototype.hasLowS = function() {
+Signature.prototype.hasLowS = function () {
   if (this.s.lt(new BN(1)) ||
     this.s.gt(new BN('7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0', 'hex'))) {
     return false;
@@ -306,7 +306,7 @@ Signature.prototype.hasLowS = function() {
  * @returns true if the nhashtype is exactly equal to one of the standard options or combinations thereof.
  * Translated from thoughtd's IsDefinedHashtypeSignature
  */
-Signature.prototype.hasDefinedHashtype = function() {
+Signature.prototype.hasDefinedHashtype = function () {
   if (!JSUtil.isNaturalNumber(this.nhashtype)) {
     return false;
   }
@@ -318,7 +318,7 @@ Signature.prototype.hasDefinedHashtype = function() {
   return true;
 };
 
-Signature.prototype.toTxFormat = function() {
+Signature.prototype.toTxFormat = function () {
   var derbuf = this.toDER();
   var buf = Buffer.alloc(1);
   buf.writeUInt8(this.nhashtype, 0);
@@ -330,12 +330,12 @@ Signature.prototype.toTxFormat = function() {
  * @param {Buffer} buf Schnorr signature buffer
  * @returns {Signature}
  */
-Signature.fromSchnorr = function(buf) {
+Signature.fromSchnorr = function (buf) {
   $.checkArgument(Buffer.isBuffer(buf), 'Schnorr signature argument must be a buffer');
   $.checkArgument(buf.length === 64 || buf.length === 65, 'Schnorr signatures must be 64 or 65 bytes');
 
   const sig = new Signature();
-  let r = buf.slice(0,32);
+  let r = buf.slice(0, 32);
   let s = buf.slice(32, 64);
   if (buf.length === 65) {
     sig.nhashtype = buf[buf.length - 1];
@@ -349,19 +349,19 @@ Signature.fromSchnorr = function(buf) {
   return sig;
 };
 
-Signature.SIGHASH_DEFAULT       = 0x00; //!< Taproot only; implied when sighash byte is missing, and equivalent to SIGHASH_ALL
-Signature.SIGHASH_ALL           = 0x01;
-Signature.SIGHASH_NONE          = 0x02;
-Signature.SIGHASH_SINGLE        = 0x03;
-Signature.SIGHASH_ANYONECANPAY  = 0x80;
+Signature.SIGHASH_DEFAULT = 0x00; //!< Taproot only; implied when sighash byte is missing, and equivalent to SIGHASH_ALL
+Signature.SIGHASH_ALL = 0x01;
+Signature.SIGHASH_NONE = 0x02;
+Signature.SIGHASH_SINGLE = 0x03;
+Signature.SIGHASH_ANYONECANPAY = 0x80;
 
 Signature.SIGHASH_OUTPUT_MASK = 3;
-Signature.SIGHASH_INPUT_MASK  = 128; // 0x80,
+Signature.SIGHASH_INPUT_MASK = 128; // 0x80,
 
 Signature.Version = {};
-Signature.Version.BASE       = 0;
+Signature.Version.BASE = 0;
 Signature.Version.WITNESS_V0 = 1;
-Signature.Version.TAPROOT    = 2;
-Signature.Version.TAPSCRIPT  = 3;
+Signature.Version.TAPROOT = 2;
+Signature.Version.TAPSCRIPT = 3;
 
 module.exports = Signature;

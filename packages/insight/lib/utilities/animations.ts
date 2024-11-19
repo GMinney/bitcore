@@ -57,7 +57,7 @@ export const ErrorExitAnime = {
   exit: {
     opacity: 0,
     height: 0,
-    transition: {bounce: 0},
+    transition: { bounce: 0 },
     duration: 0.01,
   },
 };

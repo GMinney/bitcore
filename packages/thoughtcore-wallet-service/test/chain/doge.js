@@ -1,9 +1,9 @@
 'use strict';
 
-const  _ = require('lodash');
+const _ = require('lodash');
 const chai = require('chai');
 const should = chai.should();
-const { ThoughtcoreLibDoge } = require ('crypto-wallet-core');
+const { ThoughtcoreLibDoge } = require('crypto-wallet-core');
 const { ChainService } = require('../../ts_build/lib/chain');
 const { DogeChain } = require('../../ts_build/lib/chain/doge');
 const { TxProposal } = require('../../ts_build/lib/model/txproposal');
@@ -42,7 +42,7 @@ describe('Chain DOGE', () => {
 
     it('should create a valid unsigned thoughtcore TX', () => {
       const txp = TxProposal.fromObj(signedTxp);
-      const t = ChainService.getThoughtcoreTx(txp, { signed: false } );
+      const t = ChainService.getThoughtcoreTx(txp, { signed: false });
       should.exist(t);
 
       // should serialized
@@ -86,10 +86,10 @@ describe('Chain DOGE', () => {
         .to([{ address: toAddress, notions: 1e9 - 1e8 }])
         .sign(privateKey);
 
-      const actualLength = tx.serialize().length/2;
+      const actualLength = tx.serialize().length / 2;
 
       // Check margin is ~0.0
-      ((Math.abs(actualLength-estimatedLength))/actualLength).should.not.be.above(0.05);
+      ((Math.abs(actualLength - estimatedLength)) / actualLength).should.not.be.above(0.05);
     });
 
     const p2shPrivateKey1 = ThoughtcoreLibDoge.PrivateKey.fromWIF('QQu6YLUqhPdHSGDyPWk1nB3225NTpMg9HE6eecFmE4169dTjtxjX');
@@ -122,7 +122,7 @@ describe('Chain DOGE', () => {
       const estimatedLength = doge.getEstimatedSize(x);
 
       const actualLength = tx.serialize().length / 2;
-      ((Math.abs(actualLength-estimatedLength))/actualLength).should.be.below(0.05);
+      ((Math.abs(actualLength - estimatedLength)) / actualLength).should.be.below(0.05);
     });
 
     it('1 input p2wpkh, 1 Native Segwit output: ', () => {
@@ -138,7 +138,7 @@ describe('Chain DOGE', () => {
 
       // https://thought.stackexchange.com/questions/84004/how-do-virtual-size-stripped-size-and-raw-size-compare-between-legacy-address-f
       const actualLength = 437 / 4; // this is the vsize
-      ((Math.abs(actualLength-estimatedLength))/actualLength).should.be.below(0.05);
+      ((Math.abs(actualLength - estimatedLength)) / actualLength).should.be.below(0.05);
     });
 
     it('2 input multisig p2wsh, 1 native segwit output: ', () => {
@@ -151,7 +151,7 @@ describe('Chain DOGE', () => {
 
       // from https://thought.stackexchange.com/questions/88226/how-to-calculate-the-size-of-multisig-transaction
       const actualLength = (346 + 2 * 108) / 4; // this is the vsize
-      ((Math.abs(actualLength-estimatedLength))/actualLength).should.be.below(0.05);
+      ((Math.abs(actualLength - estimatedLength)) / actualLength).should.be.below(0.05);
     });
   });
 });

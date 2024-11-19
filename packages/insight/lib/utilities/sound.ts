@@ -1,7 +1,7 @@
 'use client';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {fetcher} from '@/api/api';
+import { fetcher } from '@/api/api';
 
 export function playSoundEffect(soundFile: any) {
   const context = new (window.AudioContext || (window as any).webkitAudioContext)();

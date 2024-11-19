@@ -20,7 +20,7 @@ export class StateModel extends BaseModel<IState> {
   }
   allowedPaging = [];
 
-  onConnect() {}
+  onConnect() { }
 
   async getSingletonState(): Promise<WithId<MongoBound<IState>> | null> {
     return this.collection.findOneAndUpdate(
@@ -33,7 +33,7 @@ export class StateModel extends BaseModel<IState> {
   async getSyncingNode(params: { chain: string; network: string }): Promise<string> {
     const { chain, network } = params;
     const state = await this.getSingletonState();
-    if (!state){
+    if (!state) {
       throw new Error("State null")
     }
     return state[`syncingNode:${chain}:${network}`];
@@ -42,7 +42,7 @@ export class StateModel extends BaseModel<IState> {
   async selfNominateSyncingNode(params: { chain: string; network: string; lastHeartBeat: any }) {
     const { chain, network, lastHeartBeat } = params;
     const singleState = await this.getSingletonState()!;
-    if (!singleState){
+    if (!singleState) {
       throw new Error("singlestate null")
     }
     return this.collection.findOneAndUpdate(
@@ -60,7 +60,7 @@ export class StateModel extends BaseModel<IState> {
   async selfResignSyncingNode(params: { chain: string; network: string; lastHeartBeat: any }) {
     const { chain, network, lastHeartBeat } = params;
     const singleState = await this.getSingletonState();
-    if (!singleState){
+    if (!singleState) {
       throw new Error("singlestate null")
     }
     return this.collection.findOneAndUpdate(

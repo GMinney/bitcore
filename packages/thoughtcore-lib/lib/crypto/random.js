@@ -4,19 +4,19 @@ function Random() {
 }
 
 /* secure random bytes that sometimes throws an error due to lack of entropy */
-Random.getRandomBuffer = function(size) {
+Random.getRandomBuffer = function (size) {
   if (process.browser)
     return Random.getRandomBufferBrowser(size);
   else
     return Random.getRandomBufferNode(size);
 };
 
-Random.getRandomBufferNode = function(size) {
+Random.getRandomBufferNode = function (size) {
   var crypto = require('crypto');
   return crypto.randomBytes(size);
 };
 
-Random.getRandomBufferBrowser = function(size) {
+Random.getRandomBufferBrowser = function (size) {
   if (!window.crypto && !window.msCrypto)
     throw new Error('window.crypto not available');
 
@@ -35,7 +35,7 @@ Random.getRandomBufferBrowser = function(size) {
 };
 
 /* insecure random bytes, but it never fails */
-Random.getPseudoRandomBuffer = function(size) {
+Random.getPseudoRandomBuffer = function (size) {
   var b32 = 0x100000000;
   var b = Buffer.alloc(size);
   var r;

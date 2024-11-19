@@ -23,9 +23,9 @@ const errors = thoughtcore.errors;
 const transactionVector = require('../data/tx_creation');
 const taprootVectors = require('../data/thoughtd/wallet_test_vectors.json');
 
-describe('Transaction', function() {
+describe('Transaction', function () {
 
-  it('should serialize and deserialize correctly a given transaction', function() {
+  it('should serialize and deserialize correctly a given transaction', function () {
     var transaction = new Transaction(tx_1_hex);
     transaction.uncheckedSerialize().should.equal(tx_1_hex);
   });
@@ -36,8 +36,8 @@ describe('Transaction', function() {
     transaction.nLockTime.should.equal(0xffffffff);
   });
 
-  it('fails if an invalid parameter is passed to constructor', function() {
-    expect(function() {
+  it('fails if an invalid parameter is passed to constructor', function () {
+    expect(function () {
       return new Transaction(1);
     }).to.throw(errors.InvalidArgument);
   });
@@ -55,7 +55,7 @@ describe('Transaction', function() {
     })
     .to('mrU9pEmAx26HcbKVrABvgL7AwA5fjNFoDc', testAmount - 10000);
 
-  it('can serialize to a plain javascript object', function() {
+  it('can serialize to a plain javascript object', function () {
     var object = testTransaction.toObject();
     object.inputs[0].output.notions.should.equal(testAmount);
     object.inputs[0].output.script.should.equal(testScriptHex);
@@ -64,33 +64,33 @@ describe('Transaction', function() {
     object.outputs[0].notions.should.equal(testAmount - 10000);
   });
 
-  it('will not accept NaN as an amount', function() {
-    (function() {
+  it('will not accept NaN as an amount', function () {
+    (function () {
       var stringTx = new Transaction().to('mrU9pEmAx26HcbKVrABvgL7AwA5fjNFoDc', NaN);
     }).should.throw('Amount is expected to be a positive integer');
   });
 
-  it('returns the fee correctly', function() {
+  it('returns the fee correctly', function () {
     testTransaction.getFee().should.equal(10000);
   });
 
-  it('will return zero as the fee for a coinbase', function() {
+  it('will return zero as the fee for a coinbase', function () {
     // block #2: 0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098
     var coinbaseTransaction = new Transaction('01000000010000000000000000000000000000000000000000000000000000000000000000ffffffff0704ffff001d0104ffffffff0100f2052a0100000043410496b538e853519c726a2c91e61ec11600ae1390813a627c66fb8be7947be63c52da7589379515d4e0a604f8141781e62294721166bf621e73a82cbf2342c858eeac00000000');
     coinbaseTransaction.getFee().should.equal(0);
   });
 
-  it('serialize to Object roundtrip', function() {
+  it('serialize to Object roundtrip', function () {
     var a = testTransaction.toObject();
     var newTransaction = new Transaction(a);
     var b = newTransaction.toObject();
     a.should.deep.equal(b);
   });
 
-  it('toObject/fromObject with signatures and custom fee', function() {
+  it('toObject/fromObject with signatures and custom fee', function () {
     var tx = new Transaction()
       .from(simpleUtxoWith100000Notions)
-      .to([{address: toAddress, notions: 50000}])
+      .to([{ address: toAddress, notions: 50000 }])
       .fee(15000)
       .change(changeAddress)
       .sign(privateKey);
@@ -101,10 +101,10 @@ describe('Transaction', function() {
     txData.should.equal(txData2);
   });
 
-  it('toObject/fromObject with p2sh signatures and custom fee', function() {
+  it('toObject/fromObject with p2sh signatures and custom fee', function () {
     var tx = new Transaction()
       .from(p2shUtxoWith1THT, [p2shPublicKey1, p2shPublicKey2, p2shPublicKey3], 2)
-      .to([{address: toAddress, notions: 50000}])
+      .to([{ address: toAddress, notions: 50000 }])
       .fee(15000)
       .change(changeAddress)
       .sign(p2shPrivateKey1)
@@ -116,10 +116,10 @@ describe('Transaction', function() {
     txData.should.equal(tx2Data);
   });
 
-  it('toObject/fromObject with p2wsh signatures and custom fee', function() {
+  it('toObject/fromObject with p2wsh signatures and custom fee', function () {
     var tx = new Transaction()
       .from(p2wshUtxoWith1THT, [p2shPublicKey1, p2shPublicKey2, p2shPublicKey3], 2)
-      .to([{address: toAddress, notions: 50000}])
+      .to([{ address: toAddress, notions: 50000 }])
       .fee(15000)
       .change(changeAddress)
       .sign(p2shPrivateKey1)
@@ -131,7 +131,7 @@ describe('Transaction', function() {
     txData.should.equal(tx2Data);
   });
 
-  it('fromObject with pay-to-public-key previous outputs', function() {
+  it('fromObject with pay-to-public-key previous outputs', function () {
     var tx = thoughtcore.Transaction({
       hash: '132856bf03d6415562a556437d22ac63c37a4595fd986c796eb8e02dc031aa25',
       version: 1,
@@ -165,10 +165,10 @@ describe('Transaction', function() {
     tx.inputs[0].output.script.toHex().should.equal('2103b1c65d65f1ff3fe145a4ede692460ae0606671d04e8449e99dd11c66ab55a7feac');
   });
 
-  it('toObject/fromObject with witness, signatures and custom fee', function() {
+  it('toObject/fromObject with witness, signatures and custom fee', function () {
     var tx = new Transaction()
       .from(simpleWitnessUtxoWith1THT)
-      .to([{address: toAddress, notions: 50000}])
+      .to([{ address: toAddress, notions: 50000 }])
       .fee(15000)
       .change(changeAddress)
       .sign(privateKey);
@@ -179,10 +179,10 @@ describe('Transaction', function() {
     txData.should.equal(txData2);
   });
 
-  it('toObject/fromObject with nested witness, signatures and custom fee', function() {
+  it('toObject/fromObject with nested witness, signatures and custom fee', function () {
     var tx = new Transaction()
       .from(simpleWrappedWitnessUtxoWith1THT)
-      .to([{address: toAddress, notions: 50000}])
+      .to([{ address: toAddress, notions: 50000 }])
       .fee(15000)
       .change(changeAddress)
       .sign(privateKey);
@@ -193,58 +193,58 @@ describe('Transaction', function() {
     txData.should.equal(txData2);
   });
 
-  it('constructor returns a shallow copy of another transaction', function() {
+  it('constructor returns a shallow copy of another transaction', function () {
     var transaction = new Transaction(tx_1_hex);
     var copy = new Transaction(transaction);
     copy.uncheckedSerialize().should.equal(transaction.uncheckedSerialize());
   });
 
-  it('should display correctly in console', function() {
+  it('should display correctly in console', function () {
     var transaction = new Transaction(tx_1_hex);
     transaction.inspect().should.equal('<Transaction: ' + tx_1_hex + '>');
   });
 
-  it('standard hash of transaction should be decoded correctly', function() {
+  it('standard hash of transaction should be decoded correctly', function () {
     var transaction = new Transaction(tx_1_hex);
     transaction.id.should.equal(tx_1_id);
   });
 
-  it('serializes an empty transaction', function() {
+  it('serializes an empty transaction', function () {
     var transaction = new Transaction();
     transaction.setVersion(1);
     transaction.uncheckedSerialize().should.equal(tx_empty_hex);
   });
 
-  it('serializes an empty transaction v2', function() {
+  it('serializes an empty transaction v2', function () {
     var transaction = new Transaction();
     transaction.uncheckedSerialize().should.equal(tx_empty_hexV2);
   });
 
-  it('serializes and deserializes correctly', function() {
+  it('serializes and deserializes correctly', function () {
     var transaction = new Transaction(tx_1_hex);
     transaction.uncheckedSerialize().should.equal(tx_1_hex);
   });
 
-    // testnet tx 2035ead4a9d0c8e2da1184924abc9034d26f2a7093371183ef12891623b235d1
-    const taprootTx = '02000000000102c1d8527f83a3061536d394cf50c476c60e885986b047d0d553c59f7a703cab700100000000fdffffffb843817220dc08b9f008207b5ea2591c26ce0ad5b3f842b934d9f0635a252d630000000000fdffffff02a086010000000000225120a60869f0dbcf1dc659c9cecbaf8050135ea9e8cdc487053f1dc6880949dc684c6a720000000000001600141eadc6c059a0485e0f8cfff955be4f5a544f514d024730440220776ecbb80e66ada7fe379c93c790303a33c11e3e888e41c991bcdae7d7531487022022ff85dc93a45941b4941484c46b515a476a2f2ab4ccb7dfd243eaadeed05036012103e9f41161bafb6a4e54a9ad29a68cdb3194e4d98b784a1ebcafa0055eb7310c810247304402206b275c62d21aa152323cac83e037f660865ef2a3bc73cc208bdc275643291b6f0220257249964a0e42ced656f74247683b70249f0d65da50532a3d9a5c4df12a531401210332fe2e5317637bed2153bee395facec6a245b98831e5a5d8f7af091371e67264aa7f1f00';
-    it('deserializes and serializes a taproot tx', function() {
-      const tx = new Transaction(taprootTx);
-      tx.should.exist;
-      const script = new Script(tx.outputs[0]._scriptBuffer);
-      const addy = script.toAddress('testnet');
-      const addyString = addy.toString();
-      addyString.should.equal('tb1p5cyxnuxmeuwuvkwfem96lqzszd02n6xdcjrs20cac6yqjjwudpxqp3mvzv');
-      const reserialized = tx.uncheckedSerialize();
-      reserialized.should.equal(taprootTx);
-    });
+  // testnet tx 2035ead4a9d0c8e2da1184924abc9034d26f2a7093371183ef12891623b235d1
+  const taprootTx = '02000000000102c1d8527f83a3061536d394cf50c476c60e885986b047d0d553c59f7a703cab700100000000fdffffffb843817220dc08b9f008207b5ea2591c26ce0ad5b3f842b934d9f0635a252d630000000000fdffffff02a086010000000000225120a60869f0dbcf1dc659c9cecbaf8050135ea9e8cdc487053f1dc6880949dc684c6a720000000000001600141eadc6c059a0485e0f8cfff955be4f5a544f514d024730440220776ecbb80e66ada7fe379c93c790303a33c11e3e888e41c991bcdae7d7531487022022ff85dc93a45941b4941484c46b515a476a2f2ab4ccb7dfd243eaadeed05036012103e9f41161bafb6a4e54a9ad29a68cdb3194e4d98b784a1ebcafa0055eb7310c810247304402206b275c62d21aa152323cac83e037f660865ef2a3bc73cc208bdc275643291b6f0220257249964a0e42ced656f74247683b70249f0d65da50532a3d9a5c4df12a531401210332fe2e5317637bed2153bee395facec6a245b98831e5a5d8f7af091371e67264aa7f1f00';
+  it('deserializes and serializes a taproot tx', function () {
+    const tx = new Transaction(taprootTx);
+    tx.should.exist;
+    const script = new Script(tx.outputs[0]._scriptBuffer);
+    const addy = script.toAddress('testnet');
+    const addyString = addy.toString();
+    addyString.should.equal('tb1p5cyxnuxmeuwuvkwfem96lqzszd02n6xdcjrs20cac6yqjjwudpxqp3mvzv');
+    const reserialized = tx.uncheckedSerialize();
+    reserialized.should.equal(taprootTx);
+  });
 
 
-  describe('transaction creation test vector', function() {
+  describe('transaction creation test vector', function () {
     this.timeout(5000);
     var index = 0;
     for (const vector of transactionVector) {
       index++;
-      it('case ' + index, function() {
+      it('case ' + index, function () {
         var i = 0;
         var transaction = new Transaction();
         transaction.setVersion(1);
@@ -356,55 +356,55 @@ describe('Transaction', function() {
     notions: 1e8
   };
 
-  describe('adding inputs', function() {
+  describe('adding inputs', function () {
 
-    it('adds just once one utxo', function() {
+    it('adds just once one utxo', function () {
       var tx = new Transaction();
       tx.from(simpleUtxoWith1THT);
       tx.from(simpleUtxoWith1THT);
       tx.inputs.length.should.equal(1);
     });
 
-    describe('isFullySigned', function() {
-      it('works for normal p2pkh', function() {
+    describe('isFullySigned', function () {
+      it('works for normal p2pkh', function () {
         var transaction = new Transaction()
           .from(simpleUtxoWith100000Notions)
-          .to([{address: toAddress, notions: 50000}])
+          .to([{ address: toAddress, notions: 50000 }])
           .change(changeAddress)
           .sign(privateKey);
         transaction.isFullySigned().should.equal(true);
       });
-      it('works for normal p2wpkh', function() {
+      it('works for normal p2wpkh', function () {
         var transaction = new Transaction()
           .from(simpleWitnessUtxoWith1THT)
-          .to([{address: toAddress, notions: 50000}])
+          .to([{ address: toAddress, notions: 50000 }])
           .change(changeAddress)
           .sign(privateKey);
         transaction.isFullySigned().should.equal(true);
       });
-      it('works for wrapped p2wpkh', function() {
+      it('works for wrapped p2wpkh', function () {
         var transaction = new Transaction()
           .from(simpleWrappedWitnessUtxoWith1THT)
-          .to([{address: toAddress, notions: 50000}])
+          .to([{ address: toAddress, notions: 50000 }])
           .change(changeAddress)
           .sign(privateKey);
         transaction.isFullySigned().should.equal(true);
       });
-      it('fails when Inputs are not subclassed and isFullySigned is called', function() {
+      it('fails when Inputs are not subclassed and isFullySigned is called', function () {
         var tx = new Transaction(tx_1_hex);
-        expect(function() {
+        expect(function () {
           return tx.isFullySigned();
         }).to.throw(errors.Transaction.UnableToVerifySignature);
       });
-      it('fails when Inputs are not subclassed and verifySignature is called', function() {
+      it('fails when Inputs are not subclassed and verifySignature is called', function () {
         var tx = new Transaction(tx_1_hex);
-        expect(function() {
+        expect(function () {
           return tx.isValidSignature({
             inputIndex: 0
           });
         }).to.throw(errors.Transaction.UnableToVerifySignature);
       });
-      it('passes result of input.isValidSignature', function() {
+      it('passes result of input.isValidSignature', function () {
         var tx = new Transaction(tx_1_hex);
         tx.from(simpleUtxoWith1THT);
         tx.inputs[0].isValidSignature = sinon.stub().returns(true);
@@ -416,8 +416,8 @@ describe('Transaction', function() {
     });
   });
 
-  describe('change address', function() {
-    it('can calculate simply the output amount', function() {
+  describe('change address', function () {
+    it('can calculate simply the output amount', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1000000Notions)
         .to(toAddress, 500000)
@@ -431,7 +431,7 @@ describe('Transaction', function() {
       var expected = Script.fromAddress(changeAddress).toString();
       actual.should.equal(expected);
     });
-    it('accepts a P2SH address for change', function() {
+    it('accepts a P2SH address for change', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1000000Notions)
         .to(toAddress, 500000)
@@ -440,7 +440,7 @@ describe('Transaction', function() {
       transaction.outputs.length.should.equal(2);
       transaction.outputs[1].script.isScriptHashOut().should.equal(true);
     });
-    it('accepts a P2WPKH address for change', function() {
+    it('accepts a P2WPKH address for change', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1000000Notions)
         .to(toAddress, 500000)
@@ -449,7 +449,7 @@ describe('Transaction', function() {
       transaction.outputs.length.should.equal(2);
       transaction.outputs[1].script.isWitnessPublicKeyHashOut().should.equal(true);
     });
-    it('accepts a P2WSH address for change', function() {
+    it('accepts a P2WSH address for change', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1000000Notions)
         .to(toAddress, 500000)
@@ -458,7 +458,7 @@ describe('Transaction', function() {
       transaction.outputs.length.should.equal(2);
       transaction.outputs[1].script.isWitnessScriptHashOut().should.equal(true);
     });
-    it('can recalculate the change amount', function() {
+    it('can recalculate the change amount', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith100000Notions)
         .to(toAddress, 50000)
@@ -477,14 +477,14 @@ describe('Transaction', function() {
       transaction.outputs[2].script.toString()
         .should.equal(Script.fromAddress(changeAddress).toString());
     });
-    it('adds no fee if no change is available', function() {
+    it('adds no fee if no change is available', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith100000Notions)
         .to(toAddress, 99000)
         .sign(privateKey);
       transaction.outputs.length.should.equal(1);
     });
-    it('adds no fee if no money is available', function() {
+    it('adds no fee if no money is available', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith100000Notions)
         .to(toAddress, 100000)
@@ -500,7 +500,7 @@ describe('Transaction', function() {
         .sign(privateKey);
       transaction.outputs.length.should.equal(1);
     });
-    it('fee can be set up manually', function() {
+    it('fee can be set up manually', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith100000Notions)
         .to(toAddress, 80000)
@@ -510,8 +510,8 @@ describe('Transaction', function() {
       transaction.outputs.length.should.equal(2);
       transaction.outputs[1].notions.should.equal(10000);
     });
-    it('fee per kb can be set up manually', function() {
-      var inputs = new Array(10).fill(0).map(function(_, i) {
+    it('fee per kb can be set up manually', function () {
+      var inputs = new Array(10).fill(0).map(function (_, i) {
         var utxo = JSON.parse(JSON.stringify(simpleUtxoWith100000Notions));
         utxo.outputIndex = i;
         return utxo;
@@ -527,7 +527,7 @@ describe('Transaction', function() {
       transaction.outputs[1].notions.should.equal(37536);
     });
     it('fee per byte (low fee) can be set up manually', function () {
-      var inputs = new Array(10).fill(0).map(function(_, i) {
+      var inputs = new Array(10).fill(0).map(function (_, i) {
         var utxo = JSON.parse(JSON.stringify(simpleUtxoWith100000Notions));
         utxo.outputIndex = i;
         return utxo;
@@ -543,7 +543,7 @@ describe('Transaction', function() {
       transaction.outputs[1].notions.should.be.within(48001, 49000);
     });
     it('fee per byte (high fee) can be set up manually', function () {
-      var inputs = new Array(10).fill(0).map(function(_, i) {
+      var inputs = new Array(10).fill(0).map(function (_, i) {
         var utxo = JSON.parse(JSON.stringify(simpleUtxoWith100000Notions));
         utxo.outputIndex = i;
         return utxo;
@@ -559,7 +559,7 @@ describe('Transaction', function() {
       transaction.outputs[1].notions.should.be.within(46002, 48000);
     });
     it('fee per byte can be set up manually', function () {
-      var inputs = new Array(10).fill(0).map(function(_, i) {
+      var inputs = new Array(10).fill(0).map(function (_, i) {
         var utxo = JSON.parse(JSON.stringify(simpleUtxoWith100000Notions));
         utxo.outputIndex = i;
         return utxo;
@@ -575,7 +575,7 @@ describe('Transaction', function() {
       transaction.outputs[1].notions.should.be.within(24013, 37000);
     });
     it('fee per byte not enough for change', function () {
-      var inputs = new Array(10).fill(0).map(function(_, i) {
+      var inputs = new Array(10).fill(0).map(function (_, i) {
         var utxo = JSON.parse(JSON.stringify(simpleUtxoWith100000Notions));
         utxo.outputIndex = i;
         return utxo;
@@ -589,7 +589,7 @@ describe('Transaction', function() {
       transaction._estimateSize().should.be.within(1000, 1999);
       transaction.outputs.length.should.equal(1);
     });
-    it('if notions are invalid', function() {
+    it('if notions are invalid', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith100000Notions)
         .to(toAddress, 99999)
@@ -597,21 +597,21 @@ describe('Transaction', function() {
         .sign(privateKey);
       transaction.outputs[0]._notions = 100;
       transaction.outputs[0]._notionsBN = new BN(101, 10);
-      expect(function() {
+      expect(function () {
         return transaction.serialize();
       }).to.throw(errors.Transaction.InvalidNotions);
     });
-    it('if fee is too small, fail serialization', function() {
-      var transaction = new Transaction({disableDustOutputs: true})
+    it('if fee is too small, fail serialization', function () {
+      var transaction = new Transaction({ disableDustOutputs: true })
         .from(simpleUtxoWith100000Notions)
         .to(toAddress, 99999)
         .change(changeAddress)
         .sign(privateKey);
-      expect(function() {
+      expect(function () {
         return transaction.serialize();
       }).to.throw(errors.Transaction.FeeError.TooSmall);
     });
-    it('on second call to sign, change is not recalculated', function() {
+    it('on second call to sign, change is not recalculated', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith100000Notions)
         .to(toAddress, 100000)
@@ -620,7 +620,7 @@ describe('Transaction', function() {
         .sign(privateKey);
       transaction.outputs.length.should.equal(1);
     });
-    it('getFee() returns the difference between inputs and outputs if no change address set', function() {
+    it('getFee() returns the difference between inputs and outputs if no change address set', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith100000Notions)
         .to(toAddress, 1000);
@@ -645,8 +645,8 @@ describe('Transaction', function() {
     });
   });
 
-  describe('serialization', function() {
-    it('stores the change address correctly', function() {
+  describe('serialization', function () {
+    it('stores the change address correctly', function () {
       var serialized = new Transaction()
         .change(changeAddress)
         .toObject();
@@ -654,18 +654,18 @@ describe('Transaction', function() {
       expect(deserialized._changeScript.toString()).to.equal(Script.fromAddress(changeAddress).toString());
       expect(deserialized.getChangeOutput()).to.equal(null);
     });
-    it('can avoid checked serialize', function() {
+    it('can avoid checked serialize', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1THT)
         .to(fromAddress, 1);
-      expect(function() {
+      expect(function () {
         return transaction.serialize();
       }).to.throw();
-      expect(function() {
+      expect(function () {
         return transaction.serialize(true);
       }).to.not.throw();
     });
-    it('stores the fee set by the user', function() {
+    it('stores the fee set by the user', function () {
       var fee = 1000000;
       var serialized = new Transaction()
         .fee(fee)
@@ -675,66 +675,66 @@ describe('Transaction', function() {
     });
   });
 
-  describe('checked serialize', function() {
-    it('fails if no change address was set', function() {
+  describe('checked serialize', function () {
+    it('fails if no change address was set', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1THT)
         .to(toAddress, 1);
-      expect(function() {
+      expect(function () {
         return transaction.serialize();
       }).to.throw(errors.Transaction.ChangeAddressMissing);
     });
-    it('fails if a high fee was set', function() {
+    it('fails if a high fee was set', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1THT)
         .change(changeAddress)
         .fee(50000000)
         .to(toAddress, 40000000);
-      expect(function() {
+      expect(function () {
         return transaction.serialize();
       }).to.throw(errors.Transaction.FeeError.TooLarge);
     });
-    it('fails if a dust output is created', function() {
+    it('fails if a dust output is created', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1THT)
         .to(toAddress, 545)
         .change(changeAddress)
         .sign(privateKey);
-      expect(function() {
+      expect(function () {
         return transaction.serialize();
       }).to.throw(errors.Transaction.DustOutputs);
     });
-    it('doesn\'t fail if a dust output is not dust', function() {
+    it('doesn\'t fail if a dust output is not dust', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1THT)
         .to(toAddress, 546)
         .change(changeAddress)
         .sign(privateKey);
-      expect(function() {
+      expect(function () {
         return transaction.serialize();
       }).to.not.throw(errors.Transaction.DustOutputs);
     });
-    it('doesn\'t fail if a dust output is an op_return', function() {
+    it('doesn\'t fail if a dust output is an op_return', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1THT)
         .addData('not dust!')
         .change(changeAddress)
         .sign(privateKey);
-      expect(function() {
+      expect(function () {
         return transaction.serialize();
       }).to.not.throw(errors.Transaction.DustOutputs);
     });
-    it('fails when outputs and fee don\'t add to total input', function() {
+    it('fails when outputs and fee don\'t add to total input', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1THT)
         .to(toAddress, 99900000)
         .fee(99999)
         .sign(privateKey);
-      expect(function() {
+      expect(function () {
         return transaction.serialize();
       }).to.throw(errors.Transaction.FeeError.Different);
     });
-    it('checks output amount before fee errors', function() {
+    it('checks output amount before fee errors', function () {
       var transaction = new Transaction();
       transaction.from(simpleUtxoWith1THT);
       transaction
@@ -742,11 +742,11 @@ describe('Transaction', function() {
         .change(changeAddress)
         .fee(5);
 
-      expect(function() {
+      expect(function () {
         return transaction.serialize();
       }).to.throw(errors.Transaction.InvalidOutputAmountSum);
     });
-    it('will throw fee error with disableMoreOutputThanInput enabled (but not triggered)', function() {
+    it('will throw fee error with disableMoreOutputThanInput enabled (but not triggered)', function () {
       var transaction = new Transaction();
       transaction.from(simpleUtxoWith1THT);
       transaction
@@ -754,15 +754,15 @@ describe('Transaction', function() {
         .change(changeAddress)
         .fee(16000000);
 
-      expect(function() {
+      expect(function () {
         return transaction.serialize({
           disableMoreOutputThanInput: true
         });
       }).to.throw(errors.Transaction.FeeError.TooLarge);
     });
-    describe('skipping checks', function() {
-      var buildSkipTest = function(builder, check, expectedError) {
-        return function() {
+    describe('skipping checks', function () {
+      var buildSkipTest = function (builder, check, expectedError) {
+        return function () {
           var transaction = new Transaction();
           transaction.from(simpleUtxoWith1THT);
           builder(transaction);
@@ -770,16 +770,16 @@ describe('Transaction', function() {
           var options = {};
           options[check] = true;
 
-          expect(function() {
+          expect(function () {
             return transaction.serialize(options);
           }).not.to.throw();
-          expect(function() {
+          expect(function () {
             return transaction.serialize();
           }).to.throw(expectedError);
         };
       };
       it('can skip the check for too much fee', buildSkipTest(
-        function(transaction) {
+        function (transaction) {
           return transaction
             .fee(50000000)
             .change(changeAddress)
@@ -787,7 +787,7 @@ describe('Transaction', function() {
         }, 'disableLargeFees', errors.Transaction.FeeError.TooLarge
       ));
       it('can skip the check for a fee that is too small', buildSkipTest(
-        function(transaction) {
+        function (transaction) {
           return transaction
             .fee(1)
             .change(changeAddress)
@@ -795,7 +795,7 @@ describe('Transaction', function() {
         }, 'disableSmallFees', errors.Transaction.FeeError.TooSmall
       ));
       it('can skip the check that prevents dust outputs', buildSkipTest(
-        function(transaction) {
+        function (transaction) {
           return transaction
             .to(toAddress, 100)
             .change(changeAddress)
@@ -803,14 +803,14 @@ describe('Transaction', function() {
         }, 'disableDustOutputs', errors.Transaction.DustOutputs
       ));
       it('can skip the check that prevents unsigned outputs', buildSkipTest(
-        function(transaction) {
+        function (transaction) {
           return transaction
             .to(toAddress, 10000)
             .change(changeAddress);
         }, 'disableIsFullySigned', errors.Transaction.MissingSignatures
       ));
       it('can skip the check that avoids spending more thoughts than the inputs for a transaction', buildSkipTest(
-        function(transaction) {
+        function (transaction) {
           return transaction
             .to(toAddress, 10000000000000)
             .change(changeAddress)
@@ -820,9 +820,9 @@ describe('Transaction', function() {
     });
   });
 
-  describe('#verify', function() {
+  describe('#verify', function () {
 
-    it('not if _notions and _notionsBN have different values', function() {
+    it('not if _notions and _notionsBN have different values', function () {
       var tx = new Transaction()
         .from({
           'txId': testPrevTx,
@@ -838,7 +838,7 @@ describe('Transaction', function() {
       verify.should.equal('transaction txout 0 notions is invalid');
     });
 
-    it('not if _notions is negative', function() {
+    it('not if _notions is negative', function () {
       var tx = new Transaction()
         .from({
           'txId': testPrevTx,
@@ -854,7 +854,7 @@ describe('Transaction', function() {
       verify.should.equal('transaction txout 0 notions is invalid');
     });
 
-    it('not if transaction is greater than max block size', function() {
+    it('not if transaction is greater than max block size', function () {
 
       var tx = new Transaction()
         .from({
@@ -874,7 +874,7 @@ describe('Transaction', function() {
 
     });
 
-    it('not if has null input (and not coinbase)', function() {
+    it('not if has null input (and not coinbase)', function () {
 
       var tx = new Transaction()
         .from({
@@ -894,8 +894,8 @@ describe('Transaction', function() {
 
   });
 
-  describe('to and from JSON', function() {
-    it('takes a string that is a valid JSON and deserializes from it', function() {
+  describe('to and from JSON', function () {
+    it('takes a string that is a valid JSON and deserializes from it', function () {
       var simple = new Transaction();
       expect(new Transaction(simple.toJSON()).uncheckedSerialize()).to.equal(simple.uncheckedSerialize());
       var complex = new Transaction()
@@ -908,13 +908,13 @@ describe('Transaction', function() {
       expect(ctx.uncheckedSerialize()).to.equal(complex.uncheckedSerialize());
 
     });
-    it('serializes the `change` information', function() {
+    it('serializes the `change` information', function () {
       var transaction = new Transaction();
       transaction.change(changeAddress);
       expect(transaction.toJSON().changeScript).to.equal(Script.fromAddress(changeAddress).toString());
       expect(new Transaction(transaction.toJSON()).uncheckedSerialize()).to.equal(transaction.uncheckedSerialize());
     });
-    it('serializes correctly p2sh multisig signed tx', function() {
+    it('serializes correctly p2sh multisig signed tx', function () {
       var t = new Transaction(tx2hex);
       expect(t.toString()).to.equal(tx2hex);
       var r = new Transaction(t);
@@ -924,14 +924,14 @@ describe('Transaction', function() {
     });
   });
 
-  describe('serialization of inputs', function() {
-    it('can serialize and deserialize a P2PKH input', function() {
+  describe('serialization of inputs', function () {
+    it('can serialize and deserialize a P2PKH input', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1THT);
       var deserialized = new Transaction(transaction.toObject());
       expect(deserialized.inputs[0] instanceof Transaction.Input.PublicKeyHash).to.equal(true);
     });
-    it('can serialize and deserialize a P2SH input', function() {
+    it('can serialize and deserialize a P2SH input', function () {
       var transaction = new Transaction()
         .from({
           txId: '0000', // Not relevant
@@ -942,19 +942,19 @@ describe('Transaction', function() {
       var deserialized = new Transaction(transaction.toObject());
       expect(deserialized.inputs[0] instanceof Transaction.Input.MultiSigScriptHash).to.equal(true);
     });
-    it('can serialize and deserialize a P2PWKH input', function() {
+    it('can serialize and deserialize a P2PWKH input', function () {
       var transaction = new Transaction()
         .from(simpleWitnessUtxoWith1THT);
       var deserialized = new Transaction(transaction.toObject());
       expect(deserialized.inputs[0] instanceof Transaction.Input.PublicKeyHash).to.equal(true);
     });
-    it('can serialize and deserialize a wrapped P2PWKH input', function() {
+    it('can serialize and deserialize a wrapped P2PWKH input', function () {
       var transaction = new Transaction()
         .from(simpleWrappedWitnessUtxoWith1THT);
       var deserialized = new Transaction(transaction.toObject());
       expect(deserialized.inputs[0] instanceof Transaction.Input.PublicKeyHash).to.equal(true);
     });
-    it('can serialize and deserialize a P2WSH input', function() {
+    it('can serialize and deserialize a P2WSH input', function () {
       var transaction = new Transaction()
         .from({
           txId: '0000', // Not relevant
@@ -967,29 +967,29 @@ describe('Transaction', function() {
     });
   });
 
-  describe('checks on adding inputs', function() {
+  describe('checks on adding inputs', function () {
     var transaction = new Transaction();
-    it('fails if no output script is provided', function() {
-      expect(function() {
+    it('fails if no output script is provided', function () {
+      expect(function () {
         transaction.addInput(new Transaction.Input());
       }).to.throw(errors.Transaction.NeedMoreInfo);
     });
-    it('fails if no notions amount is provided', function() {
+    it('fails if no notions amount is provided', function () {
       var input = new Transaction.Input();
-      expect(function() {
+      expect(function () {
         transaction.addInput(input);
       }).to.throw(errors.Transaction.NeedMoreInfo);
-      expect(function() {
+      expect(function () {
         transaction.addInput(new Transaction.Input(), Script.empty());
       }).to.throw(errors.Transaction.NeedMoreInfo);
     });
-    it('allows output and transaction to be feed as arguments', function() {
-      expect(function() {
+    it('allows output and transaction to be feed as arguments', function () {
+      expect(function () {
         transaction.addInput(new Transaction.Input(), Script.empty(), 0);
       }).to.not.throw();
     });
-    it('does not allow a threshold number greater than the amount of public keys', function() {
-      expect(function() {
+    it('does not allow a threshold number greater than the amount of public keys', function () {
+      expect(function () {
         transaction = new Transaction();
         return transaction.from({
           txId: '0000000000000000000000000000000000000000000000000000000000000000',
@@ -999,7 +999,7 @@ describe('Transaction', function() {
         }, [], 1);
       }).to.throw('Number of required signatures must be greater than the number of public keys');
     });
-    it('will add an empty script if not supplied', function() {
+    it('will add an empty script if not supplied', function () {
       transaction = new Transaction();
       var outputScriptString = 'OP_2 21 0x038282263212c609d9ea2a6e3e172de238d8c39' +
         'cabd5ac1ca10646e23fd5f51508 21 0x038282263212c609d9ea2a6e3e172de23' +
@@ -1014,8 +1014,8 @@ describe('Transaction', function() {
     });
   });
 
-  describe('removeInput and removeOutput', function() {
-    it('can remove an input by index', function() {
+  describe('removeInput and removeOutput', function () {
+    it('can remove an input by index', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1THT);
       transaction.inputs.length.should.equal(1);
@@ -1024,7 +1024,7 @@ describe('Transaction', function() {
       transaction.inputs.length.should.equal(0);
       transaction.inputAmount.should.equal(0);
     });
-    it('can remove an input by transaction id', function() {
+    it('can remove an input by transaction id', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1THT);
       transaction.inputs.length.should.equal(1);
@@ -1033,18 +1033,18 @@ describe('Transaction', function() {
       transaction.inputs.length.should.equal(0);
       transaction.inputAmount.should.equal(0);
     });
-    it('fails if the index provided is invalid', function() {
+    it('fails if the index provided is invalid', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1THT);
-      expect(function() {
+      expect(function () {
         transaction.removeInput(2);
       }).to.throw(errors.Transaction.InvalidIndex);
     });
-    it('an output can be removed by index', function() {
+    it('an output can be removed by index', function () {
       var transaction = new Transaction()
         .to([
-          {address: toAddress, notions: 40000000},
-          {address: toAddress, notions: 40000000}
+          { address: toAddress, notions: 40000000 },
+          { address: toAddress, notions: 40000000 }
         ])
       transaction.outputs.length.should.equal(2);
       transaction.outputAmount.should.equal(80000000);
@@ -1054,125 +1054,125 @@ describe('Transaction', function() {
     });
   });
 
-  describe('handling the nLockTime', function() {
+  describe('handling the nLockTime', function () {
     var MILLIS_IN_SECOND = 1000;
     var timestamp = 1423504946;
     var blockHeight = 342734;
     var date = new Date(timestamp * MILLIS_IN_SECOND);
-    it('handles a null locktime', function() {
+    it('handles a null locktime', function () {
       var transaction = new Transaction();
       expect(transaction.getLockTime()).to.equal(null);
     });
-    it('handles a simple example', function() {
+    it('handles a simple example', function () {
       var future = new Date(2025, 10, 30); // Sun Nov 30 2025
       var transaction = new Transaction()
         .lockUntilDate(future);
       transaction.nLockTime.should.equal(future.getTime() / 1000);
       transaction.getLockTime().should.deep.equal(future);
     });
-    it('accepts a date instance', function() {
+    it('accepts a date instance', function () {
       var transaction = new Transaction()
         .lockUntilDate(date);
       transaction.nLockTime.should.equal(timestamp);
       transaction.getLockTime().should.deep.equal(date);
     });
-    it('accepts a number instance with a timestamp', function() {
+    it('accepts a number instance with a timestamp', function () {
       var transaction = new Transaction()
         .lockUntilDate(timestamp);
       transaction.nLockTime.should.equal(timestamp);
       transaction.getLockTime().should.deep.equal(new Date(timestamp * 1000));
     });
-    it('accepts a block height', function() {
+    it('accepts a block height', function () {
       var transaction = new Transaction()
         .lockUntilBlockHeight(blockHeight);
       transaction.nLockTime.should.equal(blockHeight);
       transaction.getLockTime().should.deep.equal(blockHeight);
     });
-    it('fails if the block height is too high', function() {
-      expect(function() {
+    it('fails if the block height is too high', function () {
+      expect(function () {
         return new Transaction().lockUntilBlockHeight(5e8);
       }).to.throw(errors.Transaction.BlockHeightTooHigh);
     });
-    it('fails if the date is too early', function() {
-      expect(function() {
+    it('fails if the date is too early', function () {
+      expect(function () {
         return new Transaction().lockUntilDate(1);
       }).to.throw(errors.Transaction.LockTimeTooEarly);
-      expect(function() {
+      expect(function () {
         return new Transaction().lockUntilDate(499999999);
       }).to.throw(errors.Transaction.LockTimeTooEarly);
     });
-    it('fails if the block height is negative', function() {
-      expect(function() {
+    it('fails if the block height is negative', function () {
+      expect(function () {
         return new Transaction().lockUntilBlockHeight(-1);
       }).to.throw(errors.Transaction.NLockTimeOutOfRange);
     });
-    it('has a non-max sequenceNumber for effective date locktime tx', function() {
+    it('has a non-max sequenceNumber for effective date locktime tx', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1THT)
         .lockUntilDate(date);
       transaction.inputs[0].sequenceNumber
         .should.equal(Transaction.Input.DEFAULT_LOCKTIME_SEQNUMBER);
     });
-    it('has a non-max sequenceNumber for effective blockheight locktime tx', function() {
+    it('has a non-max sequenceNumber for effective blockheight locktime tx', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1THT)
         .lockUntilBlockHeight(blockHeight);
       transaction.inputs[0].sequenceNumber
         .should.equal(Transaction.Input.DEFAULT_LOCKTIME_SEQNUMBER);
     });
-    it('should serialize correctly for date locktime ', function() {
-      var transaction= new Transaction()
+    it('should serialize correctly for date locktime ', function () {
+      var transaction = new Transaction()
         .from(simpleUtxoWith1THT)
         .lockUntilDate(date);
       var serialized_tx = transaction.uncheckedSerialize();
       var copy = new Transaction(serialized_tx);
       serialized_tx.should.equal(copy.uncheckedSerialize());
       copy.inputs[0].sequenceNumber
-      .should.equal(Transaction.Input.DEFAULT_LOCKTIME_SEQNUMBER)
+        .should.equal(Transaction.Input.DEFAULT_LOCKTIME_SEQNUMBER)
     });
-    it('should serialize correctly for a block height locktime', function() {
-      var transaction= new Transaction()
+    it('should serialize correctly for a block height locktime', function () {
+      var transaction = new Transaction()
         .from(simpleUtxoWith1THT)
         .lockUntilBlockHeight(blockHeight);
       var serialized_tx = transaction.uncheckedSerialize();
       var copy = new Transaction(serialized_tx);
       serialized_tx.should.equal(copy.uncheckedSerialize());
       copy.inputs[0].sequenceNumber
-      .should.equal(Transaction.Input.DEFAULT_LOCKTIME_SEQNUMBER)
+        .should.equal(Transaction.Input.DEFAULT_LOCKTIME_SEQNUMBER)
     });
   });
 
-  it('handles anyone-can-spend utxo', function() {
+  it('handles anyone-can-spend utxo', function () {
     var transaction = new Transaction()
       .from(anyoneCanSpendUTXO)
       .to(toAddress, 50000);
     should.exist(transaction);
   });
 
-  it('handles unsupported utxo in tx object', function() {
+  it('handles unsupported utxo in tx object', function () {
     var transaction = new Transaction();
     transaction.fromObject.bind(transaction, JSON.parse(unsupportedTxObj))
       .should.throw('Unsupported input script type: OP_1 OP_ADD OP_2 OP_EQUAL');
   });
 
-  it('will error if object hash does not match transaction hash', function() {
+  it('will error if object hash does not match transaction hash', function () {
     var tx = new Transaction(tx_1_hex);
     var txObj = tx.toObject();
     txObj.hash = 'a477af6b2667c29670467e4e0728b685ee07b240235771862318e29ddbe58458';
-    (function() {
+    (function () {
       var tx2 = new Transaction(txObj);
     }).should.throw('Hash in object does not match transaction hash');
   });
 
-  describe('inputAmount + outputAmount', function() {
-    it('returns correct values for simple transaction', function() {
+  describe('inputAmount + outputAmount', function () {
+    it('returns correct values for simple transaction', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1THT)
         .to(toAddress, 40000000);
       transaction.inputAmount.should.equal(100000000);
       transaction.outputAmount.should.equal(40000000);
     });
-    it('returns correct values for transaction with change', function() {
+    it('returns correct values for transaction with change', function () {
       var transaction = new Transaction()
         .from(simpleUtxoWith1THT)
         .change(changeAddress)
@@ -1180,26 +1180,26 @@ describe('Transaction', function() {
       transaction.inputAmount.should.equal(100000000);
       transaction.outputAmount.should.equal(99977400);
     });
-    it('returns correct values for coinjoin transaction', function() {
+    it('returns correct values for coinjoin transaction', function () {
       // see livenet tx c16467eea05f1f30d50ed6dbc06a38539d9bb15110e4b7dc6653046a3678a718
       var transaction = new Transaction(txCoinJoinHex);
       transaction.outputAmount.should.equal(4191290961);
-      expect(function() {
+      expect(function () {
         var ia = transaction.inputAmount;
       }).to.throw('No previous output information');
     });
   });
 
-  describe('output ordering', function() {
+  describe('output ordering', function () {
 
     var transaction, out1, out2, out3, out4;
 
-    beforeEach(function() {
+    beforeEach(function () {
       transaction = new Transaction()
         .from(simpleUtxoWith1THT)
         .to([
-          {address: toAddress, notions: tenth},
-          {address: toAddress, notions: fourth}
+          { address: toAddress, notions: tenth },
+          { address: toAddress, notions: fourth }
         ])
         .to(toAddress, half)
         .change(changeAddress);
@@ -1209,8 +1209,8 @@ describe('Transaction', function() {
       out4 = transaction.outputs[3];
     });
 
-    it('allows the user to sort outputs according to a criteria', function() {
-      var sorting = function(array) {
+    it('allows the user to sort outputs according to a criteria', function () {
+      var sorting = function (array) {
         return [array[3], array[2], array[1], array[0]];
       };
       transaction.sortOutputs(sorting);
@@ -1220,7 +1220,7 @@ describe('Transaction', function() {
       transaction.outputs[3].should.equal(out1);
     });
 
-    it('allows the user to randomize the output order', function() {
+    it('allows the user to randomize the output order', function () {
       var shuffle = sinon.stub(_, 'shuffle');
       shuffle.onFirstCall().returns([out2, out1, out4, out3]);
 
@@ -1235,33 +1235,33 @@ describe('Transaction', function() {
       _.shuffle.restore();
     });
 
-    it('fails if the provided function does not work as expected', function() {
-      var sorting = function(array) {
+    it('fails if the provided function does not work as expected', function () {
+      var sorting = function (array) {
         return [array[0], array[1], array[2]];
       };
-      expect(function() {
+      expect(function () {
         transaction.sortOutputs(sorting);
       }).to.throw(errors.Transaction.InvalidSorting);
     });
 
-    it('shuffle without change', function() {
+    it('shuffle without change', function () {
       var tx = new Transaction(transaction.toObject()).to(toAddress, half);
       expect(tx.getChangeOutput()).to.be.null;
-      expect(function() {
+      expect(function () {
         tx.shuffleOutputs();
       }).to.not.throw(errors.Transaction.InvalidSorting);
     })
   });
 
-  describe('clearOutputs', function() {
+  describe('clearOutputs', function () {
 
-    it('removes all outputs and maintains the transaction in order', function() {
+    it('removes all outputs and maintains the transaction in order', function () {
       var tx = new Transaction()
         .from(simpleUtxoWith1THT)
         .to(toAddress, tenth)
         .to([
-          {address: toAddress, notions: fourth},
-          {address: toAddress, notions: half}
+          { address: toAddress, notions: fourth },
+          { address: toAddress, notions: half }
         ])
         .change(changeAddress);
       tx.clearOutputs();
@@ -1276,9 +1276,9 @@ describe('Transaction', function() {
 
   });
 
-  describe('BIP69 Sorting', function() {
+  describe('BIP69 Sorting', function () {
 
-    it('sorts inputs correctly', function() {
+    it('sorts inputs correctly', function () {
       var from1 = {
         txId: '0000000000000000000000000000000000000000000000000000000000000000',
         outputIndex: 0,
@@ -1310,7 +1310,7 @@ describe('Transaction', function() {
       tx.inputs[2].outputIndex.should.equal(from3.outputIndex);
     });
 
-    it('sorts outputs correctly', function() {
+    it('sorts outputs correctly', function () {
       var tx = new Transaction()
         .addOutput(new Transaction.Output({
           script: new Script().add(Opcode(0)),
@@ -1333,27 +1333,27 @@ describe('Transaction', function() {
       tx.outputs[2].script.toString().should.equal('0x01');
     });
 
-    describe('thoughtjs fixtures', function() {
+    describe('thoughtjs fixtures', function () {
 
       var fixture = require('../data/bip69.json');
 
       // returns index-based order of sorted against original
-      var getIndexOrder = function(original, sorted) {
+      var getIndexOrder = function (original, sorted) {
         return sorted.map(function (value) {
           return original.indexOf(value);
         });
       };
       for (const inputSet of fixture.inputs) {
-        it(inputSet.description, function() {
+        it(inputSet.description, function () {
           var tx = new Transaction();
-          inputSet.inputs = inputSet.inputs.map(function(input) {
+          inputSet.inputs = inputSet.inputs.map(function (input) {
             var input = new Input({
               prevTxId: input.txId,
               outputIndex: input.vout,
               script: new Script(),
               output: new Output({ script: new Script(), notions: 0 })
             });
-            input.clearSignatures = function () {};
+            input.clearSignatures = function () { };
             return input;
           });
           tx.inputs = inputSet.inputs;
@@ -1362,9 +1362,9 @@ describe('Transaction', function() {
         });
       }
       for (const outputSet of fixture.outputs) {
-        it(outputSet.description, function() {
+        it(outputSet.description, function () {
           var tx = new Transaction();
-          outputSet.outputs = outputSet.outputs.map(function(output) {
+          outputSet.outputs = outputSet.outputs.map(function (output) {
             return new Output({
               script: new Script(output.script),
               notions: output.value
@@ -1378,13 +1378,13 @@ describe('Transaction', function() {
 
     });
   });
-  describe('Replace-by-fee', function() {
-    describe('#enableRBF', function() {
-      it('only enable inputs not already enabled (0xffffffff)', function() {
+  describe('Replace-by-fee', function () {
+    describe('#enableRBF', function () {
+      it('only enable inputs not already enabled (0xffffffff)', function () {
         var tx = new Transaction()
           .from(simpleUtxoWith1THT)
           .from(simpleUtxoWith100000Notions)
-          .to([{address: toAddress, notions: 50000}])
+          .to([{ address: toAddress, notions: 50000 }])
           .fee(15000)
           .change(changeAddress)
           .sign(privateKey);
@@ -1393,11 +1393,11 @@ describe('Transaction', function() {
         tx.inputs[0].sequenceNumber.should.equal(0x00000000);
         tx.inputs[1].sequenceNumber.should.equal(0xfffffffd);
       });
-      it('enable for inputs with 0xffffffff and 0xfffffffe', function() {
+      it('enable for inputs with 0xffffffff and 0xfffffffe', function () {
         var tx = new Transaction()
           .from(simpleUtxoWith1THT)
           .from(simpleUtxoWith100000Notions)
-          .to([{address: toAddress, notions: 50000}])
+          .to([{ address: toAddress, notions: 50000 }])
           .fee(15000)
           .change(changeAddress)
           .sign(privateKey);
@@ -1408,31 +1408,31 @@ describe('Transaction', function() {
         tx.inputs[1].sequenceNumber.should.equal(0xfffffffd);
       });
     });
-    describe('#isRBF', function() {
-      it('enable and determine opt-in', function() {
+    describe('#isRBF', function () {
+      it('enable and determine opt-in', function () {
         var tx = new Transaction()
           .from(simpleUtxoWith100000Notions)
-          .to([{address: toAddress, notions: 50000}])
+          .to([{ address: toAddress, notions: 50000 }])
           .fee(15000)
           .change(changeAddress)
           .enableRBF()
           .sign(privateKey);
         tx.isRBF().should.equal(true);
       });
-      it('determine opt-out with default sequence number', function() {
+      it('determine opt-out with default sequence number', function () {
         var tx = new Transaction()
           .from(simpleUtxoWith100000Notions)
-          .to([{address: toAddress, notions: 50000}])
+          .to([{ address: toAddress, notions: 50000 }])
           .fee(15000)
           .change(changeAddress)
           .sign(privateKey);
         tx.isRBF().should.equal(false);
       });
-      it('determine opt-out with 0xfffffffe', function() {
+      it('determine opt-out with 0xfffffffe', function () {
         var tx = new Transaction()
           .from(simpleUtxoWith1THT)
           .from(simpleUtxoWith100000Notions)
-          .to([{address: toAddress, notions: 50000 + 1e8}])
+          .to([{ address: toAddress, notions: 50000 + 1e8 }])
           .fee(15000)
           .change(changeAddress)
           .sign(privateKey);
@@ -1440,11 +1440,11 @@ describe('Transaction', function() {
         tx.inputs[1].sequenceNumber = 0xfffffffe;
         tx.isRBF().should.equal(false);
       });
-      it('determine opt-out with 0xffffffff', function() {
+      it('determine opt-out with 0xffffffff', function () {
         var tx = new Transaction()
           .from(simpleUtxoWith1THT)
           .from(simpleUtxoWith100000Notions)
-          .to([{address: toAddress, notions: 50000 + 1e8}])
+          .to([{ address: toAddress, notions: 50000 + 1e8 }])
           .fee(15000)
           .change(changeAddress)
           .sign(privateKey);
@@ -1452,11 +1452,11 @@ describe('Transaction', function() {
         tx.inputs[1].sequenceNumber = 0xffffffff;
         tx.isRBF().should.equal(false);
       });
-      it('determine opt-in with 0xfffffffd (first input)', function() {
+      it('determine opt-in with 0xfffffffd (first input)', function () {
         var tx = new Transaction()
           .from(simpleUtxoWith1THT)
           .from(simpleUtxoWith100000Notions)
-          .to([{address: toAddress, notions: 50000 + 1e8}])
+          .to([{ address: toAddress, notions: 50000 + 1e8 }])
           .fee(15000)
           .change(changeAddress)
           .sign(privateKey);
@@ -1464,11 +1464,11 @@ describe('Transaction', function() {
         tx.inputs[1].sequenceNumber = 0xffffffff;
         tx.isRBF().should.equal(true);
       });
-      it('determine opt-in with 0xfffffffd (second input)', function() {
+      it('determine opt-in with 0xfffffffd (second input)', function () {
         var tx = new Transaction()
           .from(simpleUtxoWith1THT)
           .from(simpleUtxoWith100000Notions)
-          .to([{address: toAddress, notions: 50000 + 1e8}])
+          .to([{ address: toAddress, notions: 50000 + 1e8 }])
           .fee(15000)
           .change(changeAddress)
           .sign(privateKey);
@@ -1479,8 +1479,8 @@ describe('Transaction', function() {
     });
   });
 
-  describe('Segregated Witness', function() {
-    it('identify as segwit transaction', function() {
+  describe('Segregated Witness', function () {
+    it('identify as segwit transaction', function () {
       // https://github.com/thought/bips/blob/master/bip-0144.mediawiki
       var version = Buffer.from('01000000', 'hex');
       var marker = Buffer.from('00', 'hex'); //always zero
@@ -1489,26 +1489,26 @@ describe('Transaction', function() {
       var inputDummy = Buffer.from('2052cda8bc0c2cb743f154881fc85cb675527dcf2f7a5938241020c33341b3f70000000000ffffffff', 'hex');
       var outputCount = Buffer.from('00', 'hex');
       var witness = Buffer.from('01', 'hex');
-      var witnessItems =  Buffer.from('00', 'hex');
-      var locktime =  Buffer.from('00000000', 'hex');
+      var witnessItems = Buffer.from('00', 'hex');
+      var locktime = Buffer.from('00000000', 'hex');
       var txBuffer = Buffer.concat([version, marker, flag, inputCount, inputDummy, outputCount, witness,
-                                    witnessItems, locktime]);
+        witnessItems, locktime]);
       var tx = thoughtcore.Transaction().fromBuffer(txBuffer);
       tx.hasWitnesses().should.equal(true);
     });
-    it('correctly calculate hash for segwit transaction', function() {
+    it('correctly calculate hash for segwit transaction', function () {
       var txBuffer = Buffer.from('01000000000101b0e5caa7e37d4b8530c3e1071a36dd5e05d1065cf7224ddff42c69e3387689870000000000ffffffff017b911100000000001600144ff831574da8bef07f8bc97244a1666147b071570247304402203fcbcfddbd6ca3a90252610dd63f1be50b2d926b8d87c912da0a3e42bb03fba002202a90c8aad75da22b0549c72618b754114583e934c0b0d2ccd6c13fcd859ba4ed01210363f3f47f4555779de405eab8d0dc8c2a4f3e09f4171a3fa47c7a77715795319800000000', 'hex');
       var tx = thoughtcore.Transaction().fromBuffer(txBuffer);
       tx.hash.should.equal('7f1a2d46746f1bfbb22ab797d5aad1fd9723477b417fa34dff73d8a7dbb14570');
       tx.witnessHash.should.equal('3c26fc8b5cfe65f96d955cecfe4d11db2659d052171f9f31af043e9f5073e46b');
     });
-    it('round trip nested witness p2sh', function() {
+    it('round trip nested witness p2sh', function () {
       var txBuffer = Buffer.from('010000000001010894bb2bbfd5249b1c55f7bc64352bb64894938bc6439f43f28a58bfa7c73205000000002322002077b16b966ee6a4b8a0901351221d279afd31d3f90df52a3fc53436ea9abde5b0ffffffff01010000000000000000030047304402200fa23efa9a8d6ae285cfc82f81e6c2196d14167553b10da1845abd2c9fe38dc502207a40a58ee5b739e902b275018dfa1bee0d608736ff4317b028fbc29391f4554f01475221037b8dc5861a0ef7b0a97b41d2d1e27186f019d4834dbc99f24952b6f5080f5cce21027152378182102b68b5fce42f9f365ec272c48afda6b0816e735c1dc4b96dd45a52ae00000000', 'hex');
       var tx = thoughtcore.Transaction().fromBuffer(txBuffer);
       tx.toBuffer().toString('hex').should.equal(txBuffer.toString('hex'));
     });
-    describe('verifying', function() {
-      it('will verify these signatures', function() {
+    describe('verifying', function () {
+      it('will verify these signatures', function () {
         var signedTxBuffer = Buffer.from('0100000000010103752b9d2baadb95480e2571a4854a68ffd8264462168346461b7cdda76beac20000000023220020fde78ea47ae10cc93c6a850d8a86d8575ddacff38ee9b0bc6535dc016a197068ffffffff010100000000000000000400483045022100ea1508225a6d37c0545d22acaee88d29d1675696953f93d657a419613bcee9b802207b8d80ca8176586878f51e001cb9e92f7640b8c9dc530fabf9087142c752de89014830450221008c6f4a9ebdee89968ec00ecc12fda67442b589296e86bf3e9bde19f4ba923406022048c3409831a55bf61f2d5defffd3b91767643b6c5981cb32338dd7e9f02821b1014752210236c8204d62fd70e7ca206a36d39f9674fa832964d787c60d44250624242bada4210266cd5a3507d6df5346aa42bd23d4c44c079aef0d7a59534758a0dabb82345c2052ae00000000', 'hex');
         var unsignedBuffer = Buffer.from('0100000000010103752b9d2baadb95480e2571a4854a68ffd8264462168346461b7cdda76beac20000000023220020fde78ea47ae10cc93c6a850d8a86d8575ddacff38ee9b0bc6535dc016a197068ffffffff010100000000000000000300483045022100ea1508225a6d37c0545d22acaee88d29d1675696953f93d657a419613bcee9b802207b8d80ca8176586878f51e001cb9e92f7640b8c9dc530fabf9087142c752de89014752210236c8204d62fd70e7ca206a36d39f9674fa832964d787c60d44250624242bada4210266cd5a3507d6df5346aa42bd23d4c44c079aef0d7a59534758a0dabb82345c2052ae00000000', 'hex');
         var signedTx = thoughtcore.Transaction().fromBuffer(signedTxBuffer);
@@ -1582,9 +1582,9 @@ describe('Transaction', function() {
         var valid = signedTx.inputs[0].isValidSignature(signedTx, signedTx.inputs[0].signatures[0]);
         valid.should.equal(true);
       });
-      describe('Thought Core tests', function() {
+      describe('Thought Core tests', function () {
         // from thought core tests at src/test/transaction_tests.cpp
-        it('will verify pay-to-compressed publickey (v0) part 1', function() {
+        it('will verify pay-to-compressed publickey (v0) part 1', function () {
           var check;
           var flags;
           var interpreter;
@@ -1605,7 +1605,7 @@ describe('Transaction', function() {
           check = interpreter.verify(scriptSig, scriptPubkey, input1, 0, flags, witnesses, notions);
           check.should.equal(true);
         });
-        it('will verify pay-to-compressed publickey (v0) part 2', function() {
+        it('will verify pay-to-compressed publickey (v0) part 2', function () {
           var flags;
           var check;
           var interpreter;
@@ -1626,7 +1626,7 @@ describe('Transaction', function() {
           check = interpreter.verify(scriptSig, scriptPubkey, input2, 0, flags, witnesses, notions);
           check.should.equal(false);
         });
-        it('will verify p2sh witness pay-to-compressed pubkey (v0) part 1', function() {
+        it('will verify p2sh witness pay-to-compressed pubkey (v0) part 1', function () {
           var flags;
           var check;
           var interpreter;
@@ -1647,7 +1647,7 @@ describe('Transaction', function() {
           check = interpreter.verify(scriptSig, scriptPubkey, input1, 0, flags, witnesses, notions);
           check.should.equal(true);
         });
-        it('will verify p2sh witness pay-to-compressed pubkey (v0) part 2', function() {
+        it('will verify p2sh witness pay-to-compressed pubkey (v0) part 2', function () {
           var flags;
           var check;
           var interpreter;
@@ -1668,7 +1668,7 @@ describe('Transaction', function() {
           check = interpreter.verify(scriptSig, scriptPubkey, input2, 0, flags, witnesses, notions);
           check.should.equal(false);
         });
-        it('will verify witness 2-of-2 multisig (part 1)', function() {
+        it('will verify witness 2-of-2 multisig (part 1)', function () {
           var flags;
           var check;
           var interpreter;
@@ -1689,7 +1689,7 @@ describe('Transaction', function() {
           check = interpreter.verify(scriptSig, scriptPubkey, input1, 0, flags, witnesses, notions);
           check.should.equal(false);
         });
-        it('will verify witness 2-of-2 multisig (part 2)', function() {
+        it('will verify witness 2-of-2 multisig (part 2)', function () {
           var flags;
           var check;
           var interpreter;
@@ -1710,7 +1710,7 @@ describe('Transaction', function() {
           check = interpreter.verify(scriptSig, scriptPubkey, input2, 0, flags, witnesses, notions);
           check.should.equal(false);
         });
-        it('will verify witness 2-of-2 multisig (part 3)', function() {
+        it('will verify witness 2-of-2 multisig (part 3)', function () {
           var flags;
           var check;
           var interpreter;
@@ -1726,7 +1726,7 @@ describe('Transaction', function() {
           check = interpreter.verify(scriptSig, scriptPubkey, input1, 0, flags, witnesses, notions);
           check.should.equal(true);
         });
-        it('will verify p2sh witness 2-of-2 multisig (part 1)', function() {
+        it('will verify p2sh witness 2-of-2 multisig (part 1)', function () {
           var flags;
           var check;
           var interpreter;
@@ -1747,7 +1747,7 @@ describe('Transaction', function() {
           check = interpreter.verify(scriptSig, scriptPubkey, input1, 0, flags, witnesses, notions);
           check.should.equal(false);
         });
-        it('will verify p2sh witness 2-of-2 multisig (part 2)', function() {
+        it('will verify p2sh witness 2-of-2 multisig (part 2)', function () {
           var flags;
           var check;
           var interpreter;
@@ -1768,7 +1768,7 @@ describe('Transaction', function() {
           check = interpreter.verify(scriptSig, scriptPubkey, input2, 0, flags, witnesses, notions);
           check.should.equal(false);
         });
-        it('will verify p2sh witness 2-of-2 multisig (part 3)', function() {
+        it('will verify p2sh witness 2-of-2 multisig (part 3)', function () {
           var flags;
           var check;
           var interpreter;
@@ -1784,7 +1784,7 @@ describe('Transaction', function() {
           check = interpreter.verify(scriptSig, scriptPubkey, input1, 0, flags, witnesses, notions);
           check.should.equal(true);
         });
-        it('will verify witness pay-to-uncompressed-pubkey (v1) part 1', function() {
+        it('will verify witness pay-to-uncompressed-pubkey (v1) part 1', function () {
           var flags;
           var check;
           var interpreter;
@@ -1806,7 +1806,7 @@ describe('Transaction', function() {
           check = interpreter.verify(scriptSig, scriptPubkey, input1, 0, flags, witnesses, notions);
           check.should.equal(true);
         });
-        it('will verify witness pay-to-uncompressed-pubkey (v1) part 2', function() {
+        it('will verify witness pay-to-uncompressed-pubkey (v1) part 2', function () {
           var flags;
           var check;
           var interpreter;
@@ -1827,7 +1827,7 @@ describe('Transaction', function() {
           check = interpreter.verify(scriptSig, scriptPubkey, input2, 0, flags, witnesses, notions);
           check.should.equal(false);
         });
-        it('will verify p2sh witness pay-to-uncompressed-pubkey (v1) part 1', function() {
+        it('will verify p2sh witness pay-to-uncompressed-pubkey (v1) part 1', function () {
           var flags;
           var check;
           var interpreter;
@@ -1848,7 +1848,7 @@ describe('Transaction', function() {
           check = interpreter.verify(scriptSig, scriptPubkey, input1, 0, flags, witnesses, notions);
           check.should.equal(true);
         });
-        it('will verify p2sh witness pay-to-uncompressed-pubkey (v1) part 2', function() {
+        it('will verify p2sh witness pay-to-uncompressed-pubkey (v1) part 2', function () {
           var flags;
           var check;
           var interpreter;
@@ -1871,7 +1871,7 @@ describe('Transaction', function() {
         });
       });
     });
-    describe('signing', function() {
+    describe('signing', function () {
       var privateKey1 = PrivateKey.fromWIF('cNuW8LX2oeQXfKKCGxajGvqwhCgBtacwTQqiCGHzzKfmpHGY4TE9');
       var publicKey1 = p2shPrivateKey1.toPublicKey();
       var privateKey2 = PrivateKey.fromWIF('cTtLHt4mv6zuJytSnM7Vd6NLxyNauYLMxD818sBC8PJ1UPiVTRSs');
@@ -1909,11 +1909,11 @@ describe('Transaction', function() {
         notions: 1e8
       };
 
-      it('will sign with nested p2sh witness program', function() {
+      it('will sign with nested p2sh witness program', function () {
         var tx = new Transaction()
           .setVersion(1)
           .from(nestedUtxo, [publicKey1], 1)
-          .to([{address: 'n3LsXgyStG2CkS2CnWZtDqxTfCnXB8PvD9', notions: 50000}])
+          .to([{ address: 'n3LsXgyStG2CkS2CnWZtDqxTfCnXB8PvD9', notions: 50000 }])
           .fee(150000)
           .change('mqWDcnW3jMzthB8qdB9SnFam6N96GDqM4W')
           .sign(privateKey1);
@@ -1921,11 +1921,11 @@ describe('Transaction', function() {
         sighash.toString('hex').should.equal('51b7c5271ae04071a6d3d4c4cde28003d8e9a09e51931ebae4003539767a4955');
         tx.toBuffer().toString('hex').should.equal('0100000000010161dc9737a880fd1f8671fa314d6e66b00060a52e97118d8a1b829fd95029731d010000002322002028ba8620c84df12e3283de37d02cfa7bcae3894e118388d6b3ae50f9aeb38798ffffffff0250c30000000000001976a914ef6aa14d8f5ba65a12c327a9659681c44cd821b088acc0d3f205000000001976a9146d8da2015c6d2890896485edd5897b3b2ec9ebb188ac030047304402203fdbd6604939ed9b46bd07bea993b102336a6fbc0a0c987f05b8522a2079037f022064466db4b0c6cc6697a28e0ba9b28c9738ecba56033a60aab7f04d5da2a8241e0125512102feab7deafbdb39885ef92a285dfa0f4ada0feefce43685e6551c95e71496d98051ae00000000');
       });
-      it('will sign with p2wpkh witness program', function() {
+      it('will sign with p2wpkh witness program', function () {
         var tx = new Transaction()
           .setVersion(1)
           .from(simpleWitnessUtxoWith1THT)
-          .to([{address: 'n3LsXgyStG2CkS2CnWZtDqxTfCnXB8PvD9', notions: 50000}])
+          .to([{ address: 'n3LsXgyStG2CkS2CnWZtDqxTfCnXB8PvD9', notions: 50000 }])
           .fee(150000)
           .change('mqWDcnW3jMzthB8qdB9SnFam6N96GDqM4W')
           .sign(privateKey);
@@ -1933,11 +1933,11 @@ describe('Transaction', function() {
         sighash.toString('hex').should.equal('77814f2e33ae919d8c9ab1f30b6da386b2efb01d0373b79baf7b3e4b347cb4a2');
         tx.toBuffer().toString('hex').should.equal('0100000000010173d805aff043ff9a0d080a1cafeffbff9553651bcf66452858afc87937606b7e0000000000ffffffff0250c30000000000001976a914ef6aa14d8f5ba65a12c327a9659681c44cd821b088acc0d3f205000000001976a9146d8da2015c6d2890896485edd5897b3b2ec9ebb188ac02483045022100a00411ad4c9153afbccf5924b79d79ccc8b151e457a8d25019febce0bd1791c8022027721a7df64deff643910f9d41b638c8b4357a3437004309f18d138de1e1dd1001210223078d2942df62c45621d209fab84ea9a7a23346201b7727b9b45a29c4e76f5e00000000');
       });
-      it('will sign with p2sh-wrapped-p2wpkh witness program', function() {
+      it('will sign with p2sh-wrapped-p2wpkh witness program', function () {
         var tx = new Transaction()
           .setVersion(1)
           .from(simpleWrappedWitnessUtxoWith1THT)
-          .to([{address: 'n3LsXgyStG2CkS2CnWZtDqxTfCnXB8PvD9', notions: 50000}])
+          .to([{ address: 'n3LsXgyStG2CkS2CnWZtDqxTfCnXB8PvD9', notions: 50000 }])
           .fee(150000)
           .change('mqWDcnW3jMzthB8qdB9SnFam6N96GDqM4W')
           .sign(privateKey);
@@ -1945,11 +1945,11 @@ describe('Transaction', function() {
         sighash.toString('hex').should.equal('f3ca83b8ebfb5454297ae1cc929c05628722999764ce38847124613eb750f1c2');
         tx.toBuffer().toString('hex').should.equal('01000000000101d73e3975c556eab0ba28acfb79fae4e504723a113898a8d1ffc7d0a5a4535182000000001716001488d9931ea73d60eaf7e5671efc0552b912911f2affffffff0250c30000000000001976a914ef6aa14d8f5ba65a12c327a9659681c44cd821b088acc0d3f205000000001976a9146d8da2015c6d2890896485edd5897b3b2ec9ebb188ac024830450221009562d8f22b00fe6862d990eb7774bbb0fa357308ca404eb82dd38da28e496a2602200162b0075591faa4c704cd1545b0a3b0e95b1efde16f89adeb1d3c098d19b28901210223078d2942df62c45621d209fab84ea9a7a23346201b7727b9b45a29c4e76f5e00000000');
       });
-      it('will sign with p2wsh witness program', function() {
+      it('will sign with p2wsh witness program', function () {
         var tx = new Transaction()
           .setVersion(1)
           .from(witnessUtxo, [publicKey1], 1)
-          .to([{address: 'n3LsXgyStG2CkS2CnWZtDqxTfCnXB8PvD9', notions: 50000}])
+          .to([{ address: 'n3LsXgyStG2CkS2CnWZtDqxTfCnXB8PvD9', notions: 50000 }])
           .fee(150000)
           .change('mqWDcnW3jMzthB8qdB9SnFam6N96GDqM4W')
           .sign(privateKey1);
@@ -1957,26 +1957,26 @@ describe('Transaction', function() {
         sighash.toString('hex').should.equal('19447fc384af7d69e2950b821387034d715f0ee52bc69a8e5495e848ab71652b');
         tx.toBuffer().toString('hex').should.equal('01000000000101f6206355b2ef1154d06127352d3ba333ae1de1e2b88bce2cb9d2393e85d666370000000000ffffffff0250c30000000000001976a914ef6aa14d8f5ba65a12c327a9659681c44cd821b088acc0d3f205000000001976a9146d8da2015c6d2890896485edd5897b3b2ec9ebb188ac0300483045022100a9f7bd91d0eaca2ea3a317a5977559751bb50b66f8f4af7ff32fb44499f9f7d80220332cd7617adc13dd29b2ebd2a6dd795208a0b06c218327e37c72d47139fa51420125512102feab7deafbdb39885ef92a285dfa0f4ada0feefce43685e6551c95e71496d98051ae00000000');
       });
-      it('will sign with p2wsh, p2sh, and nested p2sh', function() {
+      it('will sign with p2wsh, p2sh, and nested p2sh', function () {
         var tx = new Transaction()
           .setVersion(1)
           .from(witnessUtxo, [publicKey1], 1)
           .from(utxo, [publicKey1], 1)
           .from(nestedUtxo, [publicKey1], 1)
-          .to([{address: 'n3LsXgyStG2CkS2CnWZtDqxTfCnXB8PvD9', notions: 50000}])
+          .to([{ address: 'n3LsXgyStG2CkS2CnWZtDqxTfCnXB8PvD9', notions: 50000 }])
           .fee(150000)
           .change('mqWDcnW3jMzthB8qdB9SnFam6N96GDqM4W')
           .sign(privateKey1);
         tx.isFullySigned().should.equal(true);
         tx.toBuffer().toString('hex').should.equal('01000000000103f6206355b2ef1154d06127352d3ba333ae1de1e2b88bce2cb9d2393e85d666370000000000ffffffffc74f39e74b2676adc1baa3f1ff5fb0ebc0c1582903dcf63863a4cc7ffbd0c2fb010000007000483045022100af523fdd4ca01041c566dbc14ac43b46cf509056aab40c7dc37c081e559424f3022000809dbfde771fcb62190305884ebc8686a158b4ba07aa3cc1cbbf8ce042c8f70125512102feab7deafbdb39885ef92a285dfa0f4ada0feefce43685e6551c95e71496d98051aeffffffff61dc9737a880fd1f8671fa314d6e66b00060a52e97118d8a1b829fd95029731d010000002322002028ba8620c84df12e3283de37d02cfa7bcae3894e118388d6b3ae50f9aeb38798ffffffff0250c30000000000001976a914ef6aa14d8f5ba65a12c327a9659681c44cd821b088acc095de11000000001976a9146d8da2015c6d2890896485edd5897b3b2ec9ebb188ac0300473044022038ff144a2f28ad7446aabcf456624829c5206a6a02197f6f0a96724e90a9b28002206e8b7639153be62c56564fc769210988550f85ffc8d8d5d3d42d149c6946ead10125512102feab7deafbdb39885ef92a285dfa0f4ada0feefce43685e6551c95e71496d98051ae00030048304502210083689f61067caba54c20f3f55a4242946f09f178c607c6a3ef19bdc8d7bcd1be022074dd83b0d9a3fa76403c87248cfa3a14f4bfe92e25daa045180987fdda4157830125512102feab7deafbdb39885ef92a285dfa0f4ada0feefce43685e6551c95e71496d98051ae00000000');
       });
-      it('will sign with p2pkh, p2wpkh, and wrapped p2wpkh', function() {
+      it('will sign with p2pkh, p2wpkh, and wrapped p2wpkh', function () {
         var tx = new Transaction()
           .setVersion(1)
           .from(simpleUtxoWith1THT)
           .from(simpleWitnessUtxoWith1THT)
           .from(simpleWrappedWitnessUtxoWith1THT)
-          .to([{address: 'n3LsXgyStG2CkS2CnWZtDqxTfCnXB8PvD9', notions: 50000}])
+          .to([{ address: 'n3LsXgyStG2CkS2CnWZtDqxTfCnXB8PvD9', notions: 50000 }])
           .fee(150000)
           .change('mqWDcnW3jMzthB8qdB9SnFam6N96GDqM4W')
           .sign(privateKey);
@@ -1986,22 +1986,22 @@ describe('Transaction', function() {
     });
   });
 
-  describe('Size calculation', function() {
-    it('should correctly calculation the size for a non-segwit tx', function() {
+  describe('Size calculation', function () {
+    it('should correctly calculation the size for a non-segwit tx', function () {
       const t = new Transaction('0100000001032e38e9c0a84c6046d687d10556dcacc41d275ec55fc00779ac88fdf357a187000000008c493046022100c352d3dd993a981beba4a63ad15c209275ca9470abfcd57da93b58e4eb5dce82022100840792bc1f456062819f15d33ee7055cf7b5ee1af1ebcc6028d9cdb1c3af7748014104f46db5e9d61a9dc27b8d64ad23e7383a4e6ca164593c2527c038c0857eb67ee8e825dca65046b82c9331586c82e0fd1f633f25f87c161bc6f8a630121df2b3d3ffffffff0200e32321000000001976a914c398efa9c392ba6013c5e04ee729755ef7f58b3288ac000fe208010000001976a914948c765a6914d43f2a7ac177da2c2f6b52de3d7c88ac00000000');
       t.size.should.equal(259);
       t.vsize.should.equal(259);
       t.weight.should.equal(1036);
     });
 
-    it('should correctly calculation the size for a segwit tx', function() {
+    it('should correctly calculation the size for a segwit tx', function () {
       const t = new Transaction('020000000001015f8aa587aba19d10a1f12cd67ea3065a6eafa009ccec529597c2021cbf96e5700000000000fdffffff0280a4bf070000000016001498b78eb72df917e39769e68e9390aed719704dc958963e22010000001600141ebe37ae991227a14811cb674bd7f0f93d96a25f024730440220346178b20de865664c3c82cdf2e6ec5774995dba6854f83d5fd5d5e96f255d2902206e088257e59593365ac33334e7f2d9600d2ea69923146bfea41b0692c1e55f720121039a973d562a9efd1a55b2d12fe966529df75f31e1892cc15892ba956d96dc4d1d71000000');
       t.size.should.equal(222);
       t.vsize.should.equal(141);
       t.weight.should.equal(561);
     });
 
-    it('should correctly calculation the size for a segwit tx with a mix', function() {
+    it('should correctly calculation the size for a segwit tx with a mix', function () {
       const t = new Transaction('02000000000104cdcdb3429edd6c3a35455c167fc94c7f942cbf6f43f72f295eb3221bff1709a41d00000017160014cbb96e3fff893ca4cc5b30b6140ba633e0684ce5ffffffffdcd8ce8c29596a4100f1092e9fd7ca8c76bd45f4ed3e0188d03daa26b4b57e330500000017160014cbb96e3fff893ca4cc5b30b6140ba633e0684ce5ffffffffde5c954662d037991eea5e4d8c40c2903bebc39128454e5cf22512f3aaff9b740100000000ffffffff127bdd6f71479358fde9548f8c8e41427cfc91793c37c595d7eb1f157d739c3d0300000017160014cbb96e3fff893ca4cc5b30b6140ba633e0684ce5ffffffff07b00400000000000017a9148824d50f1e006a193d42b3e8f1b0e11411580a2c872202000000000000225120c4c57de58f78d4cb47b0a9c60e59f1a160914bcd0a405d8f4e1f23955d126dc14691150000000000225120b2a66b5e9dc1fd44ef8313d4970d6233a2c4cc2d6e77e2a749d3f585dd664434ac8a00000000000017a914ea6b832a05c6ca578baa3836f3f25553d41068a587580200000000000017a9148824d50f1e006a193d42b3e8f1b0e11411580a2c87580200000000000017a9148824d50f1e006a193d42b3e8f1b0e11411580a2c87a7c30a000000000017a9148824d50f1e006a193d42b3e8f1b0e11411580a2c8702483045022100bf84301a15e8ff8c54a29bd3c020eaa1c0e709a7e3c15461a9def844797e54f302206e449429f665b9df45444ac49ae978ece2b5183f60757a6b72812b35054c03fb01210323dbb07eb97d1524cb43ae68abdea9816346e5bfe0873d3451bcb31d58be7d7502483045022100805d548559ab39d4bec4b5efdf624a62149fb1e3471a937f22219b4a49583183022039e56d63ad4edb39aca4477e5d59c7ea6f0e9e267116ce6e03e4024a15da907201210323dbb07eb97d1524cb43ae68abdea9816346e5bfe0873d3451bcb31d58be7d7501413179caa8aef69cc3f9afb4b60283c25a4b9184f800206c5cc1761a8f341d2d61d9bb52566e71f760b0d533ba88b0affc4009c44152485a10e32c839348455c42830247304402203b443cfd56c665bf9798d24e536bee9b69b2c9f7d3daab45a31ab3eb94d1cf8a0220585ae75835aba95d4f63141dba75c3f36a3996cd6c2c1167244326fcd345fd5201210323dbb07eb97d1524cb43ae68abdea9816346e5bfe0873d3451bcb31d58be7d7500000000');
       t.size.should.equal(881);
       t.vsize.should.equal(587);
@@ -2009,8 +2009,8 @@ describe('Transaction', function() {
     });
   });
 
-  describe('_estimateSize', function() {
-    it('estimate an accurate size - non-segwit', function() {
+  describe('_estimateSize', function () {
+    it('estimate an accurate size - non-segwit', function () {
       const t = new Transaction();
       t.from(simpleUtxoWith1THT);
       t.to(toAddress, 50000);
@@ -2022,7 +2022,7 @@ describe('Transaction', function() {
       (t.getFee() / t.vsize).should.be.within(1, 1.01); // within 1% error
     });
 
-    it('estimate an accurate size - segwit', function() {
+    it('estimate an accurate size - segwit', function () {
       const t = new Transaction();
       t.from(simpleWitnessUtxoWith1THT);
       t.to(toAddress, 50000);
@@ -2034,7 +2034,7 @@ describe('Transaction', function() {
       (t.getFee() / t.vsize).should.be.within(1, 1.01); // within 1% error
     });
 
-    it('estimate an accurate size - wrapped segwit', function() {
+    it('estimate an accurate size - wrapped segwit', function () {
       const t = new Transaction();
       t.from(simpleWrappedWitnessUtxoWith1THT);
       t.to(toAddress, 50000);
@@ -2046,7 +2046,7 @@ describe('Transaction', function() {
       (t.getFee() / t.vsize).should.be.within(1, 1.01); // within 1% error
     });
 
-    it('estimate an accurate size - p2sh 2:2 multisig', function() {
+    it('estimate an accurate size - p2sh 2:2 multisig', function () {
       const t = new Transaction();
       t.from(p2shUtxoWith1THT, [p2shPublicKey1, p2shPublicKey2, p2shPublicKey3], 2);
       t.to(toAddress, 50000);
@@ -2059,7 +2059,7 @@ describe('Transaction', function() {
       (t.getFee() / t.vsize).should.be.within(1, 1.01); // within 1% error
     });
 
-    it('estimate an accurate size - p2sh 2:2 multisig', function() {
+    it('estimate an accurate size - p2sh 2:2 multisig', function () {
       const t = new Transaction();
       t.from(p2shUtxoWith1THT, [p2shPublicKey1, p2shPublicKey2, p2shPublicKey3], 2);
       t.to(toAddress, 50000);
@@ -2072,7 +2072,7 @@ describe('Transaction', function() {
       (t.getFee() / t.vsize).should.be.within(1, 1.01); // within 1% error
     });
 
-    it('estimate an accurate size - p2wsh multisig', function() {
+    it('estimate an accurate size - p2wsh multisig', function () {
       const t = new Transaction();
       t.from(p2wshUtxoWith1THT, [p2shPublicKey1, p2shPublicKey2, p2shPublicKey3], 2);
       t.to(toAddress, 50000);
@@ -2085,7 +2085,7 @@ describe('Transaction', function() {
       (t.getFee() / t.vsize).should.be.within(1, 1.01); // within 1% error
     });
 
-    it('estimate an accurate size - p2wsh multisig change', function() {
+    it('estimate an accurate size - p2wsh multisig change', function () {
       const t = new Transaction();
       t.from(p2wshUtxoWith1THT, [p2shPublicKey1, p2shPublicKey2, p2shPublicKey3], 2);
       t.to(toAddress, 50000);
@@ -2100,10 +2100,10 @@ describe('Transaction', function() {
   });
 
 
-  describe('Taproot', function() {
+  describe('Taproot', function () {
     for (let i = 0; i < taprootVectors.keyPathSpending.length; i++) {
       const vec = taprootVectors.keyPathSpending[i];
-      it(`vector ${i}`, function() {
+      it(`vector ${i}`, function () {
         Script;
         const tx = new Transaction(vec.given.rawUnsignedTx);
         const tf = new Transaction(vec.auxiliary.fullySignedTx);
@@ -2151,7 +2151,7 @@ describe('Transaction', function() {
               t.inputs[i].setWitnesses(tf.inputs[i].witnesses);
             } else {
               t.inputs[i].setScript(tf.inputs[i].script);
-            }            
+            }
           }
         }
         t.isFullySigned().should.equal(true);

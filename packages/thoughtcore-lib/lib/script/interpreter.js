@@ -37,7 +37,7 @@ var Interpreter = function Interpreter(obj) {
 };
 
 
-Interpreter.prototype.verifyWitnessProgram = function(version, program, witness, notions, flags, isP2SH) {
+Interpreter.prototype.verifyWitnessProgram = function (version, program, witness, notions, flags, isP2SH) {
 
   var scriptPubKey = new Script();
   var stack = [];
@@ -107,8 +107,8 @@ Interpreter.prototype.verifyWitnessProgram = function(version, program, witness,
       const scriptPubKeyBuf = stack.pop();
 
       if (
-        control.length < Interpreter.TAPROOT_CONTROL_BASE_SIZE  ||
-        control.length > Interpreter.TAPROOT_CONTROL_MAX_SIZE   ||
+        control.length < Interpreter.TAPROOT_CONTROL_BASE_SIZE ||
+        control.length > Interpreter.TAPROOT_CONTROL_MAX_SIZE ||
         ((control.length - Interpreter.TAPROOT_CONTROL_BASE_SIZE) % Interpreter.TAPROOT_CONTROL_NODE_SIZE) != 0
       ) {
         this.errstr = 'SCRIPT_ERR_TAPROOT_WRONG_CONTROL_SIZE';
@@ -162,7 +162,7 @@ Interpreter.prototype.verifyWitnessProgram = function(version, program, witness,
 };
 
 
-Interpreter.prototype.executeWitnessScript = function(scriptPubKey, stack, sigversion, notions, flags, execdata) {
+Interpreter.prototype.executeWitnessScript = function (scriptPubKey, stack, sigversion, notions, flags, execdata) {
   if (sigversion === Signature.Version.TAPSCRIPT) {
     for (let chunk of scriptPubKey.chunks) {
       // New opcodes will be listed here. May use a different sigversion to modify existing opcodes.
@@ -234,7 +234,7 @@ Interpreter.prototype.executeWitnessScript = function(scriptPubKey, stack, sigve
  *
  * Translated from thoughtd's VerifyScript
  */
-Interpreter.prototype.verify = function(scriptSig, scriptPubkey, tx, nin, flags, witness, notions) {
+Interpreter.prototype.verify = function (scriptSig, scriptPubkey, tx, nin, flags, witness, notions) {
 
   var Transaction = require('../transaction');
   if (_.isUndefined(tx)) {
@@ -386,20 +386,20 @@ Interpreter.prototype.verify = function(scriptSig, scriptPubkey, tx, nin, flags,
   // a clean stack (the P2SH inputs remain). The same holds for witness
   // evaluation.
   if ((this.flags & Interpreter.SCRIPT_VERIFY_CLEANSTACK) != 0) {
-      // Disallow CLEANSTACK without P2SH, as otherwise a switch
-      // CLEANSTACK->P2SH+CLEANSTACK would be possible, which is not a
-      // softfork (and P2SH should be one).
-      if (
-        (this.flags & Interpreter.SCRIPT_VERIFY_P2SH)    == 0 ||
-        (this.flags & Interpreter.SCRIPT_VERIFY_WITNESS) == 0
-      ) {
-        throw 'flags & SCRIPT_VERIFY_P2SH';
-      }
+    // Disallow CLEANSTACK without P2SH, as otherwise a switch
+    // CLEANSTACK->P2SH+CLEANSTACK would be possible, which is not a
+    // softfork (and P2SH should be one).
+    if (
+      (this.flags & Interpreter.SCRIPT_VERIFY_P2SH) == 0 ||
+      (this.flags & Interpreter.SCRIPT_VERIFY_WITNESS) == 0
+    ) {
+      throw 'flags & SCRIPT_VERIFY_P2SH';
+    }
 
-      if (stackCopy.length != 1) {
-        this.errstr = 'SCRIPT_ERR_CLEANSTACK';
-        return false;
-      }
+    if (stackCopy.length != 1) {
+      this.errstr = 'SCRIPT_ERR_CLEANSTACK';
+      return false;
+    }
   }
 
   if ((this.flags & Interpreter.SCRIPT_VERIFY_WITNESS)) {
@@ -414,7 +414,7 @@ Interpreter.prototype.verify = function(scriptSig, scriptPubkey, tx, nin, flags,
 
 module.exports = Interpreter;
 
-Interpreter.prototype.initialize = function(obj) {
+Interpreter.prototype.initialize = function (obj) {
   this.stack = [];
   this.altstack = [];
   this.pc = 0;
@@ -428,7 +428,7 @@ Interpreter.prototype.initialize = function(obj) {
   this.execdata = {};
 };
 
-Interpreter.prototype.set = function(obj) {
+Interpreter.prototype.set = function (obj) {
   this.script = obj.script || this.script;
   this.tx = obj.tx || this.tx;
   this.nin = typeof obj.nin === 'undefined' ? this.nin : parseInt(obj.nin);
@@ -507,10 +507,10 @@ Interpreter.SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS = (1 << 7);
 // Note: CLEANSTACK should never be used without P2SH or WITNESS.
 Interpreter.SCRIPT_VERIFY_CLEANSTACK = (1 << 8),
 
-// Verify CHECKLOCKTIMEVERIFY
-//
-// See BIP65 for details.
-Interpreter.SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY = (1 << 9);
+  // Verify CHECKLOCKTIMEVERIFY
+  //
+  // See BIP65 for details.
+  Interpreter.SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY = (1 << 9);
 
 // support CHECKSEQUENCEVERIFY opcode
 //
@@ -604,7 +604,7 @@ Interpreter.TAPROOT_CONTROL_MAX_SIZE = Interpreter.TAPROOT_CONTROL_BASE_SIZE + I
 // Conceptually, this doesn't really belong with the Interpreter, but I haven't found a better place for it.
 Interpreter.PROTOCOL_VERSION = 70016;
 
-Interpreter.castToBool = function(buf) {
+Interpreter.castToBool = function (buf) {
   for (var i = 0; i < buf.length; i++) {
     if (buf[i] !== 0) {
       // can be negative zero
@@ -620,14 +620,14 @@ Interpreter.castToBool = function(buf) {
 /**
  * Translated from thoughtd's CheckSignatureEncoding
  */
-Interpreter.prototype.checkSignatureEncoding = function(buf) {
+Interpreter.prototype.checkSignatureEncoding = function (buf) {
   var sig;
 
-    // Empty signature. Not strictly DER encoded, but allowed to provide a
-    // compact way to provide an invalid signature for use with CHECK(MULTI)SIG
-    if (buf.length == 0) {
-        return true;
-    }
+  // Empty signature. Not strictly DER encoded, but allowed to provide a
+  // compact way to provide an invalid signature for use with CHECK(MULTI)SIG
+  if (buf.length == 0) {
+    return true;
+  }
 
   if ((this.flags & (Interpreter.SCRIPT_VERIFY_DERSIG | Interpreter.SCRIPT_VERIFY_LOW_S | Interpreter.SCRIPT_VERIFY_STRICTENC)) !== 0 && !Signature.isTxDER(buf)) {
     this.errstr = 'SCRIPT_ERR_SIG_DER_INVALID_FORMAT';
@@ -652,7 +652,7 @@ Interpreter.prototype.checkSignatureEncoding = function(buf) {
 /**
  * Translated from thoughtd's CheckPubKeyEncoding
  */
-Interpreter.prototype.checkPubkeyEncoding = function(buf) {
+Interpreter.prototype.checkPubkeyEncoding = function (buf) {
   if ((this.flags & Interpreter.SCRIPT_VERIFY_STRICTENC) !== 0 && !PublicKey.isValid(buf)) {
     this.errstr = 'SCRIPT_ERR_PUBKEYTYPE';
     return false;
@@ -677,7 +677,7 @@ Interpreter.prototype.checkPubkeyEncoding = function(buf) {
  * @param {Number} notions 
  * @returns {Boolean}
  */
-Interpreter.prototype.checkEcdsaSignature = function(sig, pubkey, nin, subscript, notions) {
+Interpreter.prototype.checkEcdsaSignature = function (sig, pubkey, nin, subscript, notions) {
   var subscriptBuffer = subscript.toBuffer();
   var scriptCodeWriter = new BufferWriter();
   scriptCodeWriter.writeVarintNum(subscriptBuffer.length);
@@ -706,7 +706,7 @@ Interpreter.prototype.checkEcdsaSignature = function(sig, pubkey, nin, subscript
  * @param {Object} execdata 
  * @returns {Boolean}
  */
-Interpreter.prototype.checkSchnorrSignature = function(sig, pubkey, sigversion, execdata) {
+Interpreter.prototype.checkSchnorrSignature = function (sig, pubkey, sigversion, execdata) {
   $.checkArgument(sig && Buffer.isBuffer(sig), 'Missing sig');
   $.checkArgument(pubkey && Buffer.isBuffer(pubkey), 'Missing pubkey');
   $.checkArgument(sigversion, 'Missing sigversion');
@@ -743,7 +743,7 @@ Interpreter.prototype.checkSchnorrSignature = function(sig, pubkey, sigversion, 
  * Based on thoughtd's EvalChecksigPreTapscript function
  * thoughtd commit: a0988140b71485ad12c3c3a4a9573f7c21b1eff8
  */
-Interpreter.prototype._evalChecksigPreTapscript = function(bufSig, bufPubkey) {
+Interpreter.prototype._evalChecksigPreTapscript = function (bufSig, bufPubkey) {
   $.checkArgument(
     this.sigversion === Signature.Version.BASE || this.sigversion === Signature.Version.WITNESS_V0,
     'sigversion must be base or witness_v0'
@@ -788,7 +788,7 @@ Interpreter.prototype._evalChecksigPreTapscript = function(bufSig, bufPubkey) {
     this.errstr = 'SCRIPT_ERR_SIG_NULLFAIL';
     return retVal;
   }
-  
+
   // If it reaches here, then true
   retVal.result = true;
   return retVal;
@@ -799,7 +799,7 @@ Interpreter.prototype._evalChecksigPreTapscript = function(bufSig, bufPubkey) {
  * Based on thoughtd's EvalChecksigTapscript function
  * thoughtd commit: a0988140b71485ad12c3c3a4a9573f7c21b1eff8
  */
-Interpreter.prototype._evalChecksigTapscript = function(bufSig, bufPubkey) {
+Interpreter.prototype._evalChecksigTapscript = function (bufSig, bufPubkey) {
   $.checkArgument(this.sigversion == Signature.Version.TAPSCRIPT, 'this.sigversion must by TAPSCRIPT');
 
   /*
@@ -855,8 +855,8 @@ Interpreter.prototype._evalChecksigTapscript = function(bufSig, bufPubkey) {
  * thoughtd commit: a0988140b71485ad12c3c3a4a9573f7c21b1eff8
  * @returns {{ success: Boolean, verified: Boolean }}
  */
-Interpreter.prototype._evalCheckSig = function(bufSig, bufPubkey) {
-  switch(this.sigversion) {
+Interpreter.prototype._evalCheckSig = function (bufSig, bufPubkey) {
+  switch (this.sigversion) {
     case Signature.Version.BASE:
     case Signature.Version.WITNESS_V0:
       // const verified = this._evalChecksigPreTapscript(bufSig, bufPubkey);
@@ -875,7 +875,7 @@ Interpreter.prototype._evalCheckSig = function(bufSig, bufPubkey) {
  * Interpreter.prototype.step()
  * thoughtd commit: b5d1b1092998bc95313856d535c632ea5a8f9104
  */
-Interpreter.prototype.evaluate = function() {
+Interpreter.prototype.evaluate = function () {
   // sigversion cannot be TAPROOT here, as it admits no script execution.
   $.checkArgument(this.sigversion == Signature.Version.BASE || this.sigversion == Signature.Version.WITNESS_V0 || this.sigversion == Signature.Version.TAPSCRIPT, 'invalid sigversion');
 
@@ -919,13 +919,13 @@ Interpreter.prototype.evaluate = function() {
  * @return {boolean} true if the transaction's locktime is less than or equal to
  *                   the transaction's locktime
  */
-Interpreter.prototype.checkLockTime = function(nLockTime) {
+Interpreter.prototype.checkLockTime = function (nLockTime) {
 
   // We want to compare apples to apples, so fail the script
   // unless the type of nLockTime being tested is the same as
   // the nLockTime in the transaction.
   if (!(
-    (this.tx.nLockTime <  Interpreter.LOCKTIME_THRESHOLD && nLockTime.lt(Interpreter.LOCKTIME_THRESHOLD_BN)) ||
+    (this.tx.nLockTime < Interpreter.LOCKTIME_THRESHOLD && nLockTime.lt(Interpreter.LOCKTIME_THRESHOLD_BN)) ||
     (this.tx.nLockTime >= Interpreter.LOCKTIME_THRESHOLD && nLockTime.gte(Interpreter.LOCKTIME_THRESHOLD_BN))
   )) {
     return false;
@@ -961,7 +961,7 @@ Interpreter.prototype.checkLockTime = function(nLockTime) {
  * @return {boolean} true if the transaction's sequence is less than or equal to
  *                   the transaction's sequence 
  */
-Interpreter.prototype.checkSequence = function(nSequence) {
+Interpreter.prototype.checkSequence = function (nSequence) {
 
   // Relative lock times are supported by comparing the passed in operand to
   // the sequence number of the input.
@@ -984,7 +984,7 @@ Interpreter.prototype.checkSequence = function(nSequence) {
   // Mask off any bits that do not have consensus-enforced meaning before
   // doing the integer comparisons
   var nLockTimeMask =
-      Interpreter.SEQUENCE_LOCKTIME_TYPE_FLAG | Interpreter.SEQUENCE_LOCKTIME_MASK;
+    Interpreter.SEQUENCE_LOCKTIME_TYPE_FLAG | Interpreter.SEQUENCE_LOCKTIME_MASK;
   var txToSequenceMasked = new BN(txToSequence & nLockTimeMask);
   var nSequenceMasked = nSequence.and(nLockTimeMask);
 
@@ -996,11 +996,11 @@ Interpreter.prototype.checkSequence = function(nSequence) {
   // of nSequenceMasked being tested is the same as the nSequenceMasked in the
   // transaction.
   var SEQUENCE_LOCKTIME_TYPE_FLAG_BN = new BN(Interpreter.SEQUENCE_LOCKTIME_TYPE_FLAG);
-  
-  if (!((txToSequenceMasked.lt(SEQUENCE_LOCKTIME_TYPE_FLAG_BN)  &&
-          nSequenceMasked.lt(SEQUENCE_LOCKTIME_TYPE_FLAG_BN)) ||
-        (txToSequenceMasked.gte(SEQUENCE_LOCKTIME_TYPE_FLAG_BN) &&
-          nSequenceMasked.gte(SEQUENCE_LOCKTIME_TYPE_FLAG_BN)))) {
+
+  if (!((txToSequenceMasked.lt(SEQUENCE_LOCKTIME_TYPE_FLAG_BN) &&
+    nSequenceMasked.lt(SEQUENCE_LOCKTIME_TYPE_FLAG_BN)) ||
+    (txToSequenceMasked.gte(SEQUENCE_LOCKTIME_TYPE_FLAG_BN) &&
+      nSequenceMasked.gte(SEQUENCE_LOCKTIME_TYPE_FLAG_BN)))) {
     return false;
   }
 
@@ -1010,7 +1010,7 @@ Interpreter.prototype.checkSequence = function(nSequence) {
 }
 
 
-Interpreter.computeTapleafHash = function(leafVersion, scriptBuf) {
+Interpreter.computeTapleafHash = function (leafVersion, scriptBuf) {
   const tagWriter = TaggedHash.TAPLEAF;
   tagWriter.writeUInt8(leafVersion);
   tagWriter.writeVarintNum(scriptBuf.length);
@@ -1019,7 +1019,7 @@ Interpreter.computeTapleafHash = function(leafVersion, scriptBuf) {
 };
 
 
-Interpreter.computeTaprootMerkleRoot = function(control, tapleafHash) {
+Interpreter.computeTaprootMerkleRoot = function (control, tapleafHash) {
   const pathLen = (control.length - Interpreter.TAPROOT_CONTROL_BASE_SIZE) / Interpreter.TAPROOT_CONTROL_NODE_SIZE;
   let k = tapleafHash;
   for (let i = 0; i < pathLen; ++i) {
@@ -1039,7 +1039,7 @@ Interpreter.computeTaprootMerkleRoot = function(control, tapleafHash) {
 };
 
 
-Interpreter.verifyTaprootCommitment = function(control, program, tapleafHash) {
+Interpreter.verifyTaprootCommitment = function (control, program, tapleafHash) {
   $.checkArgument(control.length >= Interpreter.TAPROOT_CONTROL_BASE_SIZE, 'control too short');
   $.checkArgument(program.length >= 32, 'program is too short');
 
@@ -1062,7 +1062,7 @@ Interpreter.verifyTaprootCommitment = function(control, program, tapleafHash) {
  * Based on the inner loop of thoughtd's EvalScript function
  * thoughtd commit: b5d1b1092998bc95313856d535c632ea5a8f9104
  */
-Interpreter.prototype.step = function() {
+Interpreter.prototype.step = function () {
   var fRequireMinimal = (this.flags & Interpreter.SCRIPT_VERIFY_MINIMALDATA) !== 0;
 
   //bool fExec = !count(vfExec.begin(), vfExec.end(), false);
@@ -1167,9 +1167,9 @@ Interpreter.prototype.step = function() {
         break;
 
 
-        //
-        // Control
-        //
+      //
+      // Control
+      //
       case Opcode.OP_NOP:
         break;
 
@@ -1317,7 +1317,7 @@ Interpreter.prototype.step = function() {
                 this.errstr = 'SCRIPT_ERR_MINIMALIF';
                 return false;
               }
-              if (buf.length == 1 && buf[0]!=1) {
+              if (buf.length == 1 && buf[0] != 1) {
                 this.errstr = 'SCRIPT_ERR_MINIMALIF';
                 return false;
               }
@@ -1379,9 +1379,9 @@ Interpreter.prototype.step = function() {
         break;
 
 
-        //
-        // Stack ops
-        //
+      //
+      // Stack ops
+      //
       case Opcode.OP_TOALTSTACK:
         {
           if (this.stack.length < 1) {
@@ -1633,9 +1633,9 @@ Interpreter.prototype.step = function() {
         break;
 
 
-        //
-        // Bitwise logic
-        //
+      //
+      // Bitwise logic
+      //
       case Opcode.OP_EQUAL:
       case Opcode.OP_EQUALVERIFY:
         //case Opcode.OP_NOTEQUAL: // use Opcode.OP_NUMNOTEQUAL
@@ -1663,9 +1663,9 @@ Interpreter.prototype.step = function() {
         break;
 
 
-        //
-        // Numeric
-        //
+      //
+      // Numeric
+      //
       case Opcode.OP_1ADD:
       case Opcode.OP_1SUB:
       case Opcode.OP_NEGATE:
@@ -1701,7 +1701,7 @@ Interpreter.prototype.step = function() {
             case Opcode.OP_0NOTEQUAL:
               bn = new BN((bn.cmp(BN.Zero) !== 0) + 0);
               break;
-              //default:      assert(!'invalid opcode'); break; // TODO: does this ever occur?
+            //default:      assert(!'invalid opcode'); break; // TODO: does this ever occur?
           }
           this.stack.pop();
           this.stack.push(bn.toScriptNumBuffer());
@@ -1740,39 +1740,39 @@ Interpreter.prototype.step = function() {
               bn = bn1.sub(bn2);
               break;
 
-              // case Opcode.OP_BOOLAND:       bn = (bn1 != bnZero && bn2 != bnZero); break;
+            // case Opcode.OP_BOOLAND:       bn = (bn1 != bnZero && bn2 != bnZero); break;
             case Opcode.OP_BOOLAND:
               bn = new BN(((bn1.cmp(BN.Zero) !== 0) && (bn2.cmp(BN.Zero) !== 0)) + 0);
               break;
-              // case Opcode.OP_BOOLOR:        bn = (bn1 != bnZero || bn2 != bnZero); break;
+            // case Opcode.OP_BOOLOR:        bn = (bn1 != bnZero || bn2 != bnZero); break;
             case Opcode.OP_BOOLOR:
               bn = new BN(((bn1.cmp(BN.Zero) !== 0) || (bn2.cmp(BN.Zero) !== 0)) + 0);
               break;
-              // case Opcode.OP_NUMEQUAL:      bn = (bn1 == bn2); break;
+            // case Opcode.OP_NUMEQUAL:      bn = (bn1 == bn2); break;
             case Opcode.OP_NUMEQUAL:
               bn = new BN((bn1.cmp(bn2) === 0) + 0);
               break;
-              // case Opcode.OP_NUMEQUALVERIFY:    bn = (bn1 == bn2); break;
+            // case Opcode.OP_NUMEQUALVERIFY:    bn = (bn1 == bn2); break;
             case Opcode.OP_NUMEQUALVERIFY:
               bn = new BN((bn1.cmp(bn2) === 0) + 0);
               break;
-              // case Opcode.OP_NUMNOTEQUAL:     bn = (bn1 != bn2); break;
+            // case Opcode.OP_NUMNOTEQUAL:     bn = (bn1 != bn2); break;
             case Opcode.OP_NUMNOTEQUAL:
               bn = new BN((bn1.cmp(bn2) !== 0) + 0);
               break;
-              // case Opcode.OP_LESSTHAN:      bn = (bn1 < bn2); break;
+            // case Opcode.OP_LESSTHAN:      bn = (bn1 < bn2); break;
             case Opcode.OP_LESSTHAN:
               bn = new BN((bn1.cmp(bn2) < 0) + 0);
               break;
-              // case Opcode.OP_GREATERTHAN:     bn = (bn1 > bn2); break;
+            // case Opcode.OP_GREATERTHAN:     bn = (bn1 > bn2); break;
             case Opcode.OP_GREATERTHAN:
               bn = new BN((bn1.cmp(bn2) > 0) + 0);
               break;
-              // case Opcode.OP_LESSTHANOREQUAL:   bn = (bn1 <= bn2); break;
+            // case Opcode.OP_LESSTHANOREQUAL:   bn = (bn1 <= bn2); break;
             case Opcode.OP_LESSTHANOREQUAL:
               bn = new BN((bn1.cmp(bn2) <= 0) + 0);
               break;
-              // case Opcode.OP_GREATERTHANOREQUAL:  bn = (bn1 >= bn2); break;
+            // case Opcode.OP_GREATERTHANOREQUAL:  bn = (bn1 >= bn2); break;
             case Opcode.OP_GREATERTHANOREQUAL:
               bn = new BN((bn1.cmp(bn2) >= 0) + 0);
               break;
@@ -1782,7 +1782,7 @@ Interpreter.prototype.step = function() {
             case Opcode.OP_MAX:
               bn = (bn1.cmp(bn2) > 0 ? bn1 : bn2);
               break;
-              // default:           assert(!'invalid opcode'); break; //TODO: does this ever occur?
+            // default:           assert(!'invalid opcode'); break; //TODO: does this ever occur?
           }
           this.stack.pop();
           this.stack.pop();
@@ -1820,9 +1820,9 @@ Interpreter.prototype.step = function() {
         break;
 
 
-        //
-        // Crypto
-        //
+      //
+      // Crypto
+      //
       case Opcode.OP_RIPEMD160:
       case Opcode.OP_SHA1:
       case Opcode.OP_SHA256:

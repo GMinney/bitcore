@@ -15,16 +15,16 @@ function getPayloadBuffer(messageBuffer) {
   return new Buffer(messageBuffer.slice(48), 'hex');
 }
 
-describe('Messages', function() {
+describe('Messages', function () {
 
-  var buildMessage = function(hex) {
+  var buildMessage = function (hex) {
     var m = Buffers();
     m.push(new Buffer(hex, 'hex'));
     return m;
   };
 
-  describe('@constructor', function() {
-    it('sets properties correctly', function() {
+  describe('@constructor', function () {
+    it('sets properties correctly', function () {
       var network = thoughtcore.Networks.defaultNetwork;
       var messages = new Messages({
         network: network,
@@ -37,7 +37,7 @@ describe('Messages', function() {
       messages.builder.constructors.Transaction.should.equal(thoughtcore.Transaction);
       messages.network.should.deep.equal(network);
     });
-    it('network should be unique for each set of messages', function() {
+    it('network should be unique for each set of messages', function () {
       var messages = new Messages({
         network: thoughtcore.Networks.livenet
       });
@@ -53,11 +53,11 @@ describe('Messages', function() {
     });
   });
 
-  describe('@constructor for all command messages', function() {
+  describe('@constructor for all command messages', function () {
     var messages = new Messages();
-    Object.keys(messages.builder.commandsMap).forEach(function(command) {
+    Object.keys(messages.builder.commandsMap).forEach(function (command) {
       var name = messages.builder.commandsMap[command];
-      it('message.' + name, function(done) {
+      it('message.' + name, function (done) {
         should.exist(messages[name]);
         var message = messages[name]();
         should.exist(message);
@@ -67,11 +67,11 @@ describe('Messages', function() {
     });
   });
 
-  describe('#fromBuffer/#toBuffer round trip for all commands', function() {
+  describe('#fromBuffer/#toBuffer round trip for all commands', function () {
     var messages = new Messages();
-    Object.keys(messages.builder.commandsMap).forEach(function(command) {
+    Object.keys(messages.builder.commandsMap).forEach(function (command) {
       var name = messages.builder.commandsMap[command];
-      it(name, function(done) {
+      it(name, function (done) {
         var payloadBuffer = getPayloadBuffer(commandData[command].message);
         should.exist(messages[name]);
         var message = messages[name].fromBuffer(payloadBuffer);
@@ -85,11 +85,11 @@ describe('Messages', function() {
     });
   });
 
-  describe('Default Network', function() {
+  describe('Default Network', function () {
     var messages = new Messages();
-    Object.keys(messages.builder.commandsMap).forEach(function(command) {
+    Object.keys(messages.builder.commandsMap).forEach(function (command) {
       var name = messages.builder.commandsMap[command];
-      it(name, function() {
+      it(name, function () {
         var message = messages[name]();
         message.network.should.deep.equal(thoughtcore.Networks.defaultNetwork);
       });
@@ -97,16 +97,16 @@ describe('Messages', function() {
 
   });
 
-  describe('messages.Version', function() {
+  describe('messages.Version', function () {
     var messages = new Messages();
-    it('#fromBuffer works w/o fRelay arg', function() {
+    it('#fromBuffer works w/o fRelay arg', function () {
       var payloadBuffer = getPayloadBuffer(Data.version.messagenofrelay);
       var message = messages.Version.fromBuffer(payloadBuffer);
       message.relay.should.equal(true);
     });
 
-    it('#relay setting works', function() {
-      [true, false].forEach(function(relay) {
+    it('#relay setting works', function () {
+      [true, false].forEach(function (relay) {
         var message = messages.Version({
           relay: relay
         });
@@ -118,17 +118,17 @@ describe('Messages', function() {
     });
   });
 
-  describe('Inventory Helpers', function() {
+  describe('Inventory Helpers', function () {
 
     var messages = new Messages();
 
     var constructors = messages.builder.inventoryCommands;
     var fakeHash = 'e2dfb8afe1575bfacae1a0b4afc49af7ddda69285857267bae0e22be15f74a3a';
 
-    describe('#forTransaction', function() {
-      constructors.forEach(function(command) {
+    describe('#forTransaction', function () {
+      constructors.forEach(function (command) {
         var name = messages.builder.commandsMap[command];
-        it(name, function() {
+        it(name, function () {
           should.exist(messages[name].forTransaction);
           var message = messages[name].forTransaction(fakeHash);
           should.exist(message);
@@ -137,10 +137,10 @@ describe('Messages', function() {
       });
     });
 
-    describe('#forBlock', function() {
-      constructors.forEach(function(command) {
+    describe('#forBlock', function () {
+      constructors.forEach(function (command) {
         var name = messages.builder.commandsMap[command];
-        it(name, function() {
+        it(name, function () {
           var message = messages[name].forBlock(fakeHash);
           should.exist(message);
           message.should.be.instanceof(messages[name]._constructor);
@@ -148,10 +148,10 @@ describe('Messages', function() {
       });
     });
 
-    describe('#forFilteredBlock', function() {
-      constructors.forEach(function(command) {
+    describe('#forFilteredBlock', function () {
+      constructors.forEach(function (command) {
         var name = messages.builder.commandsMap[command];
-        it(name, function() {
+        it(name, function () {
           var message = messages[name].forFilteredBlock(fakeHash);
           should.exist(message);
           message.should.be.instanceof(messages[name]._constructor);
@@ -161,19 +161,19 @@ describe('Messages', function() {
 
   });
 
-  describe('#parseBuffer', function() {
-    it('fails with invalid command', function() {
+  describe('#parseBuffer', function () {
+    it('fails with invalid command', function () {
       var invalidCommand = 'f9beb4d96d616c6963696f757300000025000000bd5e830c' +
         '0102000000ec3995c1bf7269ff728818a65e53af00cbbee6b6eca8ac9ce7bc79d87' +
         '7041ed8';
-      var fails = function() {
+      var fails = function () {
         var bufs = buildMessage(invalidCommand);
         messages.parseBuffer(bufs);
       };
       fails.should.throw('Unsupported message command: malicious');
     });
 
-    it('ignores malformed messages', function() {
+    it('ignores malformed messages', function () {
       var malformed1 = 'd8c4c3d976657273696f6e000000000065000000fc970f1772110' +
         '1000100000000000000ba6288540000000001000000000000000000000000000000' +
         '0000ffffba8886dceab0010000000000000000000000000000000000ffff0509552' +
@@ -184,7 +184,7 @@ describe('Messages', function() {
       var malformed3 = 'f9beb4d967657464617461000000000025000000616263640102' +
         '00000069ebcbc34a4f9890da9aea0f773beba883a9afb1ab9ad7647dd4a1cd346c3' +
         '728';
-      [malformed1, malformed2, malformed3].forEach(function(malformed) {
+      [malformed1, malformed2, malformed3].forEach(function (malformed) {
         var ret = messages.parseBuffer(buildMessage(malformed));
         should.not.exist(ret);
       });
@@ -192,8 +192,8 @@ describe('Messages', function() {
 
   });
 
-  describe('#add', function() {
-    it('should add a custom message', function() {
+  describe('#add', function () {
+    it('should add a custom message', function () {
       var network = thoughtcore.Networks.defaultNetwork;
       var messages = new Messages({
         network: network,
@@ -201,7 +201,7 @@ describe('Messages', function() {
         Transaction: thoughtcore.Transaction
       });
 
-      var CustomMessage = function(arg, options) {
+      var CustomMessage = function (arg, options) {
         this.arg = arg;
       };
 

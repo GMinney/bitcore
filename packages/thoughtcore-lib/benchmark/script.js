@@ -11,7 +11,7 @@ console.log('Benchmarking Script');
 console.log('---------------------------------------');
 
 async.series([
-  function(next) {
+  function (next) {
 
     var c = 0;
     var scripts = [];
@@ -65,21 +65,21 @@ async.series([
     }
 
     var suite = new benchmark.Suite();
-    suite.add('isPublicKeyHashIn', isPublicKeyHashIn, {maxTime: maxTime});
-    suite.add('isPublicKeyOut', isPublicKeyOut, {maxTime: maxTime});
-    suite.add('toAddress', toAddress, {maxTime: maxTime});
-    suite.add('getAddressInfo', getAddressInfo, {maxTime: maxTime});
+    suite.add('isPublicKeyHashIn', isPublicKeyHashIn, { maxTime: maxTime });
+    suite.add('isPublicKeyOut', isPublicKeyOut, { maxTime: maxTime });
+    suite.add('toAddress', toAddress, { maxTime: maxTime });
+    suite.add('getAddressInfo', getAddressInfo, { maxTime: maxTime });
     suite
-      .on('cycle', function(event) {
+      .on('cycle', function (event) {
         console.log(String(event.target));
       })
-      .on('complete', function() {
+      .on('complete', function () {
         console.log('Done');
         console.log('----------------------------------------------------------------------');
         next();
       })
       .run();
   }
-], function(err) {
+], function (err) {
   console.log('Finished');
 });

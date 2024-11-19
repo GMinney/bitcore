@@ -6,9 +6,9 @@ var sinon = require('sinon');
 var should = chai.should();
 var CliUtils = require('../bin/cli-utils');
 
-describe('CliUtils', function() {
-  describe('#parseMN', function() {
-    it('should successfully parse m & n', function() {
+describe('CliUtils', function () {
+  describe('#parseMN', function () {
+    it('should successfully parse m & n', function () {
       var texts = {
         '1-1': [1, 1],
         '1-of-1': [1, 1],
@@ -20,12 +20,12 @@ describe('CliUtils', function() {
         '10-10': [10, 10],
         '10-of-10': [10, 10],
       };
-      _.each(texts, function(expected, text) {
+      _.each(texts, function (expected, text) {
         var result = CliUtils.parseMN(text);
         result.should.deep.equal(expected);
       });
     });
-    it('should fail to parse incorrect m & n', function() {
+    it('should fail to parse incorrect m & n', function () {
       var texts = [
         '',
         ' ',
@@ -42,7 +42,7 @@ describe('CliUtils', function() {
         '1--2',
         'x-of-2',
       ];
-      _.each(texts, function(text) {
+      _.each(texts, function (text) {
         var valid = true;
         try {
           CliUtils.parseMN(text);
@@ -54,8 +54,8 @@ describe('CliUtils', function() {
     });
   });
 
-  describe('#parseAmount', function() {
-    it('should successfully parse amounts', function() {
+  describe('#parseAmount', function () {
+    it('should successfully parse amounts', function () {
       var texts = {
         '1': 1,
         '0': 0,
@@ -78,12 +78,12 @@ describe('CliUtils', function() {
         '0.123tht': 12300000,
         '0.123   bTc': 12300000,
       };
-      _.each(texts, function(notions, text) {
+      _.each(texts, function (notions, text) {
         var amount = CliUtils.parseAmount(text);
         amount.should.equal(notions);
       });
     });
-    it('should fail to parse incorrect amounts', function() {
+    it('should fail to parse incorrect amounts', function () {
       var texts = [
         '',
         '  ',
@@ -100,7 +100,7 @@ describe('CliUtils', function() {
         '0.123bit',
         '2.000000009tht',
       ];
-      _.each(texts, function(text) {
+      _.each(texts, function (text) {
         var valid = true;
         try {
           CliUtils.parseAmount(text);

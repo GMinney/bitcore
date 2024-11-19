@@ -42,7 +42,7 @@ describe('Chain LTC', () => {
 
     it('should create a valid unsigned thoughtcore TX', () => {
       const txp = TxProposal.fromObj(signedTxp);
-      const t = ChainService.getThoughtcoreTx(txp, { signed: false } );
+      const t = ChainService.getThoughtcoreTx(txp, { signed: false });
       should.exist(t);
 
       // should serialized
@@ -56,7 +56,7 @@ describe('Chain LTC', () => {
   describe('#getEstimatedSize', () => {
     let ltc, fromAddress, simpleUtxoWith1LTC, changeAddress, toAddress, privateKey;
 
-    before(() =>  {
+    before(() => {
       ltc = new LtcChain();
       fromAddress = 'LcA1gPGGxYEGL2FS1eErMnWKSCkPUJonxH';
       toAddress = 'LYNk38CXCPavnf3wmhkymkC9HVrXj6zMQn';
@@ -89,7 +89,7 @@ describe('Chain LTC', () => {
       const actualLength = tx.serialize().length / 2;
 
       // Check margin is ~0.0
-      ((Math.abs(actualLength-estimatedLength))/actualLength).should.not.be.above(0.05);
+      ((Math.abs(actualLength - estimatedLength)) / actualLength).should.not.be.above(0.05);
     });
 
     const p2shPrivateKey1 = ThoughtcoreLibLtc.PrivateKey.fromWIF('T4EAFWF8i3vFtgXW8nwRQWgSo2E3VEp5D3vbv27umAjUCQQrsqFQ');
@@ -122,7 +122,7 @@ describe('Chain LTC', () => {
       const estimatedLength = ltc.getEstimatedSize(x);
 
       const actualLength = tx.serialize().length / 2;
-      ((Math.abs(actualLength-estimatedLength))/actualLength).should.be.below(0.05);
+      ((Math.abs(actualLength - estimatedLength)) / actualLength).should.be.below(0.05);
     });
 
     it('1 input p2wpkh, 1 Native Segwit output: ', () => {
@@ -138,7 +138,7 @@ describe('Chain LTC', () => {
 
       // https://thought.stackexchange.com/questions/84004/how-do-virtual-size-stripped-size-and-raw-size-compare-between-legacy-address-f
       const actualLength = 437 / 4; // this is the vsize
-      ((Math.abs(actualLength-estimatedLength))/actualLength).should.be.below(0.05);
+      ((Math.abs(actualLength - estimatedLength)) / actualLength).should.be.below(0.05);
     });
 
     it('2 input multisig p2wsh, 1 native segwit output: ', () => {
@@ -151,7 +151,7 @@ describe('Chain LTC', () => {
 
       // from https://thought.stackexchange.com/questions/88226/how-to-calculate-the-size-of-multisig-transaction
       const actualLength = (346 + 2 * 108) / 4; // this is the vsize
-      ((Math.abs(actualLength-estimatedLength))/actualLength).should.be.below(0.05);
+      ((Math.abs(actualLength - estimatedLength)) / actualLength).should.be.below(0.05);
     });
   });
 });
@@ -204,7 +204,7 @@ const aTXP = () => {
       'toAddress': 'LU8DsGPyFtgq3nZGHR3twfGsVUZ8nWAbSq',
       'amount': 20000000,
       'message': 'second message'
-    }, ],
+    },],
     'outputOrder': [0, 1, 2]
   };
 
@@ -253,7 +253,7 @@ const signedTxp = {
     isChange: true,
     path: 'm/1/3',
     publicKeys:
-      [ '03c27ea129d08ada3eb68235f9422230d8d0234511599ba1b9b91b2d1d82cc8e22' ],
+      ['03c27ea129d08ada3eb68235f9422230d8d0234511599ba1b9b91b2d1d82cc8e22'],
     coin: 'ltc',
     network: 'testnet',
     type: 'P2PKH',
@@ -278,8 +278,8 @@ const signedTxp = {
   status: 'temporary',
   txid: undefined,
   broadcastedOn: undefined,
-  inputPaths: [ 'm/0/0' ],
-  outputOrder: [ 1, 0 ],
+  inputPaths: ['m/0/0'],
+  outputOrder: [1, 0],
   fee: 2606,
   feeLevel: 'normal',
   feePerKb: 11378,

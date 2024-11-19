@@ -92,7 +92,7 @@ function addCoin() {
   });
 }
 
-describe('VerificationPeer', function() {
+describe('VerificationPeer', function () {
   const suite = this;
   this.timeout(500000);
   before(intBeforeHelper);

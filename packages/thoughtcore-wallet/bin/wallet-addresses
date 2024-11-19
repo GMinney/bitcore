@@ -11,16 +11,16 @@ program
 var args = program.args;
 
 utils.getClient(program, { mustExist: true }, function (client) {
-  
+
   client.getMainAddresses({
     doNotVerify: true
-  }, function(err, x) {
+  }, function (err, x) {
 
     utils.die(err);
 
     if (x.length > 0) {
       console.log('* Addresses:');
-      _.each(x, function(a) {
+      _.each(x, function (a) {
         console.log('      ', a.address);
       });
     } else {

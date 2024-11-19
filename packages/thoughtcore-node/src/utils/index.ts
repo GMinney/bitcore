@@ -68,7 +68,7 @@ export function range(start: number, end?: number): number[] {
     end = start;
     start = 0;
   }
-  
+
   if (start <= end) {
     // ascending range
     return Array.from({ length: end - start }, (_, i) => start + i);

@@ -1,25 +1,25 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {MainTitle} from '@/assets/styles/titles';
-import {fetcher} from '@/api/api';
+import React, { useEffect, useState } from 'react';
+import { MainTitle } from '@/assets/styles/titles';
+import { fetcher } from '@/api/api';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import InfiniteScrollLoadSpinner from '@/components/infinite-scroll-load-spinner';
 import Info from '@/components/info';
 import SupCurrencyLogo from '@/components/icons/sup-currency-logo';
 
-import {getApiRoot, getFormattedDate, normalizeParams, sleep} from '@/lib/utilities/helper-methods';
-import {BlocksType} from '@/lib/utilities/models';
-import {size} from '@/lib/utilities/constants';
+import { getApiRoot, getFormattedDate, normalizeParams, sleep } from '@/lib/utilities/helper-methods';
+import { BlocksType } from '@/lib/utilities/models';
+import { size } from '@/lib/utilities/constants';
 
 import styled from 'styled-components';
-import {motion} from 'framer-motion';
-import {routerFadeIn} from '@/lib/utilities/animations';
-import {useParams, useNavigate} from 'react-router-dom';
-import {useAppDispatch} from '@/lib/utilities/hooks';
-import {changeCurrency, changeNetwork} from '@/lib/store/app.actions';
-import {LightBlack, NeutralSlate, Slate30} from '@/assets/styles/colors';
+import { motion } from 'framer-motion';
+import { routerFadeIn } from '@/lib/utilities/animations';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '@/lib/utilities/hooks';
+import { changeCurrency, changeNetwork } from '@/lib/store/app.actions';
+import { LightBlack, NeutralSlate, Slate30 } from '@/assets/styles/colors';
 import nProgress from 'nprogress';
 
 const BlockListTable = styled.table`
@@ -31,7 +31,7 @@ const BlockListTable = styled.table`
 const BlockListTableHead = styled.tr`
   text-align: center;
   line-height: 45px;
-  background-color: ${({theme: {dark}}) => (dark ? '#090909' : NeutralSlate)};
+  background-color: ${({ theme: { dark } }) => (dark ? '#090909' : NeutralSlate)};
   font-size: 16px;
 
   @media screen and (max-width: ${size.tablet}) {
@@ -45,11 +45,11 @@ const BlockListTableRow = styled(motion.tr)`
   line-height: 45px;
 
   &:nth-child(odd) {
-    background-color: ${({theme: {dark}}) => (dark ? LightBlack : Slate30)};
+    background-color: ${({ theme: { dark } }) => (dark ? LightBlack : Slate30)};
   }
 
   &:nth-child(even) {
-    background-color: ${({theme: {dark}}) => (dark ? '#090909' : NeutralSlate)};
+    background-color: ${({ theme: { dark } }) => (dark ? '#090909' : NeutralSlate)};
   }
 
   transition: transform 200ms ease, box-shadow 200ms ease;
@@ -62,7 +62,7 @@ const BlockListTableRow = styled(motion.tr)`
 `;
 
 const TdLink = styled.td`
-  color: ${({theme: {colors}}) => colors.link};
+  color: ${({ theme: { colors } }) => colors.link};
 `;
 
 const getBlocksUrl = (currency: string, network: string) => {
@@ -82,7 +82,7 @@ const listAnime = {
 };
 
 const Blocks: React.FC = () => {
-  let {currency, network} = useParams<{currency: string; network: string}>();
+  let { currency, network } = useParams<{ currency: string; network: string }>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -125,7 +125,7 @@ const Blocks: React.FC = () => {
       } else {
         setHasMore(false);
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setError(e.message || 'Something went wrong. Please try again later.');
     }
@@ -163,7 +163,7 @@ const Blocks: React.FC = () => {
                   </thead>
                   <tbody>
                     {blocksList.map((block: BlocksType, index: number) => {
-                      const {height, hash, transactionCount, time, size} = block;
+                      const { height, hash, transactionCount, time, size } = block;
                       return (
                         <BlockListTableRow
                           key={index}

@@ -20,7 +20,7 @@ const main = async () => {
     await wallet.syncAddresses();
     const registered = await wallet.checkWallet();
     console.log(`Last server address: ${registered.lastAddress} (checksum: ${registered.sum})`);
-    
+
     if (!wallet.addressIndex) {
       console.log('No local addresses. Derive an address with `wallet derive --name <name> --gap 1`');
       return;

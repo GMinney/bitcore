@@ -12,7 +12,7 @@ const Schnorr = function Schnorr() {
   return this;
 };
 
-Schnorr.prototype.set = function() {};
+Schnorr.prototype.set = function () { };
 
 /**
  * Create a schnorr signature
@@ -22,7 +22,7 @@ Schnorr.prototype.set = function() {};
  * @returns {Buffer}
  * @link https://github.com/thought/bips/blob/master/bip-0340.mediawiki#Default_Signing
  */
-Schnorr.sign = function(privateKey, message, aux) {
+Schnorr.sign = function (privateKey, message, aux) {
   privateKey = Buffer.isBuffer(privateKey) ? privateKey : privateKey.toBuffer();
   if (privateKey.length !== 32) {
     throw new Error('Private key should be 32 bytes for schnorr signatures');
@@ -80,7 +80,7 @@ Schnorr.sign = function(privateKey, message, aux) {
  * @returns {Boolean}
  * @link https://github.com/thought/bips/blob/master/bip-0340.mediawiki#Verification
  */
-Schnorr.verify = function(publicKey, message, signature) {
+Schnorr.verify = function (publicKey, message, signature) {
   if ($.isType(publicKey, 'PublicKey')) {
     publicKey = publicKey.point.x.toBuffer();
   }
@@ -133,7 +133,7 @@ Schnorr.verify = function(publicKey, message, signature) {
 };
 
 /* Utility function used in Verify() */
-const getE = function(r, P, message) {
+const getE = function (r, P, message) {
   const n = Point.getN();
   const hash = new TaggedHash('BIP0340/challenge', Buffer.concat([r.toBuffer({ size: 32 }), P.x.toBuffer({ size: 32 }), message])).finalize();
   return new BN(hash).mod(n);

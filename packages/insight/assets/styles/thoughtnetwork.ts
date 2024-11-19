@@ -1,4 +1,4 @@
-import {Black, Action, White, LinkBlue, LightBlack} from './colors';
+import { Black, Action, White, LinkBlue, LightBlack } from './colors';
 
 export type ThoughtTheme = {
   dark: boolean;

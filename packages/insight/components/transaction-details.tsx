@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Transaction} from '@/lib/utilities/models';
+import { Transaction } from '@/lib/utilities/models';
 import {
   aggregateItems,
   getAddress,
@@ -9,7 +9,7 @@ import {
   isRBF,
   getLib
 } from '@/lib/utilities/helper-methods';
-import {useState, useEffect, FC, memo} from 'react';
+import { useState, useEffect, FC, memo } from 'react';
 import {
   TransactionBodyCol,
   TransactionTile,
@@ -22,11 +22,11 @@ import {
   ScriptText,
   SpanLink,
 } from '@/assets/styles/transaction';
-import {Tile, TileDescription} from '@/assets/styles/tile';
+import { Tile, TileDescription } from '@/assets/styles/tile';
 import ArrowSvg from '@/assets/images/arrow.svg';
-import {useNavigate, createSearchParams} from 'react-router-dom';
+import { useNavigate, createSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
-import {Slate, SlateDark} from '@/assets/styles/colors';
+import { Slate, SlateDark } from '@/assets/styles/colors';
 import Image from 'next/image';
 
 const TextElipsis = styled(ScriptText)`
@@ -39,10 +39,10 @@ const SelectedPill = styled.div`
   margin-top: 1rem;
   width: 100px;
   padding: 5px 10px;
-  border: 1px solid ${({theme: {dark}}) => (dark ? SlateDark : Slate)};
+  border: 1px solid ${({ theme: { dark } }) => (dark ? SlateDark : Slate)};
   text-align: center;
   border-radius: 50px;
-  color: ${({theme: {dark}}) => (dark ? Slate : SlateDark)};
+  color: ${({ theme: { dark } }) => (dark ? Slate : SlateDark)};
   font-weight: 500;
   font-size: 16px;
 `;
@@ -64,7 +64,7 @@ const TransactionDetails: FC<TransactionDetailsProps> = ({
   const navigate = useNavigate();
   const [formattedInputs, setFormattedInputs] = useState<any[]>();
   const [lib, setLib] = useState<any>(getLib(currency));
-  const {outputs, txid, blockTime, blockHeight, coinbase, inputs, confirmations, fee, value} =
+  const { outputs, txid, blockTime, blockHeight, coinbase, inputs, confirmations, fee, value } =
     transaction;
   const goToAddress = (address: any) => {
     return navigate(`/${currency}/${network}/address/${address}`);
@@ -109,7 +109,7 @@ const TransactionDetails: FC<TransactionDetailsProps> = ({
     const s = new lib.Script(vout.script);
     return s.toASM().includes('OP_RETURN');
   };
-  
+
   const getOpReturnText = (vout: any) => {
     const s = new lib.Script(vout.script);
     const hex = s.toASM().split('OP_RETURN')[1]?.trim();
@@ -262,8 +262,8 @@ const TransactionDetails: FC<TransactionDetailsProps> = ({
                         }
                         {vo.script &&
                           <>
-                          <b>Script Hex</b><ScriptText>{new lib.Script(vo.script).toHex()}</ScriptText>
-                          <b>Script ASM</b><ScriptText>{new lib.Script(vo.script).toASM()}</ScriptText>
+                            <b>Script Hex</b><ScriptText>{new lib.Script(vo.script).toHex()}</ScriptText>
+                            <b>Script ASM</b><ScriptText>{new lib.Script(vo.script).toASM()}</ScriptText>
                           </>
                         }
                       </>

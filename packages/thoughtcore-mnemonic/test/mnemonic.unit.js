@@ -8,62 +8,62 @@ var errors = require('thoughtcore-lib').errors;
 var bip39_vectors = require('./data/fixtures.json');
 const unorm = require('unorm');
 
-describe('Mnemonic', function() {
+describe('Mnemonic', function () {
   this.timeout(30000);
 
-  it('should initialize the class', function() {
+  it('should initialize the class', function () {
     should.exist(Mnemonic);
   });
 
-  describe('# Mnemonic', function() {
+  describe('# Mnemonic', function () {
 
-    describe('Constructor', function() {
-      it('does not require new keyword', function() {
+    describe('Constructor', function () {
+      it('does not require new keyword', function () {
         var mnemonic = Mnemonic(); // jshint ignore:line
         mnemonic.should.be.instanceof(Mnemonic);
       });
 
-      it('should fail with invalid data', function() {
-        (function() {
+      it('should fail with invalid data', function () {
+        (function () {
           return new Mnemonic({});
         }).should.throw(errors.InvalidArgument);
       });
 
-      it('should fail with unknown word list', function() {
-        (function() {
+      it('should fail with unknown word list', function () {
+        (function () {
           return new Mnemonic('pilots foster august tomorrow kit daughter unknown awesome model town village master');
         }).should.throw(errors.Mnemonic.UnknownWordlist);
       });
 
-      it('should fail with invalid mnemonic', function() {
-        (function() {
+      it('should fail with invalid mnemonic', function () {
+        (function () {
           return new Mnemonic('monster foster august tomorrow kit daughter unknown awesome model town village pilot');
         }).should.throw(errors.Mnemonic.InvalidMnemonic);
       });
 
-      it('should fail with invalid ENT', function() {
-        (function() {
+      it('should fail with invalid ENT', function () {
+        (function () {
           return new Mnemonic(64);
         }).should.throw(errors.InvalidArgument);
       });
 
-      it('constructor defaults to english worldlist', function() {
+      it('constructor defaults to english worldlist', function () {
         var mnemonic = new Mnemonic();
         mnemonic.wordlist.should.equal(Mnemonic.Words.ENGLISH);
       });
 
-      it('allow using different worldlists', function() {
+      it('allow using different worldlists', function () {
         var mnemonic = new Mnemonic(Mnemonic.Words.SPANISH);
         mnemonic.wordlist.should.equal(Mnemonic.Words.SPANISH);
       });
 
-      it('constructor honor both length and wordlist', function() {
+      it('constructor honor both length and wordlist', function () {
         var mnemonic = new Mnemonic(32 * 7, Mnemonic.Words.SPANISH);
         mnemonic.phrase.split(' ').length.should.equal(21);
         mnemonic.wordlist.should.equal(Mnemonic.Words.SPANISH);
       });
 
-      it('constructor should detect standard wordlist', function() {
+      it('constructor should detect standard wordlist', function () {
         var mnemonic = new Mnemonic('afirmar diseño hielo fideo etapa ogro cambio fideo toalla pomelo número buscar');
         mnemonic.wordlist.should.equal(Mnemonic.Words.SPANISH);
       });
@@ -71,42 +71,42 @@ describe('Mnemonic', function() {
     });
 
 
-    it('english wordlist is complete', function() {
+    it('english wordlist is complete', function () {
       Mnemonic.Words.ENGLISH.length.should.equal(2048);
       Mnemonic.Words.ENGLISH[0].should.equal('abandon');
     });
 
-    it('spanish wordlist is complete', function() {
+    it('spanish wordlist is complete', function () {
       Mnemonic.Words.SPANISH.length.should.equal(2048);
       Mnemonic.Words.SPANISH[0].should.equal('ábaco');
     });
 
-    it('japanese wordlist is complete', function() {
+    it('japanese wordlist is complete', function () {
       Mnemonic.Words.JAPANESE.length.should.equal(2048);
       Mnemonic.Words.JAPANESE[0].should.equal('あいこくしん');
     });
 
-    it('korean wordlist is complete', function() {
+    it('korean wordlist is complete', function () {
       Mnemonic.Words.KOREAN.length.should.equal(2048);
       Mnemonic.Words.KOREAN[0].should.equal('가격');
     });
 
-    it('chinese wordlist is complete', function() {
+    it('chinese wordlist is complete', function () {
       Mnemonic.Words.CHINESE.length.should.equal(2048);
       Mnemonic.Words.CHINESE[0].should.equal('的');
     });
 
-    it('french wordlist is complete', function() {
+    it('french wordlist is complete', function () {
       Mnemonic.Words.FRENCH.length.should.equal(2048);
       Mnemonic.Words.FRENCH[0].should.equal('abaisser');
     });
 
-    it('italian wordlist is complete', function() {
+    it('italian wordlist is complete', function () {
       Mnemonic.Words.ITALIAN.length.should.equal(2048);
       Mnemonic.Words.ITALIAN[0].should.equal('abaco');
     });
 
-    it('allows use different phrase lengths', function() {
+    it('allows use different phrase lengths', function () {
       var mnemonic;
 
       mnemonic = new Mnemonic(32 * 4);
@@ -125,7 +125,7 @@ describe('Mnemonic', function() {
       mnemonic.phrase.split(' ').length.should.equal(24);
     });
 
-    it('validates a phrase', function() {
+    it('validates a phrase', function () {
       var valid = Mnemonic.isValid('afirmar diseño hielo fideo etapa ogro cambio fideo toalla pomelo número buscar');
       valid.should.equal(true);
 
@@ -142,54 +142,54 @@ describe('Mnemonic', function() {
       valid2.should.equal(true);
     });
 
-    it('has a toString method', function() {
+    it('has a toString method', function () {
       var mnemonic = new Mnemonic();
       mnemonic.toString().should.equal(mnemonic.phrase);
     });
 
-    it('has a toString method', function() {
+    it('has a toString method', function () {
       var mnemonic = new Mnemonic();
       mnemonic.inspect().should.have.string('<Mnemonic:');
     });
 
-    it('derives a seed without a passphrase', function() {
+    it('derives a seed without a passphrase', function () {
       var mnemonic = new Mnemonic();
       var seed = mnemonic.toSeed();
       should.exist(seed);
     });
 
-    it('derives a seed using a passphrase', function() {
+    it('derives a seed using a passphrase', function () {
       var mnemonic = new Mnemonic();
       var seed = mnemonic.toSeed('my passphrase');
       should.exist(seed);
     });
 
-    it('derives an extended private key', function() {
+    it('derives an extended private key', function () {
       var mnemonic = new Mnemonic();
       var pk = mnemonic.toHDPrivateKey();
       should.exist(pk);
     });
 
-    it('Mnemonic.fromSeed should fail with invalid wordlist', function() {
-      (function() {
+    it('Mnemonic.fromSeed should fail with invalid wordlist', function () {
+      (function () {
         return Mnemonic.fromSeed(Buffer.alloc(1));
       }).should.throw(errors.InvalidArgument);
     });
 
-    it('Mnemonic.fromSeed should fail with invalid seed', function() {
-      (function() {
+    it('Mnemonic.fromSeed should fail with invalid seed', function () {
+      (function () {
         return Mnemonic.fromSeed();
       }).should.throw(errors.InvalidArgument);
     });
 
-    it('should fail with invalid entropy', function() {
-      (function() {
+    it('should fail with invalid entropy', function () {
+      (function () {
         return Mnemonic.fromSeed(Buffer.alloc(512), Mnemonic.Words.ENGLISH);
       }).should.throw(errors.InvalidArgument);
     });
 
-    it('Constructor should fail with invalid seed', function() {
-      (function() {
+    it('Constructor should fail with invalid seed', function () {
+      (function () {
         return new Mnemonic(Buffer.alloc(1));
       }).should.throw(errors.InvalidEntropy);
     });
@@ -205,8 +205,8 @@ describe('Mnemonic', function() {
       }
     }
 
-    var test_vector = function(v, lang) {
-      it('should pass test vector for ' + lang + ' #' + v, function() {
+    var test_vector = function (v, lang) {
+      it('should pass test vector for ' + lang + ' #' + v, function () {
         var wordlist = vector_wordlists[lang];
         var vector = bip39_vectors[lang][v];
         var code = vector[1];

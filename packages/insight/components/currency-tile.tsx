@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {FC, memo} from 'react';
+import { FC, memo } from 'react';
 import Image from 'next/image';
-import {buildTime, getApiRoot, getDefaultRefreshInterval} from '@/lib/utilities/helper-methods';
-import styled, {css} from 'styled-components';
-import {Tile} from '@/assets/styles/tile';
+import { buildTime, getApiRoot, getDefaultRefreshInterval } from '@/lib/utilities/helper-methods';
+import styled, { css } from 'styled-components';
+import { Tile } from '@/assets/styles/tile';
 import LargeThinSpinner from '@/assets/images/large-thin-spinner.svg';
-import {Spinner} from '@/assets/styles/spinner';
+import { Spinner } from '@/assets/styles/spinner';
 
-import {colorCodes} from '@/lib/utilities/constants';
- import {useNavigate} from 'react-router-dom';
-import {useApi} from '@/api/api';
-import {Error, SlateDark, White} from '@/assets/styles/colors';
+import { colorCodes } from '@/lib/utilities/constants';
+import { useNavigate } from 'react-router-dom';
+import { useApi } from '@/api/api';
+import { Error, SlateDark, White } from '@/assets/styles/colors';
 
 import {
   Chart as ChartJS,
@@ -37,7 +37,7 @@ ChartJS.register(
 
 const gutter = '1.5rem';
 
-const LightBackground: {[key in string]: string} = {
+const LightBackground: { [key in string]: string } = {
   THT: '#FFF1E0',
   BCH: '#EFFFF6',
   ETH: '#EBECF6',
@@ -45,7 +45,7 @@ const LightBackground: {[key in string]: string} = {
   DOGE: '#FDF8E6',
 };
 
-const DarkBackground: {[key in string]: string} = {
+const DarkBackground: { [key in string]: string } = {
   THT: '#0C0700',
   BCH: '#020A05',
   ETH: '#06070F',
@@ -53,12 +53,12 @@ const DarkBackground: {[key in string]: string} = {
   DOGE: '#0B0903',
 };
 
-const CurrencyTileDiv = styled.div.attrs<{ $currency: string}>(props => ({ $currency: props.$currency }))`
+const CurrencyTileDiv = styled.div.attrs<{ $currency: string }>(props => ({ $currency: props.$currency }))`
   padding: ${gutter};
   text-align: left;
   border-radius: 8px;
-  background: ${({ $currency, theme: {dark} }) => dark ? DarkBackground[$currency] : LightBackground[$currency]};
-  box-shadow: ${({theme: {dark}}) => (dark ? '0px 5px 20px -5px rgba(0, 0, 0, 0.18)' : 'none')};
+  background: ${({ $currency, theme: { dark } }) => dark ? DarkBackground[$currency] : LightBackground[$currency]};
+  box-shadow: ${({ theme: { dark } }) => (dark ? '0px 5px 20px -5px rgba(0, 0, 0, 0.18)' : 'none')};
   margin-bottom: 2rem;
 
   &:hover {
@@ -92,22 +92,22 @@ interface CurrencyTileDescProps {
 
 const CurrencyTileDesc = styled.p<CurrencyTileDescProps>`
   margin: 0;
-  font-weight: ${({value}) => (value ? 'normal' : '500')};
+  font-weight: ${({ value }) => (value ? 'normal' : '500')};
   font-size: 14px;
   line-height: 27px;
-  color: ${({theme: {dark}}) => (dark ? White : SlateDark)};
+  color: ${({ theme: { dark } }) => (dark ? White : SlateDark)};
 `;
 
 interface PositionDivProps {
   error?: any;
 }
 
-const PositionDiv = styled(Spinner)<PositionDivProps>`
+const PositionDiv = styled(Spinner) <PositionDivProps>`
   min-height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
-  ${({error}) =>
+  ${({ error }) =>
     error &&
     css`
       color: ${Error};
@@ -123,7 +123,7 @@ const ChartContainer = styled.div`
 interface CurrencyTileProps {
   currency: string;
 }
-const CurrencyTile: FC<CurrencyTileProps> = ({currency}) => {
+const CurrencyTile: FC<CurrencyTileProps> = ({ currency }) => {
   //const navigate = useNavigate();
   const apiRoot = getApiRoot(currency);
   const refreshInterval = getDefaultRefreshInterval(currency);
@@ -132,15 +132,15 @@ const CurrencyTile: FC<CurrencyTileProps> = ({currency}) => {
   let price;
 
   const url = `${apiRoot}/${currency}/mainnet/block?limit=1`;
-  const {data, error} = useApi(url, {refreshInterval});
-  const {data: priceDetails} = useApi(`https://thoughtnetwork.com/rates/${currency}/usd`);
-  const {data: priceDisplay} = useApi(
+  const { data, error } = useApi(url, { refreshInterval });
+  const { data: priceDetails } = useApi(`https://thoughtnetwork.com/rates/${currency}/usd`);
+  const { data: priceDisplay } = useApi(
     `https://thoughtnetwork.com/currencies/prices?currencyPairs=["${currency}:USD"]`,
   );
 
   if (priceDetails?.data) {
     const {
-      data: {rate},
+      data: { rate },
     } = priceDetails;
     price = rate;
   }
@@ -168,7 +168,7 @@ const CurrencyTile: FC<CurrencyTileProps> = ({currency}) => {
     );
   }
 
-  const {height, time, transactionCount, size} = data[0];
+  const { height, time, transactionCount, size } = data[0];
 
 
 

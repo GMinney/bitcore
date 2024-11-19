@@ -7,7 +7,7 @@ import { WalletAddressStorage } from '../../../src/models/walletAddress';
 import { mockCollection } from '../../helpers/index.js';
 import { unitAfterHelper, unitBeforeHelper } from '../../helpers/unit';
 
-describe('Wallet Model', function() {
+describe('Wallet Model', function () {
   before(unitBeforeHelper);
   after(unitAfterHelper);
 

@@ -17,29 +17,29 @@ var storage, blockchainExplorer, blockchainExplorerEVM, bcmonitor;
 var socket = {
   handlers: {}
 };
-socket.on = function(eventName, handler) {
+socket.on = function (eventName, handler) {
   this.handlers[eventName] = handler;
 };
 
-describe('Blockchain monitor', function() {
+describe('Blockchain monitor', function () {
   this.timeout(5000);
   var server, wallet;
 
-  before(function(done) {
-    helpers.before(function(res) {
+  before(function (done) {
+    helpers.before(function (res) {
       storage = res.storage;
       blockchainExplorer = res.blockchainExplorer;
       blockchainExplorerEVM = _.cloneDeep(blockchainExplorer);
 
-      blockchainExplorer.initSocket = function(callbacks) {
-        socket.handlers['coin'] = function(data) {
+      blockchainExplorer.initSocket = function (callbacks) {
+        socket.handlers['coin'] = function (data) {
           callbacks.onIncomingPayments(data);
         };
         socket.handlers['block'] = callbacks.onBlock;
       };
 
-      blockchainExplorerEVM.initSocket = function(callbacks) {
-        socket.handlers['tx'] = function(data) {
+      blockchainExplorerEVM.initSocket = function (callbacks) {
+        socket.handlers['tx'] = function (data) {
           // copied from v8.tx
           const tx = data.tx;
           // script output, or similar.
@@ -69,10 +69,10 @@ describe('Blockchain monitor', function() {
       done();
     });
   });
-  after(function(done) {
+  after(function (done) {
     helpers.after(done);
   });
-  beforeEach(function(done) {
+  beforeEach(function (done) {
     blockchainExplorer.last = [];
     blockchainExplorer.lastTx = [];
     // TODO
@@ -100,7 +100,7 @@ describe('Blockchain monitor', function() {
       },
       err => {
         should.not.exist(err);
-        helpers.createAndJoinWallet(2, 3, function(s, w) {
+        helpers.createAndJoinWallet(2, 3, function (s, w) {
           server = s;
           wallet = w;
 
@@ -122,7 +122,7 @@ describe('Blockchain monitor', function() {
                 }
               }
             },
-            function(err) {
+            function (err) {
               should.not.exist(err);
               done();
             }
@@ -132,8 +132,8 @@ describe('Blockchain monitor', function() {
     );
   });
 
-  it('should notify copayers of incoming txs', function(done) {
-    server.createAddress({}, function(err, address) {
+  it('should notify copayers of incoming txs', function (done) {
+    server.createAddress({}, function (err, address) {
       should.not.exist(err);
 
       var incoming = {
@@ -142,8 +142,8 @@ describe('Blockchain monitor', function() {
       };
       socket.handlers['coin'](incoming);
 
-      setTimeout(function() {
-        server.getNotifications({}, function(err, notifications) {
+      setTimeout(function () {
+        server.getNotifications({}, function (err, notifications) {
           should.not.exist(err);
           var notification = _.find(notifications, {
             type: 'NewIncomingTx'
@@ -159,8 +159,8 @@ describe('Blockchain monitor', function() {
     });
   });
 
-  it('should not notify copayers of incoming txs tht, amount =0', function(done) {
-    server.createAddress({}, function(err, address) {
+  it('should not notify copayers of incoming txs tht, amount =0', function (done) {
+    server.createAddress({}, function (err, address) {
       should.not.exist(err);
 
       var incoming = {
@@ -169,8 +169,8 @@ describe('Blockchain monitor', function() {
       };
       socket.handlers['coin'](incoming);
 
-      setTimeout(function() {
-        server.getNotifications({}, function(err, notifications) {
+      setTimeout(function () {
+        server.getNotifications({}, function (err, notifications) {
           should.not.exist(err);
           var notification = _.find(notifications, {
             type: 'NewIncomingTx'
@@ -182,9 +182,9 @@ describe('Blockchain monitor', function() {
     });
   });
 
-  it('should notify copayers of incoming txs ETH, amount =0', function(done) {
-    helpers.createAndJoinWallet(1, 1, { coin: 'eth' }, function(s, w) {
-      s.createAddress({}, function(err, address) {
+  it('should notify copayers of incoming txs ETH, amount =0', function (done) {
+    helpers.createAndJoinWallet(1, 1, { coin: 'eth' }, function (s, w) {
+      s.createAddress({}, function (err, address) {
         should.not.exist(err);
 
         var incoming = {
@@ -198,8 +198,8 @@ describe('Blockchain monitor', function() {
         };
         socket.handlers['tx'](incoming);
 
-        setTimeout(function() {
-          s.getNotifications({}, function(err, notifications) {
+        setTimeout(function () {
+          s.getNotifications({}, function (err, notifications) {
             should.not.exist(err);
             var notification = _.find(notifications, {
               type: 'NewIncomingTx'
@@ -215,8 +215,8 @@ describe('Blockchain monitor', function() {
     });
   });
 
-  it('should not notify copayers of incoming txs more than once', function(done) {
-    server.createAddress({}, function(err, address) {
+  it('should not notify copayers of incoming txs more than once', function (done) {
+    server.createAddress({}, function (err, address) {
       should.not.exist(err);
 
       var incoming = {
@@ -224,11 +224,11 @@ describe('Blockchain monitor', function() {
       };
       incoming.out = { address: address.address, amount: 15000 };
       socket.handlers['coin'](incoming);
-      setTimeout(function() {
+      setTimeout(function () {
         socket.handlers['coin'](incoming);
 
-        setTimeout(function() {
-          server.getNotifications({}, function(err, notifications) {
+        setTimeout(function () {
+          server.getNotifications({}, function (err, notifications) {
             should.not.exist(err);
             var notification = _.filter(notifications, {
               type: 'NewIncomingTx'
@@ -243,9 +243,9 @@ describe('Blockchain monitor', function() {
     });
   });
 
-  it('should not notify copayers of incoming txs more than once', function(done) {
-    helpers.createAndJoinWallet(1, 1, { coin: 'eth' }, function(s, w) {
-      s.createAddress({}, function(err, address) {
+  it('should not notify copayers of incoming txs more than once', function (done) {
+    helpers.createAndJoinWallet(1, 1, { coin: 'eth' }, function (s, w) {
+      s.createAddress({}, function (err, address) {
         should.not.exist(err);
         var incoming = {
           tx: {
@@ -273,8 +273,8 @@ describe('Blockchain monitor', function() {
         };
         socket.handlers['tx'](incoming);
         socket.handlers['tx'](incoming);
-        setTimeout(function() {
-          s.getNotifications({}, function(err, notifications) {
+        setTimeout(function () {
+          s.getNotifications({}, function (err, notifications) {
             should.not.exist(err);
             var notification = _.filter(notifications, {
               type: 'NewIncomingTx'
@@ -288,8 +288,8 @@ describe('Blockchain monitor', function() {
     });
   });
 
-  it('should parse v8 amount ', function(done) {
-    server.createAddress({}, function(err, address) {
+  it('should parse v8 amount ', function (done) {
+    server.createAddress({}, function (err, address) {
       should.not.exist(err);
 
       var incoming = {
@@ -297,8 +297,8 @@ describe('Blockchain monitor', function() {
       };
       incoming.out = { address: address.address, amount: 1500 };
       socket.handlers['coin'](incoming);
-      setTimeout(function() {
-        server.getNotifications({}, function(err, notifications) {
+      setTimeout(function () {
+        server.getNotifications({}, function (err, notifications) {
           should.not.exist(err);
           var notification = _.filter(notifications, {
             type: 'NewIncomingTx'
@@ -311,8 +311,8 @@ describe('Blockchain monitor', function() {
     });
   });
 
-  it('should notify copayers of tx confirmation', function(done) {
-    server.createAddress({}, function(err, address) {
+  it('should notify copayers of tx confirmation', function (done) {
+    server.createAddress({}, function (err, address) {
       should.not.exist(err);
 
       var incoming = {
@@ -325,18 +325,18 @@ describe('Blockchain monitor', function() {
         {
           txid: '123'
         },
-        function(err) {
+        function (err) {
           should.not.exist(err);
 
           blockchainExplorer.getTxidsInBlock = sinon.stub().callsArgWith(1, null, ['123', '456']);
           socket.handlers['block']('block1');
 
-          setTimeout(function() {
+          setTimeout(function () {
             blockchainExplorer.getTxidsInBlock = sinon.stub().callsArgWith(1, null, ['123', '456']);
             socket.handlers['block']('block2');
 
-            setTimeout(function() {
-              server.getNotifications({}, function(err, notifications) {
+            setTimeout(function () {
+              server.getNotifications({}, function (err, notifications) {
                 should.not.exist(err);
                 var notifications = _.filter(notifications, {
                   type: 'TxConfirmation'
@@ -355,23 +355,23 @@ describe('Blockchain monitor', function() {
     });
   });
 
-  describe('Block Notify Throttling', function() {
-    it('should throttle _notifyNewBlock if setting requires', function(done) {
+  describe('Block Notify Throttling', function () {
+    it('should throttle _notifyNewBlock if setting requires', function (done) {
       const notifyNewBlockSpy = sinon.spy(bcmonitor, '_notifyNewBlock');
       bcmonitor.blockThrottleSettings = { tht: { livenet: 2 } };
 
       blockchainExplorer.getTxidsInBlock = sinon.stub().callsArgWith(1, null, ['123', '456']);
       socket.handlers['block']('block1');
-      setTimeout(function() {
+      setTimeout(function () {
         // it always calls _notifyNewBlock the first time
         notifyNewBlockSpy.calledOnce.should.be.true;
         socket.handlers['block']('block2');
         socket.handlers['block']('block3');
         socket.handlers['block']('block4');
-        setTimeout(function() {
+        setTimeout(function () {
           notifyNewBlockSpy.calledTwice.should.be.false;
           socket.handlers['block']('block5');
-          setTimeout(function() {
+          setTimeout(function () {
             notifyNewBlockSpy.calledTwice.should.be.true;
             done();
           }, 100);
@@ -379,20 +379,20 @@ describe('Blockchain monitor', function() {
       }, 100);
     });
 
-    it('should not throttle _notifyNewBlock if setting doesn"t exist', function(done) {
+    it('should not throttle _notifyNewBlock if setting doesn"t exist', function (done) {
       const notifyNewBlockSpy = sinon.spy(bcmonitor, '_notifyNewBlock');
       bcmonitor.blockThrottleSettings = { tht: {} };
 
       blockchainExplorer.getTxidsInBlock = sinon.stub().callsArgWith(1, null, ['123', '456']);
       socket.handlers['block']('block1');
-      setTimeout(function() {
+      setTimeout(function () {
         // it always calls _notifyNewBlock the first time
         notifyNewBlockSpy.calledOnce.should.be.true;
         socket.handlers['block']('block2');
-        setTimeout(function() {
+        setTimeout(function () {
           notifyNewBlockSpy.calledTwice.should.be.true;
           socket.handlers['block']('block3');
-          setTimeout(function() {
+          setTimeout(function () {
             notifyNewBlockSpy.calledThrice.should.be.true;
             done();
           }, 100);
@@ -400,20 +400,20 @@ describe('Blockchain monitor', function() {
       }, 100);
     });
 
-    it('should not throttle _notifyNewBlock if setting is zero', function(done) {
+    it('should not throttle _notifyNewBlock if setting is zero', function (done) {
       const notifyNewBlockSpy = sinon.spy(bcmonitor, '_notifyNewBlock');
       bcmonitor.blockThrottleSettings = { tht: { livenet: 0 } };
 
       blockchainExplorer.getTxidsInBlock = sinon.stub().callsArgWith(1, null, ['123', '456']);
       socket.handlers['block']('block1');
-      setTimeout(function() {
+      setTimeout(function () {
         // it always calls _notifyNewBlock the first time
         notifyNewBlockSpy.calledOnce.should.be.true;
         socket.handlers['block']('block2');
-        setTimeout(function() {
+        setTimeout(function () {
           notifyNewBlockSpy.calledTwice.should.be.true;
           socket.handlers['block']('block3');
-          setTimeout(function() {
+          setTimeout(function () {
             notifyNewBlockSpy.calledThrice.should.be.true;
             done();
           }, 100);

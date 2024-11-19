@@ -36,7 +36,7 @@ const pubKey = authKey.publicKey.toString('hex');
 const address = '2MuYKLUaKCenkEpwPkWUwYpBoDBNA2dgY3t';
 const sandbox = sinon.createSandbox();
 
-describe('Websockets', function() {
+describe('Websockets', function () {
   const suite = this;
   this.timeout(60000);
 

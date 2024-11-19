@@ -4,7 +4,7 @@ var thoughtcore = module.exports;
 
 // module information
 thoughtcore.version = 'v' + require('./package.json').version;
-thoughtcore.versionGuard = function(version) {
+thoughtcore.versionGuard = function (version) {
   if (version !== undefined) {
     var message = 'More than one instance of thoughtcore-lib found. ' +
       'Please make sure to require thoughtcore-lib and check that submodules do' +

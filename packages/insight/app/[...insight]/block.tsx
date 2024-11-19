@@ -1,19 +1,19 @@
 'use client';
 
 import Info from '@/components/info';
-import {useParams} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import EthBlockDetails from '@/components/eth-block-details';
 import BlockDetails from '@/components/block-details';
-import React, {useEffect} from 'react';
-import {normalizeParams} from '@/lib/utilities/helper-methods';
-import {changeCurrency, changeNetwork} from '@/lib/store/app.actions';
-import {useAppDispatch} from '@/lib/utilities/hooks';
+import React, { useEffect } from 'react';
+import { normalizeParams } from '@/lib/utilities/helper-methods';
+import { changeCurrency, changeNetwork } from '@/lib/store/app.actions';
+import { useAppDispatch } from '@/lib/utilities/hooks';
 
 const Block: React.FC = () => {
-  const params = useParams<{currency: string; network: string; block: string}>();
-  const {block} = params;
+  const params = useParams<{ currency: string; network: string; block: string }>();
+  const { block } = params;
   const dispatch = useAppDispatch();
-  let {currency, network} = params;
+  let { currency, network } = params;
 
   useEffect(() => {
     if (!currency || !network || !block) {

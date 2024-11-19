@@ -13,7 +13,7 @@ var Script = thoughtcore.Script;
 var PrivateKey = thoughtcore.PrivateKey;
 var errors = thoughtcore.errors;
 
-describe('TransactionSignature', function() {
+describe('TransactionSignature', function () {
 
   var fromAddress = 'mszYqVnqKoQx4jcTdJXxwKAissE3Jbrrc1';
   var privateKey = 'cSBnVM4xvxarwGQuAfQFwqDg9k5tErHUHzgWsEfD4zdwUasvqRVY';
@@ -25,41 +25,41 @@ describe('TransactionSignature', function() {
     notions: 100000
   };
 
-  var getSignatureFromTransaction = function() {
+  var getSignatureFromTransaction = function () {
     var transaction = new Transaction();
     transaction.from(simpleUtxoWith100000Notions);
     return transaction.getSignatures(privateKey)[0];
   };
 
-  it('can be created without the `new` keyword', function() {
+  it('can be created without the `new` keyword', function () {
     var signature = getSignatureFromTransaction();
     var serialized = signature.toObject();
     var nonew = TransactionSignature(serialized);
     expect(nonew.toObject()).to.deep.equal(serialized);
   });
 
-  it('can be retrieved from Transaction#getSignatures', function() {
+  it('can be retrieved from Transaction#getSignatures', function () {
     var signature = getSignatureFromTransaction();
     expect(signature instanceof TransactionSignature).to.equal(true);
   });
 
-  it('fails when trying to create from invalid arguments', function() {
-    expect(function() {
+  it('fails when trying to create from invalid arguments', function () {
+    expect(function () {
       return new TransactionSignature();
     }).to.throw(errors.InvalidArgument);
-    expect(function() {
+    expect(function () {
       return new TransactionSignature(1);
     }).to.throw(errors.InvalidArgument);
-    expect(function() {
+    expect(function () {
       return new TransactionSignature('hello world');
     }).to.throw(errors.InvalidArgument);
   });
-  it('returns the same object if called with a TransactionSignature', function() {
+  it('returns the same object if called with a TransactionSignature', function () {
     var signature = getSignatureFromTransaction();
     expect(new TransactionSignature(signature)).to.equal(signature);
   });
 
-  it('gets returned by a P2SH multisig output', function() {
+  it('gets returned by a P2SH multisig output', function () {
     var private1 = new PrivateKey('6ce7e97e317d2af16c33db0b9270ec047a91bff3eff8558afb5014afb2bb5976');
     var private2 = new PrivateKey('c9b26b0f771a0d2dad88a44de90f05f416b3b385ff1d989343005546a0032890');
     var public1 = private1.publicKey;
@@ -77,38 +77,38 @@ describe('TransactionSignature', function() {
     expect(signatures[0] instanceof TransactionSignature).to.equal(true);
   });
 
-  it('can be aplied to a Transaction with Transaction#addSignature', function() {
+  it('can be aplied to a Transaction with Transaction#addSignature', function () {
     var transaction = new Transaction();
     transaction.from(simpleUtxoWith100000Notions);
     var signature = transaction.getSignatures(privateKey)[0];
-    var addSignature = function() {
+    var addSignature = function () {
       return transaction.applySignature(signature);
     };
     expect(signature instanceof TransactionSignature).to.equal(true);
     expect(addSignature).to.not.throw();
   });
 
-  describe('serialization', function() {
-    it('serializes to an object and roundtrips correctly', function() {
+  describe('serialization', function () {
+    it('serializes to an object and roundtrips correctly', function () {
       var signature = getSignatureFromTransaction();
       var serialized = signature.toObject();
       expect(new TransactionSignature(serialized).toObject()).to.deep.equal(serialized);
     });
 
-    it('can be deserialized with fromObject', function() {
+    it('can be deserialized with fromObject', function () {
       var signature = getSignatureFromTransaction();
       var serialized = signature.toObject();
       expect(TransactionSignature.fromObject(serialized).toObject()).to.deep.equal(serialized);
     });
 
-    it('can deserialize when signature is a buffer', function() {
+    it('can deserialize when signature is a buffer', function () {
       var signature = getSignatureFromTransaction();
       var serialized = signature.toObject();
       serialized.signature = Buffer.from(serialized.signature, 'hex');
       expect(TransactionSignature.fromObject(serialized).toObject()).to.deep.equal(signature.toObject());
     });
 
-    it('can roundtrip to/from json', function() {
+    it('can roundtrip to/from json', function () {
       var signature = getSignatureFromTransaction();
       var serialized = signature.toObject();
       var json = JSON.stringify(signature);
@@ -116,12 +116,12 @@ describe('TransactionSignature', function() {
       expect(TransactionSignature.fromObject(JSON.parse(json)).toObject()).to.deep.equal(serialized);
     });
 
-    it('can parse a previously known json string', function() {
+    it('can parse a previously known json string', function () {
       var str = JSON.stringify(TransactionSignature(JSON.parse(testJSON)));
       expect(JSON.parse(str)).to.deep.equal(JSON.parse(testJSON));
     });
 
-    it('can deserialize a previously known object', function() {
+    it('can deserialize a previously known object', function () {
       expect(TransactionSignature(testObject).toObject()).to.deep.equal(testObject);
     });
   });

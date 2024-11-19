@@ -9,7 +9,7 @@ import { CacheTimes } from '../middleware';
 
 const router = Router({ mergeParams: true });
 
-router.get('/', function(req: Request, res: Response) {
+router.get('/', function (req: Request, res: Response) {
   let { chain, network } = req.params;
   let { blockHeight, blockHash, limit, since, direction, paging } = req.query as any;
   if (!chain || !network) {
@@ -140,7 +140,7 @@ router.get('/:txid/coins', (req: Request, res: Response, next) => {
   }
 });
 
-router.post('/send', async function(req: Request, res: Response) {
+router.post('/send', async function (req: Request, res: Response) {
   let { chain, network } = req.params;
   let { rawTx } = req.body;
   try {

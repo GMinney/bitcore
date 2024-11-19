@@ -18,7 +18,7 @@ class MoralisClass implements IExternalProvider {
     'Content-Type': 'application/json',
     'X-API-Key': this.apiKey,
   };
-  
+
 
   async getBlockNumberByDate({ chainId, date }) {
     if (!date || !isDateValid(date)) {
@@ -32,15 +32,15 @@ class MoralisClass implements IExternalProvider {
     const queryStr = this._buildQueryString(query);
 
     return new Promise<number>((resolve, reject) => {
-      got(`${this.baseUrl}/dateToBlock${queryStr}`,{
+      got(`${this.baseUrl}/dateToBlock${queryStr}`, {
         method: 'GET',
         headers: this.headers,
         json: true
       })
-      .then((res) => {return resolve(res.body.block as number)} )
-      .catch((err) => {reject(err)});
+        .then((res) => { return resolve(res.body.block as number) })
+        .catch((err) => { reject(err) });
 
-      
+
     });
   }
 
@@ -56,16 +56,16 @@ class MoralisClass implements IExternalProvider {
         headers: this.headers,
         json: true
       })
-      .then((res) => {
-        if (typeof res === 'string') {
-          return reject(new Error(res));
-        }
-        const tx = res.body;
-        return resolve(this._transformTransaction({ chain, network, ...tx }));
-      })
-      .catch((err) => {reject(err);});
+        .then((res) => {
+          if (typeof res === 'string') {
+            return reject(new Error(res));
+          }
+          const tx = res.body;
+          return resolve(this._transformTransaction({ chain, network, ...tx }));
+        })
+        .catch((err) => { reject(err); });
 
-      
+
     });
   }
 

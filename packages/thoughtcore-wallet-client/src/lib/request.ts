@@ -159,10 +159,10 @@ export class Request {
       } else {
         ret = new Error(
           body.code +
-            ': ' +
-            (_.isObject(body.message)
-              ? JSON.stringify(body.message)
-              : body.message)
+          ': ' +
+          (_.isObject(body.message)
+            ? JSON.stringify(body.message)
+            : body.message)
         );
       }
     } else {

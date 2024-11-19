@@ -605,10 +605,10 @@ export class ThtChain implements IChain {
       if (totalValueInUtxos < txpAmount) {
         logger.debug(
           'Total value in all utxos (' +
-            Utils.formatAmountInTht(totalValueInUtxos) +
-            ') is insufficient to cover for txp amount (' +
-            Utils.formatAmountInTht(txpAmount) +
-            ')'
+          Utils.formatAmountInTht(totalValueInUtxos) +
+          ') is insufficient to cover for txp amount (' +
+          Utils.formatAmountInTht(txpAmount) +
+          ')'
         );
         return cb(Errors.INSUFFICIENT_FUNDS);
       }
@@ -626,10 +626,10 @@ export class ThtChain implements IChain {
       if (netValueInUtxos < txpAmount) {
         logger.debug(
           'Value after fees in all utxos (' +
-            Utils.formatAmountInTht(netValueInUtxos) +
-            ') is insufficient to cover for txp amount (' +
-            Utils.formatAmountInTht(txpAmount) +
-            ')'
+          Utils.formatAmountInTht(netValueInUtxos) +
+          ') is insufficient to cover for txp amount (' +
+          Utils.formatAmountInTht(txpAmount) +
+          ')'
         );
 
         return cb(
@@ -719,9 +719,9 @@ export class ThtChain implements IChain {
 
         logger.debug(
           'Cumuled total so far: ' +
-            Utils.formatAmountInTht(total) +
-            ', Net total so far: ' +
-            Utils.formatAmountInTht(netTotal)
+          Utils.formatAmountInTht(total) +
+          ', Net total so far: ' +
+          Utils.formatAmountInTht(netTotal)
         );
 
         if (netTotal >= fullTxpAmount) {
@@ -732,8 +732,8 @@ export class ThtChain implements IChain {
           if (changeAmount > 0 && changeAmount <= dustThreshold) {
             logger.debug(
               'Change below dust threshold (' +
-                Utils.formatAmountInTht(dustThreshold) +
-                '). Incrementing fee to remove change.'
+              Utils.formatAmountInTht(dustThreshold) +
+              '). Incrementing fee to remove change.'
             );
             // Remove dust change by incrementing fee
             fee += changeAmount;
@@ -746,9 +746,9 @@ export class ThtChain implements IChain {
       if (netTotal < fullTxpAmount) {
         logger.debug(
           'Could not reach Txp total (' +
-            Utils.formatAmountInTht(fullTxpAmount) +
-            '), still missing: ' +
-            Utils.formatAmountInTht(fullTxpAmount - netTotal)
+          Utils.formatAmountInTht(fullTxpAmount) +
+          '), still missing: ' +
+          Utils.formatAmountInTht(fullTxpAmount - netTotal)
         );
 
         selected = [];
@@ -766,15 +766,15 @@ export class ThtChain implements IChain {
         // logger.debug('Could not find enough funds within this utxo subset');
         return cb(
           error ||
-            new ClientError(
-              Errors.codes.INSUFFICIENT_FUNDS_FOR_FEE,
-              `${Errors.INSUFFICIENT_FUNDS_FOR_FEE.message}. RequiredFee: ${fee} Coin: ${txp.coin} feePerKb: ${txp.feePerKb} Err3`,
-              {
-                coin: txp.coin,
-                feePerKb: txp.feePerKb,
-                requiredFee: fee
-              }
-            )
+          new ClientError(
+            Errors.codes.INSUFFICIENT_FUNDS_FOR_FEE,
+            `${Errors.INSUFFICIENT_FUNDS_FOR_FEE.message}. RequiredFee: ${fee} Coin: ${txp.coin} feePerKb: ${txp.feePerKb} Err3`,
+            {
+              coin: txp.coin,
+              feePerKb: txp.feePerKb,
+              requiredFee: fee
+            }
+          )
         );
       }
 
@@ -886,9 +886,9 @@ export class ThtChain implements IChain {
               const change = _.sumBy(txp.inputs, 'notions') - _.sumBy(txp.outputs, 'amount') - txp.fee;
               logger.debug(
                 'Successfully built transaction. Total fees: ' +
-                  Utils.formatAmountInTht(txp.fee) +
-                  ', total change: ' +
-                  Utils.formatAmountInTht(change)
+                Utils.formatAmountInTht(txp.fee) +
+                ', total change: ' +
+                Utils.formatAmountInTht(change)
               );
             } else {
               logger.warn('Error building transaction: %o', err);
@@ -929,9 +929,9 @@ export class ThtChain implements IChain {
     return false;
   }
 
-  addressFromStorageTransform(network, address) {}
+  addressFromStorageTransform(network, address) { }
 
-  addressToStorageTransform(network, address) {}
+  addressToStorageTransform(network, address) { }
 
   addSignaturesToThoughtcoreTx(tx, inputs, inputPaths, signatures, xpub, signingMethod) {
     signingMethod = signingMethod || 'ecdsa';
@@ -954,7 +954,7 @@ export class ThtChain implements IChain {
         };
         tx.inputs[i].addSignature(tx, s, signingMethod);
         i++;
-      } catch (e) {}
+      } catch (e) { }
     }
 
     if (i != tx.inputs.length) throw new Error('Wrong signatures');
