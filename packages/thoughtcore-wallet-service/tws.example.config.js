@@ -23,7 +23,7 @@ module.exports = {
   storageOpts: {
     mongoDb: {
       uri: 'mongodb://0.0.0.0:27017/tws',
-      dbname: 'bws'
+      dbname: 'tws'
     }
   },
   messageBrokerOpts: {
@@ -34,33 +34,33 @@ module.exports = {
   },
   blockchainExplorerOpts: {
     tht: {
+      mainnet: {
+        url: 'https://iapi.thought.live'
+      },
       livenet: {
-        url: 'https://api.thoughtcore.io'
+        url: 'https://iapi.thought.live'
       },
       testnet: {
-        url: 'https://api.thoughtcore.io',
+        url: 'https://iapi.thought.live',
         regtestEnabled: false
       },
       testnet3: {
-        url: 'https://api.thoughtcore.io'
-      },
-      signet: {
-        url: 'https://api.thoughtcore.io'
-      },
+        url: 'https://iapi.thought.live'
+      }
     },
     eth: {
       livenet: {
-        url: 'https://api-eth.thoughtcore.io'
+        url: 'https://iapi-eth.thought.live'
       },
       testnet: {
-        url: 'https://api-eth.thoughtcore.io',
+        url: 'https://iapi-eth.thought.live',
         regtestEnabled: false
       },
       sepolia: {
-        url: 'https://api-eth.thoughtcore.io'
+        url: 'https://iapi-eth.thought.live'
       },
       holesky: {
-        url: 'https://api-eth.thoughtcore.io'
+        url: 'https://iapi-eth.thought.live'
       },
     },
     socketApiKey: 'socketApiKey'
@@ -82,7 +82,7 @@ module.exports = {
   },
   services: {
     buyCrypto: {
-      disabled: false,
+      disabled: true,
       banxa: {
         disabled: false,
         removed: false
@@ -113,14 +113,14 @@ module.exports = {
       }
     },
     sellCrypto: {
-      disabled: false,
+      disabled: true,
       moonpay: {
         disabled: false,
         removed: false
       }
     },
     swapCrypto: {
-      disabled: false,
+      disabled: true,
       changelly: {
         disabled: false,
         removed: false

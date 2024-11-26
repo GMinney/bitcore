@@ -28,7 +28,8 @@ RUN npm i -g npm@10.9.3
 WORKDIR /thoughtcore
 
 # Add source
-COPY lerna.json ./
+# COPY lerna.json ./
+
 COPY package*.json ./
 
 COPY  ./packages/thoughtcore-client/package.json ./packages/thoughtcore-client/package.json
@@ -64,6 +65,6 @@ COPY  ./packages/crypto-wallet-core/package-lock.json ./packages/crypto-wallet-c
 
 
 RUN npm install --ignore-scripts
-RUN npm run bootstrap
+# Context is handled by docker-compose.yml in monorepo root
 ADD . .
 RUN npm run compile

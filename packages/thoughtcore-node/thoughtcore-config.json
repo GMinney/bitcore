@@ -17,6 +17,21 @@
             "password": "password"
           }
         },
+        "testnet": {
+          "chainSource": "p2p",
+          "trustedPeers": [
+            {
+              "host": "phi.thought.live",
+              "port": 11618
+            }
+          ],
+          "rpc": {
+            "host": "127.0.0.1",
+            "port": 11617,
+            "username": "username",
+            "password": "password"
+          }
+        },
         "regtest": {
           "chainSource": "p2p",
           "trustedPeers": [

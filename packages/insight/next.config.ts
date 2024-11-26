@@ -3,6 +3,7 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   /* config options here */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  output: "standalone",
   webpack: (config: any) => {
     // Add fallbacks for Node.js core modules
     config.resolve.fallback = {

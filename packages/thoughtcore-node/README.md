@@ -121,8 +121,8 @@ The definition for all the chain configuration can be found in `src/types/Config
 # if using Thought Core v0.17+ prefix
 # [main]
 
-port=20008
-rpcport=20009
+#port=20008
+#rpcport=20009
 rpcallowip=127.0.0.1
 
 rpcuser=username

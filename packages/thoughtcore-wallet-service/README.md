@@ -130,7 +130,7 @@ The are plenty example creating and sending proposals in the `/test/integration`
 blockchainExplorerOpts: {
     tht: {
       livenet: {
-        url: 'https://api.thoughtcore.io'
+        url: 'https://tapi.thought.live'
       },
       testnet: {
         // set url to http://localhost:3000 here
@@ -138,7 +138,8 @@ blockchainExplorerOpts: {
         // set regtestEnabled to true here
         regtestEnabled: true
       }
-    },
+    }
+}
 ...
 ```
 
