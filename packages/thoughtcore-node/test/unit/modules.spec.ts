@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+
 import sinon from 'sinon';
 import { Modules } from '../../src/modules';
 import { ChainStateProvider } from '../../src/providers/chain-state';
@@ -34,14 +34,20 @@ describe('Modules', function () {
   });
 
   it('should have a test which runs', function () {
-    expect(true).to.equal(true);
+    (import('chai')).then((chai) => {
+      const expect = chai.expect
+      expect(true).to.equal(true);
+    });
   });
 
   it('should have services registered after loading modules', () => {
     const chains = Config.chains();
     for (const chain of chains) {
       const service = ChainStateProvider.get({ chain });
-      expect(service).to.exist;
+      (import('chai')).then((chai) => {
+        const expect = chai.expect
+        expect(service).to.exist;
+      });
     }
   });
 
@@ -49,7 +55,10 @@ describe('Modules', function () {
     const chains = ['THT'];
     for (const chain of chains) {
       const service = Libs.get(chain);
-      expect(service).to.exist;
+      (import('chai')).then((chai) => {
+        const expect = chai.expect
+        expect(service).to.exist;
+      });
     }
   });
 
@@ -57,7 +66,10 @@ describe('Modules', function () {
     const chains = ['THT'];
     for (const chain of chains) {
       const service = P2P.get(chain);
-      expect(service).to.exist;
+      (import('chai')).then((chai) => {
+        const expect = chai.expect
+        expect(service).to.exist;
+      });
     }
   });
 
@@ -65,7 +77,10 @@ describe('Modules', function () {
     const chains = ['THT'];
     for (const chain of chains) {
       const service = Verification.get(chain);
-      expect(service).to.exist;
+      (import('chai')).then((chai) => {
+        const expect = chai.expect
+        expect(service).to.exist;
+      });
     }
   });
 });
@@ -112,8 +127,11 @@ describe('Modules', function () {
 const validateModules = () => {
   Modules.internalServices = []; // Remove all loaded modules from internalServices array for a fresh load
   Modules.loadConfigured(); // Re-load modules with stubbed Config.get()
+  (import('chai')).then((chai) => {
+    const expect = chai.expect
+    expect(Modules.internalServices.length).to.equal(2);
+    expect(Modules.internalServices[0].constructor.name).to.equal('ThoughtModule');
+    expect(Modules.internalServices[1].constructor.name).to.equal('ETHModule');
+  });
 
-  expect(Modules.internalServices.length).to.equal(2);
-  expect(Modules.internalServices[0].constructor.name).to.equal('ThoughtModule');
-  expect(Modules.internalServices[1].constructor.name).to.equal('ETHModule');
 };

@@ -1,7 +1,9 @@
-export const SUPPORTED_CURRENCIES = ['THT', 'ETH'];
+export const SUPPORTED_CURRENCIES = ['THT'];
 // export const SUPPORTED_CURRENCIES = ['THT', 'tTHT'];
-export const API_ROOT = 'https://api.thoughtcore.io/api';
-export const API_ROOT_ETH = 'https://api-eth.thoughtcore.io/api';
+export const API_ROOT = 'http://localhost:3000/api';
+export const API_ROOT_ETH = 'https://exp2-eth.thought.live/api';
+//export const API_ROOT = 'https://exp2.thought.live/api';
+//export const API_ROOT_ETH = 'https://exp2-eth.thought.live/api';
 export const ETH_DEFAULT_REFRESH_INTERVAL = 300000;
 export const UTXO_DEFAULT_REFRESH_INTERVAL = 600000;
 export const COIN = 100000000;
@@ -9,8 +11,7 @@ export const DEFAULT_RBF_SEQ_NUMBER = 0xffffffff;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const colorCodes: any = {
-  ETH: '#6B71D6',
-  THT: '#2222FF'
+  THT: '#0A0945'
 };
 
 // Media breakpoints

@@ -169,10 +169,9 @@ addNetwork({
   pubkeyhash: 0x07,
   privatekey: 0x7b,
   scripthash: 0x09,
-  bech32prefix: 'bc',
   xpubkey: 0xfbc6a00d,
   xprivkey: 0x5aebd8c6,
-  networkMagic: 0xf9beb4d9,
+  networkMagic: 0x59472ee4,
   port: 10618,
   dnsSeeds: [
     'phee.thought.live',
@@ -189,15 +188,14 @@ addNetwork({
 
 addNetwork({
   name: 'test',
-  alias: 'testnet3',
+  alias: 'testnet',
   is,
   pubkeyhash: 0x6d,
   privatekey: 0xeb,
   scripthash: 0xc1,
-  bech32prefix: 'tb',
   xpubkey: 0x5d405f7a,
   xprivkey: 0xb6f13f50,
-  networkMagic: 0x59472ee4,
+  networkMagic: 0x2b9939bf,
   port: 11618,
   dnsSeeds: [
     'testnet.phee.thought.live'
@@ -210,28 +208,6 @@ addNetwork({
  */
 var testnet = get('testnet');
 
-
-addNetwork({
-  name: 'dev',
-  alias: 'dev',
-  is,
-  pubkeyhash: 0x6f,
-  privatekey: 0xef,
-  scripthash: 0xc4,
-  bech32prefix: 'bcrt',
-  xpubkey: 0x043587cf,
-  xprivkey: 0x04358394,
-  networkMagic: 0xfabfb5da,
-  port: 12617,
-  dnsSeeds: []
-});
-
-/**
- * @instance
- * @member Networks#dev
- */
-var dev = get('dev');
-
 addNetwork({
   name: 'regtest',
   alias: 'regtest',
@@ -239,7 +215,6 @@ addNetwork({
   pubkeyhash: 0x6f,
   privatekey: 0xef,
   scripthash: 0xc4,
-  bech32prefix: 'bcrt',
   xpubkey: 0x043587cf,
   xprivkey: 0x04358394,
   networkMagic: 0xfabfb5da,

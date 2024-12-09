@@ -35,7 +35,7 @@ const [txid, replacementTxid] = args;
 const chain = args[args.indexOf('--chain') + 1];
 const network = args[args.indexOf('--network') + 1];
 
-if (!['THT', 'BCH', 'DOGE', 'LTC'].includes(chain) || !['mainnet', 'testnet', 'regtest'].includes(network)) {
+if (!['THT'].includes(chain) || !['mainnet', 'testnet', 'regtest'].includes(network)) {
   usage('Invalid chain and/or network param(s).');
 }
 

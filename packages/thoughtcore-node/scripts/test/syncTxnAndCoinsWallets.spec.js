@@ -1,6 +1,5 @@
 'use strict';
 
-const { expect } = require('chai');
 const { execSync } = require('child_process');
 const { ObjectId } = require('mongodb');
 const { Storage } = require('../../build/src/services/storage');
@@ -44,7 +43,10 @@ describe('syncTxnAndCoinsWallets', function () {
             console.log(tx.txid, txWalletStrings, c.wallets.map(w => w.toString()));
             console.log(buf.toString());
           }
-          expect(txWalletStrings.includes(w.toString())).to.be.true;
+          (import('chai')).then((chai) => {
+            const expect = chai.expect
+            expect(txWalletStrings.includes(w.toString())).to.be.true;
+          });
         }
       }
     }
@@ -60,7 +62,7 @@ async function setupDb() {
     const c = CoinStorage.collection.insertMany(tx.COINS);
     promises.push(c);
     delete tx.COINS;
-    const t = TransactionStorage.collection.insert(tx);
+    const t = TransactionStorage.collection.insertOne(tx);
     promises.push(t);
   }
   return Promise.all(promises);

@@ -39,6 +39,6 @@ const stop = async () => {
   }, 30 * 1000).unref();
 };
 
-if (require.main === module) {
-  PruningWorker();
-}
+// if (require.main === module) {
+//   PruningWorker();
+// }

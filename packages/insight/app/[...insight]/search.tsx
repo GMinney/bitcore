@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import { Black, LightBlack, NeutralSlate, Slate30 } from '@/assets/styles/colors';
 import Image from 'next/image';
+import ThoughtLogo from '@/assets/images/thought_coin_bird_blue2.svg';
 
 const SearchTile = styled.div`
   margin: 0.5rem 0;
@@ -95,10 +96,10 @@ const Search: React.FC = () => {
                           <HeaderImg>
 
                             <Image
-                              src={`https://thoughtnetwork.com/img/icon/currencies/${chain}.svg`}
+                              src={ThoughtLogo.src}
                               width={35}
                               height={35}
-                              alt='currency logo'
+                              alt='Thought coin logo'
                             />
                           </HeaderImg>
 
@@ -136,7 +137,7 @@ const Search: React.FC = () => {
                           <HeaderImg>
 
                             <Image
-                              src={`https://thoughtnetwork.com/img/icon/currencies/${chain}.svg`}
+                              src={ThoughtLogo.src}
                               width={35}
                               height={35}
                               alt='currency logo'
@@ -174,7 +175,7 @@ const Search: React.FC = () => {
                       <SearchTileHeader>
                         <HeaderImg>
                           <Image
-                            src={`https://thoughtnetwork.com/img/icon/currencies/${chain}.svg`}
+                            src={ThoughtLogo.src}
                             width={35}
                             height={35}
                             alt='currency logo'

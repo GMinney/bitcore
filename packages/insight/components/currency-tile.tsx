@@ -12,6 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import { useApi } from '@/api/api';
 import { Error, SlateDark, White } from '@/assets/styles/colors';
 
+import ThoughtCoin from '@/assets/images/thought_coin_bird_blue2.svg';
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -38,7 +40,7 @@ ChartJS.register(
 const gutter = '1.5rem';
 
 const LightBackground: { [key in string]: string } = {
-  THT: '#FFF1E0',
+  THT: '#e0e4ff',
   BCH: '#EFFFF6',
   ETH: '#EBECF6',
   LTC: '#FAFAFA',
@@ -46,7 +48,7 @@ const LightBackground: { [key in string]: string } = {
 };
 
 const DarkBackground: { [key in string]: string } = {
-  THT: '#0C0700',
+  THT: '#00040c',
   BCH: '#020A05',
   ETH: '#06070F',
   LTC: '#0A0A0A',
@@ -133,10 +135,12 @@ const CurrencyTile: FC<CurrencyTileProps> = ({ currency }) => {
 
   const url = `${apiRoot}/${currency}/mainnet/block?limit=1`;
   const { data, error } = useApi(url, { refreshInterval });
-  const { data: priceDetails } = useApi(`https://thoughtnetwork.com/rates/${currency}/usd`);
+  const { data: priceDetails } = useApi(`https://exp2.thought.live.com/rates/${currency}/usd`);
   const { data: priceDisplay } = useApi(
-    `https://thoughtnetwork.com/currencies/prices?currencyPairs=["${currency}:USD"]`,
+    `https://exp2.thought.live.com/currencies/prices?currencyPairs=["${currency}:USD"]`,
   );
+
+  // NEED TO WRITE COINMETRO LOGIC FOR PARSING PRICE AND DETERMINE JSON STRUCT FOR priceDetails and priceDisplay
 
   if (priceDetails?.data) {
     const {
@@ -178,7 +182,7 @@ const CurrencyTile: FC<CurrencyTileProps> = ({ currency }) => {
     // return <Navigate to={`/insight/${currency}/mainnet/blocks`} replace={true} />
   };
 
-  const imgSrc = `https://thoughtnetwork.com/img/icon/currencies/${currency}.svg`;
+  const imgSrc = `https://exp2.thought.live.com/img/icon/currencies/${currency}.svg`;
 
   const chartData = {
     labels: priceList,
@@ -217,7 +221,7 @@ const CurrencyTile: FC<CurrencyTileProps> = ({ currency }) => {
   return (
     <CurrencyTileDiv $currency={currency} onClick={gotoAllBlocks} key={currency}>
       <CurrencyTileHeader>
-        <Image src={imgSrc} width={35} height={35} alt={currency + ' logo'} />
+        <Image src={ThoughtCoin.src} width={35} height={35} alt={currency + ' logo'} />
         <div>
           <CurrencyName>{currency}</CurrencyName>
           {price && <CurrencyPrice>{price} USD</CurrencyPrice>}

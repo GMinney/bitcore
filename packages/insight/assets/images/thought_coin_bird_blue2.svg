@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 903.8 904">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: #fff;
+      }
+
+      .cls-3, .cls-4 {
+        fill: none;
+      }
+
+      .cls-5 {
+        fill: url(#radial-gradient);
+      }
+
+      .cls-6 {
+        clip-path: url(#clippath-1);
+      }
+
+      .cls-7 {
+        isolation: isolate;
+      }
+
+      .cls-4 {
+        clip-path: url(#clippath);
+      }
+
+      .cls-8 {
+        mix-blend-mode: multiply;
+        opacity: .1;
+      }
+
+      .cls-2 {
+        opacity: .6;
+      }
+
+      .cls-9 {
+        fill: #0a0945;
+      }
+    </style>
+    <radialGradient id="radial-gradient" cx="451.9" cy="452" fx="451.9" fy="452" r="452" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#14c7e3" stop-opacity=".5"/>
+      <stop offset="1" stop-color="#14c7e3" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="clippath">
+      <path class="cls-3" d="M561.2,13.5C319.1-46.8,73.9,100.5,13.5,342.7c-60.4,242.1,87,487.4,329,547.7,242.2,60.4,487.4-87,547.8-329.1,60.4-242.1-87-487.4-329.1-547.8Z"/>
+    </clipPath>
+    <clipPath id="clippath-1">
+      <path class="cls-4" d="M561.2,13.5C319.1-46.8,73.9,100.5,13.5,342.7c-60.4,242.1,87,487.4,329,547.7,242.2,60.4,487.4-87,547.8-329.1,60.4-242.1-87-487.4-329.1-547.8Z"/>
+    </clipPath>
+  </defs>
+  <!-- Generator: Adobe Illustrator 28.6.0, SVG Export Plug-In . SVG Version: 1.2.0 Build 709)  -->
+  <g class="cls-7">
+    <g id="svg2" inkscape:version="0.48.2 r9819" sodipodi:docname="thought-logo-noshadow.svg">
+      <g>
+        <path class="cls-9" d="M561.2,13.5C319.1-46.8,73.9,100.5,13.5,342.7c-60.4,242.1,87,487.4,329,547.7,242.2,60.4,487.4-87,547.8-329.1,60.4-242.1-87-487.4-329.1-547.8Z"/>
+        <path class="cls-5" d="M561.2,13.5C319.1-46.8,73.9,100.5,13.5,342.7c-60.4,242.1,87,487.4,329,547.7,242.2,60.4,487.4-87,547.8-329.1,60.4-242.1-87-487.4-329.1-547.8Z"/>
+      </g>
+      <g class="cls-6">
+        <g>
+          <image class="cls-8" width="672" height="708" transform="translate(46.9 223)" xlink:href="thought_coin_bird_blue2-1.png"/>
+          <g>
+            <polygon class="cls-2" points="489.9 239.2 526.8 198 667.9 227.8 630.9 269 489.9 239.2"/>
+            <polygon class="cls-1" points="675.7 406 630.9 269 667.9 227.8 712.7 364.8 675.7 406"/>
+          </g>
+          <g>
+            <polygon class="cls-2" points="490.3 438 527.3 396.8 668.3 426.6 631.4 467.8 490.3 438"/>
+            <polygon class="cls-1" points="676.1 604.8 631.4 467.8 668.3 426.6 713.1 563.6 676.1 604.8"/>
+          </g>
+          <g>
+            <polygon class="cls-2" points="490.3 708.5 527.3 667.3 668.3 697.1 631.4 738.2 490.3 708.5"/>
+            <polygon class="cls-1" points="676.1 875.3 631.4 738.2 668.3 697.1 713.1 834.1 676.1 875.3"/>
+          </g>
+          <g>
+            <polygon class="cls-2" points="72.8 290.8 109.8 249.6 250.8 279.3 213.9 320.5 72.8 290.8"/>
+            <polygon class="cls-1" points="258.6 457.6 213.9 320.5 250.8 279.3 295.6 416.4 258.6 457.6"/>
+          </g>
+          <g>
+            <polygon class="cls-2" points="291.8 262.5 328.8 221.3 469.9 251 432.9 292.2 291.8 262.5"/>
+            <polygon class="cls-1" points="477.7 429.3 432.9 292.2 469.9 251 514.6 388.1 477.7 429.3"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

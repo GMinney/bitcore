@@ -59,6 +59,6 @@ const stop = async () => {
   }, 30 * 1000).unref();
 };
 
-if (require.main === module) {
-  FullClusteredWorker();
-}
+// if (require.main === module) {
+//   FullClusteredWorker();
+// }

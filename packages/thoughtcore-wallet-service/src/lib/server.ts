@@ -302,9 +302,9 @@ export class WalletService implements IWalletService {
     opts = opts || {};
 
     const version = Utils.parseVersion(opts.clientVersion);
-    if (version && version.agent === 'bwc') {
+    if (version && version.agent === 'twc') {
       if (version.major === 0 || (version.major === 1 && version.minor < 2)) {
-        throw new ClientError(Errors.codes.UPGRADE_NEEDED, 'BWC clients < 1.2 are no longer supported.');
+        throw new ClientError(Errors.codes.UPGRADE_NEEDED, 'TWC clients < 1.2 are no longer supported.');
       }
     }
 

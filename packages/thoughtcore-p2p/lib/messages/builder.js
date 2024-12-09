@@ -19,7 +19,7 @@ function builder(options) {
   options.BlockHeader = options.BlockHeader || thoughtcore.BlockHeader;
   options.Transaction = options.Transaction || thoughtcore.Transaction;
   options.MerkleBlock = options.MerkleBlock || thoughtcore.MerkleBlock;
-  options.protocolVersion = options.protocolVersion || 70001;
+  options.protocolVersion = options.protocolVersion || 70210;
 
   var exported = {
     constructors: {

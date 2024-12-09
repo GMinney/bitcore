@@ -6,58 +6,27 @@ import { fetcher } from '@/api/api';
 const inputTypes: InputType[] = [
   // Standard THT / Legacy BCH address
   {
-    regexes: [/^(thought:)?([13][a-km-zA-HJ-NP-Z1-9]{25,34})/],
+    regexes: [/^(thought:)?([43][a-km-zA-HJ-NP-Z1-9]{25,34})/],
     dataIndex: 2,
     type: 'address',
     chainNetworks: [{ chain: 'THT', network: 'mainnet' }],
   },
   // Standard THT / Legacy BCH address
   {
-    regexes: [/^(thoughtcash:)?([13][a-km-zA-HJ-NP-Z1-9]{25,34})/],
+    regexes: [/^(thoughtcash:)?([43][a-km-zA-HJ-NP-Z1-9]{25,34})/],
     dataIndex: 2,
     type: 'address',
     chainNetworks: [{ chain: 'BCH', network: 'mainnet' }],
-  },
-  // bech32 THT Address
-  {
-    regexes: [/^(thought:)?(bc1[ac-hj-np-zAC-HJ-NP-Z02-9]{11,71})/],
-    dataIndex: 2,
-    type: 'address',
-    chainNetworks: [{ chain: 'THT', network: 'mainnet' }],
-  },
-  // Standard BCH Address
-  {
-    regexes: [/^(thoughtcash:)?([qp][a-z0-9]{41})$/, /^(THOUGHTCASH:)?([QP][A-Z0-9]{41})/],
-    dataIndex: 2,
-    type: 'address',
-    chainNetworks: [{ chain: 'BCH', network: 'mainnet' }],
-  },
-  //  LTC Address
-  {
-    regexes: [/^(litecoin:)?([LM3][a-km-zA-HJ-NP-Z1-9]{26,33}$)/],
-    dataIndex: 2,
-    type: 'address',
-    chainNetworks: [{ chain: 'LTC', network: 'mainnet' }],
   },
 
-  // Testnet THT / BCH / Doge / LTC Address
+  // Testnet THT Address
   {
-    regexes: [/^(thought:|bchtest:|dogecoin:|litecoin:)?([2mn][1-9A-HJ-NP-Za-km-z]{26,35})/],
+    regexes: [/^(thought:)?([mt][1-9A-HJ-NP-Za-km-z]{26,35})/],
     dataIndex: 2,
     type: 'address',
     chainNetworks: [
       { chain: 'THT', network: 'testnet' },
-      { chain: 'BCH', network: 'testnet' },
-      { chain: 'DOGE', network: 'testnet' },
-      { chain: 'LTC', network: 'testnet' },
     ],
-  },
-  // Testnet BCH Address
-  {
-    regexes: [/^(bchtest:)?([qp][a-z0-9]{41})$/, /^(BCHTEST:)?([QP][A-Z0-9]{41})/],
-    dataIndex: 2,
-    type: 'address',
-    chainNetworks: [{ chain: 'BCH', network: 'testnet' }],
   },
   // ETH Address
   {
@@ -68,26 +37,14 @@ const inputTypes: InputType[] = [
       { chain: 'ETH', network: 'testnet' },
     ],
   },
-  // Doge Address
-  {
-    regexes: [/^(dogecoin:)?(D[5-9A-HJ-NP-U][1-9A-HJ-NP-Za-km-z]{32})/],
-    dataIndex: 2,
-    type: 'address',
-    chainNetworks: [{ chain: 'DOGE', network: 'mainnet' }],
-  },
-  // THT / BCH / DOGE / LTC block or tx
+  // THT block or tx
   {
     regexes: [/^[A-Fa-f0-9]{64}$/],
     type: 'blockOrTx',
     chainNetworks: [
       { chain: 'THT', network: 'mainnet' },
-      { chain: 'BCH', network: 'mainnet' },
-      { chain: 'DOGE', network: 'mainnet' },
-      { chain: 'LTC', network: 'mainnet' },
       { chain: 'THT', network: 'testnet' },
-      { chain: 'BCH', network: 'testnet' },
-      { chain: 'DOGE', network: 'testnet' },
-      { chain: 'LTC', network: 'testnet' },
+
     ],
   },
   // ETH block or tx
@@ -99,21 +56,14 @@ const inputTypes: InputType[] = [
       { chain: 'ETH', network: 'testnet' },
     ],
   },
-  // THT / BCH / DOGE / ETH block height
+  // THT / ETH block height
   {
     regexes: [/^[0-9]{1,9}$/],
     type: 'block',
     chainNetworks: [
       { chain: 'THT', network: 'mainnet' },
-      { chain: 'BCH', network: 'mainnet' },
-      { chain: 'DOGE', network: 'mainnet' },
-      { chain: 'ETH', network: 'mainnet' },
-      { chain: 'LTC', network: 'mainnet' },
       { chain: 'THT', network: 'testnet' },
-      { chain: 'BCH', network: 'testnet' },
-      { chain: 'DOGE', network: 'testnet' },
-      { chain: 'ETH', network: 'testnet' },
-      { chain: 'LTC', network: 'testnet' },
+
     ],
   },
 ];

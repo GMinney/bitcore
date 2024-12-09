@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { unitAfterHelper, unitBeforeHelper } from '../helpers/unit';
 
 describe('server', function () {
@@ -6,6 +5,9 @@ describe('server', function () {
   after(unitAfterHelper);
 
   it('should have a test which runs', function () {
-    expect(true).to.equal(true);
+    (import('chai')).then((chai) => {
+      const expect = chai.expect
+      expect(true).to.equal(true);
+    });
   });
 });

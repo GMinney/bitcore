@@ -21,8 +21,8 @@ function AlertMessage(arg, options) {
   if (!arg) {
     arg = {};
   }
-  this.payload = arg.payload || new Buffer(32);
-  this.signature = arg.signature || new Buffer(32);
+  this.payload = arg.payload || Buffer.from(32);
+  this.signature = arg.signature || Buffer.from(32);
 }
 inherits(AlertMessage, Message);
 

@@ -113,8 +113,7 @@ const Layout = ({ children }: { children?: ReactNode }) => {
 
 
   return (
-    <div>
-
+    <>
       <Header setSearchError={setSearchError} />
       <BodyContainer>
         {isHomePage() && (
@@ -170,7 +169,7 @@ const Layout = ({ children }: { children?: ReactNode }) => {
       <motion.div variants={fadeIn} animate='animate' initial='initial'>
         <Footer />
       </motion.div>
-    </div>
+    </>
   );
 };
 export default memo(Layout);

@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import { expect } from 'chai';
 import config from '../../src/config';
 import logger from '../../src/logger';
 import { ThoughtBlockStorage, IThtBlock } from '../../src/models/block';
@@ -23,6 +22,7 @@ export async function blocks(
     port: number | string;
   }
 ) {
+  const expect = (await import('chai')).expect;
   const rpc = new AsyncRPC(creds.username, creds.password, creds.host, creds.port);
   const tip = await ChainStateProvider.getLocalTip({ chain: info.chain, network: info.network });
   const heights = new Array(tip!.height).fill(false);
@@ -153,7 +153,7 @@ export async function transactions(
   }
 ) {
   const rpc = new AsyncRPC(creds.username, creds.password, creds.host, creds.port);
-
+  const expect = (await import('chai')).expect;
   const txcursor = TransactionStorage.collection.find({
     chain: info.chain,
     network: info.network
@@ -229,13 +229,19 @@ export async function transactions(
   }
 }
 
-if (require.main === module)
+if (require.main === module) {
   (async () => {
     const info = {
       chain: process.env.CHAIN || 'THT',
       network: process.env.NETWORK || 'testnet'
     };
-    const creds = (config.chains[info.chain][info.network] as IUtxoNetworkConfig).rpc;
+    const chainConfig = config.chains[info.chain][info.network] as IUtxoNetworkConfig;
+    const creds = chainConfig.rpc;
+    if (!chainConfig) {
+      logger.error('Invalid chain or network configuration');
+      process.exit(1);
+    }
+
 
     await Storage.start({});
     logger.info('verifying blocks');
@@ -247,3 +253,4 @@ if (require.main === module)
     logger.error('%o', err);
     process.exit(1);
   });
+}

@@ -46,7 +46,7 @@ const Footer = () => {
           <Image
             src={theme.dark ? ThoughtLogoDark.src : ThoughtLogoLight.src}
             alt='Thought logo'
-            onClick={() => window.open('https://thoughtnetwork.com', '_blank')}
+            onClick={() => window.open('https://thought.live', '_blank')}
             fill={true}
           />
         </div>

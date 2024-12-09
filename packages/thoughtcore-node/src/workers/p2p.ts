@@ -63,6 +63,6 @@ const stop = async () => {
   }, 30 * 1000).unref();
 };
 
-if (require.main === module) {
-  P2pWorker();
-}
+// if (require.main === module) {
+//   P2pWorker();
+// }
