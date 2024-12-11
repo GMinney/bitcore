@@ -1,4 +1,4 @@
-const ThoughtcoreLib = require('thoughtcore-lib');
+import ThoughtcoreLib from 'thoughtcore-lib';
 import { IDeriver } from '..';
 
 export abstract class AbstractThoughtcoreLibDeriver implements IDeriver {

@@ -1,12 +1,9 @@
-# syntax=docker/dockerfile:1
 
-ARG NODE_VERSION=18.0.0
 
-FROM node:${NODE_VERSION}-alpine
+FROM node:18-bullseye
 
 # Use production node environment by default.
 # ENV NODE_ENV production
-
 
 WORKDIR /insight
 

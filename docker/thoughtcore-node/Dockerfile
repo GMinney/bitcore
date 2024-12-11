@@ -23,12 +23,12 @@ RUN set -x \
     && google-chrome --version
 
 
-RUN npm i -g npm@10.9.3
+RUN npm i -g npm@10.9.2
 
 WORKDIR /thoughtcore
 
 # Add source
-# COPY lerna.json ./
+COPY lerna.json ./
 
 COPY package*.json ./
 

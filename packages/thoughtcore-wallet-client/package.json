@@ -39,24 +39,24 @@
     "source-map-loader": "5.0.0",
     "source-map-support": "0.5.21",
     "superagent": "10.1.0",
-    "typescript": "5.5.4"
+    "typescript": "5.7.2"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.7",
-    "@types/node": "^22.5.0",
+    "@types/node": "22.10.1",
     "thoughtcore-wallet-service": "file:../thoughtcore-wallet-service",
     "browserify": "^17.0.0",
-    "chai": "^5.1.1",
+    "chai": "5.1.1",
     "nyc": "17.0.0",
     "kbpgp": "^2.1.15",
-    "mocha": "^10.7.3",
-    "mongodb": "^6.8.0",
+    "mocha": "11.0.1",
+    "mongodb": "6.8.0",
     "prettier": "^3.3.3",
     "got": "14.4.2",
     "sinon": "^18.0.0",
-    "supertest": "*",
+    "supertest": "7.0.0",
     "ts-node": "^10.9.2",
-    "typescript-eslint": "8.3.0",
+    "typescript-eslint": "8.18.0",
     "uuid": "^10.0.0"
   },
   "scripts": {

@@ -42,9 +42,9 @@
     "assert": "^2.1.0",
     "thoughtcore-build": "file:../thoughtcore-build",
     "brfs": "^2.0.2",
-    "chai": "^5.1.1",
+    "chai": "5.1.1",
     "gulp": "^5.0.0",
-    "mocha": "^10.7.3"
+    "mocha": "11.0.1"
   },
   "dependencies": {
     "thoughtcore-lib": "file:../thoughtcore-lib",

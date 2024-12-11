@@ -45,14 +45,14 @@
     "bn.js": "=5.2.1",
     "bs58": "^6.0.0",
     "buffer-compare": "=1.1.1",
-    "elliptic": "^6.5.7",
+    "elliptic": "6.6.1",
     "inherits": "=2.0.4",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
     "thoughtcore-build": "file:../thoughtcore-build",
     "brfs": "^2.0.2",
-    "chai": "^5.1.1",
+    "chai": "5.1.1",
     "gulp": "^5.0.0",
     "sinon": "^18.0.0"
   },
