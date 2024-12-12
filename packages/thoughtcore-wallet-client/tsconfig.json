@@ -12,6 +12,7 @@
     "declaration": true,
     "declarationMap": true,
     "module": "commonjs",
+    "skipLibCheck": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,

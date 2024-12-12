@@ -6,9 +6,9 @@ describe('logger', function () {
   after(unitAfterHelper);
 
   it('should have a test which runs', function () {
-
-    (import('chai')).then(() => {
-      chai.expect(true).to.equal(true);
+    (import('chai')).then((chai) => {
+      const expect = chai.expect
+      expect(true).to.equal(true);
     });
   });
 });

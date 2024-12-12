@@ -22,7 +22,7 @@ Currently we have the following features
 
 ### Wallet Create
 
-No baseUrl flag will automatically create a wallet that points to https://api.thoughtcore.io/api.
+No baseUrl flag will automatically create a wallet that points to https://exp2.thought.live/api.
 
 ```sh
 ./wallet-create --name TestWalletTHT --chain THT --network mainnet
@@ -39,7 +39,7 @@ To create a wallet to point to local thoughtcore-node.
 Register an existing wallet to point to custom Thoughtcore API url.
 
 ```sh
-./wallet-register --name myregtestwallet --baseUrl https://api.thoughtcore.io/api
+./wallet-register --name myregtestwallet --baseUrl https://exp2.thought.live/api
 ```
 
 Or a local Thoughtcore-node

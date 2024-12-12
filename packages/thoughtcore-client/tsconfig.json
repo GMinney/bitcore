@@ -11,13 +11,14 @@
     "declarationMap": true,
     "module": "ESNext",
     "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "target": "ES6",
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
+    // "typeRoots": [
+    //   "./node_modules/@types"
+    // ],
     "baseUrl": ".",
     "paths": {
       "*": [

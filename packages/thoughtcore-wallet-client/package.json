@@ -44,6 +44,7 @@
   "devDependencies": {
     "@types/lodash": "^4.17.7",
     "@types/node": "22.10.1",
+    "@types/mocha": "10.0.10",
     "thoughtcore-wallet-service": "file:../thoughtcore-wallet-service",
     "browserify": "^17.0.0",
     "chai": "5.1.1",

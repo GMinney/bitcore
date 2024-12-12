@@ -39,6 +39,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@types/mocha": "10.0.10",
     "assert": "^2.1.0",
     "thoughtcore-build": "file:../thoughtcore-build",
     "brfs": "^2.0.2",

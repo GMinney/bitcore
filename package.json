@@ -1,13 +1,10 @@
 {
+  "name": "thoughtcore-monorepo",
+  "workspaces": ["packages/*"],
   "version": "8.25.8",
-  "prettier": {
-    "singleQuote": true,
-    "printWidth": 120
-  },
   "scripts": {
     "build": "docker build -t thoughtcore-node . ",
     "watch": "./node_modules/.bin/lerna run watch --parallel",
-    "bootstrap": "./node_modules/.bin/lerna bootstrap",
     "insight:build": "cd ./packages/insight && npm i && npm run build",
     "node": "cd packages/thoughtcore-node && npm start",
     "tws": "cd packages/thoughtcore-wallet-service && npm start",
@@ -61,27 +58,29 @@
       "path": "node_modules/cz-customizable"
     }
   },
-  "devDependencies": {
-    "cz-customizable": "^7.2.1",
-    "eslint-plugin-import": "^2.29.1",
-    "husky": "^9.1.5",
-    "tslint": "^5.20.1",
-    "tslint-config-prettier": "^1.18.0",
-    "lint-staged": "^15.2.9",
-    "prettier": "^3.3.3",
-    "typedoc": "^0.26.6",
-    "typescript-eslint": "8.3.0"
-  },
-  "dependencies": {
-    "@types/got": "9.6.12",
-    "lerna": "^8.1.9",
-    "typescript": "5.5.4"
+  "prettier": {
+    "singleQuote": true,
+    "printWidth": 120
   },
   "husky": {
     "hooks": {
       "pre-commit": "npm run precommit"
     }
   },
-  "name": "thoughtcore-monorepo",
-  "workspaces": ["packages/*"]
+  "devDependencies": {
+    "cz-customizable": "^7.2.1",
+    "eslint-plugin-import": "^2.29.1",
+    "husky": "^9.1.5",
+    "tslint": "6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "lint-staged": "^15.2.9",
+    "prettier": "^3.3.3",
+    "typedoc": "^0.27.4",
+    "typescript-eslint": "8.3.0"
+  },
+  "dependencies": {
+    "@types/got": "9.6.12",
+    "lerna": "^8.1.9",
+    "typescript": "5.7.2"
+  }
 }

@@ -1,6 +1,7 @@
 # Dockerfile for thoughtcore-node build found in docker-compose.yml
 
-FROM node:18-bullseye
+FROM node:23-bullseye
+
 
 # Install Chrome
 
@@ -15,6 +16,7 @@ RUN set -x \
 
 ENV CHROME_BIN /usr/bin/google-chrome
 
+
 # Log versions
 
 RUN set -x \
@@ -23,48 +25,50 @@ RUN set -x \
     && google-chrome --version
 
 
+# Install npm version
+
 RUN npm i -g npm@10.9.2
+
+
+# Set container working directory to /thoughtcore
 
 WORKDIR /thoughtcore
 
-# Add source
-COPY lerna.json ./
 
-COPY package*.json ./
+# Add sources, Context is handled by docker-compose.yml in monorepo root
 
-COPY  ./packages/thoughtcore-client/package.json ./packages/thoughtcore-client/package.json
-COPY  ./packages/thoughtcore-client/package-lock.json ./packages/thoughtcore-client/package-lock.json
+ADD . .
 
-COPY  ./packages/thoughtcore-build/package.json ./packages/thoughtcore-build/package.json
-COPY  ./packages/thoughtcore-build/package-lock.json ./packages/thoughtcore-build/package-lock.json
+# COPY lerna.json ./
 
-COPY  ./packages/thoughtcore-lib/package.json ./packages/thoughtcore-lib/package.json
-COPY  ./packages/thoughtcore-lib/package-lock.json ./packages/thoughtcore-lib/package-lock.json
+# COPY package*.json ./
 
-COPY  ./packages/thoughtcore-mnemonic/package.json ./packages/thoughtcore-mnemonic/package.json
-COPY  ./packages/thoughtcore-mnemonic/package-lock.json ./packages/thoughtcore-mnemonic/package-lock.json
+# COPY  ./packages/thoughtcore-client/package.json ./packages/thoughtcore-client/package.json
 
-COPY  ./packages/thoughtcore-node/package.json ./packages/thoughtcore-node/package.json
-COPY  ./packages/thoughtcore-node/package-lock.json ./packages/thoughtcore-node/package-lock.json
+# COPY  ./packages/thoughtcore-build/package.json ./packages/thoughtcore-build/package.json
 
-COPY  ./packages/thoughtcore-p2p/package.json ./packages/thoughtcore-p2p/package.json
-COPY  ./packages/thoughtcore-p2p/package-lock.json ./packages/thoughtcore-p2p/package-lock.json
+# COPY  ./packages/thoughtcore-lib/package.json ./packages/thoughtcore-lib/package.json
 
-COPY  ./packages/thoughtcore-wallet-client/package.json ./packages/thoughtcore-wallet-client/package.json
-COPY  ./packages/thoughtcore-wallet-client/package-lock.json ./packages/thoughtcore-wallet-client/package-lock.json
+# COPY  ./packages/thoughtcore-mnemonic/package.json ./packages/thoughtcore-mnemonic/package.json
 
-COPY  ./packages/thoughtcore-wallet-service/package.json ./packages/thoughtcore-wallet-service/package.json
-COPY  ./packages/thoughtcore-wallet-service/package-lock.json ./packages/thoughtcore-wallet-service/package-lock.json
+# COPY  ./packages/thoughtcore-node/package.json ./packages/thoughtcore-node/package.json
 
-COPY  ./packages/thoughtcore-wallet/package.json ./packages/thoughtcore-wallet/package.json
-COPY  ./packages/thoughtcore-wallet/package-lock.json ./packages/thoughtcore-wallet/package-lock.json
+# COPY  ./packages/thoughtcore-p2p/package.json ./packages/thoughtcore-p2p/package.json
 
-COPY  ./packages/crypto-wallet-core/package.json ./packages/crypto-wallet-core/package.json
-COPY  ./packages/crypto-wallet-core/package-lock.json ./packages/crypto-wallet-core/package-lock.json
+# COPY  ./packages/thoughtcore-wallet-client/package.json ./packages/thoughtcore-wallet-client/package.json
+
+# COPY  ./packages/thoughtcore-wallet-service/package.json ./packages/thoughtcore-wallet-service/package.json
+
+# COPY  ./packages/thoughtcore-wallet/package.json ./packages/thoughtcore-wallet/package.json
+
+# COPY  ./packages/crypto-wallet-core/package.json ./packages/crypto-wallet-core/package.json
 
 
+# Install npm dependencies
 
 RUN npm install --ignore-scripts
-# Context is handled by docker-compose.yml in monorepo root
-ADD . .
+
+
+# Compile dpendencies
+
 RUN npm run compile

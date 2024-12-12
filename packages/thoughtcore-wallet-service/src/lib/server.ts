@@ -5,7 +5,7 @@ import {
   Validation
 } from 'crypto-wallet-core';
 import * as _ from 'lodash';
-import Moralis from 'moralis';
+//import Moralis from 'moralis';
 import 'source-map-support/register';
 import config from '../config.ts';
 import logger from './logger.ts';
@@ -139,11 +139,11 @@ export class WalletService implements IWalletService {
     this.request = request;
   }
   /**
-   * Gets the current version of BWS
+   * Gets the current version of TWS
    */
   static getServiceVersion() {
     if (!serviceVersion) {
-      serviceVersion = 'bws-' + require('../../package').version;
+      serviceVersion = 'tws-' + require('../../package').version;
     }
 
     return serviceVersion;
@@ -224,14 +224,16 @@ export class WalletService implements IWalletService {
       if (!isMoralisInitialized) {
         try {
           logger.info('Initializing Moralis...');
-          const API_KEY = config.moralis.apiKey;
-
-          await Moralis.start({
-            apiKey: API_KEY,
-          });
-          logger.info('Moralis initialized successfully!');
-          isMoralisInitialized = true;
+          //const API_KEY = config.moralis.apiKey;
+          logger.info('Moralis currently disabled due to build issues...');
+          isMoralisInitialized = false;
           return cb();
+          // await Moralis.start({
+          //   apiKey: API_KEY,
+          // });
+          // logger.info('Moralis initialized successfully!');
+          // isMoralisInitialized = true;
+          // return cb();
         } catch (err) {
           logger.error('Error initializing Moralis: ', err);
           isMoralisInitialized = false;
@@ -7296,15 +7298,16 @@ export class WalletService implements IWalletService {
   moralisGetWalletTokenBalances(req): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await Moralis.EvmApi.token.getWalletTokenBalances({
-          address: req.body.address,
-          chain: req.body.chain,
-          toBlock: req.body.toBlock,
-          tokenAddresses: req.body.tokenAddresses,
-          excludeSpam: req.body.excludeSpam,
-        });
+        // const response = await Moralis.EvmApi.token.getWalletTokenBalances({
+        //   address: req.body.address,
+        //   chain: req.body.chain,
+        //   toBlock: req.body.toBlock,
+        //   tokenAddresses: req.body.tokenAddresses,
+        //   excludeSpam: req.body.excludeSpam,
+        // });
 
-        return resolve(response.raw ?? response);
+        // return resolve(response.raw ?? response);
+        reject("Moralis Disabled");
       } catch (err) {
         reject(err);
       }
@@ -7314,14 +7317,15 @@ export class WalletService implements IWalletService {
   moralisGetTokenAllowance(req): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await Moralis.EvmApi.token.getTokenAllowance({
-          address: req.body.address,
-          chain: req.body.chain,
-          ownerAddress: req.body.ownerAddress,
-          spenderAddress: req.body.spenderAddress,
-        });
+        // const response = await Moralis.EvmApi.token.getTokenAllowance({
+        //   address: req.body.address,
+        //   chain: req.body.chain,
+        //   ownerAddress: req.body.ownerAddress,
+        //   spenderAddress: req.body.spenderAddress,
+        // });
 
-        return resolve(response.raw ?? response);
+        // return resolve(response.raw ?? response);
+        reject("Moralis Disabled");
       } catch (err) {
         reject(err);
       }
@@ -7331,13 +7335,14 @@ export class WalletService implements IWalletService {
   moralisGetNativeBalance(req): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await Moralis.EvmApi.balance.getNativeBalance({
-          address: req.body.address,
-          chain: req.body.chain,
-          toBlock: req.body.toBlock,
-        });
+        // const response = await Moralis.EvmApi.balance.getNativeBalance({
+        //   address: req.body.address,
+        //   chain: req.body.chain,
+        //   toBlock: req.body.toBlock,
+        // });
 
-        return resolve(response.raw ?? response);
+        // return resolve(response.raw ?? response);
+        reject("Moralis Disabled");
       } catch (err) {
         reject(err);
       }
@@ -7347,15 +7352,16 @@ export class WalletService implements IWalletService {
   moralisGetTokenPrice(req): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await Moralis.EvmApi.token.getTokenPrice({
-          address: req.body.address,
-          chain: req.body.chain,
-          include: req.body.include,
-          exchange: req.body.exchange,
-          toBlock: req.body.toBlock,
-        });
+        // const response = await Moralis.EvmApi.token.getTokenPrice({
+        //   address: req.body.address,
+        //   chain: req.body.chain,
+        //   include: req.body.include,
+        //   exchange: req.body.exchange,
+        //   toBlock: req.body.toBlock,
+        // });
 
-        return resolve(response.raw ?? response);
+        // return resolve(response.raw ?? response);
+        reject("Moralis Disabled");
       } catch (err) {
         reject(err);
       }
@@ -7365,14 +7371,14 @@ export class WalletService implements IWalletService {
   moralisGetMultipleERC20TokenPrices(req): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await Moralis.EvmApi.token.getMultipleTokenPrices({
-          chain: req.body.chain,
-          include: req.body.include,
-        }, {
-          tokens: req.body.tokens,
-        });
-
-        return resolve(response.raw ?? response);
+        // const response = await Moralis.EvmApi.token.getMultipleTokenPrices({
+        //   chain: req.body.chain,
+        //   include: req.body.include,
+        // }, {
+        //   tokens: req.body.tokens,
+        // });
+        // return resolve(response.raw ?? response);
+        reject("Moralis Disabled");
       } catch (err) {
         reject(err);
       }

@@ -2,8 +2,9 @@
 
 MODULES='thoughtcore-build thoughtcore-lib thoughtcore-mnemonic  crypto-wallet-core thoughtcore-wallet-service thoughtcore-wallet-client thoughtcore-client'
 
+# Do not publish
 
-for i in $MODULES; 
-do
-  cd $i && npm run pub  ; cd ..
-done
+#for i in $MODULES; 
+#do
+#  cd $i && npm run pub  ; cd ..
+#done

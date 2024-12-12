@@ -13,6 +13,7 @@
     "declarationMap": true,
     "allowImportingTsExtensions": true,
     "emitDeclarationOnly": true,
+    "skipLibCheck": true,
     "module": "Node16",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
