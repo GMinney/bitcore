@@ -4,7 +4,7 @@ import Info from '@/components/info';
 import { useParams } from 'react-router-dom';
 import EthBlockDetails from '@/components/eth-block-details';
 import BlockDetails from '@/components/block-details';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { normalizeParams } from '@/lib/utilities/helper-methods';
 import { changeCurrency, changeNetwork } from '@/lib/store/app.actions';
 import { useAppDispatch } from '@/lib/utilities/hooks';
@@ -13,18 +13,23 @@ const Block: React.FC = () => {
   const params = useParams<{ currency: string; network: string; block: string }>();
   const { block } = params;
   const dispatch = useAppDispatch();
-  let { currency, network } = params;
+
+  const [network, setNetwork] = useState('');
+  const [currency, setCurrency] = useState('');
+  setNetwork(params.network ?? '');
+  setCurrency(params.currency ?? '');
 
   useEffect(() => {
     if (!currency || !network || !block) {
       return;
     }
     const _normalizeParams = normalizeParams(currency, network);
-    currency = _normalizeParams.currency;
-    network = _normalizeParams.network;
+    setNetwork(_normalizeParams.network);
+    setCurrency(_normalizeParams.currency);
+
     dispatch(changeCurrency(currency));
     dispatch(changeNetwork(network));
-  }, [currency, network, block]);
+  }, [currency, network, block, dispatch]);
 
   if (currency && network && block) {
     if (currency.toUpperCase() === 'ETH') {

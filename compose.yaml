@@ -13,6 +13,8 @@ services:
     volumes:
       - /data/db:/data/db
     restart: unless-stopped
+    networks:
+      - insight-services
 
   thoughtcore-node:
     container_name: thoughtcore-node
@@ -30,12 +32,14 @@ services:
       - THOUGHTCORE_NODE_HTTP_PORT=3004
     env_file: .env
     restart: unless-stopped
+    networks:
+      - insight-services
 
   insight:
     container_name: insight
     build: 
       context: .
-      dockerfile: ./docker/insight/Dockerfile
+      dockerfile: ./docker/insight/Dockerfile2
     image: insight
     ports:
       - 3000:3000
@@ -47,6 +51,8 @@ services:
       - PORT=3000
       - API_URL=thoughtcore-node
     restart: unless-stopped
+    networks:
+      - insight-services
 
   # thoughtd:
   #   container_name: thoughtd
@@ -60,3 +66,11 @@ services:
   #     - 11617:11617
   #     - 11618:11618
   #   restart: unless-stopped
+  #    networks:
+  #    - insight-services
+
+# Define a network, which allows containers to communicate
+# with each other, by using their container name as a hostname
+networks:
+  insight-services:
+    external: true

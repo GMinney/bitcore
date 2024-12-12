@@ -56,6 +56,10 @@ RUN npm install --ignore-scripts
 RUN npm run build
 
 
+COPY public .next/standalone/ 
+COPY .next/static .next/standalone/.next/
+
+
 # Run the application as a non-root user.
 
 USER insight
@@ -75,4 +79,4 @@ USER insight
 
 # Run the application.
 
-CMD node src/index.js
+CMD node .next/standalone/server.js

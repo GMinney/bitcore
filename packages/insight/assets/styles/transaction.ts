@@ -39,16 +39,13 @@ export const TransactionTileBody = styled.div`
   margin: 1rem 0;
 `;
 
-
-
 export const TransactionTileFlex = styled.div.attrs<{
   $justifyContent?: string;
-}>(props => ({
-  $justifyContent: props.$justifyContent
+}>((props) => ({
+  $justifyContent: props.$justifyContent,
 }))`
   display: flex;
-  justify-content: ${props =>
-    props.$justifyContent || 'space-between'};
+  justify-content: ${(props) => props.$justifyContent || 'space-between'};
   flex-wrap: wrap;
   align-items: center;
 
@@ -66,44 +63,38 @@ export enum Type {
   Twelve = 100,
 }
 
-
-
 export const TransactionBodyCol = styled.div.attrs<{
   $type?: any;
   $textAlign?: string;
   $backgroundColor?: string;
   $textTAlign?: string;
   $padding?: string;
-
-}>(props => ({
+}>((props) => ({
   $type: props.$type,
   $textAlign: props.$textAlign,
   $backgroundColor: props.$backgroundColor,
   $textTAlign: props.$textTAlign,
-  $padding: props.$padding
+  $padding: props.$padding,
 }))`
   width: 100%;
   max-width: 100%;
   flex: 0 0 100%;
-  padding: ${props => props.$padding || '1rem'};
-  text-align: ${props => props.$textAlign || 'left'};
-  background-color: ${({ $backgroundColor, theme: { dark } }) =>
-    $backgroundColor || (dark ? '#303030' : Slate30)};
+  padding: ${(props) => props.$padding || '1rem'};
+  text-align: ${(props) => props.$textAlign || 'left'};
+  background-color: ${({ $backgroundColor, theme: { dark } }) => $backgroundColor || (dark ? '#303030' : Slate30)};
 
   @media screen and ${device.tablet} {
-    ${props =>
-    props.$textTAlign &&
-    css`
+    ${(props) =>
+      props.$textTAlign &&
+      css`
         text-align: ${props.$textTAlign};
       `};
-    flex: 0 0 ${props => Type[props.$type]}%;
-    width: ${props => Type[props.$type]}%;
-    max-width: ${props => Type[props.$type]}%;
+    flex: 0 0 ${(props) => Type[props.$type]}%;
+    width: ${(props) => Type[props.$type]}%;
+    max-width: ${(props) => Type[props.$type]}%;
   }
 }
 `;
-
-
 
 export const TransactionChip = styled.div.attrs<{
   $primary?: any;
@@ -111,7 +102,7 @@ export const TransactionChip = styled.div.attrs<{
   $error?: any;
   $margin?: any;
   $errorText?: any;
-}>(props => ({
+}>((props) => ({
   $primary: props.$primary,
   $warning: props.$warning,
   $error: props.$error,
@@ -121,11 +112,11 @@ export const TransactionChip = styled.div.attrs<{
   padding: 0.5rem 1rem;
   background-color: ${({ theme: { dark } }) => (dark ? '#303030' : Slate30)};
   font-size: 16px;
-  margin: ${props => props.$margin || 0};
+  margin: ${(props) => props.$margin || 0};
   text-align: center;
   height: 2.5rem;
 
-  ${props => {
+  ${(props) => {
     if (props.$primary) {
       return css`
         color: ${White};
@@ -174,12 +165,12 @@ export const TransactionChip = styled.div.attrs<{
 
 export const ArrowDiv = styled.div.attrs<{
   $margin: string;
-}>(props => ({
+}>((props) => ({
   $margin: props.$margin,
 }))`
   width: 25px;
   position: relative;
-  margin: ${props => props.$margin};
+  margin: ${(props) => props.$margin};
 
   img {
     cursor: pointer;

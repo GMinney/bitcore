@@ -12,7 +12,7 @@ const SupCurrencyLogo = ({ currency }: { currency: string }) => {
   const imgSrc = `https://thoughtnetwork.com/img/icon/currencies/${currency}.svg`;
 
   return (
-    <CurrencyIcon variants={imageFadeIn} initial='initial' animate={animationControls}>
+    <CurrencyIcon variants={imageFadeIn} initial="initial" animate={animationControls}>
       <Image
         src={imgSrc}
         width={22}
@@ -20,8 +20,6 @@ const SupCurrencyLogo = ({ currency }: { currency: string }) => {
         alt={currency + ' logo'}
         onLoad={() => animationControls.start('animate')}
       />
-
-
     </CurrencyIcon>
   );
 };

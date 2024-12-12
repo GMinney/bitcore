@@ -52,7 +52,9 @@ const BlockListTableRow = styled(motion.tr)`
     background-color: ${({ theme: { dark } }) => (dark ? '#090909' : NeutralSlate)};
   }
 
-  transition: transform 200ms ease, box-shadow 200ms ease;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
   font-size: 16px;
 
   @media screen and (max-width: ${size.tablet}) {
@@ -82,9 +84,13 @@ const listAnime = {
 };
 
 const Blocks: React.FC = () => {
-  let { currency, network } = useParams<{ currency: string; network: string }>();
+  const params = useParams<{ currency: string; network: string }>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [network, setNetwork] = useState('');
+  const [currency, setCurrency] = useState('');
+  setNetwork(params.network ?? '');
+  setCurrency(params.currency ?? '');
   const [isLoading, setIsLoading] = useState(true);
   const [blocksList, setBlocksList] = useState<BlocksType[]>();
   const [error, setError] = useState('');
@@ -94,8 +100,8 @@ const Blocks: React.FC = () => {
     if (!currency || !network) return;
     nProgress.start();
     const _normalizeParams = normalizeParams(currency, network);
-    currency = _normalizeParams.currency;
-    network = _normalizeParams.network;
+    setCurrency(_normalizeParams.currency);
+    setNetwork(_normalizeParams.network);
 
     dispatch(changeCurrency(currency));
     dispatch(changeNetwork(network));
@@ -111,7 +117,7 @@ const Blocks: React.FC = () => {
         setIsLoading(false);
         nProgress.done();
       });
-  }, [currency, network]);
+  }, [currency, network, dispatch]);
 
   const fetchMore = async (_blocksList: BlocksType[]) => {
     if (!_blocksList.length || !currency || !network) return;
@@ -141,7 +147,7 @@ const Blocks: React.FC = () => {
         <>
           {error ? <Info type={'error'} message={error} /> : null}
           {blocksList?.length ? (
-            <motion.div variants={routerFadeIn} animate='animate' initial='initial'>
+            <motion.div variants={routerFadeIn} animate="animate" initial="initial">
               <MainTitle>
                 Blocks
                 {currency && <SupCurrencyLogo currency={currency} />}
@@ -151,8 +157,9 @@ const Blocks: React.FC = () => {
                 next={() => fetchMore(blocksList)}
                 hasMore={hasMore}
                 loader={<InfiniteScrollLoadSpinner />}
-                dataLength={blocksList.length}>
-                <BlockListTable id='blockList'>
+                dataLength={blocksList.length}
+              >
+                <BlockListTable id="blockList">
                   <thead>
                     <BlockListTableHead>
                       <th>Height</th>
@@ -168,12 +175,13 @@ const Blocks: React.FC = () => {
                         <BlockListTableRow
                           key={index}
                           variants={listAnime}
-                          whileHover='whileHover'
-                          onClick={() => gotoSingleBlockDetailsView(hash)}>
-                          <TdLink width='25%'>{height}</TdLink>
-                          <td width='25%'>{getFormattedDate(time)}</td>
-                          <td width='25%'>{transactionCount}</td>
-                          <td width='25%'>{size}</td>
+                          whileHover="whileHover"
+                          onClick={() => gotoSingleBlockDetailsView(hash)}
+                        >
+                          <TdLink width="25%">{height}</TdLink>
+                          <td width="25%">{getFormattedDate(time)}</td>
+                          <td width="25%">{transactionCount}</td>
+                          <td width="25%">{size}</td>
                         </BlockListTableRow>
                       );
                     })}

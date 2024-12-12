@@ -9,9 +9,9 @@ export const SharedTile = ({
   description: string | number | undefined;
 }): JSX.Element => (
   <Tile $withBorderBottom>
-    <TileDescription $margin='0 1rem 0 0'>{title}</TileDescription>
+    <TileDescription $margin="0 1rem 0 0">{title}</TileDescription>
     {description ? (
-      <TileDescription $value $textAlign='right'>
+      <TileDescription $value $textAlign="right">
         {description}
       </TileDescription>
     ) : null}

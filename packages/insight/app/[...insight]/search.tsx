@@ -81,46 +81,38 @@ const Search: React.FC = () => {
   };
 
   return (
-    <motion.div variants={routerFadeIn} animate='animate' initial='initial'>
+    <motion.div variants={routerFadeIn} animate="animate" initial="initial">
       {matches && (
         <>
           {matches.blocks && matches.blocks.length > 0 && (
             <>
               <MainTitle>Blocks</MainTitle>
               <Grid>
-                {matches.blocks.map(
-                  ({ chain, network, hash, height, time }: Block, index: number) => {
-                    return (
-                      <SearchTile key={index} onClick={() => goToBlock({ chain, network, hash })}>
-                        <SearchTileHeader>
-                          <HeaderImg>
+                {matches.blocks.map(({ chain, network, hash, height, time }: Block, index: number) => {
+                  return (
+                    <SearchTile key={index} onClick={() => goToBlock({ chain, network, hash })}>
+                      <SearchTileHeader>
+                        <HeaderImg>
+                          <Image src={ThoughtLogo.src} width={35} height={35} alt="Thought coin logo" />
+                        </HeaderImg>
 
-                            <Image
-                              src={ThoughtLogo.src}
-                              width={35}
-                              height={35}
-                              alt='Thought coin logo'
-                            />
-                          </HeaderImg>
+                        <div>{chain}</div>
 
-                          <div>{chain}</div>
+                        <HeaderChip>{network}</HeaderChip>
 
-                          <HeaderChip>{network}</HeaderChip>
+                        <div>#{height}</div>
+                      </SearchTileHeader>
 
-                          <div>#{height}</div>
-                        </SearchTileHeader>
+                      <Tile>
+                        <TileDescription $value>Block Hash {hash}</TileDescription>
+                      </Tile>
 
-                        <Tile>
-                          <TileDescription $value>Block Hash {hash}</TileDescription>
-                        </Tile>
-
-                        <Tile $padding='0'>
-                          <TileDescription $value>Mined on {getFormattedDate(time)}</TileDescription>
-                        </Tile>
-                      </SearchTile>
-                    );
-                  },
-                )}
+                      <Tile $padding="0">
+                        <TileDescription $value>Mined on {getFormattedDate(time)}</TileDescription>
+                      </Tile>
+                    </SearchTile>
+                  );
+                })}
               </Grid>
             </>
           )}
@@ -129,38 +121,28 @@ const Search: React.FC = () => {
             <>
               <MainTitle>Transactions</MainTitle>
               <Grid>
-                {matches.txs.map(
-                  ({ chain, network, txid, blockTime }: Transaction, index: number) => {
-                    return (
-                      <SearchTile key={index} onClick={() => goToTx({ chain, network, txid })}>
-                        <SearchTileHeader>
-                          <HeaderImg>
+                {matches.txs.map(({ chain, network, txid, blockTime }: Transaction, index: number) => {
+                  return (
+                    <SearchTile key={index} onClick={() => goToTx({ chain, network, txid })}>
+                      <SearchTileHeader>
+                        <HeaderImg>
+                          <Image src={ThoughtLogo.src} width={35} height={35} alt="currency logo" />
+                        </HeaderImg>
 
-                            <Image
-                              src={ThoughtLogo.src}
-                              width={35}
-                              height={35}
-                              alt='currency logo'
-                            />
-                          </HeaderImg>
+                        <div>{chain}</div>
 
-                          <div>{chain}</div>
+                        <HeaderChip>{network}</HeaderChip>
+                      </SearchTileHeader>
+                      <Tile>
+                        <TileDescription $value>{txid}</TileDescription>
+                      </Tile>
 
-                          <HeaderChip>{network}</HeaderChip>
-                        </SearchTileHeader>
-                        <Tile>
-                          <TileDescription $value>{txid}</TileDescription>
-                        </Tile>
-
-                        <Tile $padding='0'>
-                          <TileDescription $value>
-                            Received Time{getFormattedDate(blockTime)}
-                          </TileDescription>
-                        </Tile>
-                      </SearchTile>
-                    );
-                  },
-                )}
+                      <Tile $padding="0">
+                        <TileDescription $value>Received Time{getFormattedDate(blockTime)}</TileDescription>
+                      </Tile>
+                    </SearchTile>
+                  );
+                })}
               </Grid>
             </>
           )}
@@ -174,12 +156,7 @@ const Search: React.FC = () => {
                     <SearchTile key={index} onClick={() => goToAddress({ chain, network, address })}>
                       <SearchTileHeader>
                         <HeaderImg>
-                          <Image
-                            src={ThoughtLogo.src}
-                            width={35}
-                            height={35}
-                            alt='currency logo'
-                          />
+                          <Image src={ThoughtLogo.src} width={35} height={35} alt="currency logo" />
                         </HeaderImg>
 
                         <div>{chain}</div>

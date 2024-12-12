@@ -10,15 +10,12 @@ import SearchDarkSvg from '@/assets/images/search-dark.svg';
 import { LightBlack, Slate } from '@/assets/styles/colors';
 import { useAppSelector } from '@/lib/utilities/hooks';
 
-
-
 const borderbottom = true;
 
-const SearchInput = styled.input.attrs<{ $searchicon?: string }>(props => ({ $searchicon: props.$searchicon }))`
-
-  background: url(${props => (props.$searchicon)}) no-repeat scroll 7px 7px;
+const SearchInput = styled.input.attrs<{ $searchicon?: string }>((props) => ({ $searchicon: props.$searchicon }))`
+  background: url(${(props) => props.$searchicon}) no-repeat scroll 7px 7px;
   padding-left: 40px;
-  border-bottom: ${({ theme: { colors } }) => `${borderbottom}` ? `1px solid ${colors.borderColor}` : 'none'};
+  border-bottom: ${({ theme: { colors } }) => (`${borderbottom}` ? `1px solid ${colors.borderColor}` : 'none')};
   border-top: none;
   border-left: none;
   border-right: none;
@@ -79,11 +76,7 @@ const Search: FC<SearchProps> = ({ id, setErrorMessage }) => {
     const resFiltered = response.filter((o: any) => {
       return (
         typeof o !== 'string' &&
-        !(
-          (o.addr && o.addr.length === 0) ||
-          (o.block && o.block.length === 0) ||
-          (o.tx && o.tx.length === 0)
-        )
+        !((o.addr && o.addr.length === 0) || (o.block && o.block.length === 0) || (o.tx && o.tx.length === 0))
       );
     });
 
@@ -107,7 +100,7 @@ const Search: FC<SearchProps> = ({ id, setErrorMessage }) => {
 
       // ETH addresses doesn't have 'address' property
       if (matches.addresses.length > 0) {
-        matches.addresses.forEach(addr => {
+        matches.addresses.forEach((addr) => {
           if (!addr.address) {
             addr.address = searchVal;
           }
@@ -126,9 +119,7 @@ const Search: FC<SearchProps> = ({ id, setErrorMessage }) => {
             state: { transactionData: matches.txs[0] },
           });
         } else {
-          navigate(
-            `/${matches.blocks[0].chain}/${matches.blocks[0].network}/block/${matches.blocks[0].hash}`,
-          );
+          navigate(`/${matches.blocks[0].chain}/${matches.blocks[0].network}/block/${matches.blocks[0].hash}`);
         }
       } else {
         sessionStorage.setItem('matches', JSON.stringify(matches));
@@ -160,15 +151,15 @@ const Search: FC<SearchProps> = ({ id, setErrorMessage }) => {
       <SearchForm onSubmit={search}>
         <SearchInput
           id={id || 'search'}
-          type='text'
-          placeholder='Search for block, transaction, or address'
+          type="text"
+          placeholder="Search for block, transaction, or address"
           required
-          aria-labelledby='search'
+          aria-labelledby="search"
           $searchicon={searchIcon}
           tabIndex={0}
-          autoComplete='off'
-          autoCorrect='off'
-          spellCheck='false'
+          autoComplete="off"
+          autoCorrect="off"
+          spellCheck="false"
         />
       </SearchForm>
     </>

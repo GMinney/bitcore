@@ -21,11 +21,7 @@ interface TransactionDetailsEthProps {
   currency: string;
   network: string;
 }
-const TransactionDetailsEth: FC<TransactionDetailsEthProps> = ({
-  transaction,
-  currency,
-  network,
-}) => {
+const TransactionDetailsEth: FC<TransactionDetailsEthProps> = ({ transaction, currency, network }) => {
   const navigate = useNavigate();
   const { txid, blockTime, blockHeight, coinbase, from, to, fee, confirmations, value } = transaction;
 
@@ -40,36 +36,36 @@ const TransactionDetailsEth: FC<TransactionDetailsEthProps> = ({
   return (
     <TransactionTile>
       <TransactionTileHeader>
-        <TileDescription $value $padding='0 .25rem 0 0'>
+        <TileDescription $value $padding="0 .25rem 0 0">
           <SpanLink onClick={() => goToTx(txid)}>{txid}</SpanLink>
         </TileDescription>
 
-        <TileDescription $textAlign='right' $value $padding='0 0 0 0.25rem'>
+        <TileDescription $textAlign="right" $value $padding="0 0 0 0.25rem">
           {`${blockHeight > -1 ? 'Mined' : 'Seen'} on: ${getFormattedDate(blockTime)}`}
         </TileDescription>
       </TransactionTileHeader>
 
       <TransactionTileBody>
-        <TransactionBodyCol $type='Five' $padding='0 1rem'>
+        <TransactionBodyCol $type="Five" $padding="0 1rem">
           {coinbase && <Tile>No Inputs (Newly Generated Coins)</Tile>}
 
           {!coinbase && from && (
             <Tile>
-              <TileDescription $padding='0 1rem 0 0' $value>
+              <TileDescription $padding="0 1rem 0 0" $value>
                 <SpanLink onClick={() => goToAddress(from)}>{from}</SpanLink>
               </TileDescription>
             </Tile>
           )}
         </TransactionBodyCol>
 
-        <TransactionBodyCol $type='One' $textAlign='center' $backgroundColor='transparent'>
-          <Image src={ArrowSvg} width={15} height={15} alt='arrow' />
+        <TransactionBodyCol $type="One" $textAlign="center" $backgroundColor="transparent">
+          <Image src={ArrowSvg} width={15} height={15} alt="arrow" />
         </TransactionBodyCol>
 
-        <TransactionBodyCol $type='Six' $textAlign='right' $padding='0 1rem'>
+        <TransactionBodyCol $type="Six" $textAlign="right" $padding="0 1rem">
           {to && (
             <Tile>
-              <TileDescription $padding='0 1rem 0 0' $value>
+              <TileDescription $padding="0 1rem 0 0" $value>
                 <SpanLink onClick={() => goToAddress(to)}>{to}</SpanLink>
               </TileDescription>
             </Tile>
@@ -95,11 +91,9 @@ const TransactionDetailsEth: FC<TransactionDetailsEthProps> = ({
 
           {confirmations === 1 && <TransactionChip $primary>1 Confirmation</TransactionChip>}
 
-          {confirmations > 1 && (
-            <TransactionChip $primary>{confirmations} Confirmations</TransactionChip>
-          )}
+          {confirmations > 1 && <TransactionChip $primary>{confirmations} Confirmations</TransactionChip>}
 
-          <TransactionChip $margin='0 0 0 1rem'>
+          <TransactionChip $margin="0 0 0 1rem">
             {getConvertedValue(value, currency)} {currency}
           </TransactionChip>
         </TransactionTileFlex>

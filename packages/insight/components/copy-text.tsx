@@ -53,18 +53,13 @@ const CopyText: FC<CopyTextProps> = ({ text }) => {
     <>
       <AnimatePresence>
         {copied ? (
-          <CopyImg variants={copyAnime} exit='exit' initial='initial' animate='animate'>
-            <Image src={TickSvg} width={12} height={12} alt='copy' />
+          <CopyImg variants={copyAnime} exit="exit" initial="initial" animate="animate">
+            <Image src={TickSvg} width={12} height={12} alt="copy" />
           </CopyImg>
         ) : (
           <CopyToClipboard text={text} onCopy={() => onClickCopy()}>
-            <CopyImg
-              variants={copyAnime}
-              whileHover='whileHover'
-              exit='exit'
-              initial='initial'
-              animate='animate'>
-              <Image src={CopySvg.src} width={12} height={0} alt='copy' style={{ height: 'auto' }} />
+            <CopyImg variants={copyAnime} whileHover="whileHover" exit="exit" initial="initial" animate="animate">
+              <Image src={CopySvg.src} width={12} height={0} alt="copy" style={{ height: 'auto' }} />
             </CopyImg>
           </CopyToClipboard>
         )}

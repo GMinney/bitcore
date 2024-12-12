@@ -38,8 +38,13 @@ const QRDiv = styled.div`
 
 const Address: React.FC = () => {
   const params = useParams<{ currency: string; network: string; address: string }>();
-  const { address } = params;
-  let { currency, network } = params;
+  const [address, setAddress] = useState('');
+  const [network, setNetwork] = useState('');
+  const [currency, setCurrency] = useState('');
+  setAddress(params.address ?? '');
+  setNetwork(params.network ?? '');
+  setCurrency(params.currency ?? '');
+
   const dispatch = useAppDispatch();
   const [numTransactions, setNumTransactions] = useState(0);
   const [error, setError] = useState('');
@@ -57,8 +62,8 @@ const Address: React.FC = () => {
     if (!currency || !network || !address) return;
     nProgress.start();
     const _normalizeParams = normalizeParams(currency, network);
-    currency = _normalizeParams.currency;
-    network = _normalizeParams.network;
+    setCurrency(_normalizeParams.currency);
+    setNetwork(_normalizeParams.network);
 
     const baseUrl = `${getApiRoot(currency)}/${currency}/${network}`;
     dispatch(changeCurrency(currency));
@@ -81,7 +86,7 @@ const Address: React.FC = () => {
         setIsLoading(false);
         nProgress.done();
       });
-  }, [currency, network, address]);
+  }, [currency, network, address, dispatch]);
 
   return (
     <>
@@ -90,47 +95,49 @@ const Address: React.FC = () => {
           {error ? <Info type={'error'} message={error} /> : null}
 
           {currency && balance && tip && txs && address && network ? (
-            <motion.div variants={routerFadeIn} animate='animate' initial='initial'>
+            <motion.div variants={routerFadeIn} animate="animate" initial="initial">
               <MainTitle>
                 Address
                 <SupCurrencyLogo currency={currency} />
               </MainTitle>
 
-              <SecondaryTitle>{address} <CopyText text={address}></CopyText></SecondaryTitle>
+              <SecondaryTitle>
+                {address} <CopyText text={address}></CopyText>
+              </SecondaryTitle>
 
               <TransactionTileBody>
-                <TransactionBodyCol $type='Nine' $backgroundColor='transparent' $padding='1rem 0'>
-
+                <TransactionBodyCol $type="Nine" $backgroundColor="transparent" $padding="1rem 0">
                   <Tile $withBorderBottom>
-                    <TileDescription $margin='0 1rem 0 0'>Confirmed Balance</TileDescription>
-                    <TileDescription $value $textAlign='right'>
+                    <TileDescription $margin="0 1rem 0 0">Confirmed Balance</TileDescription>
+                    <TileDescription $value $textAlign="right">
                       {getConvertedValue(balance.confirmed, currency)} {currency}
                     </TileDescription>
                   </Tile>
 
                   {balance.unconfirmed > 0 && (
                     <Tile $withBorderBottom>
-                      <TileDescription $margin='0 1rem 0 0'>Unconfirmed Balance</TileDescription>
-                      <TileDescription $value $textAlign='right'>
+                      <TileDescription $margin="0 1rem 0 0">Unconfirmed Balance</TileDescription>
+                      <TileDescription $value $textAlign="right">
                         {getConvertedValue(balance.unconfirmed, currency)} {currency}
                       </TileDescription>
                     </Tile>
                   )}
 
                   <Tile $withBorderBottom>
-                    <TileDescription $margin='0 1rem 0 0'>No. Transactions</TileDescription>
-                    <TileDescription $value $textAlign='right'>
+                    <TileDescription $margin="0 1rem 0 0">No. Transactions</TileDescription>
+                    <TileDescription $value $textAlign="right">
                       {numTransactions || 0}
                     </TileDescription>
                   </Tile>
                 </TransactionBodyCol>
 
                 <TransactionBodyCol
-                  $type='Three'
-                  $backgroundColor='transparent'
-                  $textAlign='center'
-                  $textTAlign='right'
-                  $padding='1rem 0'>
+                  $type="Three"
+                  $backgroundColor="transparent"
+                  $textAlign="center"
+                  $textTAlign="right"
+                  $padding="1rem 0"
+                >
                   <QRDiv>
                     <QRCodeSVG value={address} size={160} />
                   </QRDiv>

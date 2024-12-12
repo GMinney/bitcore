@@ -30,8 +30,7 @@ export const buildTime = (time: string): string => {
   return minutes + ' minutes';
 };
 
-export const getApiRoot = (currency: string): string =>
-  ['ETH'].includes(currency) ? API_ROOT_ETH : API_ROOT;
+export const getApiRoot = (currency: string): string => (['ETH'].includes(currency) ? API_ROOT_ETH : API_ROOT);
 export const getDefaultRefreshInterval = (currency: string): number =>
   ['ETH'].includes(currency) ? ETH_DEFAULT_REFRESH_INTERVAL : UTXO_DEFAULT_REFRESH_INTERVAL;
 export const urlSafetyCheck = (url: string) => (url.includes('undefined') ? null : url);
@@ -70,8 +69,7 @@ export const aggregateItems = (items: any[]): any[] => {
       continue;
     }
 
-    const address: string =
-      items[i].address || (items[i].scriptPubKey && items[i].scriptPubKey.addresses[0]);
+    const address: string = items[i].address || (items[i].scriptPubKey && items[i].scriptPubKey.addresses[0]);
 
     if (!tmp[address]) {
       tmp[address] = {};
@@ -108,8 +106,7 @@ export const aggregateItems = (items: any[]): any[] => {
 };
 
 export const getFee = (tx: BlockTransactionDetails): number => {
-  const sumNotions: any = (arr: any): number =>
-    arr.reduce((prev: any, cur: any) => prev + cur.value, 0);
+  const sumNotions: any = (arr: any): number => arr.reduce((prev: any, cur: any) => prev + cur.value, 0);
   const inputs: number = sumNotions(tx.inputs);
   const outputs: number = sumNotions(tx.outputs);
   return tx.isCoinBase ? 0 : inputs - outputs;
@@ -124,9 +121,7 @@ export const getAddress = (v: any): string => {
 };
 
 export const isRBF = (inputs: any): boolean => {
-  return inputs.some(
-    (input: any) => input.sequenceNumber && input.sequenceNumber < DEFAULT_RBF_SEQ_NUMBER - 1,
-  );
+  return inputs.some((input: any) => input.sequenceNumber && input.sequenceNumber < DEFAULT_RBF_SEQ_NUMBER - 1);
 };
 
 export const hasUnconfirmedInputs = (inputs: any): boolean => {
@@ -162,13 +157,10 @@ export const getConvertedValue = (value: any, chain: string): number => {
 };
 
 export function sleep(duration: number) {
-  return new Promise<void>(resolve => window.setTimeout(resolve, duration));
+  return new Promise<void>((resolve) => window.setTimeout(resolve, duration));
 }
 
-export const normalizeParams = (
-  currency: string,
-  network: string,
-): { currency: string; network: string } => {
+export const normalizeParams = (currency: string, network: string): { currency: string; network: string } => {
   return { currency: currency.toUpperCase(), network: network.toLowerCase() };
 };
 

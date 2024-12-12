@@ -17,18 +17,18 @@ import { useLocation } from 'react-router-dom';
 import { FooterHeight, HeaderHeight } from '@/assets/styles/global';
 import { Feather } from '@/assets/styles/colors';
 
-const BodyWrapper = styled.main.attrs<{ $margintop?: boolean }>(props => ({ $margintop: props.$margintop }))`
+const BodyWrapper = styled.main.attrs<{ $margintop?: boolean }>((props) => ({ $margintop: props.$margintop }))`
   padding: 1rem calc((100% - 992px) / 4);
   justify-content: space-between;
   margin-bottom: 1rem;
-  margin-top:  ${props => (props.$margintop ? `${HeaderHeight} auto` : '1rem auto')};
+  margin-top: ${(props) => (props.$margintop ? `${HeaderHeight} auto` : '1rem auto')};
 
   @media screen and (max-width: 992px) {
     padding: 1rem;
   }
 
   @media screen and ${device.tablet} {
-    margin: ${props => (props.$margintop ? `${HeaderHeight} auto` : '1rem auto')};
+    margin: ${(props) => (props.$margintop ? `${HeaderHeight} auto` : '1rem auto')};
   }
 `;
 
@@ -108,9 +108,7 @@ const Layout = ({ children }: { children?: ReactNode }) => {
     },
   };
 
-
   //       <motion.div variants={fadeIn} animate='animate' initial='initial'></motion.div>
-
 
   return (
     <>
@@ -119,7 +117,7 @@ const Layout = ({ children }: { children?: ReactNode }) => {
         {isHomePage() && (
           <ParallaxDiv bgImage={url} strength={400}>
             <ParallaxBackgroundHeight>
-              <HomePageSearch variants={searchAnime} animate='animate' initial='initial'>
+              <HomePageSearch variants={searchAnime} animate="animate" initial="initial">
                 <MainTitle variants={fadeInTransition}>Insight Blockchain Explorer</MainTitle>
                 <motion.div variants={fadeInTransition}>
                   <Search setErrorMessage={setSearchError} />
@@ -127,7 +125,7 @@ const Layout = ({ children }: { children?: ReactNode }) => {
 
                 <AnimatePresence>
                   {searchError && (
-                    <motion.div variants={ErrorExitAnime} exit='exit'>
+                    <motion.div variants={ErrorExitAnime} exit="exit">
                       <Info message={searchError} type={'error'} />
                     </motion.div>
                   )}
@@ -139,7 +137,7 @@ const Layout = ({ children }: { children?: ReactNode }) => {
 
         {!isHomePage() && (
           <MobileSearch>
-            <Search id='headerSearch' setErrorMessage={setSearchError} />
+            <Search id="headerSearch" setErrorMessage={setSearchError} />
           </MobileSearch>
         )}
 
@@ -147,7 +145,7 @@ const Layout = ({ children }: { children?: ReactNode }) => {
           <BodyWrapperContent>
             <AnimatePresence>
               {searchError && !isHomePage() && (
-                <motion.div variants={ErrorExitAnime} exit='exit'>
+                <motion.div variants={ErrorExitAnime} exit="exit">
                   <Info message={searchError} type={'error'} />
                 </motion.div>
               )}
@@ -166,7 +164,7 @@ const Layout = ({ children }: { children?: ReactNode }) => {
         </BodyWrapper>
       </BodyContainer>
 
-      <motion.div variants={fadeIn} animate='animate' initial='initial'>
+      <motion.div variants={fadeIn} animate="animate" initial="initial">
         <Footer />
       </motion.div>
     </>

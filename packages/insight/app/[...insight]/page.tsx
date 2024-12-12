@@ -23,13 +23,11 @@ export default function Insight() {
         <SWRConfig
           value={{
             fetcher,
-          }}>
+          }}
+        >
           <Body />
         </SWRConfig>
-
       </ThemeProvider>
     </NoSSR>
   );
 }
-
-

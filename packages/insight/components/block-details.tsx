@@ -39,9 +39,7 @@ const populateTxsForBlock = (txData: any, { time, height }: { time: number; heig
     tx.fee = getFee(tx);
     tx.blockHeight = tx.outputs[0].mintHeight;
     tx.blockTime = time;
-    tx.value = tx.outputs
-      .filter((output: any) => output.mintTxid === txid)
-      .reduce((a: any, b: any) => a + b.value, 0);
+    tx.value = tx.outputs.filter((output: any) => output.mintTxid === txid).reduce((a: any, b: any) => a + b.value, 0);
     // Replace ternary operator with if statement
     if (tx.inputs.length === 0) {
       tx.coinbase = true;
@@ -84,9 +82,7 @@ const BlockDetails: FC<BlockDetailsProps> = ({ currency, network, block }) => {
         setTip(_tip);
         if (_transactionList) {
           _transactionList = [_transactionList];
-          const formattedData = _transactionList
-            .map((data: any) => populateTxsForBlock(data, _tip))
-            .flat();
+          const formattedData = _transactionList.map((data: any) => populateTxsForBlock(data, _tip)).flat();
 
           setTransactionList(formattedData);
           setHasMore(!!_transactionList[_transactionList.length - 1].next);
@@ -100,24 +96,22 @@ const BlockDetails: FC<BlockDetailsProps> = ({ currency, network, block }) => {
         setIsLoading(false);
         nProgress.done();
       });
-  }, [block]);
+  }, [block, baseUrl, pageNumber]);
 
   const loadMore = () => {
     if (hasMore && !isLoadingMoreData) {
       setIsLoadingMoreData(true);
       fetcher(`${baseUrl}/block/${block}/coins/100/${pageNumber}`)
-        .then(_transactionList => {
+        .then((_transactionList) => {
           _transactionList = [_transactionList];
 
-          const formattedData = _transactionList
-            .map((data: any) => populateTxsForBlock(data, tip))
-            .flat();
+          const formattedData = _transactionList.map((data: any) => populateTxsForBlock(data, tip)).flat();
 
           setTransactionList(transactionList.concat(formattedData));
           setHasMore(!!_transactionList[_transactionList.length - 1].next);
           setPageNumber(pageNumber + 1);
         })
-        .catch(e => {
+        .catch((e) => {
           setError(e.message || 'Something went wrong. Please try again later.');
         })
         .finally(() => setIsLoadingMoreData(false));
@@ -130,14 +124,14 @@ const BlockDetails: FC<BlockDetailsProps> = ({ currency, network, block }) => {
         <>
           {error ? <Info type={'error'} message={error} /> : null}
           {summary ? (
-            <motion.div variants={routerFadeIn} animate='animate' initial='initial'>
+            <motion.div variants={routerFadeIn} animate="animate" initial="initial">
               <MainTitle style={{ marginBottom: 8 }}>
                 Block #{summary.height}
                 <SupCurrencyLogo currency={currency} />
               </MainTitle>
 
               <DisplayFlex>
-                <TileDescription $margin='0 1rem 0 0' $width='auto' $noTruncate>
+                <TileDescription $margin="0 1rem 0 0" $width="auto" $noTruncate>
                   Block Hash
                 </TileDescription>
                 <TileDescription $value>
@@ -149,53 +143,42 @@ const BlockDetails: FC<BlockDetailsProps> = ({ currency, network, block }) => {
 
               <SecondaryTitle>Summary</SecondaryTitle>
 
-              <Grid $margin='0 0 3rem 0'>
-                <SharedTile title='Merkle Root' description={summary.merkleRoot} />
-                <SharedTile
-                  title='Difficulty'
-                  description={(0x1d00ffff / summary.bits).toString()}
-                />
-                <SharedTile title='Bits' description={summary.bits} />
-                <SharedTile title='Size (bytes)' description={summary.size} />
-                <SharedTile title='Version' description={summary.version} />
-                <SharedTile title='Nonce' description={summary.nonce} />
-                <SharedTile title='Number of Transactions' description={summary.transactionCount} />
+              <Grid $margin="0 0 3rem 0">
+                <SharedTile title="Merkle Root" description={summary.merkleRoot} />
+                <SharedTile title="Difficulty" description={(0x1d00ffff / summary.bits).toString()} />
+                <SharedTile title="Bits" description={summary.bits} />
+                <SharedTile title="Size (bytes)" description={summary.size} />
+                <SharedTile title="Version" description={summary.version} />
+                <SharedTile title="Nonce" description={summary.nonce} />
+                <SharedTile title="Number of Transactions" description={summary.transactionCount} />
 
                 <Tile $withBorderBottom>
-                  <TileDescription $margin='0 1rem 0 0'>Previous Block</TileDescription>
-                  <TileLink $value $textAlign='right' disabled={!summary.previousBlockHash}>
-                    <span
-                      onClick={() =>
-                        summary.previousBlockHash ? gotoBlock(summary.previousBlockHash) : null
-                      }>
+                  <TileDescription $margin="0 1rem 0 0">Previous Block</TileDescription>
+                  <TileLink $value $textAlign="right" disabled={!summary.previousBlockHash}>
+                    <span onClick={() => (summary.previousBlockHash ? gotoBlock(summary.previousBlockHash) : null)}>
                       {summary.height - 1}
                     </span>
                   </TileLink>
                 </Tile>
 
-                <SharedTile title='Height' description={summary.height} />
+                <SharedTile title="Height" description={summary.height} />
 
                 <Tile $withBorderBottom>
-                  <TileDescription $margin='0 1rem 0 0'>Next Block</TileDescription>
-                  <TileLink $value $textAlign='right' disabled={!summary.nextBlockHash}>
-                    <span
-                      onClick={() =>
-                        summary.nextBlockHash ? gotoBlock(summary.nextBlockHash) : null
-                      }>
+                  <TileDescription $margin="0 1rem 0 0">Next Block</TileDescription>
+                  <TileLink $value $textAlign="right" disabled={!summary.nextBlockHash}>
+                    <span onClick={() => (summary.nextBlockHash ? gotoBlock(summary.nextBlockHash) : null)}>
                       {summary.height + 1}
                     </span>
                   </TileLink>
                 </Tile>
 
                 <SharedTile
-                  title='Block Reward'
-                  description={`${getConvertedValue(summary.reward, currency).toFixed(
-                    3,
-                  )} ${currency}`}
+                  title="Block Reward"
+                  description={`${getConvertedValue(summary.reward, currency).toFixed(3)} ${currency}`}
                 />
-                <SharedTile title='Confirmations' description={summary.confirmations} />
+                <SharedTile title="Confirmations" description={summary.confirmations} />
 
-                <SharedTile title='Timestamp' description={getFormattedDate(summary.time) || ''} />
+                <SharedTile title="Timestamp" description={getFormattedDate(summary.time) || ''} />
               </Grid>
 
               <SecondaryTitle>Transactions</SecondaryTitle>
@@ -206,24 +189,18 @@ const BlockDetails: FC<BlockDetailsProps> = ({ currency, network, block }) => {
                   hasMore={hasMore}
                   loader={<InfiniteScrollLoadSpinner />}
                   scrollThreshold={0.95}
-                  dataLength={transactionList.length}>
+                  dataLength={transactionList.length}
+                >
                   {transactionList.map((tx: any, index: number) => {
                     return (
                       <div key={index}>
-                        <TransactionDetails
-                          transaction={tx}
-                          currency={currency}
-                          network={network}
-                        />
+                        <TransactionDetails transaction={tx} currency={currency} network={network} />
                       </div>
                     );
                   })}
                 </InfiniteScroll>
               ) : (
-                <Info
-                  type={'warning'}
-                  message={'There are no transactions involving this block.'}
-                />
+                <Info type={'warning'} message={'There are no transactions involving this block.'} />
               )}
             </motion.div>
           ) : null}

@@ -18,7 +18,7 @@ interface SwitchProps {
   checked: boolean;
 }
 
-const Switch = styled(motion.div) <SwitchProps>`
+const Switch = styled(motion.div)<SwitchProps>`
   width: 42px;
   height: 26px;
   background: #8f00ff;
@@ -30,7 +30,7 @@ const Switch = styled(motion.div) <SwitchProps>`
   margin-left: 21px;
 `;
 
-const Handle = styled(motion.div) <SwitchProps>`
+const Handle = styled(motion.div)<SwitchProps>`
   width: 20px;
   height: 20px;
   background-color: ${Black};

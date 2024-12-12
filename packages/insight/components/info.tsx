@@ -10,7 +10,7 @@ interface InfoProps {
   textAlign?: 'center';
 }
 
-const Message = styled(motion.div) <{ type: string; align?: 'center' }>`
+const Message = styled(motion.div)<{ type: string; align?: 'center' }>`
   font-size: 16px;
   margin: 1rem 0;
   padding: 1rem;
@@ -59,13 +59,7 @@ const Info: FC<InfoProps> = ({ message, type, onClick, textAlign }) => {
   message = message || 'Uh Oh, Something went wrong. Please try again.';
 
   return (
-    <Message
-      type={type}
-      variants={infoAnime}
-      initial='initial'
-      animate='animate'
-      onClick={onClick}
-      align={textAlign}>
+    <Message type={type} variants={infoAnime} initial="initial" animate="animate" onClick={onClick} align={textAlign}>
       {message}
     </Message>
   );

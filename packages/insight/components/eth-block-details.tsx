@@ -2,12 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState, memo } from 'react';
-import {
-  getApiRoot,
-  getConvertedValue,
-  getFormattedDate,
-  normalizeParams,
-} from '@/lib/utilities/helper-methods';
+import { getApiRoot, getConvertedValue, getFormattedDate, normalizeParams } from '@/lib/utilities/helper-methods';
 import { fetcher } from '@/api/api';
 import InfiniteScrollLoadSpinner from './infinite-scroll-load-spinner';
 import Info from './info';
@@ -80,9 +75,7 @@ const EthBlockDetails: React.FC<EthDetailsProps> = ({ currency, network, block }
       .then(([_transactionList, _tip, _summary]) => {
         setSummary(_summary);
         if (_transactionList && _tip) {
-          const formattedData = _transactionList.map((tx: any) =>
-            PopulateEthTsxFromBlock(tx, _tip),
-          );
+          const formattedData = _transactionList.map((tx: any) => PopulateEthTsxFromBlock(tx, _tip));
           setHasMore(!!formattedData.length);
           setTransactionList(formattedData.slice(0, limit));
           setCompleteList(formattedData);
@@ -95,7 +88,7 @@ const EthBlockDetails: React.FC<EthDetailsProps> = ({ currency, network, block }
         setIsLoading(false);
         nProgress.done();
       });
-  }, [block]);
+  }, [block, baseUrl, limit]);
 
   const loadMore = () => {
     if (limit < completeList.length) {
@@ -113,14 +106,14 @@ const EthBlockDetails: React.FC<EthDetailsProps> = ({ currency, network, block }
         <>
           {error ? <Info type={'error'} message={error} /> : null}
           {summary ? (
-            <motion.div variants={routerFadeIn} animate='animate' initial='initial'>
+            <motion.div variants={routerFadeIn} animate="animate" initial="initial">
               <MainTitle style={{ marginBottom: 8 }}>
                 Block #{summary.height}
                 <SupCurrencyLogo currency={currency} />
               </MainTitle>
 
               <DisplayFlex>
-                <TileDescription $margin='0 1rem 0 0' $width='auto' $noTruncate>
+                <TileDescription $margin="0 1rem 0 0" $width="auto" $noTruncate>
                   Block Hash
                 </TileDescription>
                 <TileDescription $value>
@@ -132,51 +125,43 @@ const EthBlockDetails: React.FC<EthDetailsProps> = ({ currency, network, block }
 
               <SecondaryTitle>Summary</SecondaryTitle>
 
-              <Grid $margin='0 0 3rem 0'>
-                <SharedTile title='Total Difficulty' description={summary.totalDifficulty} />
-                <SharedTile title='Difficulty' description={summary.difficulty} />
-                <SharedTile title='Gas Limit' description={summary.gasLimit} />
-                <SharedTile title='Size (bytes)' description={summary.size} />
+              <Grid $margin="0 0 3rem 0">
+                <SharedTile title="Total Difficulty" description={summary.totalDifficulty} />
+                <SharedTile title="Difficulty" description={summary.difficulty} />
+                <SharedTile title="Gas Limit" description={summary.gasLimit} />
+                <SharedTile title="Size (bytes)" description={summary.size} />
 
-                <SharedTile title='Gas Used' description={summary.gasUsed} />
-                <SharedTile title='Nonce' description={summary.nonce} />
-                <SharedTile title='Number of Transactions' description={summary.transactionCount} />
+                <SharedTile title="Gas Used" description={summary.gasUsed} />
+                <SharedTile title="Nonce" description={summary.nonce} />
+                <SharedTile title="Number of Transactions" description={summary.transactionCount} />
 
                 <Tile $withBorderBottom>
-                  <TileDescription $margin='0 1rem 0 0'>Previous Block</TileDescription>
-                  <TileLink $value $textAlign='right' disabled={!summary.previousBlockHash}>
-                    <span
-                      onClick={() =>
-                        summary.previousBlockHash ? gotoBlock(summary.previousBlockHash) : null
-                      }>
+                  <TileDescription $margin="0 1rem 0 0">Previous Block</TileDescription>
+                  <TileLink $value $textAlign="right" disabled={!summary.previousBlockHash}>
+                    <span onClick={() => (summary.previousBlockHash ? gotoBlock(summary.previousBlockHash) : null)}>
                       {summary.height - 1}
                     </span>
                   </TileLink>
                 </Tile>
 
-                <SharedTile title='Height' description={summary.height} />
+                <SharedTile title="Height" description={summary.height} />
 
                 <Tile $withBorderBottom>
-                  <TileDescription $margin='0 1rem 0 0'>Next Block</TileDescription>
-                  <TileLink $value $textAlign='right' disabled={!summary.nextBlockHash}>
-                    <span
-                      onClick={() =>
-                        summary.nextBlockHash ? gotoBlock(summary.nextBlockHash) : null
-                      }>
+                  <TileDescription $margin="0 1rem 0 0">Next Block</TileDescription>
+                  <TileLink $value $textAlign="right" disabled={!summary.nextBlockHash}>
+                    <span onClick={() => (summary.nextBlockHash ? gotoBlock(summary.nextBlockHash) : null)}>
                       {summary.height + 1}
                     </span>
                   </TileLink>
                 </Tile>
 
                 <SharedTile
-                  title='Block Reward'
-                  description={`${getConvertedValue(summary.reward, currency).toFixed(
-                    3,
-                  )} ${currency}`}
+                  title="Block Reward"
+                  description={`${getConvertedValue(summary.reward, currency).toFixed(3)} ${currency}`}
                 />
-                <SharedTile title='Confirmation' description={summary.confirmations} />
+                <SharedTile title="Confirmation" description={summary.confirmations} />
 
-                <SharedTile title='Timestamp' description={getFormattedDate(summary.time) || ''} />
+                <SharedTile title="Timestamp" description={getFormattedDate(summary.time) || ''} />
               </Grid>
 
               <SecondaryTitle>Transactions</SecondaryTitle>
@@ -186,24 +171,18 @@ const EthBlockDetails: React.FC<EthDetailsProps> = ({ currency, network, block }
                   dataLength={transactionList.length}
                   next={loadMore}
                   hasMore={hasMore}
-                  loader={<InfiniteScrollLoadSpinner />}>
+                  loader={<InfiniteScrollLoadSpinner />}
+                >
                   {transactionList.map((tx: any, index: number) => {
                     return (
                       <div key={index}>
-                        <TransactionDetailsEth
-                          transaction={tx}
-                          currency={currency}
-                          network={network}
-                        />
+                        <TransactionDetailsEth transaction={tx} currency={currency} network={network} />
                       </div>
                     );
                   })}
                 </InfiniteScroll>
               ) : (
-                <Info
-                  type={'warning'}
-                  message={'There are no transactions involving this block.'}
-                />
+                <Info type={'warning'} message={'There are no transactions involving this block.'} />
               )}
             </motion.div>
           ) : null}

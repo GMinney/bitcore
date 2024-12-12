@@ -29,14 +29,14 @@ export default function Home() {
   }, [dispatch]);
 
   return (
-
-    <motion.div variants={routerFadeIn} animate='animate' initial='initial'>
+    <motion.div variants={routerFadeIn} animate="animate" initial="initial">
       <SecondaryTitle>Latest Blocks</SecondaryTitle>
       <Masonry
         breakpointCols={breakpointColumnsObj}
-        className='currency-masonry-grid'
-        columnClassName='currency-masonry-grid_column'>
-        {SUPPORTED_CURRENCIES.map(currency => {
+        className="currency-masonry-grid"
+        columnClassName="currency-masonry-grid_column"
+      >
+        {SUPPORTED_CURRENCIES.map((currency) => {
           return <CurrencyTile currency={currency} key={currency} />;
         })}
       </Masonry>
@@ -45,4 +45,3 @@ export default function Home() {
 }
 
 export type AppDispatch = ThunkDispatch<RootState, unknown, UnknownAction>;
-

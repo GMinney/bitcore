@@ -7,7 +7,7 @@ import {
   getFormattedDate,
   hasUnconfirmedInputs,
   isRBF,
-  getLib
+  getLib,
 } from '@/lib/utilities/helper-methods';
 import { useState, useEffect, FC, memo } from 'react';
 import {
@@ -54,18 +54,11 @@ interface TransactionDetailsProps {
   refTxid?: string;
   refVout?: number;
 }
-const TransactionDetails: FC<TransactionDetailsProps> = ({
-  transaction,
-  currency,
-  network,
-  refTxid,
-  refVout,
-}) => {
+const TransactionDetails: FC<TransactionDetailsProps> = ({ transaction, currency, network, refTxid, refVout }) => {
   const navigate = useNavigate();
   const [formattedInputs, setFormattedInputs] = useState<any[]>();
   const [lib, setLib] = useState<any>(getLib(currency));
-  const { outputs, txid, blockTime, blockHeight, coinbase, inputs, confirmations, fee, value } =
-    transaction;
+  const { outputs, txid, blockTime, blockHeight, coinbase, inputs, confirmations, fee, value } = transaction;
   const goToAddress = (address: any) => {
     return navigate(`/${currency}/${network}/address/${address}`);
   };
@@ -134,20 +127,18 @@ const TransactionDetails: FC<TransactionDetailsProps> = ({
   return (
     <TransactionTile key={txid}>
       <TransactionTileHeader>
-        <TileDescription $value $padding='0 .25rem 0 0'>
-          <TxsPlusSign onClick={() => setShowDetails(!showDetails)}>
-            {showDetails ? '-' : '+'}
-          </TxsPlusSign>
+        <TileDescription $value $padding="0 .25rem 0 0">
+          <TxsPlusSign onClick={() => setShowDetails(!showDetails)}>{showDetails ? '-' : '+'}</TxsPlusSign>
           <SpanLink onClick={() => goToTx(txid)}>{txid}</SpanLink>
         </TileDescription>
 
-        <TileDescription $textAlign='right' $value $padding='0 0 0 0.25rem'>
+        <TileDescription $textAlign="right" $value $padding="0 0 0 0.25rem">
           {`${blockHeight > -1 ? 'Mined' : 'Seen'} on: ${getFormattedDate(blockTime)}`}
         </TileDescription>
       </TransactionTileHeader>
 
       <TransactionTileBody>
-        <TransactionBodyCol $type='Five' $padding='0 1rem'>
+        <TransactionBodyCol $type="Five" $padding="0 1rem">
           {coinbase && <Tile>No Inputs (Newly Generated Coins)</Tile>}
 
           {!coinbase && (
@@ -161,22 +152,20 @@ const TransactionDetails: FC<TransactionDetailsProps> = ({
 
                         <Tile $invertedBorderColor={arr.length > 1 && arr.length !== i + 1}>
                           {showDetails && (
-                            <ArrowDiv $margin='auto .5rem auto 0'>
+                            <ArrowDiv $margin="auto .5rem auto 0">
                               <Image
                                 src={ArrowSvg}
                                 width={17}
                                 height={17}
-                                alt='arrow'
+                                alt="arrow"
                                 onClick={() => goToTx(item.mintTxid, undefined, item.mintIndex)}
                               />
                             </ArrowDiv>
                           )}
 
-                          <TileDescription $padding='0 1rem 0 0' $value>
+                          <TileDescription $padding="0 1rem 0 0" $value>
                             {getAddress(vi) !== 'Unparsed address' ? (
-                              <SpanLink onClick={() => goToAddress(getAddress(vi))}>
-                                {getAddress(vi)}
-                              </SpanLink>
+                              <SpanLink onClick={() => goToAddress(getAddress(vi))}>{getAddress(vi)}</SpanLink>
                             ) : (
                               <span>Unparsed address</span>
                             )}
@@ -185,10 +174,7 @@ const TransactionDetails: FC<TransactionDetailsProps> = ({
                               <>
                                 <TextElipsis>
                                   <b>Tx ID </b>
-                                  <SpanLink
-                                    onClick={() =>
-                                      goToTx(item.mintTxid, undefined, item.mintIndex)
-                                    }>
+                                  <SpanLink onClick={() => goToTx(item.mintTxid, undefined, item.mintIndex)}>
                                     {item.mintTxid}
                                   </SpanLink>
                                 </TextElipsis>
@@ -203,19 +189,19 @@ const TransactionDetails: FC<TransactionDetailsProps> = ({
                                   </ScriptText>
                                 ) : null}
 
-                                {item.script &&
+                                {item.script && (
                                   <>
                                     <b>Script Hex</b>
                                     <ScriptText>{item.script}</ScriptText>
                                     <b>Script ASM</b>
                                     <ScriptText>{new lib.Script(item.script).toASM()}</ScriptText>
                                   </>
-                                }
+                                )}
                               </>
                             )}
                           </TileDescription>
 
-                          <TileDescription $value $textAlign='right'>
+                          <TileDescription $value $textAlign="right">
                             {getConvertedValue(item.value, currency)} {currency}
                           </TileDescription>
                         </Tile>
@@ -228,60 +214,57 @@ const TransactionDetails: FC<TransactionDetailsProps> = ({
           )}
         </TransactionBodyCol>
 
-        <TransactionBodyCol $type='One' $backgroundColor='transparent' $textAlign='center'>
-          <Image src={ArrowSvg} width={15} height={15} alt='arrow' />
+        <TransactionBodyCol $type="One" $backgroundColor="transparent" $textAlign="center">
+          <Image src={ArrowSvg} width={15} height={15} alt="arrow" />
         </TransactionBodyCol>
 
-        <TransactionBodyCol $type='Six' $textAlign='right' $padding='0 1rem'>
+        <TransactionBodyCol $type="Six" $textAlign="right" $padding="0 1rem">
           {outputs.map((vo: any, i: number) => {
             return (
               <div key={i}>
                 {isOutputSelected(i) ? <SelectedPill>Selected</SelectedPill> : null}
                 <Tile $invertedBorderColor={outputsLength > 1 && outputsLength !== i + 1}>
-                  <TileDescription $padding='0 1rem 0 0' $value>
+                  <TileDescription $padding="0 1rem 0 0" $value>
                     {getAddress(vo) !== 'Unparsed address' ? (
-                      <SpanLink onClick={() => goToAddress(getAddress(vo))}>
-                        {getAddress(vo)}
-                      </SpanLink>
+                      <SpanLink onClick={() => goToAddress(getAddress(vo))}>{getAddress(vo)}</SpanLink>
                     ) : (
                       <span>{isOpReturn(vo) ? 'OP_RETURN' : 'Unparsed address'}</span>
                     )}
 
                     {showDetails && (
                       <>
-                        {vo.spentTxid &&
+                        {vo.spentTxid && (
                           <TextElipsis>
                             <b>Spent By </b>
                             <SpanLink onClick={() => goToTx(vo.spentTxid, transaction.txid, i)}>
                               {vo.spentTxid}
                             </SpanLink>
                           </TextElipsis>
-                        }
-                        {isOpReturn(vo) &&
-                          <ScriptText>{getOpReturnText(vo)}</ScriptText>
-                        }
-                        {vo.script &&
+                        )}
+                        {isOpReturn(vo) && <ScriptText>{getOpReturnText(vo)}</ScriptText>}
+                        {vo.script && (
                           <>
-                            <b>Script Hex</b><ScriptText>{new lib.Script(vo.script).toHex()}</ScriptText>
-                            <b>Script ASM</b><ScriptText>{new lib.Script(vo.script).toASM()}</ScriptText>
+                            <b>Script Hex</b>
+                            <ScriptText>{new lib.Script(vo.script).toHex()}</ScriptText>
+                            <b>Script ASM</b>
+                            <ScriptText>{new lib.Script(vo.script).toASM()}</ScriptText>
                           </>
-                        }
+                        )}
                       </>
                     )}
                   </TileDescription>
 
-                  <TileDescription $value $textAlign='right'>
-                    {getConvertedValue(vo.value, currency)} {currency}{' '}
-                    {vo.spentTxid ? '(S)' : '(U)'}
+                  <TileDescription $value $textAlign="right">
+                    {getConvertedValue(vo.value, currency)} {currency} {vo.spentTxid ? '(S)' : '(U)'}
                   </TileDescription>
 
                   {showDetails && vo.spentTxid && (
-                    <ArrowDiv $margin='auto 0 auto .5rem'>
+                    <ArrowDiv $margin="auto 0 auto .5rem">
                       <Image
                         src={ArrowSvg}
                         width={17}
                         height={17}
-                        alt='arrow'
+                        alt="arrow"
                         onClick={() => goToTx(vo.spentTxid, transaction.txid, i)}
                       />
                     </ArrowDiv>
@@ -311,19 +294,15 @@ const TransactionDetails: FC<TransactionDetailsProps> = ({
 
           {confirmations === 1 && <TransactionChip $primary>1 Confirmation</TransactionChip>}
 
-          {confirmations > 1 && (
-            <TransactionChip $primary>{confirmations} Confirmations</TransactionChip>
-          )}
+          {confirmations > 1 && <TransactionChip $primary>{confirmations} Confirmations</TransactionChip>}
 
           {isRBF(inputs) && confirmations === -1 && (
             <TransactionChip $error>Replace By Fee (RBF) enabled</TransactionChip>
           )}
 
-          {hasUnconfirmedInputs(inputs) && (
-            <TransactionChip $error>Tx has unconfirmed inputs</TransactionChip>
-          )}
+          {hasUnconfirmedInputs(inputs) && <TransactionChip $error>Tx has unconfirmed inputs</TransactionChip>}
 
-          <TransactionChip $margin='0 0 0 1rem'>
+          <TransactionChip $margin="0 0 0 1rem">
             {getConvertedValue(value, currency)} {currency}
           </TransactionChip>
         </TransactionTileFlex>

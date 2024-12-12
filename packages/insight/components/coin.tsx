@@ -53,16 +53,16 @@ const Coin: FC<CoinProps> = ({ transaction, currency, network, order }) => {
         <>
           <TransactionTileBody>
             {height >= -1 && (
-              <TransactionBodyCol $type='Six' $padding='0 1rem'>
+              <TransactionBodyCol $type="Six" $padding="0 1rem">
                 <Tile>
-                  <TileDescription $padding='0 1rem 0 0' $value>
+                  <TileDescription $padding="0 1rem 0 0" $value>
                     <SpanLink onClick={() => gotToTx(mintTxid)}>{mintTxid}</SpanLink>
                   </TileDescription>
                 </Tile>
               </TransactionBodyCol>
             )}
-            <TransactionBodyCol $type='Six' $backgroundColor='transparent' $padding='0 1rem'>
-              <TransactionTileFlex $justifyContent='flex-end'>
+            <TransactionBodyCol $type="Six" $backgroundColor="transparent" $padding="0 1rem">
+              <TransactionTileFlex $justifyContent="flex-end">
                 {height === -3 && <TransactionChip $error>Invalid</TransactionChip>}
 
                 {height === -5 && <TransactionChip $error>Expired</TransactionChip>}
@@ -71,11 +71,9 @@ const Coin: FC<CoinProps> = ({ transaction, currency, network, order }) => {
 
                 {confirmations === 1 && <TransactionChip $primary>1 Confirmation</TransactionChip>}
 
-                {confirmations > 1 && (
-                  <TransactionChip $primary>{confirmations} Confirmations</TransactionChip>
-                )}
+                {confirmations > 1 && <TransactionChip $primary>{confirmations} Confirmations</TransactionChip>}
 
-                <TransactionChip $margin='0 0 0 1rem'>
+                <TransactionChip $margin="0 0 0 1rem">
                   {getConvertedValue(value, currency)} {currency}
                 </TransactionChip>
               </TransactionTileFlex>
@@ -84,12 +82,12 @@ const Coin: FC<CoinProps> = ({ transaction, currency, network, order }) => {
 
           <TransactionTileFlex>
             {showTimer ? (
-              <TileDescription $value $width='auto'>
+              <TileDescription $value $width="auto">
                 {' '}
                 {confirmations > 0 ? 'Mined' : 'Seen'} on {getFormattedDate(time)}{' '}
               </TileDescription>
             ) : (
-              <TileLink $value $width='auto' onClick={() => getTxData(mintTxid)}>
+              <TileLink $value $width="auto" onClick={() => getTxData(mintTxid)}>
                 Tx Details
               </TileLink>
             )}
@@ -101,17 +99,17 @@ const Coin: FC<CoinProps> = ({ transaction, currency, network, order }) => {
         <>
           <TransactionTileBody>
             {height >= -1 && (
-              <TransactionBodyCol $type='Six' $padding='0 1rem'>
+              <TransactionBodyCol $type="Six" $padding="0 1rem">
                 <Tile>
-                  <TileDescription $padding='0 1rem 0 0' $value>
+                  <TileDescription $padding="0 1rem 0 0" $value>
                     <SpanLink onClick={() => gotToTx(spentTxid)}>{spentTxid}</SpanLink>
                   </TileDescription>
                 </Tile>
               </TransactionBodyCol>
             )}
 
-            <TransactionBodyCol $type='Six' $backgroundColor='transparent' $padding='0 1rem'>
-              <TransactionTileFlex $justifyContent='flex-end'>
+            <TransactionBodyCol $type="Six" $backgroundColor="transparent" $padding="0 1rem">
+              <TransactionTileFlex $justifyContent="flex-end">
                 {height === -2 && <TransactionChip>Unspent</TransactionChip>}
 
                 {height === -3 && <TransactionChip $error>Invalid</TransactionChip>}
@@ -124,11 +122,9 @@ const Coin: FC<CoinProps> = ({ transaction, currency, network, order }) => {
 
                 {confirmations === 1 && <TransactionChip $primary>1 Confirmation</TransactionChip>}
 
-                {confirmations > 1 && (
-                  <TransactionChip $primary>{confirmations} Confirmations</TransactionChip>
-                )}
+                {confirmations > 1 && <TransactionChip $primary>{confirmations} Confirmations</TransactionChip>}
 
-                <TransactionChip $error $margin='0 0 0 1rem'>
+                <TransactionChip $error $margin="0 0 0 1rem">
                   - {getConvertedValue(value, currency)} {currency}
                 </TransactionChip>
               </TransactionTileFlex>
@@ -137,12 +133,12 @@ const Coin: FC<CoinProps> = ({ transaction, currency, network, order }) => {
 
           <TransactionTileFlex>
             {showTimer ? (
-              <TileDescription $value $width='auto'>
+              <TileDescription $value $width="auto">
                 {' '}
                 {confirmations > 0 ? 'Mined' : 'Seen'} on {getFormattedDate(time)}{' '}
               </TileDescription>
             ) : (
-              <TileLink $value $width='auto' onClick={() => getTxData(spentTxid)}>
+              <TileLink $value $width="auto" onClick={() => getTxData(spentTxid)}>
                 Tx Details
               </TileLink>
             )}

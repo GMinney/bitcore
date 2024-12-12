@@ -24,9 +24,7 @@ const inputTypes: InputType[] = [
     regexes: [/^(thought:)?([mt][1-9A-HJ-NP-Za-km-z]{26,35})/],
     dataIndex: 2,
     type: 'address',
-    chainNetworks: [
-      { chain: 'THT', network: 'testnet' },
-    ],
+    chainNetworks: [{ chain: 'THT', network: 'testnet' }],
   },
   // ETH Address
   {
@@ -44,7 +42,6 @@ const inputTypes: InputType[] = [
     chainNetworks: [
       { chain: 'THT', network: 'mainnet' },
       { chain: 'THT', network: 'testnet' },
-
     ],
   },
   // ETH block or tx
@@ -63,7 +60,6 @@ const inputTypes: InputType[] = [
     chainNetworks: [
       { chain: 'THT', network: 'mainnet' },
       { chain: 'THT', network: 'testnet' },
-
     ],
   },
 ];
@@ -71,7 +67,7 @@ const inputTypes: InputType[] = [
 export const determineInputType = (input: string): Promise<CryptoSearchInput[]> => {
   const searchInputs: CryptoSearchInput[] = [];
   for (const { regexes, chainNetworks, type, dataIndex } of inputTypes) {
-    const index = regexes.findIndex(regex => regex.test(input));
+    const index = regexes.findIndex((regex) => regex.test(input));
     if (index > -1) {
       let localInput = input;
       // If defined then the data we care about is a subset of the actual user input (ie has prefix to discard)
@@ -101,14 +97,13 @@ export const searchValue = async (
   if (currency && network) {
     // If user has selected a specific network, we only search that network for results
     searchInputs = searchInputs
-      .filter(input => input.chainNetwork.chain === currency)
-      .filter(input => input.chainNetwork.network === network);
+      .filter((input) => input.chainNetwork.chain === currency)
+      .filter((input) => input.chainNetwork.network === network);
   }
 
   for (const search of searchInputs) {
     const apiURL =
-      getApiRoot(search.chainNetwork.chain) +
-      `/${search.chainNetwork.chain}/${search.chainNetwork.network}`;
+      getApiRoot(search.chainNetwork.chain) + `/${search.chainNetwork.chain}/${search.chainNetwork.network}`;
     if (search.type === 'block') {
       searchArray.push(searchBlock(search.input, apiURL));
     } else if (search.type === 'blockOrTx') {

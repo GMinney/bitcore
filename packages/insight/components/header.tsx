@@ -86,7 +86,7 @@ const Header = ({ setSearchError }: { setSearchError?: any }) => {
       </ImageDiv>
       <AnimatePresence>
         {location.pathname !== '/' && (
-          <DesktopSearch variants={fadeInOut} animate='animate' initial='initial' exit='exit'>
+          <DesktopSearch variants={fadeInOut} animate="animate" initial="initial" exit="exit">
             <Search setErrorMessage={setSearchError} />
           </DesktopSearch>
         )}

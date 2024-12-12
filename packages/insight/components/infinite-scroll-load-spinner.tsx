@@ -14,7 +14,7 @@ const SpinnerDiv = styled(Spinner)`
 const InfiniteScrollLoadSpinner = () => {
   return (
     <SpinnerDiv>
-      <Image src={LargeThinSpinner} height={30} width={30} alt='spinner' />
+      <Image src={LargeThinSpinner} height={30} width={30} alt="spinner" />
     </SpinnerDiv>
   );
 };

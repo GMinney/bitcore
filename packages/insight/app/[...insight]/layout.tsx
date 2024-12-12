@@ -1,9 +1,7 @@
 import type { Metadata } from 'next';
-import localFont from 'next/font/local';
 import './globals.css';
 import React from 'react';
 import StoreProvider from './StoreProvider';
-
 
 // import NoSSR from './NoSSR';
 
@@ -28,17 +26,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   //${geistSans.variable} ${geistMono.variable}
 
   return (
-    <html lang="en">
-      <body
-        className={` antialiased`}
-      >
-        <StoreProvider>
-          {children}
-        </StoreProvider>
+    <html lang='en'>
+      <body className={'antialiased'}>
+        <StoreProvider>{children}</StoreProvider>
       </body>
     </html>
   );

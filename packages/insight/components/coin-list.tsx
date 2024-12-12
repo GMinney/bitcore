@@ -29,8 +29,8 @@ const SortButton = styled(motion.button)`
 
 const ButtonText = styled.div.attrs<{
   $activeTextColor: boolean;
-}>(props => ({
-  $activeTextColor: props.$activeTextColor
+}>((props) => ({
+  $activeTextColor: props.$activeTextColor,
 }))`
   font-size: 16px;
   color: ${({ $activeTextColor, theme: { colors } }) => ($activeTextColor ? Action : colors.color)};
@@ -66,7 +66,7 @@ const ProcessData = (data: any, blockTipHeight: number) => {
         height: spentHeight,
         spentTxid,
         value,
-        confirmations: spentHeight > -1 ? (blockTipHeight - spentHeight + 1) : spentHeight,
+        confirmations: spentHeight > -1 ? blockTipHeight - spentHeight + 1 : spentHeight,
       });
     }
     if (mintHeight >= -1) {
@@ -74,7 +74,7 @@ const ProcessData = (data: any, blockTipHeight: number) => {
         height: mintHeight,
         mintTxid,
         value,
-        confirmations: mintHeight > -1 ? (blockTipHeight - mintHeight + 1) : mintHeight,
+        confirmations: mintHeight > -1 ? blockTipHeight - mintHeight + 1 : mintHeight,
       });
     }
   }
@@ -119,7 +119,7 @@ const CoinList: FC<CoinListProps> = ({ txs, currency, network, tip, transactions
     setTransactions(_transactions);
     setHasMoreTxs(_transactions.length < _txs.length);
     setIsLoading(false);
-  }, [txs]);
+  }, [txs, currency, height, limit, transactionsLength]);
 
   const sortTransactions = (order: string) => {
     if (currentOrder === order) {
@@ -162,17 +162,11 @@ const CoinList: FC<CoinListProps> = ({ txs, currency, network, tip, transactions
         <>
           <SortDiv>
             <span>Sort by: </span>
-            <SortButton
-              variants={sortBtnAnime}
-              whileHover='whileHover'
-              onClick={() => sortTransactions('mostRecent')}>
+            <SortButton variants={sortBtnAnime} whileHover="whileHover" onClick={() => sortTransactions('mostRecent')}>
               <ButtonText $activeTextColor={currentOrder === 'mostRecent'}>Most Recent</ButtonText>
             </SortButton>{' '}
             |
-            <SortButton
-              variants={sortBtnAnime}
-              whileHover='whileHover'
-              onClick={() => sortTransactions('oldest')}>
+            <SortButton variants={sortBtnAnime} whileHover="whileHover" onClick={() => sortTransactions('oldest')}>
               <ButtonText $activeTextColor={currentOrder === 'oldest'}>Oldest</ButtonText>
             </SortButton>
           </SortDiv>
@@ -181,19 +175,15 @@ const CoinList: FC<CoinListProps> = ({ txs, currency, network, tip, transactions
             dataLength={transactions.length}
             next={loadMore}
             hasMore={hasMoreTxs}
-            loader={<InfiniteScrollLoadSpinner />}>
+            loader={<InfiniteScrollLoadSpinner />}
+          >
             {transactions.map((tx: any, index: number) => {
               return (
                 <div key={index}>
                   {currency === 'ETH' ? (
                     <TransactionDetailsEth transaction={tx} currency={currency} network={network} />
                   ) : (
-                    <Coin
-                      transaction={tx}
-                      currency={currency}
-                      network={network}
-                      order={currentOrder}
-                    />
+                    <Coin transaction={tx} currency={currency} network={network} order={currentOrder} />
                   )}
                 </div>
               );

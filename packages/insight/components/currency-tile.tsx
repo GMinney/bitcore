@@ -27,15 +27,7 @@ import {
 import { Line } from 'react-chartjs-2';
 //import { useRouter } from 'next/navigation';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const gutter = '1.5rem';
 
@@ -55,11 +47,11 @@ const DarkBackground: { [key in string]: string } = {
   DOGE: '#0B0903',
 };
 
-const CurrencyTileDiv = styled.div.attrs<{ $currency: string }>(props => ({ $currency: props.$currency }))`
+const CurrencyTileDiv = styled.div.attrs<{ $currency: string }>((props) => ({ $currency: props.$currency }))`
   padding: ${gutter};
   text-align: left;
   border-radius: 8px;
-  background: ${({ $currency, theme: { dark } }) => dark ? DarkBackground[$currency] : LightBackground[$currency]};
+  background: ${({ $currency, theme: { dark } }) => (dark ? DarkBackground[$currency] : LightBackground[$currency])};
   box-shadow: ${({ theme: { dark } }) => (dark ? '0px 5px 20px -5px rgba(0, 0, 0, 0.18)' : 'none')};
   margin-bottom: 2rem;
 
@@ -104,7 +96,7 @@ interface PositionDivProps {
   error?: any;
 }
 
-const PositionDiv = styled(Spinner) <PositionDivProps>`
+const PositionDiv = styled(Spinner)<PositionDivProps>`
   min-height: 200px;
   display: flex;
   justify-content: center;
@@ -166,7 +158,7 @@ const CurrencyTile: FC<CurrencyTileProps> = ({ currency }) => {
     return (
       <CurrencyTileDiv $currency={currency}>
         <PositionDiv>
-          <Image src={LargeThinSpinner} height={30} width={30} alt='spinner' />
+          <Image src={LargeThinSpinner} height={30} width={30} alt="spinner" />
         </PositionDiv>
       </CurrencyTileDiv>
     );
@@ -174,15 +166,13 @@ const CurrencyTile: FC<CurrencyTileProps> = ({ currency }) => {
 
   const { height, time, transactionCount, size } = data[0];
 
-
-
   const gotoAllBlocks = async () => {
     await navigate(`/${currency}/mainnet/blocks`);
     //router.push(`/insight/${currency}/mainnet/blocks`);
     // return <Navigate to={`/insight/${currency}/mainnet/blocks`} replace={true} />
   };
 
-  const imgSrc = `https://exp2.thought.live.com/img/icon/currencies/${currency}.svg`;
+  //const imgSrc = `https://exp2.thought.live.com/img/icon/currencies/${currency}.svg`;
 
   const chartData = {
     labels: priceList,
@@ -230,32 +220,26 @@ const CurrencyTile: FC<CurrencyTileProps> = ({ currency }) => {
 
       {priceList.length > 0 && (
         <ChartContainer>
-          <Line
-            key={currency}
-            data={chartData}
-            options={options}
-            aria-label='price line chart'
-            role='img'
-          />
+          <Line key={currency} data={chartData} options={options} aria-label="price line chart" role="img" />
         </ChartContainer>
       )}
 
-      <Tile $padding='0'>
+      <Tile $padding="0">
         <CurrencyTileDesc>Height</CurrencyTileDesc>
         <CurrencyTileDesc value>{height}</CurrencyTileDesc>
       </Tile>
 
-      <Tile $padding='0'>
+      <Tile $padding="0">
         <CurrencyTileDesc>Mined</CurrencyTileDesc>
         <CurrencyTileDesc value>{buildTime(time)}</CurrencyTileDesc>
       </Tile>
 
-      <Tile $padding='0'>
+      <Tile $padding="0">
         <CurrencyTileDesc>Transaction</CurrencyTileDesc>
         <CurrencyTileDesc value>{transactionCount}</CurrencyTileDesc>
       </Tile>
 
-      <Tile $padding='0'>
+      <Tile $padding="0">
         <CurrencyTileDesc>Size</CurrencyTileDesc>
         <CurrencyTileDesc value>{size}</CurrencyTileDesc>
       </Tile>

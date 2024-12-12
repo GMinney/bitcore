@@ -11,7 +11,7 @@ export const DEFAULT_RBF_SEQ_NUMBER = 0xffffffff;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const colorCodes: any = {
-  THT: '#0A0945'
+  THT: '#0A0945',
 };
 
 // Media breakpoints

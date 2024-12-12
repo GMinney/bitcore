@@ -40,17 +40,14 @@ const Footer = () => {
   return (
     <FooterDiv>
       <ThoughtLink>
-
-
         <div style={{ width: '89px', height: '25px', position: 'relative' }}>
           <Image
             src={theme.dark ? ThoughtLogoDark.src : ThoughtLogoLight.src}
-            alt='Thought logo'
+            alt="Thought logo"
             onClick={() => window.open('https://thought.live', '_blank')}
             fill={true}
           />
         </div>
-
       </ThoughtLink>
 
       <Version>v9.0.0</Version>

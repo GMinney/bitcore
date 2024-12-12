@@ -9,13 +9,12 @@ export const Tile = styled.div.attrs<{
   $invertedBorderColor?: boolean;
   $margin?: string;
   $padding?: string;
-}>
-  (props => ({
-    $withBorderBottom: props.$withBorderBottom,
-    $invertedBorderColor: props.$invertedBorderColor,
-    $margin: props.$margin,
-    $padding: props.$padding
-  }))`
+}>((props) => ({
+  $withBorderBottom: props.$withBorderBottom,
+  $invertedBorderColor: props.$invertedBorderColor,
+  $margin: props.$margin,
+  $padding: props.$padding,
+}))`
   justify-content: space-between;
   display: flex;
   margin: ${({ $margin }) => $margin || 0};
@@ -38,7 +37,6 @@ export const Tile = styled.div.attrs<{
       `;
     }
   }};
-
 `;
 
 export const TileDescription = styled.div.attrs<{
@@ -48,34 +46,33 @@ export const TileDescription = styled.div.attrs<{
   $padding?: string;
   $width?: string;
   $textAlign?: string;
-}>(props => ({
+}>((props) => ({
   $value: props.$value,
   $noTruncate: props.$noTruncate,
   $margin: props.$margin,
   $padding: props.$padding,
   $width: props.$width,
-  $textAlign: props.$textAlign
+  $textAlign: props.$textAlign,
 }))`
-
-  ${props => {
+  ${(props) => {
     if (!props.$noTruncate) {
       return Truncate();
     }
   }}
 
   font-style: normal;
-  font-weight: ${props => (props.$value ? 'normal' : '500')};
-  font-size: ${props => (props.$value ? '16px' : '18px')};
+  font-weight: ${(props) => (props.$value ? 'normal' : '500')};
+  font-size: ${(props) => (props.$value ? '16px' : '18px')};
   line-height: 25px;
   white-space: nowrap;
-  margin: ${props => props.$margin || 0};
-  padding: ${props => props.$padding || 0};
-  width: ${props => props.$width || '100%'};
-  text-align: ${props => props.$textAlign || 'left'};
+  margin: ${(props) => props.$margin || 0};
+  padding: ${(props) => props.$padding || 0};
+  width: ${(props) => props.$width || '100%'};
+  text-align: ${(props) => props.$textAlign || 'left'};
   display: inline;
 
   @media screen and (max-width: ${size.mobileL}) {
-    font-size: ${props => (props.$value ? '14px' : '16px')};
+    font-size: ${(props) => (props.$value ? '14px' : '16px')};
   }
 `;
 
@@ -83,7 +80,7 @@ interface TileLinkProps {
   disabled?: boolean;
 }
 
-export const TileLink = styled(TileDescription) <TileLinkProps>`
+export const TileLink = styled(TileDescription)<TileLinkProps>`
   color: ${({ disabled, theme: { colors } }) => (disabled ? 'inherit' : colors.link)};
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
 `;
