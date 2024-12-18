@@ -18,16 +18,17 @@
   },
   "dependencies": {
     "async": "3.2.6",
-    "thoughtcore-lib": "file:../thoughtcore-lib",
-    "thoughtcore-wallet-client": "file:../thoughtcore-wallet-client",
     "commander": "12.1.0",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
     "qr-image": "^3.2.0",
     "read": "^3.0.1",
-    "sjcl": "^1.0.8"
+    "sjcl": "^1.0.8",
+    "thoughtcore-lib": "file:../thoughtcore-lib",
+    "thoughtcore-wallet-client": "file:../thoughtcore-wallet-client"
   },
   "devDependencies": {
+    "@types/node": "^22.10.2",
     "chai": "5.1.1",
     "sinon": "^18.0.0"
   },

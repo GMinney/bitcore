@@ -1,0 +1,9 @@
+#!/bin/sh
+
+INSTALL='crypto-rpc crypto-wallet-core insight thoughtcore-build thoughtcore-client thoughtcore-lib thoughtcore-mnemonic thoughtcore-node thoughtcore-p2p thoughtcore-wallet thoughtcore-wallet-service thoughtcore-wallet-client '
+
+for i in $INSTALL; 
+do
+  echo "## $i"
+  cd $i && npm i || (echo "ERROR" && exit) && cd ..
+done

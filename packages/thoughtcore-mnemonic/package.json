@@ -41,7 +41,6 @@
   "devDependencies": {
     "@types/mocha": "10.0.10",
     "assert": "^2.1.0",
-    "thoughtcore-build": "file:../thoughtcore-build",
     "brfs": "^2.0.2",
     "chai": "5.1.1",
     "gulp": "^5.0.0",

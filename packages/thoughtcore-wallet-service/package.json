@@ -83,7 +83,7 @@
     "@types/async": "3.2.24",
     "@types/got": "9.6.12",
     "@types/lodash": "^4.17.7",
-    "@types/node": "22.10.1",
+    "@types/node": "22.10.2",
     "@types/nodemailer": "^6.4.17",
     "@types/mocha": "10.0.10",
     "chai": "5.1.1",

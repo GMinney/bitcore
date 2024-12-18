@@ -6,9 +6,6 @@ var async = require('async');
 var chai = require('chai');
 var sinon = require('sinon');
 var should = chai.should();
-var log = require('npmlog');
-log.debug = log.verbose;
-log.level = 'info';
 
 var sjcl = require('sjcl');
 

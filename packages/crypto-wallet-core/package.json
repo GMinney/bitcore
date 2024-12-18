@@ -25,7 +25,6 @@
   "dependencies": {
     "bn.js": "^5.2.1",
     "ethers": "6.13.2",
-    "info": "0.0.6-beta.0",
     "thoughtcore-lib": "file:../thoughtcore-lib",
     "web3": "^4.12.1",
     "xrpl": "4.0.0"
@@ -33,7 +32,7 @@
   "devDependencies": {
     "@types/chai": "5.0.1",
     "@types/mocha": "10.0.10",
-    "@types/node": "22.10.1",
+    "@types/node": "22.10.2",
     "chai": "5.1.1",
     "mocha": "11.0.1",
     "ts-node": "10.9.2",

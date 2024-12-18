@@ -1,7 +1,6 @@
 var _ = require('lodash');
 var url = require('url');
 var read = require('read')
-var log = require('npmlog');
 var Client = require('thoughtcore-wallet-client').default;
 const Key = Client.Key;
 var FileStorage = require('./filestorage');
@@ -87,7 +86,7 @@ Utils.doLoad = function (client, doNotComplete, walletData, password, filename, 
 
   client.on('walletCompleted', function (wallet) {
     Utils.doSave(key, client, filename, password, function () {
-      log.info('Your wallet has just been completed. Please backup your wallet file or use the export command.');
+      console.log('Your wallet has just been completed. Please backup your wallet file or use the export command.');
     });
   });
   client.openWallet(function (err, isComplete) {

@@ -73,4 +73,4 @@ services:
 # with each other, by using their container name as a hostname
 networks:
   insight-services:
-    external: true
+    driver: bridge

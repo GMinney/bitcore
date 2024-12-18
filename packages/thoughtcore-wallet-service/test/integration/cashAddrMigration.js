@@ -6,8 +6,6 @@ var async = require('async');
 var chai = require('chai');
 var sinon = require('sinon');
 var should = chai.should();
-var log = require('npmlog');
-log.debug = log.verbose;
 
 var Thoughtcore = require('thoughtcore-lib');
 var Thoughtcore_ = {
@@ -42,7 +40,6 @@ describe('Cash address migration', function () {
 
   });
   beforeEach(function (done) {
-    log.level = 'error';
     helpers.beforeEach(function (res) {
       done();
     });

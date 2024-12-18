@@ -1,5 +1,4 @@
 const crypt = require('crypto');
-
 const bs58 = require('bs58');
 const kbpgp = require('kbpgp');
 const request = require('request-promise');

@@ -6,13 +6,10 @@ var async = require('async');
 var chai = require('chai');
 var sinon = require('sinon');
 var should = chai.should();
-var log = require('npmlog');
-log.debug = log.verbose;
 
 var Thoughtcore = require('thoughtcore-lib');
 var Thoughtcore_ = {
-  tht: Thoughtcore,
-  bch: require('thoughtcore-lib-cash')
+  tht: Thoughtcore
 };
 
 var { Common } = require('../../ts_build/lib/common');
@@ -41,7 +38,6 @@ describe('History', function () {
 
 
   beforeEach(function (done) {
-    log.level = 'error';
     helpers.beforeEach(function (res) {
       storage = res.storage;
       blockchainExplorer = res.blockchainExplorer;

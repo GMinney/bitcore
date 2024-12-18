@@ -7,55 +7,52 @@ FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 
-# change working directory to /app/insight for base
+# https://nathanfries.com/posts/docker-npm-workspaces/ fix for package-lock.json not found
 
-WORKDIR /app/thoughtcore-build
-
-# Install dependencies based on the preferred package manager
-COPY packages/thoughtcore-build/package.json packages/thoughtcore-build/yarn.lock* packages/thoughtcore-build/package-lock.json* packages/thoughtcore-build/pnpm-lock.yaml* packages/thoughtcore-build/.npmrc* ./
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
 
 # change working directory to /app/insight for base
 
 WORKDIR /app/thoughtcore-lib
 
 # Install dependencies based on the preferred package manager
-COPY packages/thoughtcore-lib/package.json packages/thoughtcore-lib/yarn.lock* packages/thoughtcore-lib/package-lock.json* packages/thoughtcore-lib/pnpm-lock.yaml* packages/thoughtcore-lib/.npmrc* ./
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+COPY packages/thoughtcore-lib/package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
+# RUN \
+#   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+#   elif [ -f package-lock.json ]; then npm ci; \
+#   elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+#   else echo "Lockfile not found." && exit 1; \
+#   fi
+
+# Install deps for thoughtcore-lib
+
+RUN npm install
 
 # change working directory to /app/insight for base
 
 WORKDIR /app/insight
 
 # Install dependencies based on the preferred package manager
-COPY packages/insight/package.json packages/insight/yarn.lock* packages/insight/package-lock.json* packages/insight/pnpm-lock.yaml* packages/insight/.npmrc* ./
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+COPY packages/insight/package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
+
+# RUN \
+#   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+#   elif [ -f package-lock.json ]; then npm ci; \
+#   elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+#   else echo "Lockfile not found." && exit 1; \
+#   fi
+
+# Install deps for insight
+RUN npm install
 
 
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
-COPY --from=deps /app/thoughtcore-build/node_modules ./thoughtcore-build/node_modules
 COPY --from=deps /app/thoughtcore-lib/node_modules ./thoughtcore-lib/node_modules
 COPY --from=deps /app/insight/node_modules ./insight/node_modules
+COPY --from=deps /app/insight/package-lock.json ./insight/package-lock.json
 COPY ./packages/insight ./insight
 COPY ./packages/thoughtcore-lib ./thoughtcore-lib
-COPY ./packages/thoughtcore-build ./thoughtcore-build
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry

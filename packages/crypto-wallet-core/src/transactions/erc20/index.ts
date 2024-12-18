@@ -1,7 +1,7 @@
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 import { ETHTxProvider } from '../eth';
-import { ERC20Abi, MULTISENDAbi } from './abi';
+import { ERC20Abi } from './abi';
 import BN from 'bn.js'
 
 

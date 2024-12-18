@@ -24,7 +24,6 @@
     "socks5-client": "^1.2.8"
   },
   "devDependencies": {
-    "thoughtcore-build": "file:../thoughtcore-build",
     "brfs": "^2.0.2",
     "chai": "5.1.1",
     "gulp": "^5.0.0",
