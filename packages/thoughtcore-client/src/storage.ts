@@ -1,4 +1,3 @@
-import 'source-map-support/register';
 import { PassThrough } from 'stream';
 import { Encryption } from './encryption';
 import { Level } from './storage/level';

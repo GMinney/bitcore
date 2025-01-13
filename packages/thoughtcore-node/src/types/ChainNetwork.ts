@@ -1,4 +1,4 @@
-export type NetworkType = 'mainnet' | 'testnet' | 'regtest';
+export type NetworkType = 'main' | 'test' | 'regtest';
 
 export interface Chain {
   chain: string;

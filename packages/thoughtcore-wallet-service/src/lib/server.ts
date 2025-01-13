@@ -6,7 +6,6 @@ import {
 } from 'crypto-wallet-core';
 import * as _ from 'lodash';
 //import Moralis from 'moralis';
-import 'source-map-support/register';
 import config from '../config.ts';
 import logger from './logger.ts';
 

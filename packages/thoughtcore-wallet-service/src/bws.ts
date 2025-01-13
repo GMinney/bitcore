@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import cluster from 'cluster';
 import * as fs from 'fs';
-import 'source-map-support/register';
 import config from './config.ts';
 import { ExpressApp } from './lib/expressapp.ts';
 import logger from './lib/logger.ts';

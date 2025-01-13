@@ -25,7 +25,7 @@ export class BlockCypherClass implements IFeeProvider {
 
   public async getFee(network: NetworkType, nblocks: number): Promise<number> {
     try {
-      network = network === 'regtest' ? 'testnet' : network;
+      network = network === 'regtest' ? 'test' : network;
 
       // blockcypher rate limits to 3 req/s or 100 req/hr, so cache for 1.5 minutes
       if (this.cache[network] && this.cache[network].timestamp > Date.now() - 1000 * 90) {

@@ -1,6 +1,6 @@
 export const SUPPORTED_CURRENCIES = ['THT'];
 // export const SUPPORTED_CURRENCIES = ['THT', 'tTHT'];
-export const API_ROOT = 'http://localhost:3000/api';
+export const API_ROOT = 'http://localhost:3004/api';
 export const API_ROOT_ETH = 'https://exp2-eth.thought.live/api';
 //export const API_ROOT = 'https://exp2.thought.live/api';
 //export const API_ROOT_ETH = 'https://exp2-eth.thought.live/api';

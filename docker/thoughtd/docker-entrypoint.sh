@@ -19,8 +19,8 @@ if [[ "$1" == "thought-cli" || "$1" == "thought-tx" || "$1" == "thoughtd" || "$1
 	${CONFIG_PREFIX}
 	rpcuser=username
 	rpcpassword=password
-	printtoconsole=1
-	rpcallowip=::/0
+	printtoconsole=0
+	server=1
 	${THOUGHT_EXTRA_ARGS}
 	EOF
 	chown thought:thought "$THOUGHT_DATA/thought.conf"

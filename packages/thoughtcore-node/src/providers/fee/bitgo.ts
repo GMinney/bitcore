@@ -12,7 +12,7 @@ export class BitgoClass implements IFeeProvider {
 
   public async getFee(network: NetworkType, nblocks: number): Promise<number> {
     try {
-      network = network === 'regtest' ? 'testnet' : network;
+      network = network === 'regtest' ? 'test' : network;
       nblocks = Math.min(Math.max(nblocks, 2), 1000); // min 2, max 1000
       let got = await import('got');
       const res = await got.get(`${this.feeUrls[network]}?numBlocks=${nblocks}`, {

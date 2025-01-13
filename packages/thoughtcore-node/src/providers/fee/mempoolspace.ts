@@ -29,7 +29,7 @@ export class MempoolSpaceClass implements IFeeProvider {
   private cacheTime = 1000 * 90; // 90 seconds
 
   public async getFee(network: NetworkType, nblocks: number): Promise<number> {
-    network = network === 'regtest' ? 'testnet' : network;
+    network = network === 'regtest' ? 'test' : network;
 
     if (this.cache[network] && this.cache[network].timestamp > Date.now() - this.cacheTime) {
       return this._getFeeLevel(this.cache[network].response, nblocks);

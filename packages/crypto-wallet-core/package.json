@@ -27,7 +27,8 @@
     "ethers": "6.13.2",
     "thoughtcore-lib": "file:../thoughtcore-lib",
     "web3": "^4.12.1",
-    "xrpl": "4.0.0"
+    "xrpl": "4.0.0",
+    "lodash": "4.17.21"
   },
   "devDependencies": {
     "@types/chai": "5.0.1",

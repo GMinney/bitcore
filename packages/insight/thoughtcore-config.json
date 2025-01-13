@@ -5,72 +5,48 @@
     ],
     "services": {
       "api": {
-        "disabled": false,
-        "rateLimiter": {
-          "disabled": true,
-          "whitelist": []
-        },
         "wallets": {
-          "allowCreationBeforeCompleteSync": false,
-          "allowUnauthenticatedCalls": false
+          "allowCreationBeforeCompleteSync": true
         }
-      },
-      "event": {
-        "disabled": false,
-        "onlyWalletEvents": false
-      },
-      "p2p": {
-        "disabled": false
-      },
-      "socket": {
-        "disabled": false,
-        "bwsKeys": []
-      },
-      "storage": {
-        "disabled": false
       }
     },
     "chains": {
       "THT": {
-        "main": {
-          "chainSource": "p2p",
-          "trustedPeers": [
-            {
-              "host": "localhost",
-              "port": 10618
-            },
-            {
-              "host": "73.230.14.36",
-              "port": 10618
-            }
-          ],
-          "rpc": {
-            "host": "localhost",
-            "port": 10617,
-            "username": "username",
-            "password": "password"
-          }
-        },
-        "test": {
-          "chainSource": "p2p",
-          "trustedPeers": [
-            {
-              "host": "localhost",
-              "port": 10618
-            }
-          ],
-          "rpc": {
-            "host": "localhost",
-            "port": 10617,
-            "username": "username",
-            "password": "password"
-          }
-        },
         "regtest": {
           "chainSource": "p2p",
           "trustedPeers": [
             {
               "host": "localhost",
+              "port": 10618
+            }
+          ],
+          "rpc": {
+            "host": "localhost",
+            "port": 10617,
+            "username": "username",
+            "password": "password"
+          }
+        },
+        "testnet": {
+          "chainSource": "p2p",
+          "trustedPeers": [
+            {
+              "host": "phi.thought.live",
+              "port": 10618
+            }
+          ],
+          "rpc": {
+            "host": "localhost",
+            "port": 10617,
+            "username": "username",
+            "password": "password"
+          }
+        },
+        "mainnet": {
+          "chainSource": "p2p",
+          "trustedPeers": [
+            {
+              "host": "phi.thought.live",
               "port": 10618
             }
           ],
@@ -89,9 +65,8 @@
       },
       "networks": {
         "THT": {
-          "mainnet": "main",
-          "testnet3": "test",
-          "testnet4": "test"
+          "testnet3": "testnet",
+          "testnet4": "testnet"
         }
       }
     }

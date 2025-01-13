@@ -117,7 +117,7 @@ The definition for all the chain configuration can be found in `src/types/Config
   "thoughtcoreNode": {
     "chains": {
       "THT": {
-        "mainnet": {
+        "main": {
           "chainSource": "p2p",
           "trustedPeers": [
             {
@@ -149,7 +149,7 @@ The definition for all the chain configuration can be found in `src/types/Config
         }
       },
       "BCH": {
-        "mainnet": {
+        "main": {
           "parentChain": "THT",
           "forkHeight": 478558,
           "trustedPeers": [

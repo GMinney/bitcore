@@ -1,13 +1,10 @@
 import * as async from 'async';
 import * as _ from 'lodash';
-import 'source-map-support/register';
 
 // This has been changed in favor of @sendgrid.  To use nodemail, change the
 // sending function from `.send` to `.sendMail`.
 // import * as nodemailer from nodemailer';
 import { Constants as ConstantsCWC } from 'crypto-wallet-core';
-import got, { Options as GotOptions } from 'got';
-import GotJSONOptions from 'got';
 import * as request from 'got';
 import config from '../config.ts';
 import { Defaults } from "./common/defaults.ts";

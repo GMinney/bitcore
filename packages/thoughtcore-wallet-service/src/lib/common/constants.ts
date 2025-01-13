@@ -56,8 +56,12 @@ export const Constants = {
   // These aliases are here to support legacy clients so don't change them lightly
   NETWORK_ALIASES: {
     tht: {
-      mainnet: 'livenet',
-      testnet: 'testnet3'
+      mainnet: 'main',
+      main: 'main',
+      testnet: 'test',
+      testnet3: 'test',
+      regtest: 'regtest',
+      devnet: 'devnet'
     },
     eth: {
       mainnet: 'livenet',

@@ -19,7 +19,7 @@ export class ApiService {
   stopped = true;
 
   constructor({
-    port = 3000,
+    port = 3004,
     timeout = 600000,
     configService = Config,
     storageService = Storage,

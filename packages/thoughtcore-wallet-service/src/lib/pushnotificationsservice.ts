@@ -1,7 +1,6 @@
 import * as async from 'async';
 import * as fs from 'fs';
 import _ from 'lodash';
-import 'source-map-support/register';
 
 import * as request from 'got';
 import config from '../config.ts';

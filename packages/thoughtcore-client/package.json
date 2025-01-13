@@ -36,7 +36,6 @@
     "progress": "2.0.3",
     "promptly": "3.2.0",
     "secp256k1": "5.0.1",
-    "source-map-support": "0.5.21",
     "thoughtcore-mnemonic": "file:../thoughtcore-mnemonic"
   },
   "devDependencies": {

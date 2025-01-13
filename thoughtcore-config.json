@@ -42,7 +42,7 @@
             "password": "password"
           }
         },
-        "mainnet": {
+        "main": {
           "chainSource": "p2p",
           "trustedPeers": [
             {

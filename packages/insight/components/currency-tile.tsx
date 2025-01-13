@@ -125,7 +125,7 @@ const CurrencyTile: FC<CurrencyTileProps> = ({ currency }) => {
   const navigate = useNavigate();
   let price;
 
-  const url = `${apiRoot}/${currency}/mainnet/block?limit=1`;
+  const url = `${apiRoot}/${currency}/main/block?limit=1`;
   const { data, error } = useApi(url, { refreshInterval });
   const { data: priceDetails } = useApi(`https://exp2.thought.live.com/rates/${currency}/usd`);
   const { data: priceDisplay } = useApi(
@@ -167,9 +167,9 @@ const CurrencyTile: FC<CurrencyTileProps> = ({ currency }) => {
   const { height, time, transactionCount, size } = data[0];
 
   const gotoAllBlocks = async () => {
-    await navigate(`/${currency}/mainnet/blocks`);
-    //router.push(`/insight/${currency}/mainnet/blocks`);
-    // return <Navigate to={`/insight/${currency}/mainnet/blocks`} replace={true} />
+    await navigate(`/${currency}/main/blocks`);
+    //router.push(`/insight/${currency}/main/blocks`);
+    // return <Navigate to={`/insight/${currency}/main/blocks`} replace={true} />
   };
 
   //const imgSrc = `https://exp2.thought.live.com/img/icon/currencies/${currency}.svg`;

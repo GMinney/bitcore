@@ -297,19 +297,19 @@ export class Utils {
 
   // Good for going from specific 'testnet3', 'sepolia', etc to generic 'testnet'
   static getGenericName(network) {
-    if (network === 'mainnet') return 'livenet';
+    if (network === 'mainnet') return 'main';
     const isTestnet = !!Object.keys(Constants.NETWORK_ALIASES).find(key => Constants.NETWORK_ALIASES[key].testnet === network);
-    if (isTestnet) return 'testnet';
+    if (isTestnet) return 'test';
     return network;
   }
 
   static getNetworkType(network) {
-    if (['mainnet', 'livenet'].includes(network)) {
-      return 'mainnet';
+    if (['mainnet', 'livenet', 'main'].includes(network)) {
+      return 'main';
     }
     if (network === 'regtest') {
       return 'regtest';
     }
-    return 'testnet';
+    return 'test';
   }
 }

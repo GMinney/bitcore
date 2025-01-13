@@ -1,4 +1,3 @@
-import 'source-map-support/register';
 import logger from '../logger';
 import { Event } from '../services/event';
 import { Pruning } from '../services/pruning';
@@ -38,6 +37,6 @@ const stop = async () => {
   }, 30 * 1000).unref();
 };
 
-// if (require.main === module) {
-//   PruningWorker();
-// }
+if (require.main === module) {
+  PruningWorker();
+}

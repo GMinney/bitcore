@@ -1,5 +1,4 @@
 import { Db, MongoClient } from 'mongodb';
-import 'source-map-support/register';
 import { Transform } from 'stream';
 
 export class Mongo {

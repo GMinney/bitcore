@@ -36,7 +36,6 @@
     "preconditions": "3.0.2",
     "sjcl": "1.0.8",
     "source-map-loader": "5.0.0",
-    "source-map-support": "0.5.21",
     "superagent": "10.1.0",
     "thoughtcore-mnemonic": "file:../thoughtcore-mnemonic",
     "typescript": "5.7.2"

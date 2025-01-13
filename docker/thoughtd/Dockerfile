@@ -1,5 +1,5 @@
 # Builder image
-FROM debian:stable-slim as builder
+FROM debian:stable-slim AS builder
 
 RUN set -ex \
 	&& apt-get update \
@@ -35,9 +35,13 @@ RUN mkdir "$THOUGHT_DATA" \
 	&& ln -sfn "$THOUGHT_DATA" /home/thought/.thoughtcore \
 	&& chown -h thought:thought /home/thought/.thoughtcore
 
-VOLUME /data
+#VOLUME /data
 
-COPY docker-entrypoint.sh /entrypoint.sh
+# Copy Thought Entrypoint script
+COPY docker/thoughtd/docker-entrypoint.sh /entrypoint.sh
+
+# Copy Thought chainstate backup and extract
+ADD docker/thoughtd/thoughtchainstatebackup.tar.gz /data/
 
 # Make the script executable
 RUN chmod +x entrypoint.sh
@@ -46,5 +50,8 @@ RUN chmod +x entrypoint.sh
 # binary to run, and populate the appropriate configuration files
 ENTRYPOINT ["/entrypoint.sh"]
 
+# Expose the rpc and p2p ports
 EXPOSE 10617 10618 11617 11618
+
+# Run the thought daemon by default
 CMD ["thoughtd"]

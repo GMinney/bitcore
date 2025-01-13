@@ -1,5 +1,4 @@
 import cluster from 'cluster';
-import 'source-map-support/register';
 import logger from '../logger';
 import { Modules } from '../modules';
 import { Api } from '../services/api';
@@ -56,6 +55,6 @@ const stop = async () => {
   }, 30 * 1000).unref();
 };
 
-// if (require.main === module) {
-//   ClusteredApiWorker();
-// }
+if (require.main === module) {
+  ClusteredApiWorker();
+}

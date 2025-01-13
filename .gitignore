@@ -17,3 +17,4 @@ Session.vim
 ts_build
 thoughtcore-lib.js
 
+docker/thoughtd/ThoughtChainstateBackup.tar

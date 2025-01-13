@@ -169,11 +169,5 @@ export const getLib = (currency: string) => {
     case 'THT':
     default:
       return ThoughtcoreLib;
-    // case 'BCH':
-    //   return ThoughtcoreLibCash;
-    // case 'DOGE':
-    //   return ThoughtcoreLibDoge;
-    // case 'LTC':
-    //   return ThoughtcoreLibLtc;
   }
 };

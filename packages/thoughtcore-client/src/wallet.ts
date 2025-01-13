@@ -1,6 +1,5 @@
 import * as Bcrypt from 'bcrypt';
 import { ThoughtcoreLib, Deriver, ethers, Transactions, Web3, xrpl } from 'crypto-wallet-core';
-import 'source-map-support/register';
 import { Client } from './client';
 import { Encryption } from './encryption';
 import { Storage } from './storage';

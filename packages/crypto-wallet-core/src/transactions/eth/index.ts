@@ -84,10 +84,10 @@ export class ETHTxProvider {
   }
 
   getChainId(network: string) {
-    if (network === 'testnet') {
+    if (network === 'testnet' || network === 'test') {
       network = defaultTestnet[this.chain];
     }
-    return chainIds[`${this.chain}_${network}`] || chainIds[`${this.chain}_mainnet`];
+    return chainIds[`${this.chain}_${network}`] || chainIds[`${this.chain}_main`];
   }
 
   getSignatureObject(params: { tx: string; key: Key }) {

@@ -2,8 +2,8 @@
 # thoughtcore-node is built from the Dockerfile in the current directory using node from docker hub
 # insight is built from the Dockerfile in the packages/insight directory using node from docker hub
 # thought is built from the src repo using the ubuntu image
-
-name: insight-services
+# Network name becomes the "name" + "_" + "insight-services"
+name: thoughtcore
 services:
   mongo:
     container_name: mongo
@@ -11,7 +11,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - /data/db:/data/db
+      - mongo-data:/data/db
     restart: unless-stopped
     networks:
       - insight-services
@@ -20,11 +20,11 @@ services:
     container_name: thoughtcore-node
     build: 
       context: .
-      dockerfile: ./docker/thoughtcore-node/Dockerfile
+      dockerfile: ./docker/thoughtcore-node/Dockerfile2
     image: thoughtcore-node
     ports:
       - 8100:8100
-      - 3004:3000
+      - 3004:3004
     links:
       - mongo
     environment:
@@ -47,27 +47,32 @@ services:
       - thoughtcore-node
     environment:
       - NODE_ENV=production
-      - HOSTNAME="0.0.0.0"
       - PORT=3000
       - API_URL=thoughtcore-node
     restart: unless-stopped
     networks:
       - insight-services
 
-  # thoughtd:
-  #   container_name: thoughtd
-  #   build:
-  #     context: .
-  #     dockerfile: ./docker/thoughtd/Dockerfile
-  #   image: thoughtd:0.18.3
-  #   ports:
-  #     - 10617:10617
-  #     - 10618:10618
-  #     - 11617:11617
-  #     - 11618:11618
-  #   restart: unless-stopped
-  #    networks:
-  #    - insight-services
+  thoughtd:
+    container_name: thoughtd
+    build:
+      context: .
+      dockerfile: ./docker/thoughtd/Dockerfile
+    image: thoughtd:0.18.3
+    volumes:
+      - thoughtd-data:/data
+    ports:
+      - 10617:10617
+      - 10618:10618
+      - 11617:11617
+      - 11618:11618
+    restart: unless-stopped
+    networks:
+      - insight-services
+
+volumes:
+  mongo-data:
+  thoughtd-data:
 
 # Define a network, which allows containers to communicate
 # with each other, by using their container name as a hostname

@@ -1,6 +1,5 @@
 import * as async from 'async';
 import _ from 'lodash';
-import 'source-map-support/register';
 
 import { BlockChainExplorer } from './blockchainexplorer.ts';
 import { ChainService } from './chain/index.ts';

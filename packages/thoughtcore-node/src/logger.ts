@@ -1,7 +1,7 @@
-import * as winston from 'winston';
+const winston = require('winston');
 import parseArgv from './utils/parseArgv';
 let args = parseArgv([], [{ arg: 'DEBUG', type: 'bool' }]);
-const logLevel = args.DEBUG ? 'debug' : (process.env.BCN_LOG_LEVEL || 'info');
+const logLevel = args.DEBUG ? 'debug' : (process.env.TCN_LOG_LEVEL || 'info');
 
 
 const logger = winston.createLogger({

@@ -90,7 +90,7 @@ const Layout = ({ children }: { children?: ReactNode }) => {
 
   const isTestnet = () => {
     const network = location.pathname.split('/')[2]?.toLowerCase();
-    return network && network !== 'mainnet';
+    return network && network !== 'main';
   };
 
   const searchAnime = {

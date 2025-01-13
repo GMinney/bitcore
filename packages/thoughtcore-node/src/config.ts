@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { cpus, homedir } from 'os';
+import { availableParallelism, homedir } from 'os';
 import { ConfigType } from './types/Config';
 import parseArgv from './utils/parseArgv';
 let program = parseArgv([], ['config']);
@@ -53,14 +53,14 @@ function setTrustedPeers(config: ConfigType): ConfigType {
 const Config = function (): ConfigType {
   let config: ConfigType = {
     maxPoolSize: 50,
-    port: 3000,
+    port: 3004,
     dbUrl: process.env.DB_URL || '',
     dbHost: process.env.DB_HOST || '127.0.0.1',
     dbName: process.env.DB_NAME || 'thoughtcore',
     dbPort: process.env.DB_PORT || '27017',
     dbUser: process.env.DB_USER || '',
     dbPass: process.env.DB_PASS || '',
-    numWorkers: cpus().length,
+    numWorkers: availableParallelism(),
     chains: {},
     aliasMapping: {
       chains: {},
@@ -100,11 +100,20 @@ const Config = function (): ConfigType {
   if (!Object.keys(config.chains).length) {
     Object.assign(config.chains, {
       THT: {
-        mainnet: {
+        main: {
           chainSource: 'p2p',
-          trustedPeers: [{ host: 'phi.thought.live', port: 10618 }],
+          trustedPeers: 
+          [            
+            {
+            "host": "localhost",
+            "port": 10618
+          },
+          {
+            "host": "73.230.14.36",
+            "port": 10618
+          }],
           rpc: {
-            host: '127.0.0.1',
+            host: 'localhost',
             port: 10617,
             username: 'username',
             password: 'password'

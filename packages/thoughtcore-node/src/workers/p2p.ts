@@ -1,4 +1,3 @@
-import 'source-map-support/register';
 import logger from '../logger';
 import { Modules } from '../modules';
 import { Config } from '../services/config';
@@ -62,6 +61,6 @@ const stop = async () => {
   }, 30 * 1000).unref();
 };
 
-// if (require.main === module) {
-//   P2pWorker();
-// }
+if (require.main === module) {
+  P2pWorker();
+}

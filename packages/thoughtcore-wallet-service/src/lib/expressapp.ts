@@ -2,7 +2,6 @@ import * as async from 'async';
 import cors from 'cors';
 import express from 'express';
 import _ from 'lodash';
-import 'source-map-support/register';
 import config from '../config.ts';
 import { Defaults } from "./common/defaults.ts";
 import { ClientError } from './errors/clienterror.ts';
