@@ -13,7 +13,7 @@ export class RPC {
 
   public async callMethod(method: string, params: any, callback: CallbackType, walletName?: string) {
     let got = await import('got');
-    got.get(`http://${this.username}:${this.password}@${this.host}:${this.port}${walletName ? '/wallet/' + walletName : ''}`,
+    got.post(`http://${this.username}:${this.password}@${this.host}:${this.port}${walletName ? '/wallet/' + walletName : ''}`,
       {
         method: 'POST',
         body: {

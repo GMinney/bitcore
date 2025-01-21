@@ -52,6 +52,7 @@ export class P2pManager {
         network,
         chainConfig
       });
+      logger.info(`P2P Worker type: ${typeof p2pWorker}`);
       this.workers.push(p2pWorker);
       try {
         p2pWorker.start();
@@ -76,20 +77,29 @@ export class BaseP2PWorker<T extends IBlock = IBlock> {
   async sync(): Promise<any> { }
 
   getIsSyncingNode(): boolean {
-    if (!this.lastHeartBeat) {
+    try {
+      logger.debug('getIsSyncingNode()' + this.lastHeartBeat);
+      if (!this.lastHeartBeat) {
+        return false;
+      }
+      const [hostname, pid, timestamp] = this.lastHeartBeat.split(':');
+      logger.debug('getIsSyncingNode() info: ' + hostname, pid, timestamp);
+      const hostNameMatches = hostname === os.hostname();
+      const pidMatches = pid === process.pid.toString();
+      const timestampIsFresh = Date.now() - parseInt(timestamp) < 5 * 60 * 1000;
+      logger.debug('getIsSyncingNode() matches: ' + hostNameMatches, pidMatches, timestampIsFresh);
+      const amSyncingNode = hostNameMatches && pidMatches && timestampIsFresh;
+      return amSyncingNode;
+    } catch (err) {
+      logger.error('getIsSyncingNode() error','%o', err);
       return false;
     }
-    const [hostname, pid, timestamp] = this.lastHeartBeat.split(':');
-    const hostNameMatches = hostname === os.hostname();
-    const pidMatches = pid === process.pid.toString();
-    const timestampIsFresh = Date.now() - parseInt(timestamp) < 5 * 60 * 1000;
-    const amSyncingNode = hostNameMatches && pidMatches && timestampIsFresh;
-    return amSyncingNode;
   }
 
   async waitTilSync() {
     while (true) {
       if (this.isSyncingNode) {
+        logger.debug('waitTilSync() is syncing node');
         return;
       }
       await wait(500);
@@ -97,46 +107,59 @@ export class BaseP2PWorker<T extends IBlock = IBlock> {
   }
 
   async refreshSyncingNode() {
-    while (!this.stopping) {
-      const wasSyncingNode = this.getIsSyncingNode();
-      this.lastHeartBeat = await StateStorage.getSyncingNode({ chain: this.chain, network: this.network });
-      const nowSyncingNode = this.getIsSyncingNode();
-      this.isSyncingNode = nowSyncingNode;
-      if (wasSyncingNode && !nowSyncingNode) {
-        throw new Error('Syncing Node Renewal Failure');
+    try {
+      logger.debug('refreshSyncingNode()');
+      while (!this.stopping) {
+        const wasSyncingNode = this.getIsSyncingNode();
+        this.lastHeartBeat = await StateStorage.getSyncingNode({ chain: this.chain, network: this.network });
+        const nowSyncingNode = this.getIsSyncingNode();
+        this.isSyncingNode = nowSyncingNode;
+        if (wasSyncingNode && !nowSyncingNode) {
+          throw new Error('Syncing Node Renewal Failure');
+        }
+        if (!wasSyncingNode && nowSyncingNode) {
+          logger.info(`This worker is now the syncing node for ${this.chain} ${this.network}`);
+          this.sync();
+        }
+        if (!this.lastHeartBeat || this.getIsSyncingNode()) {
+          this.registerSyncingNode({ primary: true });
+        } else {
+          logger.info('Another node is the primary syncing node');
+          this.registerSyncingNode({ primary: false });
+        }
+        await wait(500);
       }
-      if (!wasSyncingNode && nowSyncingNode) {
-        logger.info(`This worker is now the syncing node for ${this.chain} ${this.network}`);
-        this.sync();
-      }
-      if (!this.lastHeartBeat || this.getIsSyncingNode()) {
-        this.registerSyncingNode({ primary: true });
-      } else {
-        logger.info('Another node is the primary syncing node');
-        this.registerSyncingNode({ primary: false });
-      }
-      await wait(500);
+    } catch (err: any) {
+      logger.error('refreshSyncingNode() error','%o', err);
     }
+
   }
 
   async registerSyncingNode({ primary }) {
-    const lastHeartBeat = this.lastHeartBeat;
-    const queuedRegistration = setTimeout(
-      () => {
-        StateStorage.selfNominateSyncingNode({
-          chain: this.chain,
-          network: this.network,
-          lastHeartBeat
-        });
-      },
-      primary ? 0 : 5 * 60 * 1000
-    );
-    this.queuedRegistrations.push(queuedRegistration);
+    try {
+      logger.debug('registerSyncingNode()');
+      const lastHeartBeat = this.lastHeartBeat;
+      const queuedRegistration = setTimeout(
+        () => {
+          StateStorage.selfNominateSyncingNode({
+            chain: this.chain,
+            network: this.network,
+            lastHeartBeat
+          });
+        },
+        primary ? 0 : 5 * 60 * 1000
+      );
+      this.queuedRegistrations.push(queuedRegistration);
+    } catch (err: any) {
+      logger.error('registerSyncingNode() error','%o', err);
+    }
+
   }
 
   async unregisterSyncingNode() {
     await wait(1000);
     try {
+      logger.debug('unregisterSyncingNode()');
       this.lastHeartBeat = await StateStorage.getSyncingNode({ chain: this.chain, network: this.network });
       if (this.getIsSyncingNode()) {
         await StateStorage.selfResignSyncingNode({

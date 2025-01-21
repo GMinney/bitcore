@@ -8,13 +8,42 @@ services:
   mongo:
     container_name: mongo
     image: mongo:8.0.3-noble
+    hostname: mongo
     ports:
       - 27017:27017
     volumes:
+      - ./docker/mongo/initdb.d/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
       - mongo-data:/data/db
+      - mongo-log:/var/log/mongodb/
+    env_file:
+      - ./docker/mongo/.env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: 'username'
+      MONGO_INITDB_ROOT_PASSWORD: 'password'
     restart: unless-stopped
     networks:
       - insight-services
+    command: --quiet
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    restart: always
+    env_file:
+      - ./docker/mongo/.env
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: 'username'
+      ME_CONFIG_MONGODB_ADMINPASSWORD: 'password'
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_SERVER: 'mongo'
+      ME_CONFIG_BASICAUTH_USERNAME: 'username'
+      ME_CONFIG_BASICAUTH_PASSWORD: 'password'
+    ports:
+      - 8081:8081
+    networks:
+      - insight-services
+    depends_on:
+      - mongo
 
   thoughtcore-node:
     container_name: thoughtcore-node
@@ -59,8 +88,7 @@ services:
       context: .
       dockerfile: ./docker/thoughtd/Dockerfile
     image: thoughtd:0.18.3
-    volumes:
-      - thoughtd-data:/data
+
     ports:
       - 10617:10617
       - 10618:10618
@@ -72,10 +100,15 @@ services:
 
 volumes:
   mongo-data:
-  thoughtd-data:
+    driver: local
+    name: mongo-data
+  mongo-log:
+    driver: local
+    name: mongo-log
 
 # Define a network, which allows containers to communicate
 # with each other, by using their container name as a hostname
 networks:
   insight-services:
     driver: bridge
+    name: insight-services

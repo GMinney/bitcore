@@ -53,6 +53,7 @@ export class StorageService {
           this.connected = true;
           clearInterval(attemptConnectId);
           this.connection.emit('CONNECTED');
+          logger.info('Connected to database');
           resolve(this.client);
         } catch (err: any) {
           logger.error('%o', err);

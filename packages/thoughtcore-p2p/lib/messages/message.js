@@ -28,7 +28,7 @@ Message.prototype.toBuffer = Message.prototype.serialize = function () {
   commandBuf.write(this.command, 'ascii');
 
   var payload = this.getPayload();
-  var checksum = Hash.sha256sha256(payload).slice(0, 4);
+  var checksum = Hash.sha256sha256(payload).subarray(0, 4);
 
   var bw = new BufferWriter();
   bw.write(this.network.networkMagic);

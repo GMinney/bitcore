@@ -5,7 +5,6 @@ export interface ConnectionConfig {
   chainSource: string;
   trustedPeers: Array<HostPort>;
   rpc: HostPort & UserPassword;
-  parentChain: 'THT';
   forkHeight: number;
 }
 export interface NetworkConfig {

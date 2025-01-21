@@ -1,29 +1,25 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
-if [[ "$1" == "thought-cli" || "$1" == "thought-tx" || "$1" == "thoughtd" || "$1" == "test_thought" ]]; then
 	mkdir -p "$THOUGHT_DATA"
-
-	CONFIG_PREFIX=""
-    if [[ "${THOUGHT_NETWORK}" == "regtest" ]]; then
-        CONFIG_PREFIX=$'regtest=1\n[regtest]'
-    fi
-    if [[ "${THOUGHT_NETWORK}" == "testnet" ]]; then
-        CONFIG_PREFIX=$'testnet=1\n[test]'
-    fi
-    if [[ "${THOUGHT_NETWORK}" == "mainnet" ]]; then
-        CONFIG_PREFIX=$'mainnet=1\n[main]'
-    fi
-
 	cat <<-EOF > "$THOUGHT_DATA/thought.conf"
-	${CONFIG_PREFIX}
+	listen=1
+	server=1
+	irc=1
+	upnp=1
+	port=10618
+	rpcport=10617
+	rpcallowip=0.0.0.0/0
 	rpcuser=username
 	rpcpassword=password
-	printtoconsole=0
-	server=1
+	addnode=phi.thought.live:10618
 	${THOUGHT_EXTRA_ARGS}
 	EOF
 	chown thought:thought "$THOUGHT_DATA/thought.conf"
+
+	# Commented out params
+	# printtoconsole=0
+
 
 	# ensure correct ownership and linking of data directory
 	# we do not update group ownership here, in case users want to mount

@@ -1,9 +1,7 @@
 'use strict';
 
-var startGulp = require('thoughtcore-build');
-
 function defaultTask(cb) {
-  startGulp('p2p', { skipBrowser: true })
+  // place code for your default task here
   cb();
 }
 

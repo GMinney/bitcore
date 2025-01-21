@@ -5,9 +5,10 @@ import { LoggifyClass } from '../decorators/Loggify';
 import logger from '../logger';
 import { CallbackType } from '../types/Callback';
 import { WorkerType } from '../types/Worker';
-import parseArgv from '../utils/parseArgv';
+//import parseArgv from '../utils/parseArgv';
 
-let args = parseArgv([], [{ arg: 'DEBUG', type: 'bool' }]);
+//let args = parseArgv([], [{ arg: 'DEBUG', type: 'bool' }]);
+const DEBUGON = true;
 
 @LoggifyClass
 export class WorkerService extends EventEmitter {
@@ -24,7 +25,7 @@ export class WorkerService extends EventEmitter {
         logger.warn(`worker ${worker.process.pid} stopped`);
         process.kill(process.pid);
       });
-      if (!args.DEBUG) {
+      if (!DEBUGON) {
         for (let worker = 0; worker < config.numWorkers; worker++) {
           let newWorker = cluster.fork();
           logger.verbose(`Starting worker number ${worker}`);

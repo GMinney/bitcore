@@ -39,6 +39,7 @@ export const FullClusteredWorker = async () => {
 };
 
 let stopping = false;
+
 const stop = async () => {
   if (stopping) {
     logger.error('Force stopping all workers');

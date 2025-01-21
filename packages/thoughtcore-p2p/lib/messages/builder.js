@@ -19,7 +19,7 @@ function builder(options) {
   options.BlockHeader = options.BlockHeader || thoughtcore.BlockHeader;
   options.Transaction = options.Transaction || thoughtcore.Transaction;
   options.MerkleBlock = options.MerkleBlock || thoughtcore.MerkleBlock;
-  options.protocolVersion = options.protocolVersion || 70210;
+  options.protocolVersion = options.protocolVersion || 70018;
 
   var exported = {
     constructors: {
@@ -39,7 +39,7 @@ function builder(options) {
     ],
     commandsMap: {
       version: 'Version',
-      verack: 'VerAck',
+      verack: 'Verack',
       ping: 'Ping',
       pong: 'Pong',
       block: 'Block',
@@ -63,6 +63,10 @@ function builder(options) {
     commands: {}
   };
 
+  // exported.add is a function that takes a key and a command, 
+  // where the index of 'commands' is another functiion that takes an object and returns an instance of the command
+  // where the index of 'commands' contains a property '_constructor' that contains the command constructor
+  // where the index of 'commands' contains a function 'fromBuffer' that takes a buffer and returns a new instance of the messsage at that index, the payload is also set
   exported.add = function (key, Command) {
     exported.commands[key] = function (obj) {
       return new Command(obj, options);
@@ -77,6 +81,9 @@ function builder(options) {
     };
   };
 
+
+// for each key in the commandsMap object, add the key and the command to the exported object. so the exported object will be a list of all the commands that reference their source files
+// calls on exported.verack for example will return the VerackMessage constructor
   Object.keys(exported.commandsMap).forEach(function (key) {
     exported.add(key, require('./commands/' + key));
   });

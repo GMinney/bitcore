@@ -25,7 +25,7 @@ describe('Command Messages', function () {
           v4: 'localhost'
         },
         services: 1,
-        port: 1234
+        port: 10618
       }]);
     });
   });

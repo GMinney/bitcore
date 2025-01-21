@@ -22,6 +22,7 @@ router.get('/', async function (req: Request, res: Response) {
       req,
       res
     };
+    logger.info('Attempting new request payload %o', chain, network, sinceBlock, date, limit, since, direction, paging);
     return ChainStateProvider.streamBlocks(payload);
   } catch (err: any) {
     logger.error('Error getting blocks: %o', err.stack || err.message || err);

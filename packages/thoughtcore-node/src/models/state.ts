@@ -3,6 +3,7 @@ import { MongoBound } from './base';
 import os from 'os';
 import { StorageService } from '../services/storage';
 import { BaseModel } from './base';
+import logger from '../logger';
 
 export interface IState {
   _id?: ObjectId;
@@ -58,15 +59,22 @@ export class StateModel extends BaseModel<IState> {
   }
 
   async selfResignSyncingNode(params: { chain: string; network: string; lastHeartBeat: any }) {
-    const { chain, network, lastHeartBeat } = params;
-    const singleState = await this.getSingletonState();
-    if (!singleState) {
-      throw new Error("singlestate null")
+    try {
+      logger.debug('selfResignSyncingNode()');
+      const { chain, network, lastHeartBeat } = params;
+      const singleState = await this.getSingletonState();
+      if (!singleState) {
+        throw new Error("singlestate null")
+      }
+      return this.collection.findOneAndUpdate(
+        { _id: singleState._id, [`syncingNode:${chain}:${network}`]: lastHeartBeat },
+        { $unset: { [`syncingNode:${chain}:${network}`]: true } }
+      );
+    } catch (err) { 
+      logger.error('selfResignSyncingNode()');
+      return err;
     }
-    return this.collection.findOneAndUpdate(
-      { _id: singleState._id, [`syncingNode:${chain}:${network}`]: lastHeartBeat },
-      { $unset: { [`syncingNode:${chain}:${network}`]: true } }
-    );
+
   }
 }
 

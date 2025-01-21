@@ -3,9 +3,10 @@
 var chai = require('chai');
 var Net = require('net');
 var Socks5Client = require('socks5-client');
+var Socks5ClientSocket = Socks5Client.Socket;
 
 /* jshint unused: false */
-var should = chai.should();
+var should = chai.should;
 var expect = chai.expect;
 var sinon = require('sinon');
 var fs = require('fs');
@@ -73,87 +74,87 @@ describe('Peer', function () {
 
   it('create instance', function () {
     var peer = new Peer('localhost');
-    peer.host.should.equal('localhost');
-    peer.network.should.equal(Networks.livenet);
-    peer.port.should.equal(Networks.livenet.port);
+    expect(peer.host).to.equal('localhost');
+    expect(peer.network).to.equal(Networks.livenet);
+    expect(peer.port).to.equal(Networks.livenet.port);
   });
 
   it('create instance setting a port', function () {
-    var peer = new Peer({ host: 'localhost', port: 8111 });
-    peer.host.should.equal('localhost');
-    peer.network.should.equal(Networks.livenet);
-    peer.port.should.equal(8111);
+    var peer = new Peer({ host: 'localhost', port: 10618 });
+    expect(peer.host).to.equal('localhost');
+    expect(peer.network).to.equal(Networks.livenet);
+    expect(peer.port).to.equal(10618);
   });
 
   it('create instance setting a network', function () {
     var peer = new Peer({ host: 'localhost', network: Networks.testnet });
-    peer.host.should.equal('localhost');
-    peer.network.should.equal(Networks.testnet);
+    expect(peer.host).to.equal('localhost');
+    expect(peer.network.name).to.equal(Networks.testnet);
     // Default testnet doesn't have a port, it is contained in the variants properties
-    // peer.port.should.equal(Networks.testnet.port);
+    // peer.port.to.equal(Networks.testnet.port);
   });
 
   it('create instance setting a network from string', function () {
     var peer = new Peer({ host: 'localhost', network: 'testnet' });
-    peer.host.should.equal('localhost');
-    peer.network.should.equal(Networks.testnet);
+    expect(peer.host).to.equal('localhost');
+    expect(peer.network.name).to.equal(Networks.testnet);
     // Default testnet doesn't have a port, it is contained in the variants properties
-    // peer.port.should.equal(Networks.testnet.port);
+    // peer.port.to.equal(Networks.testnet.port);
   });
 
   it('create instance setting a network from xpubkey', function () {
     var peer = new Peer({ host: 'localhost', network: 0x043587cf });
-    peer.host.should.equal('localhost');
-    peer.network.should.equal(Networks.testnet);
+    expect(peer.host).to.equal('localhost');
+    expect(peer.network.name).to.equal(Networks.regtest);
     // Default testnet doesn't have a port, it is contained in the variants properties
-    // peer.port.should.equal(Networks.testnet.port);
+    // peer.port.to.equal(Networks.testnet.port);
   });
 
   it('create instance setting a custom network', function () {
     const customNetwork = new class Network { constructor(port, networkMagic) { this.port = port; this.networkMagic = networkMagic } }(1234, 0x1234567);
     var peer = new Peer({ host: 'localhost', network: customNetwork });
-    peer.host.should.equal('localhost');
-    peer.network.should.equal(customNetwork);
-    peer.port.should.equal(customNetwork.port);
+    expect(peer.host).to.equal('localhost');
+    expect(peer.network.name).to.equal(customNetwork.network);
+    expect(peer.port).to.equal(customNetwork.port);
   });
 
   it('create instance setting port and network', function () {
     var peer = new Peer({ host: 'localhost', port: 8111, network: Networks.testnet });
-    peer.host.should.equal('localhost');
-    peer.network.should.equal(Networks.testnet);
-    peer.port.should.equal(8111);
+    expect(peer.host).to.equal('localhost');
+    expect(peer.network.name).to.equal(Networks.testnet);
+    expect(peer.port).to.equal(8111);
   });
 
   it('create instance without new', function () {
     var peer = Peer({ host: 'localhost', port: 8111, network: Networks.testnet });
-    peer.host.should.equal('localhost');
-    peer.network.should.equal(Networks.testnet);
-    peer.port.should.equal(8111);
+    expect(peer.host).to.equal('localhost');
+    expect(peer.network.name).to.equal(Networks.testnet);
+    expect(peer.port).to.equal(8111);
   });
 
   it('set a proxy', function () {
     var peer, peer2, socket;
 
     peer = new Peer('localhost');
-    expect(peer.proxy).to.be.undefined();
+    expect(peer.proxy).to.be.an('undefined');
     socket = peer._getSocket();
-    socket.should.be.instanceof(Net.Socket);
+    socket.should.to.be.instanceof(Net.Socket);
 
     peer2 = peer.setProxy('127.0.0.1', 9050);
-    peer2.proxy.host.should.equal('127.0.0.1');
-    peer2.proxy.port.should.equal(9050);
+    expect(peer2.proxy.host).to.equal('127.0.0.1');
+    expect(peer2.proxy.port).to.equal(9050);
     socket = peer2._getSocket();
-    socket.should.be.instanceof(Socks5Client);
+    expect(socket).to.be.an.instanceof(Socks5ClientSocket);
 
-    peer.should.equal(peer2);
+    peer.to.equal(peer2);
   });
 
   it('send pong on ping', function (done) {
     var peer = new Peer({ host: 'localhost' });
     var pingMessage = messages.Ping();
     peer.sendMessage = function (message) {
-      message.command.should.equal('pong');
-      message.nonce.should.equal(pingMessage.nonce);
+      expect(message.command).to.equal('pong');
+      expect(message.nonce).to.equal(pingMessage.nonce);
       done();
     };
     peer.emit('ping', pingMessage);
@@ -169,7 +170,7 @@ describe('Peer', function () {
     };
     var error = new Error('error');
     peer.on('error', function (err) {
-      err.should.equal(error);
+      expect(err).to.equal(error);
       done();
     });
     peer.connect();
@@ -234,7 +235,7 @@ describe('Peer', function () {
     peer.versionSent = true;
     var commands = {};
     peer.sendMessage = function (message) {
-      message.command.should.not.equal('version');
+      expect(message.command).to.not.equal('version');
       done();
     };
     peer.socket = {};
@@ -247,19 +248,20 @@ describe('Peer', function () {
 
   it('relay set properly', function () {
     var peer = new Peer({ host: 'localhost' });
-    peer.relay.should.equal(true);
+    expect(peer.relay).to.equal(true);
     var peer2 = new Peer({ host: 'localhost', relay: false });
-    peer2.relay.should.equal(false);
+    expect(peer2.relay).to.equal(false);
     var peer3 = new Peer({ host: 'localhost', relay: true });
-    peer3.relay.should.equal(true);
+    expect(peer3.relay).to.equal(true);
   });
 
   it('relay setting respected', function () {
     [true, false].forEach(function (relay) {
       var peer = new Peer({ host: 'localhost', relay: relay });
-      var peerSendMessageStub = sinon.stub(Peer.prototype, 'sendMessage', function (message) {
-        message.relay.should.equal(relay);
-      });
+      var peerSendMessageStub = sinon.stub(Peer.prototype, 'sendMessage').callsFake(
+        function (message) {
+          expect(message.relay).to.equal(relay);
+        });
       peer._sendVersion();
       peerSendMessageStub.restore();
     });

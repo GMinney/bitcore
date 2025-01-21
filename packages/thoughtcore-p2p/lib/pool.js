@@ -8,6 +8,7 @@ var Peer = require('./peer');
 var Networks = thoughtcore.Networks;
 var util = require('util');
 var net = require('net');
+var logger = require('./logger');
 
 function now() {
   return Math.floor(new Date().getTime() / 1000);
@@ -113,11 +114,15 @@ util.inherits(Pool, EventEmitter);
 
 Pool.MaxConnectedPeers = 8;
 Pool.RetrySeconds = 30;
-Pool.PeerEvents = ['version', 'inv', 'getdata', 'ping', 'pong', 'addr',
-  'getaddr', 'verack', 'reject', 'alert', 'headers', 'block', 'merkleblock',
-  'tx', 'getblocks', 'getheaders', 'error', 'filterload', 'filteradd',
-  'filterclear'
+Pool.PeerEvents = ['version', 'verack', 'addr', 'inv', 'getdata', 'merkleblock', 'getblocks', 'getheaders',
+  'tx', 'headers', 'block', 'getaddr', 
+  'ping', 'pong', 'alert',
+  'filterload', 'filteradd', 'filterclear',
+  'reject',   
+  'error',  
 ];
+
+// mempool, notfound, sendheaders, sendcompct, cmpctblock, getblocktxn, blocktxn not used
 
 /**
  * Will initiate connection to peers, if available peers have been added to
@@ -248,6 +253,7 @@ Pool.prototype._addPeerEventHandlers = function (peer, addr) {
     self.emit('peerdisconnect', peer, addr);
   });
   peer.on('ready', function peerReady() {
+    logger.debug(`thoughtcore-p2p peer ready, emitting a peerready event`);
     self.emit('peerready', peer, addr);
   });
   Pool.PeerEvents.forEach(function addPeerEvents(event) {

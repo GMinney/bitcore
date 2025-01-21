@@ -154,8 +154,8 @@ PublicKey._transformDER = function (buf, strict) {
   var ybuf;
 
   if (buf[0] === 0x04 || (!strict && (buf[0] === 0x06 || buf[0] === 0x07))) {
-    xbuf = buf.slice(1, 33);
-    ybuf = buf.slice(33, 65);
+    xbuf = buf.subarray(1, 33);
+    ybuf = buf.subarray(33, 65);
     if (xbuf.length !== 32 || ybuf.length !== 32 || buf.length !== 65) {
       throw new TypeError('Length of x and y must be 32 bytes');
     }
@@ -164,12 +164,12 @@ PublicKey._transformDER = function (buf, strict) {
     info.point = new Point(x, y);
     info.compressed = false;
   } else if (buf[0] === 0x03) {
-    xbuf = buf.slice(1);
+    xbuf = buf.subarray(1);
     x = new BN(xbuf);
     info = PublicKey._transformX(true, x);
     info.compressed = true;
   } else if (buf[0] === 0x02) {
-    xbuf = buf.slice(1);
+    xbuf = buf.subarray(1);
     x = new BN(xbuf);
     info = PublicKey._transformX(false, x);
     info.compressed = true;

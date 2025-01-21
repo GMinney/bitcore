@@ -4,7 +4,7 @@
   "description": "Interface to the thought P2P network for thoughtcore",
   "main": "index.js",
   "scripts": {
-    "test": "gulp test",
+    "test": " mocha",
     "test:ci": "npm run test",
     "coverage": "gulp coverage",
     "build": "gulp",
@@ -19,15 +19,18 @@
     "url": "https://github.com/thoughtnetwork/thoughtcore-p2p.git"
   },
   "dependencies": {
-    "thoughtcore-lib": "file:../thoughtcore-lib",
     "bloom-filter": "^0.2.0",
-    "socks5-client": "^1.2.8"
+    "socks5-client": "^1.2.8",
+    "thoughtcore-lib": "file:../thoughtcore-lib",
+    "winston": "^3.14.2"
   },
   "devDependencies": {
     "brfs": "^2.0.2",
-    "chai": "5.1.1",
+    "chai": "4.4.1",
     "gulp": "^5.0.0",
-    "sinon": "^18.0.0"
+    "mocha": "^11.0.1",
+    "sinon": "^18.0.1",
+    "winston": "^3.14.2"
   },
   "license": "MIT",
   "gitHead": "012cc0216a9bc6b195035855bd17149bad41acd1"

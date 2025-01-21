@@ -165,7 +165,7 @@ PrivateKey._transformBuffer = function (buf, network) {
     throw new Error('Length of buffer must be 33 (uncompressed) or 34 (compressed)');
   }
 
-  info.bn = BN.fromBuffer(buf.slice(1, 32 + 1));
+  info.bn = BN.fromBuffer(buf.subarray(1, 32 + 1));
 
   return info;
 };

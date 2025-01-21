@@ -55,11 +55,11 @@ const Config = function (): ConfigType {
     maxPoolSize: 50,
     port: 3004,
     dbUrl: process.env.DB_URL || '',
-    dbHost: process.env.DB_HOST || '127.0.0.1',
+    dbHost: process.env.DB_HOST || 'mongo',
     dbName: process.env.DB_NAME || 'thoughtcore',
     dbPort: process.env.DB_PORT || '27017',
-    dbUser: process.env.DB_USER || '',
-    dbPass: process.env.DB_PASS || '',
+    dbUser: process.env.DB_USER || 'username',
+    dbPass: process.env.DB_PASS || 'password',
     numWorkers: availableParallelism(),
     chains: {},
     aliasMapping: {
@@ -105,11 +105,7 @@ const Config = function (): ConfigType {
           trustedPeers: 
           [            
             {
-            "host": "localhost",
-            "port": 10618
-          },
-          {
-            "host": "73.230.14.36",
+            "host": "phi.thought.live",
             "port": 10618
           }],
           rpc: {

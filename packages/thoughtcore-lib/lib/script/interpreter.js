@@ -602,7 +602,7 @@ Interpreter.TAPROOT_CONTROL_MAX_NODE_COUNT = 128;
 Interpreter.TAPROOT_CONTROL_MAX_SIZE = Interpreter.TAPROOT_CONTROL_BASE_SIZE + Interpreter.TAPROOT_CONTROL_NODE_SIZE * Interpreter.TAPROOT_CONTROL_MAX_NODE_COUNT;
 
 // Conceptually, this doesn't really belong with the Interpreter, but I haven't found a better place for it.
-Interpreter.PROTOCOL_VERSION = 70016;
+Interpreter.PROTOCOL_VERSION = 70018;
 
 Interpreter.castToBool = function (buf) {
   for (var i = 0; i < buf.length; i++) {

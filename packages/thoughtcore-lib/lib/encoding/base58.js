@@ -34,14 +34,14 @@ Base58.prototype.set = function (obj) {
   return this;
 };
 
-Base58.encode = function (buf) {
+Base58.prototype.encode = function (buf) {
   if (!buffer.Buffer.isBuffer(buf)) {
     throw new Error('Input should be a buffer');
   }
   return bs58.encode(buf);
 };
 
-Base58.decode = function (str) {
+Base58.prototype.decode = function (str) {
   if (typeof str !== 'string') {
     throw new Error('Input should be a string');
   }

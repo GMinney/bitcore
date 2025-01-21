@@ -76,173 +76,219 @@ export class ThoughtP2PWorker extends BaseP2PWorker<IThtBlock> {
   }
 
   setupListeners() {
-    this.pool.on('peerready', peer => {
-      logger.info(
-        `${timestamp()} | Connected to peer: ${peer.host}:${peer.port.toString().padEnd(5)} | Chain: ${this.chain
-        } | Network: ${this.network}`
-      );
-    });
-
-    this.pool.on('peerconnect', peer => {
-      logger.info(
-        `${timestamp()} | Connected to peer: ${peer.host}:${peer.port.toString().padEnd(5)} | Chain: ${this.chain
-        } | Network: ${this.network}`
-      );
-    });
-
-    this.pool.on('peerdisconnect', peer => {
-      logger.warn(
-        `${timestamp()} | Not connected to peer: ${peer.host}:${peer.port.toString().padEnd(5)} | Chain: ${this.chain
-        } | Network: ${this.network}`
-      );
-    });
-
-    this.pool.on('peertx', async (peer, message) => {
-      const hash = message.transaction.hash;
-      logger.debug('peer tx received: %o', {
-        peer: `${peer.host}:${peer.port}`,
-        chain: this.chain,
-        network: this.network,
-        hash
+    try {
+      this.pool.on('peerready', peer => {
+        logger.info(
+          `${timestamp()} | Connected to peer: ${peer.host}:${peer.port.toString().padEnd(5)} | Chain: ${this.chain
+          } | Network: ${this.network}`
+        );
       });
-      if (this.isSyncingNode && !this.isCachedInv(this.thoughtcoreP2p.Inventory.TYPE.TX, hash)) {
-        this.cacheInv(this.thoughtcoreP2p.Inventory.TYPE.TX, hash);
-        await this.processTransaction(message.transaction);
-        this.events.emit('transaction', message.transaction);
-      }
-    });
-
-    this.pool.on('peerblock', async (peer, message) => {
-      const { block } = message;
-      const { hash } = block;
-      logger.debug('peer block received: %o', {
-        peer: `${peer.host}:${peer.port}`,
-        chain: this.chain,
-        network: this.network,
-        hash
+  
+      this.pool.on('peerconnect', peer => {
+        logger.info(
+          `${timestamp()} | Connected to peer: ${peer.host}:${peer.port.toString().padEnd(5)} | Chain: ${this.chain
+          } | Network: ${this.network}`
+        );
       });
-
-      const blockInCache = this.isCachedInv(this.thoughtcoreP2p.Inventory.TYPE.BLOCK, hash);
-      if (!blockInCache) {
-        block.transactions.forEach(transaction => this.cacheInv(this.thoughtcoreP2p.Inventory.TYPE.TX, transaction.hash));
-        this.cacheInv(this.thoughtcoreP2p.Inventory.TYPE.BLOCK, hash);
-      }
-      if (this.isSyncingNode && (!blockInCache || this.isSyncing)) {
-        this.events.emit(hash, message.block);
-        this.events.emit('block', message.block);
-        if (!this.isSyncing) {
-          this.sync();
-        }
-      }
-    });
-
-    this.pool.on('peerheaders', (peer, message) => {
-      logger.debug('peerheaders message received: %o', {
-        peer: `${peer.host}:${peer.port}`,
-        chain: this.chain,
-        network: this.network,
-        count: message.headers.length
+  
+      this.pool.on('peerdisconnect', peer => {
+        logger.warn(
+          `${timestamp()} | Not connected to peer: ${peer.host}:${peer.port.toString().padEnd(5)} | Chain: ${this.chain
+          } | Network: ${this.network}`
+        );
       });
-      this.events.emit('headers', message.headers);
-    });
-
-    this.pool.on('peerinv', (peer, message) => {
-      if (this.isSyncingNode) {
-        const filtered = message.inventory.filter(inv => {
-          const hash = this.thoughtcoreLib.encoding
-            .BufferReader(inv.hash)
-            .readReverse()
-            .toString('hex');
-          return !this.isCachedInv(inv.type, hash);
+  
+      this.pool.on('peertx', async (peer, message) => {
+        const hash = message.transaction.hash;
+        logger.debug('peer tx received: %o', {
+          peer: `${peer.host}:${peer.port}`,
+          chain: this.chain,
+          network: this.network,
+          hash
         });
-
-        if (filtered.length) {
-          peer.sendMessage(this.messages.GetData(filtered));
+        if (this.isSyncingNode && !this.isCachedInv(this.thoughtcoreP2p.Inventory.TYPE.TX, hash)) {
+          this.cacheInv(this.thoughtcoreP2p.Inventory.TYPE.TX, hash);
+          await this.processTransaction(message.transaction);
+          this.events.emit('transaction', message.transaction);
         }
-      }
-    });
+      });
+  
+      this.pool.on('peerblock', async (peer, message) => {
+        const { block } = message;
+        const { hash } = block;
+        logger.debug('peer block received: %o', {
+          peer: `${peer.host}:${peer.port}`,
+          chain: this.chain,
+          network: this.network,
+          hash
+        });
+  
+        const blockInCache = this.isCachedInv(this.thoughtcoreP2p.Inventory.TYPE.BLOCK, hash);
+        if (!blockInCache) {
+          block.transactions.forEach(transaction => this.cacheInv(this.thoughtcoreP2p.Inventory.TYPE.TX, transaction.hash));
+          this.cacheInv(this.thoughtcoreP2p.Inventory.TYPE.BLOCK, hash);
+        }
+        if (this.isSyncingNode && (!blockInCache || this.isSyncing)) {
+          this.events.emit(hash, message.block);
+          this.events.emit('block', message.block);
+          if (!this.isSyncing) {
+            this.sync();
+          }
+        }
+      });
+  
+      this.pool.on('peerheaders', (peer, message) => {
+        logger.debug('peerheaders message received: %o', {
+          peer: `${peer.host}:${peer.port}`,
+          chain: this.chain,
+          network: this.network,
+          count: message.headers.length
+        });
+        this.events.emit('headers', message.headers);
+      });
+  
+      this.pool.on('peerinv', (peer, message) => {
+        if (this.isSyncingNode) {
+          const filtered = message.inventory.filter(inv => {
+            const hash = this.thoughtcoreLib.encoding
+              .BufferReader(inv.hash)
+              .readReverse()
+              .toString('hex');
+            return !this.isCachedInv(inv.type, hash);
+          });
+  
+          if (filtered.length) {
+            peer.sendMessage(this.messages.GetData(filtered));
+          }
+        }
+      });
+    } catch (err) {
+      logger.err(`An error has occurred while setting up listeners ${this.chain} ${this.network}: %o`, err);
+    }
   }
 
   async connect() {
-    this.setupListeners();
-    this.pool.connect();
-    this.connectInterval = setInterval(this.pool.connect.bind(this.pool), 5000);
-    return new Promise<void>(resolve => {
-      this.pool.once('peerready', () => resolve());
-    });
+    try {
+      logger.debug(`Attempting to connect ... Setting up listeners ...`);
+      this.setupListeners();
+      logger.debug(`Attempting to connect ... Connecting with pool ...`);
+      this.pool.connect();
+      logger.debug(`Attempting to connect ... Binding to pool ...`);
+      this.connectInterval = setInterval(this.pool.connect.bind(this.pool), 5000);
+      logger.debug(`Attempting to connect ... awaiting peerready to resolve ...`);
+      return new Promise<void>(resolve => {
+        this.pool.once('peerready', () => resolve());
+      });
+    } catch (err) {
+      logger.err(`An error has occurred while attempting to connect() ${this.chain} ${this.network}: %o`, err);
+    }
   }
 
   async disconnect() {
-    this.pool.removeAllListeners();
-    this.pool.disconnect();
-    if (this.connectInterval) {
-      clearInterval(this.connectInterval as NodeJS.Timeout);
+    try {
+      this.pool.removeAllListeners();
+      this.pool.disconnect();
+      if (this.connectInterval) {
+        clearInterval(this.connectInterval as NodeJS.Timeout);
+      }
+    } catch (err) {
+      logger.err(`An error has occurred while attempting to disconnect() ${this.chain} ${this.network}: %o`, err);
     }
   }
 
   public async getHeaders(candidateHashes: string[]): Promise<ThoughtHeaderObj[]> {
-    let received = false;
-    return new Promise<ThoughtHeaderObj[]>(async resolve => {
-      this.events.once('headers', headers => {
-        received = true;
-        resolve(headers);
+    try {
+      let received = false;
+      return new Promise<ThoughtHeaderObj[]>(async resolve => {
+        this.events.once('headers', headers => {
+          received = true;
+          resolve(headers);
+        });
+        while (!received) {
+          this.pool.sendMessage(this.messages.GetHeaders({ starts: candidateHashes }));
+          await wait(1000);
+        }
       });
-      while (!received) {
-        this.pool.sendMessage(this.messages.GetHeaders({ starts: candidateHashes }));
-        await wait(1000);
-      }
-    });
+    } catch (err) {
+      logger.err(`An error has occurred while attempting to getHeaders() ${this.chain} ${this.network}: %o`, err);
+      return new Promise<ThoughtHeaderObj[]>(async resolve => {
+        resolve([]);
+      });
+    }
   }
 
   public async getBlock(hash: string) {
-    logger.debug('Getting block, hash:', hash);
-    let received = false;
-    return new Promise<ThoughtBlockType>(async resolve => {
-      this.events.once(hash, (block: ThoughtBlockType) => {
-        logger.debug('Received block, hash: %o', hash);
-        received = true;
-        resolve(block);
+    try {
+      logger.debug(`Getting block, hash:`, hash);
+      let received = false;
+      return new Promise<ThoughtBlockType>(async resolve => {
+        this.events.once(hash, (block: ThoughtBlockType) => {
+          logger.debug(`Received block, hash: %o`, hash);
+          received = true;
+          resolve(block);
+        });
+        while (!received) {
+          this.pool.sendMessage(this.messages.GetData.forBlock(hash));
+          await wait(1000);
+        }
       });
-      while (!received) {
-        this.pool.sendMessage(this.messages.GetData.forBlock(hash));
-        await wait(1000);
-      }
-    });
+    } catch (err) {
+      logger.err(`An error has occurred while attempting to getBlock() ${this.chain} ${this.network}: %o`, err);
+      return new Promise<ThoughtBlockType>(async resolve => {
+        resolve({} as ThoughtBlockType);
+      });
+    }
   }
 
   getBestPoolHeight(): number {
-    let best = 0;
-    for (const peer of Object.values(this.pool._connectedPeers) as { bestHeight: number }[]) {
-      if (peer.bestHeight > best) {
-        best = peer.bestHeight;
+    try {
+      let best = 0;
+      for (const peer of Object.values(this.pool._connectedPeers) as { bestHeight: number }[]) {
+        if (peer.bestHeight > best) {
+          best = peer.bestHeight;
+        }
       }
+      return best;
+    } catch (err) {
+      logger.err(`An error has occurred while attempting to getBestPoolHeight() ${this.chain} ${this.network}: %o`, err);
+      return 0;
     }
-    return best;
   }
 
   async processBlock(block: ThoughtBlockType): Promise<any> {
-    await this.blockModel.addBlock({
-      chain: this.chain,
-      network: this.network,
-      forkHeight: this.chainConfig.forkHeight,
-      parentChain: this.chainConfig.parentChain,
-      initialSyncComplete: this.initialSyncComplete,
-      block
-    });
+    try {
+      await this.blockModel.addBlock({
+        chain: this.chain,
+        network: this.network,
+        forkHeight: this.chainConfig.forkHeight,
+        parentChain: this.chainConfig.parentChain,
+        initialSyncComplete: this.initialSyncComplete,
+        block
+      });
+    } catch (err) {
+      logger.err(`An error has occurred while attempting to processBlock() ${this.chain} ${this.network}: %o`, err);
+      return;
+    }
+
   }
 
   async processTransaction(tx: ThoughtTransaction): Promise<any> {
-    const now = new Date();
-    await TransactionStorage.batchImport({
-      chain: this.chain,
-      network: this.network,
-      txs: [tx],
-      height: SpentHeightIndicators.pending,
-      mempoolTime: now,
-      blockTime: now,
-      blockTimeNormalized: now,
-      initialSyncComplete: true
-    });
+    try {
+      const now = new Date();
+      await TransactionStorage.batchImport({
+        chain: this.chain,
+        network: this.network,
+        txs: [tx],
+        height: SpentHeightIndicators.pending,
+        mempoolTime: now,
+        blockTime: now,
+        blockTimeNormalized: now,
+        initialSyncComplete: true
+      });
+    } catch (err) {
+      logger.err(`An error has occurred while attempting to processTransaction() ${this.chain} ${this.network}: %o`, err);
+      return;
+    }
   }
 
   async syncDone() {
@@ -250,86 +296,102 @@ export class ThoughtP2PWorker extends BaseP2PWorker<IThtBlock> {
   }
 
   async sync() {
-    if (this.isSyncing) {
-      return false;
-    }
-    this.isSyncing = true;
-    const { chain, chainConfig, network } = this;
-    const { parentChain, forkHeight } = chainConfig;
-    const state = await StateStorage.collection.findOne({});
-    this.initialSyncComplete =
-      state && state.initialSyncComplete && state.initialSyncComplete.includes(`${chain}:${network}`);
-    let tip = await ChainStateProvider.getLocalTip({ chain, network });
-    if (parentChain && (!tip || tip.height < forkHeight)) {
-      let parentTip = await ChainStateProvider.getLocalTip({ chain: parentChain, network });
-      while (!parentTip || parentTip.height < forkHeight) {
-        logger.info(`Waiting until ${parentChain} syncs before ${chain} ${network}`);
-        await wait(5000);
-        parentTip = await ChainStateProvider.getLocalTip({ chain: parentChain, network });
+    try {
+      logger.info(`Attempting to sync ${this.chain} ${this.network}`);
+      if (this.isSyncing) {
+        return false;
       }
-    }
-
-    const getHeaders = async () => {
-      const locators = await ChainStateProvider.getLocatorHashes({ chain, network });
-      return this.getHeaders(locators);
-    };
-
-    let headers = await getHeaders();
-    while (headers.length > 0) {
-      tip = await ChainStateProvider.getLocalTip({ chain, network });
-      let currentHeight = tip ? tip.height : 0;
-      const startingHeight = currentHeight;
-      const startingTime = Date.now();
-      let lastLog = startingTime;
-      logger.info(`${timestamp()} | Syncing ${headers.length} blocks | Chain: ${chain} | Network: ${network}`);
-      for (const header of headers) {
-        try {
-          const block = await this.getBlock(header.hash);
-          await this.processBlock(block);
-          currentHeight++;
-          const now = Date.now();
-          const oneSecond = 1000;
-          if (now - lastLog > oneSecond) {
-            const blocksProcessed = currentHeight - startingHeight;
-            const elapsedMinutes = (now - startingTime) / (60 * oneSecond);
-            logger.info(
-              `${timestamp()} | Syncing... | Chain: ${chain} | Network: ${network} |${(blocksProcessed / elapsedMinutes)
-                .toFixed(2)
-                .padStart(8)} blocks/min | Height: ${currentHeight.toString().padStart(7)}`
-            );
-            lastLog = now;
-          }
-        } catch (err) {
-          logger.error(`${timestamp()} | Error syncing | Chain: ${chain} | Network: ${network} | %o`, err);
-          this.isSyncing = false;
-          return this.sync();
+      this.isSyncing = true;
+      const { chain, chainConfig, network } = this;
+      const { parentChain, forkHeight } = chainConfig;
+      const state = await StateStorage.collection.findOne({});
+      this.initialSyncComplete =
+        state && state.initialSyncComplete && state.initialSyncComplete.includes(`${chain}:${network}`);
+      let tip = await ChainStateProvider.getLocalTip({ chain, network });
+      if (parentChain && (!tip || tip.height < forkHeight)) {
+        let parentTip = await ChainStateProvider.getLocalTip({ chain: parentChain, network });
+        while (!parentTip || parentTip.height < forkHeight) {
+          logger.info(`Waiting until ${parentChain} syncs before ${chain} ${network}`);
+          await wait(5000);
+          parentTip = await ChainStateProvider.getLocalTip({ chain: parentChain, network });
         }
       }
-      headers = await getHeaders();
+  
+      const getHeaders = async () => {
+        const locators = await ChainStateProvider.getLocatorHashes({ chain, network });
+        return this.getHeaders(locators);
+      };
+  
+      let headers = await getHeaders();
+      while (headers.length > 0) {
+        tip = await ChainStateProvider.getLocalTip({ chain, network });
+        let currentHeight = tip ? tip.height : 0;
+        const startingHeight = currentHeight;
+        const startingTime = Date.now();
+        let lastLog = startingTime;
+        logger.info(`${timestamp()} | Syncing ${headers.length} blocks | Chain: ${chain} | Network: ${network}`);
+        for (const header of headers) {
+          try {
+            const block = await this.getBlock(header.hash);
+            await this.processBlock(block);
+            currentHeight++;
+            const now = Date.now();
+            const oneSecond = 1000;
+            if (now - lastLog > oneSecond) {
+              const blocksProcessed = currentHeight - startingHeight;
+              const elapsedMinutes = (now - startingTime) / (60 * oneSecond);
+              logger.info(
+                `${timestamp()} | Syncing... | Chain: ${chain} | Network: ${network} |${(blocksProcessed / elapsedMinutes)
+                  .toFixed(2)
+                  .padStart(8)} blocks/min | Height: ${currentHeight.toString().padStart(7)}`
+              );
+              lastLog = now;
+            }
+          } catch (err) {
+            logger.error(`${timestamp()} | Error syncing | Chain: ${chain} | Network: ${network} | %o`, err);
+            this.isSyncing = false;
+            return this.sync();
+          }
+        }
+        headers = await getHeaders();
+      }
+  
+      logger.info(`${timestamp()} | Sync completed | Chain: ${chain} | Network: ${network}`);
+      this.isSyncing = false;
+      await StateStorage.collection.findOneAndUpdate(
+        {},
+        { $addToSet: { initialSyncComplete: `${chain}:${network}` } },
+        { upsert: true }
+      );
+      this.events.emit('SYNCDONE');
+      return true;
+    } catch (err) {
+      logger.err(`An error has occurred while syncing ${this.chain} ${this.network}: %o`, err);
     }
-
-    logger.info(`${timestamp()} | Sync completed | Chain: ${chain} | Network: ${network}`);
-    this.isSyncing = false;
-    await StateStorage.collection.findOneAndUpdate(
-      {},
-      { $addToSet: { initialSyncComplete: `${chain}:${network}` } },
-      { upsert: true }
-    );
-    this.events.emit('SYNCDONE');
-    return true;
   }
 
   async stop() {
-    this.stopping = true;
-    logger.debug(`Stopping worker for chain ${this.chain}`);
-    this.queuedRegistrations.forEach(timeoutId => clearTimeout(timeoutId as NodeJS.Timeout));
-    await this.unregisterSyncingNode();
-    await this.disconnect();
+    try {
+      this.stopping = true;
+      logger.debug(`Stopping worker for chain ${this.chain}`);
+      this.queuedRegistrations.forEach(timeoutId => clearTimeout(timeoutId as NodeJS.Timeout));
+      await this.unregisterSyncingNode();
+      await this.disconnect();
+    } catch (err) {
+      logger.err(`An error has occurred while stopping ${this.chain} ${this.network}: %o`, err);
+    }
   }
 
   async start() {
-    logger.debug(`Started worker for chain ${this.chain}`);
-    await this.connect();
-    this.refreshSyncingNode();
+    try {
+      logger.debug(`Loaded module ./thought/p2p for chain ${this.chain}`);
+      logger.debug(`Started worker for chain / Attempting Connections ${this.chain}`);
+      await this.connect();
+      logger.debug(`Promise to connect resolved, Refreshing syncing node for chain ${this.chain}`);
+      this.refreshSyncingNode();
+    } catch (err) {
+      logger.err(`An error has occurred while starting ${this.chain} ${this.network}: %o`, err);
+    }
+
   }
 }

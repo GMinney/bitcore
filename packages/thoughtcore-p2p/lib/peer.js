@@ -3,12 +3,14 @@
 var Buffers = require('./buffers');
 var EventEmitter = require('events').EventEmitter;
 var Net = require('net');
+var Socket = Net.Socket;
 var Socks5Client = require('socks5-client');
 var thoughtcore = require('thoughtcore-lib');
 var Networks = thoughtcore.Networks;
 var Messages = require('./messages');
 var $ = thoughtcore.util.preconditions;
 var util = require('util');
+var logger = require('./logger');
 
 /**
  * The Peer constructor will create an instance of Peer to send and receive messages
@@ -32,14 +34,12 @@ var util = require('util');
  * @param {Number} options.port - Port number of the remote host
  * @param {Network} options.network - The network configuration
  * @param {Boolean=} options.relay - An option to disable automatic inventory relaying from the remote peer
- * @param {Socket=} options.socket - An existing connected socket
+ * @param {Net.Socket=} options.socket - An existing connected socket
 
  * @returns {Peer} A new instance of Peer.
  * @constructor
  */
 function Peer(options) {
-  /* jshint maxstatements: 26 */
-  /* jshint maxcomplexity: 8 */
 
   if (!(this instanceof Peer)) {
     return new Peer(options);
@@ -78,12 +78,15 @@ function Peer(options) {
   this.bestHeight = 0;
   this.subversion = null;
   this.relay = options.relay === false ? false : true;
-
   this.versionSent = false;
+  this.verackSent = false;
 
   // set message handlers
   var self = this;
+
+  // Receive a verack message and emit a ready event - peerready
   this.on('verack', function () {
+    logger.debug(`thoughtcore-p2p verack recv, emitting a ready event`);
     self.status = Peer.STATUS.READY;
     self.emit('ready');
   });
@@ -93,8 +96,9 @@ function Peer(options) {
     self.subversion = message.subversion;
     self.bestHeight = message.startHeight;
 
-    var verackResponse = self.messages.VerAck();
-    self.sendMessage(verackResponse);
+    if (!self.verackSent) {
+      self._sendVerack();
+    }
 
     if (!self.versionSent) {
       self._sendVersion();
@@ -188,7 +192,9 @@ Peer.prototype._onError = function (e) {
  */
 Peer.prototype.disconnect = function () {
   this.status = Peer.STATUS.DISCONNECTED;
-  this.socket.destroy();
+  if (this.socket !== undefined) {
+    this.socket.destroy;
+  }
   this.emit('disconnect');
   return this;
 };
@@ -208,6 +214,16 @@ Peer.prototype._sendVersion = function () {
   // todo: include sending local ip address
   var message = this.messages.Version({ relay: this.relay });
   this.versionSent = true;
+  this.sendMessage(message);
+};
+
+/**
+ * Internal function that sends VERSION message to the remote peer.
+ */
+Peer.prototype._sendVerack = function () {
+  // todo: include sending local ip address
+  var message = this.messages.Verack();
+  this.verackSent = true;
   this.sendMessage(message);
 };
 
@@ -232,11 +248,11 @@ Peer.prototype._readMessage = function () {
 
 /**
  * Internal function that creates a socket using a proxy if necessary.
- * @returns {Socket} A Socket instance not yet connected.
+ * @returns {Net.Socket} A Socket instance not yet connected.
  */
 Peer.prototype._getSocket = function () {
   if (this.proxy) {
-    return new Socks5Client(this.proxy.host, this.proxy.port);
+    return Socks5Client.createConnection(this.proxy.host, this.proxy.port);
   }
 
   return new Net.Socket();
