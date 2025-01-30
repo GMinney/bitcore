@@ -95,7 +95,7 @@ export class ErigonRPC implements IRpc {
   }
 
   public reconcileTraces(block: IEVMBlock, transactions: IEVMTransactionInProcess[], traceTxs: ClassifiedTrace[]) {
-    const gasSum = transactions.reduce((sum, e) => Number(BigInt(sum) + e.fee), 0);
+    const gasSum = transactions.reduce((sum, e) => Number(BigInt(sum) + BigInt(e.fee)), 0);
 
     for (const tx of traceTxs) {
       if (tx.type === 'reward') {

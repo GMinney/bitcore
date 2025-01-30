@@ -176,6 +176,8 @@ export class ThoughtP2PWorker extends BaseP2PWorker<IThtBlock> {
       logger.debug(`Attempting to connect ... Binding to pool ...`);
       this.connectInterval = setInterval(this.pool.connect.bind(this.pool), 5000);
       logger.debug(`Attempting to connect ... awaiting peerready to resolve ...`);
+      // once is one time listener
+      // See Nodejs.eventemitter#once
       return new Promise<void>(resolve => {
         this.pool.once('peerready', () => resolve());
       });

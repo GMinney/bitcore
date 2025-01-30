@@ -130,7 +130,7 @@ Peer.STATUS = {
  */
 Peer.prototype.setProxy = function (host, port) {
   $.checkState(this.status === Peer.STATUS.DISCONNECTED);
-
+  logger.debug(`thoughtcore-p2p peer setting proxy...`)
   this.proxy = {
     host: host,
     port: port
@@ -143,6 +143,7 @@ Peer.prototype.setProxy = function (host, port) {
  * @returns {Peer} The same peer instance.
  */
 Peer.prototype.connect = function () {
+  logger.debug(`thoughtcore-p2p peer connect, getting socket..`);
   this.socket = this._getSocket();
   this.status = Peer.STATUS.CONNECTING;
 
@@ -150,10 +151,15 @@ Peer.prototype.connect = function () {
   this.socket.on('connect', function (ev) {
     self.status = Peer.STATUS.CONNECTED;
     self.emit('connect');
+    logger.debug(`thoughtcore-p2p peer connect, sending version message..`);
     self._sendVersion();
   });
 
+  logger.debug(`thoughtcore-p2p peer: Adding socket event handlers`);
+
   this._addSocketEventHandlers();
+
+  logger.debug(`thoughtcore-p2p peer: Attempting to connect to ${this.host}:${this.port}`);
   this.socket.connect(this.port, this.host);
   return this;
 };
@@ -162,6 +168,8 @@ Peer.prototype._addSocketEventHandlers = function () {
   var self = this;
 
   this.socket.on('error', self._onError.bind(this));
+
+  // This is getting hit
   this.socket.on('end', self.disconnect.bind(this));
 
   this.socket.on('data', function (data) {
@@ -239,9 +247,13 @@ Peer.prototype._sendPong = function (nonce) {
  * Internal function that tries to read a message from the data buffer
  */
 Peer.prototype._readMessage = function () {
+  logger.debug(`thoughtcore-p2p peer: Parse Buffer Peer.prototype._readMessage`);
   var message = this.messages.parseBuffer(this.dataBuffer);
+  logger.debug(`thoughtcore-p2p peer: Peer.prototype._readMessage, message parsed`);
   if (message) {
+    logger.debug(`thoughtcore-p2p peer: Peer.prototype._readMessage, message ${message.command}, ${message}`);
     this.emit(message.command, message);
+    logger.debug(`thoughtcore-p2p peer: Peer.prototype._readMessage, _readMessage `);
     this._readMessage();
   }
 };
@@ -255,7 +267,7 @@ Peer.prototype._getSocket = function () {
     return Socks5Client.createConnection(this.proxy.host, this.proxy.port);
   }
 
-  return new Net.Socket();
+  return new Socket();
 };
 
 module.exports = Peer;

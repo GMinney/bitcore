@@ -3,7 +3,9 @@
 var thoughtcore = require('thoughtcore-lib');
 var $ = thoughtcore.util.preconditions;
 var BufferWriter = thoughtcore.encoding.BufferWriter;
+var BufferReader = thoughtcore.encoding.BufferReader;
 var Hash = thoughtcore.crypto.Hash;
+var logger = require('./../logger');
 
 /**
  * Base message that can be inherited to add an additional
@@ -23,11 +25,19 @@ function Message(options) {
  * @constructor
  */
 Message.prototype.toBuffer = Message.prototype.serialize = function () {
+  logger.debug(`thoughtcore-p2p message: Message.prototype.toBuffer, checkState`);
   $.checkState(this.network, 'Need to have a defined network to serialize message');
-  var commandBuf = Buffer.from(Array(12));
+
+  logger.debug(`thoughtcore-p2p message: Message.prototype Buffer`);
+  var commandBuf = Buffer.alloc(12);
+
+  logger.debug(`thoughtcore-p2p message: Message.prototype Write`);
   commandBuf.write(this.command, 'ascii');
 
+  logger.debug(`thoughtcore-p2p message: Message.prototype getPayload `);
   var payload = this.getPayload();
+
+  logger.debug(`thoughtcore-p2p message: Message.prototype DoubleHash `);
   var checksum = Hash.sha256sha256(payload).subarray(0, 4);
 
   var bw = new BufferWriter();
@@ -37,7 +47,13 @@ Message.prototype.toBuffer = Message.prototype.serialize = function () {
   bw.write(checksum);
   bw.write(payload);
 
-  return bw.concat();
+  var bufferMessage =  bw.concat();
+  var br = new BufferReader(bufferMessage);
+  //var bufferReadout = br.();
+
+  logger.debug(`thoughtcore-p2p message: Message.prototype Buffer contains: ${this.network.networkMagic} | ${commandBuf} | ${payload.length} | ${checksum} | ${payload} | ${bufferMessage} | ${bufferMessage.toString('hex')}`);
+
+  return bufferMessage;
 };
 
 module.exports = Message;

@@ -162,6 +162,7 @@ Pool.prototype.numberConnected = function numberConnected() {
  * Will fill the connected peers to the maximum amount.
  */
 Pool.prototype._fillConnections = function _fillConnections() {
+  logger.debug(`thoughtcore-p2p pool filling connections...`);
   var length = this._addrs.length;
   for (var i = 0; i < length; i++) {
     if (this.numberConnected() >= this.maxSize) {
@@ -180,6 +181,7 @@ Pool.prototype._fillConnections = function _fillConnections() {
  * @param {Object} addr - An addr from the list of addrs
  */
 Pool.prototype._removeConnectedPeer = function _removeConnectedPeer(addr) {
+  logger.debug(`thoughtcore-p2p pool removing connectedPeer ${addr}, ${addr.hash}...`);
   if (this._connectedPeers[addr.hash].status !== Peer.STATUS.DISCONNECTED) {
     this._connectedPeers[addr.hash].disconnect();
   } else {
@@ -194,7 +196,7 @@ Pool.prototype._removeConnectedPeer = function _removeConnectedPeer(addr) {
  */
 Pool.prototype._connectPeer = function _connectPeer(addr) {
   var self = this;
-
+  logger.debug(`thoughtcore-p2p pool connecting to peer ip and port ${addr.ip.v4 || addr.ip.v6}:${addr.port}`);
   if (!this._connectedPeers[addr.hash]) {
     var port = addr.port || self.network.port;
     var ip = addr.ip.v4 || addr.ip.v6;
@@ -205,13 +207,16 @@ Pool.prototype._connectPeer = function _connectPeer(addr) {
       network: this.network,
       relay: self.relay
     });
-
+    logger.debug(`thoughtcore-p2p pool connecting to peer ${peer.host}:${peer.port}, ${peer.network}, ${peer.relay}, ${peer.messages}`);
     peer.on('connect', function peerConnect() {
       self.emit('peerconnect', peer, addr);
     });
-
+    logger.debug(`thoughtcore-p2p pool adding peer event handlers`);
     self._addPeerEventHandlers(peer, addr);
+    logger.debug(`thoughtcore-p2p pool connect`);
     peer.connect();
+    logger.debug(`thoughtcore-p2p pool adding ${addr.hash} to connected peers`);
+    logger.debug(`thoughtcore-p2p pool adding ${addr.hash} with status ${peer.status} to connected peers`);
     self._connectedPeers[addr.hash] = peer;
   }
 

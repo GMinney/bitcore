@@ -49,7 +49,7 @@ services:
     container_name: thoughtcore-node
     build: 
       context: .
-      dockerfile: ./docker/thoughtcore-node/Dockerfile2
+      dockerfile: ./docker/thoughtcore-node/Dockerfile
     image: thoughtcore-node
     ports:
       - 8100:8100
@@ -68,7 +68,7 @@ services:
     container_name: insight
     build: 
       context: .
-      dockerfile: ./docker/insight/Dockerfile2
+      dockerfile: ./docker/insight/Dockerfile
     image: insight
     ports:
       - 3000:3000

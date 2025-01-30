@@ -12,7 +12,7 @@ export interface ITransaction {
   blockHash?: string;
   blockTime?: Date;
   blockTimeNormalized?: Date;
-  fee: bigint;
+  fee: bigint | number;
   value: number;
   wallets: ObjectId[];
   replacedByTxid?: string;

@@ -31,7 +31,7 @@ function Messages(options) {
   this.network = options.network || thoughtcore.Networks.defaultNetwork;
 }
 
-Messages.MINIMUM_LENGTH = 16;
+Messages.MINIMUM_LENGTH = 24;
 Messages.PAYLOAD_START = 16;
 Messages.Message = require('./message');
 Messages.builder = require('./builder');
@@ -42,34 +42,34 @@ Messages.builder = require('./builder');
 Messages.prototype.parseBuffer = function (dataBuffer) {
   /* jshint maxstatements: 18 */
 
-  logger.debug(`Parsing databuffer of length ${dataBuffer.length}`);
+  logger.debug(`thoughtcore-p2p index Parsing databuffer of length ${dataBuffer.length}`);
 
   if (dataBuffer.length < Messages.MINIMUM_LENGTH) {
     return;
   }
 
-  logger.debug(`Parsing databuffer 2`);
+  logger.debug(`thoughtcore-p2p index Parsing databuffer 2`);
 
   // Search the next magic number
   if (!this._discardUntilNextMessage(dataBuffer)) {
     return;
   }
 
-  logger.debug(`Parsing databuffer 3`);
+  logger.debug(`thoughtcore-p2p index Parsing databuffer 3`);
 
   var payloadLen = (dataBuffer.get(Messages.PAYLOAD_START)) +
     (dataBuffer.get(Messages.PAYLOAD_START + 1) << 8) +
     (dataBuffer.get(Messages.PAYLOAD_START + 2) << 16) +
     (dataBuffer.get(Messages.PAYLOAD_START + 3) << 24);
 
-    logger.debug(`Parsing databuffer 4`);
+    logger.debug(`thoughtcore-p2p index Parsing databuffer 4`);
 
   var messageLength = 24 + payloadLen;
   if (dataBuffer.length < messageLength) {
     return;
   }
 
-  logger.debug(`Parsing databuffer 5`);
+  logger.debug(`thoughtcore-p2p index Parsing databuffer 5`);
 
   var command = dataBuffer.slice(4, 16).toString('ascii').replace(/\0+$/, '');
   var payload = dataBuffer.slice(24, messageLength);
@@ -81,7 +81,7 @@ Messages.prototype.parseBuffer = function (dataBuffer) {
     return;
   }
 
-  logger.debug(`Parsing databuffer 6`);
+  logger.debug(`thoughtcore-p2p index Parsing databuffer 6`);
 
   dataBuffer.skip(messageLength);
 
@@ -89,28 +89,37 @@ Messages.prototype.parseBuffer = function (dataBuffer) {
 };
 
 Messages.prototype._discardUntilNextMessage = function (dataBuffer) {
-  logger.debug(`Parsing Databuffer ... Checking buffer argument against preconditions`);
+  logger.debug(`thoughtcore-p2p index Parsing Databuffer 2.1... Checking buffer argument against preconditions`);
   $.checkArgument(dataBuffer);
-  logger.debug(`Parsing Databuffer ... Checking state of network. Network must be set. Network: ${this.network}`);
+  logger.debug(`thoughtcore-p2p index Parsing Databuffer 2.2... Checking state of network. Network is set. Network: ${this.network}`);
   $.checkState(this.network, 'network must be set');
-  var i = 0;
-  for (; ;) {
-    // check if it's the beginning of a new message
-    var packageNumber = dataBuffer.slice(0, 4).toString('hex');
-    if (packageNumber === this.network.networkMagic.toString('hex')) {
-      dataBuffer.skip(i);
-      logger.debug(`Parsing Databuffer ... Returning true. Start of message. Network Magic Found: ${this.network.networkMagic.toString('hex')}`);
-      return true;
-    }
+  logger.debug(`thoughtcore-p2p index Parsing Databuffer 2.2.1... Checking type of databuffer. ${BufferUtil.isBuffer(dataBuffer)}`);
 
-    // did we reach the end of the buffer?
-    if (i > (dataBuffer.length - 4)) {
-      logger.debug(`Parsing Databuffer ... Reached end of buffer. Returning False.`);
-      dataBuffer.skip(i);
-      return false;
+  try {
+    var i = 0;
+    // Infinite loop until we find a valid message
+    for (; ;) {
+      // check if it's the beginning of a new message
+      
+      var packageNumber = dataBuffer.slice(0, 4).toString('hex');
+      logger.debug(`thoughtcore-p2p index Parsing Databuffer 2.3... package number: ${packageNumber}`);
+      if (packageNumber === this.network.networkMagic.toString('hex')) {
+        dataBuffer.skip(i);
+        logger.debug(`thoughtcore-p2p index Parsing Databuffer 2.4... Returning true. Start of message. Network Magic Found: ${this.network.networkMagic.toString('hex')}`);
+        return true;
+      }
+  
+      // did we reach the end of the buffer?
+      if (i > (dataBuffer.length - 4)) {
+        logger.debug(`thoughtcore-p2p index Parsing Databuffer 2.5... Reached end of buffer. Returning False.`);
+        dataBuffer.skip(i);
+        return false;
+      }
+  
+      i++; // continue scanning
     }
-
-    i++; // continue scanning
+  } catch (err) {
+    logger.error(`thoughtcore-p2p index Parsing Databuffer ERROR: ${err}`);
   }
 };
 

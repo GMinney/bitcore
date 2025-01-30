@@ -49,7 +49,7 @@ export interface IEVMNetworkConfig extends INetworkConfig {
   leanTransactionStorage?: boolean; // Removes data, abiType, internal and calls before saving a transaction to the databases
 }
 
-export interface IXrpNetworkConfig extends INetworkConfig {
+export interface IThtRpcNetworkConfig extends INetworkConfig {
   provider: IProvider & {
     dataHost: string;
   };
@@ -70,7 +70,7 @@ export interface ConfigType {
   numWorkers: number;
 
   chains: {
-    [currency: string]: IChainConfig<IUtxoNetworkConfig | IEVMNetworkConfig | IXrpNetworkConfig>;
+    [currency: string]: IChainConfig<IUtxoNetworkConfig | IEVMNetworkConfig | IThtRpcNetworkConfig>;
   };
   aliasMapping: {
     chains: {

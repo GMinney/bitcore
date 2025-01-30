@@ -52,7 +52,7 @@ import {
   isValidProviderType
 } from './provider';
 import { EVMListTransactionsStream } from './transform';
-import CryptoRpcProvider from 'crypto-rpc/lib';
+import { CryptoRpcProvider } from 'crypto-rpc/lib';
 import { TransformableModel } from '../../../../types/TransformableModel';
 
 export interface GetWeb3Response { rpc: CryptoRpcProvider; web3: Web3; dataType: string };

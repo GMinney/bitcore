@@ -237,7 +237,7 @@ export interface EVMTransactionJSON {
   blockHash: string;
   blockTime: string;
   blockTimeNormalized: string;
-  fee: bigint;
+  fee: bigint | number;
   value: number;
   gasLimit: number;
   gasPrice: number;

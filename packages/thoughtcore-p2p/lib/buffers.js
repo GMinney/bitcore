@@ -3,42 +3,42 @@
 const { Buffer } = require('node:buffer');
 
 class Buffers {
-  constructor(bufs) {
-    this.buffers = bufs || [];
-    this.length = this.buffers.reduce(function (size, buf) {
-      return size + buf.length;
-    }, 0);
-  }
-
-  pos(i) {
-    // Implement the pos method to calculate the position within the buffers
-    let offset = 0;
-    for (let bufIndex = 0; bufIndex < this.buffers.length; bufIndex++) {
-      const buf = this.buffers[bufIndex];
-      if (i < offset + buf.length) {
-        return { buf: bufIndex, offset: i - offset };
-      }
-      offset += buf.length;
+    constructor(bufs) {
+        this.buffers = bufs || [];
+        this.length = this.buffers.reduce(function (size, buf) {
+            return size + buf.length;
+        }, 0);
     }
-    return { buf: this.buffers.length - 1, offset: this.buffers[this.buffers.length - 1].length };
-  }
+
+    pos(i) {
+        // Implement the pos method to calculate the position within the buffers
+        let offset = 0;
+        for (let bufIndex = 0; bufIndex < this.buffers.length; bufIndex++) {
+            const buf = this.buffers[bufIndex];
+            if (i < offset + buf.length) {
+                return { buf: bufIndex, offset: i - offset };
+            }
+            offset += buf.length;
+        }
+        return { buf: this.buffers.length - 1, offset: this.buffers[this.buffers.length - 1].length };
+    }
 }
 
 Buffers.prototype.skip = function (i) {
-  if (i === 0) {
-    return;
-  }
+    if (i === 0) {
+        return;
+    }
 
-  if (i >= this.length) {
-    this.buffers = [];
-    this.length = 0;
-    return;
-  }
+    if (i >= this.length) {
+        this.buffers = [];
+        this.length = 0;
+        return;
+    }
 
-  var pos = this.pos(i);
-  this.buffers = this.buffers.slice(pos.buf);
-  this.buffers[0] = Buffer.from(this.buffers[0].slice(pos.offset));
-  this.length -= i;
+    var pos = this.pos(i);
+    this.buffers = this.buffers.subarray(pos.buf);
+    this.buffers[0] = Buffer.from(this.buffers[0].subarray(pos.offset));
+    this.length -= i;
 };
 
 Buffers.prototype.push = function () {
@@ -72,13 +72,13 @@ Buffers.prototype.unshift = function () {
 };
 
 Buffers.prototype.copy = function (dst, dStart, start, end) {
-    return this.slice(start, end).copy(dst, dStart, 0, end - start);
+    return this.subarray(start, end).copy(dst, dStart, 0, end - start);
 };
 
 Buffers.prototype.splice = function (i, howMany) {
     var buffers = this.buffers;
     var index = i >= 0 ? i : this.length - i;
-    var reps = [].slice.call(arguments, 2);
+    var reps = [].subarray.call(arguments, 2);
 
     if (howMany === undefined) {
         howMany = this.length - index;
@@ -98,14 +98,14 @@ Buffers.prototype.splice = function (i, howMany) {
     for (
         var ii = 0;
         ii < buffers.length && startBytes + buffers[ii].length < index;
-        ii ++
+        ii++
     ) { startBytes += buffers[ii].length }
 
     if (index - startBytes > 0) {
         var start = index - startBytes;
 
         if (start + howMany < buffers[ii].length) {
-            removed.push(buffers[ii].slice(start, start + howMany));
+            removed.push(buffers[ii].subarray(start, start + howMany));
 
             var orig = buffers[ii];
             //var buf = new Buffer(orig.length - howMany);
@@ -116,14 +116,14 @@ Buffers.prototype.splice = function (i, howMany) {
 
             var buf1 = Buffer.from(orig.length - start - howMany);
             for (var i = start + howMany; i < orig.length; i++) {
-                buf1[ i - howMany - start ] = orig[i]
+                buf1[i - howMany - start] = orig[i]
             }
 
             if (reps.length > 0) {
-                var reps_ = reps.slice();
+                var reps_ = reps.subarray();
                 reps_.unshift(buf0);
                 reps_.push(buf1);
-                buffers.splice.apply(buffers, [ ii, 1 ].concat(reps_));
+                buffers.splice.apply(buffers, [ii, 1].concat(reps_));
                 ii += reps_.length;
                 reps = [];
             }
@@ -134,14 +134,14 @@ Buffers.prototype.splice = function (i, howMany) {
             }
         }
         else {
-            removed.push(buffers[ii].slice(start));
-            buffers[ii] = buffers[ii].slice(0, start);
-            ii ++;
+            removed.push(buffers[ii].subarray(start));
+            buffers[ii] = buffers[ii].subarray(0, start);
+            ii++;
         }
     }
 
     if (reps.length > 0) {
-        buffers.splice.apply(buffers, [ ii, 0 ].concat(reps));
+        buffers.splice.apply(buffers, [ii, 0].concat(reps));
         ii += reps.length;
     }
 
@@ -155,8 +155,8 @@ Buffers.prototype.splice = function (i, howMany) {
             buffers.splice(ii, 1);
         }
         else {
-            removed.push(buf.slice(0, take));
-            buffers[ii] = buffers[ii].slice(take);
+            removed.push(buf.subarray(0, take));
+            buffers[ii] = buffers[ii].subarray(take);
         }
     }
 
@@ -167,13 +167,13 @@ Buffers.prototype.splice = function (i, howMany) {
 
 
 
-Buffers.prototype.get = function get (i) {
+Buffers.prototype.get = function get(i) {
     var pos = this.pos(i);
 
     return this.buffers[pos.buf][pos.offset];
 };
 
-Buffers.prototype.set = function set (i, b) {
+Buffers.prototype.set = function set(i, b) {
     var pos = this.pos(i);
 
     return this.buffers[pos.buf].set(pos.offset, b);
@@ -207,7 +207,7 @@ Buffers.prototype.indexOf = function (needle, offset) {
     }
 
     // for each character in virtual buffer
-    for (;;) {
+    for (; ;) {
         while (j >= this.buffers[i].length) {
             j = 0;
             i++;
@@ -248,12 +248,12 @@ Buffers.prototype.indexOf = function (needle, offset) {
     }
 };
 
-Buffers.prototype.toBuffer = function() {
-    return this.slice();
+Buffers.prototype.toBuffer = function () {
+    return this.subarray();
 }
 
-Buffers.prototype.toString = function(encoding, start, end) {
-    return this.slice(start, end).toString(encoding);
+Buffers.prototype.toString = function (encoding, start, end) {
+    return this.subarray(start, end).toString(encoding);
 }
 
 

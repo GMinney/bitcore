@@ -1,82 +1,99 @@
-# Dockerfile for insight build found in docker-compose.yml
+# syntax=docker.io/docker/dockerfile:1
 
-FROM node:23-bullseye
+FROM node:23-alpine AS base
 
+# Install dependencies only when needed
+FROM base AS deps
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
 
-# Use production node environment by default.
-
-# ENV NODE_ENV production
-
-
-# Change working directory
-
-WORKDIR /insight-app
+# https://nathanfries.com/posts/docker-npm-workspaces/ fix for package-lock.json not found
 
 
-# Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.npm to speed up subsequent builds.
-# Leverage a bind mounts to package.json and package-lock.json to avoid having to copy them into
-# into this layer.
+# change working directory to /app/insight for base
 
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev
+WORKDIR /app/thoughtcore-lib
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 insight
+# Install dependencies based on the preferred package manager
+COPY packages/thoughtcore-lib/package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
+# RUN \
+#   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+#   elif [ -f package-lock.json ]; then npm ci; \
+#   elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+#   else echo "Lockfile not found." && exit 1; \
+#   fi
+
+# Install deps for thoughtcore-lib
+
+RUN npm install
+
+# change working directory to /app/insight for base
+
+WORKDIR /app/insight
+
+# Install dependencies based on the preferred package manager
+COPY packages/insight/package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
+
+# RUN \
+#   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+#   elif [ -f package-lock.json ]; then npm ci; \
+#   elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+#   else echo "Lockfile not found." && exit 1; \
+#   fi
+
+# Install deps for insight
+RUN npm install
 
 
-# Copy the rest of the source files into the image. Context is handled by docker-compose.yml in monorepo root
-
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/thoughtcore-lib/node_modules ./thoughtcore-lib/node_modules
+COPY --from=deps /app/insight/node_modules ./insight/node_modules
+COPY --from=deps /app/insight/package-lock.json ./insight/package-lock.json
 COPY ./packages/insight ./insight
 COPY ./packages/thoughtcore-lib ./thoughtcore-lib
-COPY ./packages/thoughtcore-build ./thoughtcore-build
+
+# Next.js collects completely anonymous telemetry data about general usage.
+# Learn more here: https://nextjs.org/telemetry
+# Uncomment the following line in case you want to disable telemetry during the build.
+ENV NEXT_TELEMETRY_DISABLED=1
+
+WORKDIR /app/insight
+
+RUN \
+  if [ -f yarn.lock ]; then yarn run build; \
+  elif [ -f package-lock.json ]; then npm run build; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
 
-# Change working directory and install
+# Production image, copy all the files and run next
+FROM base AS runner
+WORKDIR /app
 
-WORKDIR /insight-app/thoughtcore-build
-RUN npm install --ignore-scripts
+ENV NODE_ENV=production
+# Uncomment the following line in case you want to disable telemetry during runtime.
+ENV NEXT_TELEMETRY_DISABLED=1
 
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# Change working directory and install
+COPY --from=builder /app/insight/public ./public
 
-WORKDIR /insight-app/thoughtcore-lib
-RUN npm install --ignore-scripts
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/insight/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/insight/.next/static ./.next/static
 
+USER nextjs
 
-# Change working directory and install
+EXPOSE 3000
 
-WORKDIR /insight-app/insight
-RUN npm install --ignore-scripts
+ENV PORT=3000
 
-# Actually build the application
-
-RUN npm run build
-
-
-COPY public .next/standalone/ 
-COPY .next/static .next/standalone/.next/
-
-
-# Run the application as a non-root user.
-
-USER insight
-
-
-# Expose the port that the application listens on.
-
-# EXPOSE 3000
-
-
-# Set environment variables for nextjs
-
-# ENV PORT=3000
-# server.js is created by next build from the standalone output, see https://nextjs.org/docs/pages/api-reference/next-config-js/output
+# server.js is created by next build from the standalone output
+# https://nextjs.org/docs/pages/api-reference/next-config-js/output
 # ENV HOSTNAME="0.0.0.0"
-
-
-# Run the application.
-
-CMD node .next/standalone/server.js
+CMD ["node", "server.js"]

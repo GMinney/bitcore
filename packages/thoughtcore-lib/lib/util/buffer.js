@@ -1,9 +1,7 @@
 'use strict';
 
 var buffer = require('buffer');
-var assert = require('assert');
 
-var js = require('./js');
 var $ = require('./preconditions');
 
 function equals(a, b) {
