@@ -18,3 +18,4 @@ ts_build
 thoughtcore-lib.js
 
 docker/thoughtd/ThoughtChainstateBackup.tar
+docker/thoughtd/thoughtchainstatebackup.tar.gz

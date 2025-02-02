@@ -1,5 +1,6 @@
 {
   "name": "thoughtcore-lib",
+  "type": "module",
   "version": "10.2.1",
   "description": "A pure and powerful JavaScript Thought library.",
   "author": "Thought <dev@thoughtnetwork.com>",

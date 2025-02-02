@@ -1,0 +1,23 @@
+{
+
+    "compilerOptions": {
+  
+      // other options
+      "resolveJsonModule": true,
+      "esModuleInterop": true,
+      "target": "ES6",
+      "moduleResolution": "NodeNext",
+      "module": "NodeNext",
+    },
+    "exclude": [
+      "node_modules",
+      "dist"
+    ],
+    "include": [
+      "lib/**/*.ts",
+      "lib/**/*.js",
+      "lib/**/*.json"
+    ],
+
+  
+  }
